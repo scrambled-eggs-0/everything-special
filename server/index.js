@@ -105,7 +105,7 @@ app.get('/game', (res, req) => {
         if(closed === true) return;
         res.cork(() => {
             console.error('Error fetching file from GridFS:', error);
-            res.status(500).send('Internal Server Error');
+            res.end('Internal Server Error');
         })
     });
 

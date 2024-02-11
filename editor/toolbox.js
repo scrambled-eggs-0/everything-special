@@ -542,28 +542,28 @@ export const toolbox = {
             },
           },
         },
-        {
-          'kind': 'block',
-          'type': 'add_text',
-          'inputs': {
-            'TEXT': {
-              'shadow': {
-                'type': 'text',
-                'fields': {
-                  'TEXT': 'abc',
-                },
-              },
-            },
-            'COLOR': {
-              'shadow': {
-                'type': 'colour_picker',
-                'fields': {
-                  'COLOUR': '#aa00cc',
-                },
-              },
-            },
-          },
-        },
+        // {
+        //   'kind': 'block',
+        //   'type': 'add_text',
+        //   'inputs': {
+        //     'TEXT': {
+        //       'shadow': {
+        //         'type': 'text',
+        //         'fields': {
+        //           'TEXT': 'abc',
+        //         },
+        //       },
+        //     },
+        //     'COLOR': {
+        //       'shadow': {
+        //         'type': 'colour_picker',
+        //         'fields': {
+        //           'COLOUR': '#aa00cc',
+        //         },
+        //       },
+        //     },
+        //   },
+        // },
       ],
     },
     {
