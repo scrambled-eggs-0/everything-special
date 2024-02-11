@@ -58,7 +58,7 @@ function getAllCode(){
 
   codes[workspaceName] = code;
 
-  return '{\n' + Object.values(codes).map(c => 'const e = {x: 900/2, y: 1600/2, angle: 0};\nI(e);\n' + c).join('}\n{') + '\n}';
+  return '{\n' + Object.values(codes).map(c => 'const e = {x:450,y:800,angle:0,img:undefined,drawImg:false,r:30};\nI(e);\n' + c).join('}\n{') + '\n}';
 }
 
 const runCode = () => {

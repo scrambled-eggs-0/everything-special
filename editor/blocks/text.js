@@ -66,6 +66,22 @@ const blockData = [
     'helpUrl': '',
   },
   {
+    'type': 'set_size',
+    'message0': 'set scale to %1 percent',
+    'args0': [
+      {
+        'type': 'input_value',
+        'name': 'S',
+        'check': 'Number',
+      },
+    ],
+    'previousStatement': null,
+    'nextStatement': null,
+    'colour': '#07ced9',
+    'tooltip': '',// TODO: tooltips
+    'helpUrl': '',
+  },
+  {
     'type': 'x_variable',
     'message0': 'x position',
     'args0': [],
@@ -97,7 +113,39 @@ const blockData = [
       }
     ],
     "colour": '#07ced9'
-  }
+  },
+  // {
+  //   "type": "set_sprite",
+  //   "message0": "drop down: %1",
+  //   "args0": [
+  //     {
+  //       "type": "field_dropdown",
+  //       "name": "SPRITENAME",
+  //       "options": [
+  //         [ "🤔", "ITEM1" ],
+  //         [ "💪", "ITEM2" ],
+  //         [ "✅", "ITEM2" ],
+  //       ]
+  //     }
+  //   ],
+  //   "colour": '#07ced9'
+  // }
+  {
+    'type': 'sprite_url',
+    'message0': 'Set sprite image to (https://) %1',
+    'args0': [
+      {
+        'type': 'input_value',
+        'name': 'URL',
+        'check': 'String',
+      },
+    ],
+    'previousStatement': null,
+    'nextStatement': null,
+    "colour": '#07ced9',
+    'tooltip': '',
+    'helpUrl': '',
+  },
 ]
 
 // Create the block definitions for the JSON-only blocks.

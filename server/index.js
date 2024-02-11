@@ -153,7 +153,7 @@ app.post('/upload', (res, req) => {
 });
 
 app.get("/:filename", (res, req) => {
-    const path = 'client' + req.getUrl();
+    let path = 'client' + req.getUrl();
     
     // only js files check for mime type so everything can be text/javascript lol
     // TODO: GET WEBPACK SET UP!!!!!! WITHOUT IT THERE's A PREFLIGHT REQUEST WHICH IS REALLY SLOW
@@ -164,6 +164,12 @@ app.get("/:filename", (res, req) => {
             res.writeHeader('Content-Type', 'text/javascript');
         }
     });
+
+    // hacky fix
+    if(path.endsWith('png')){
+        path = 'editor/dist' + req.getUrl();
+        console.log(path);
+    }
 
     // TODO: to avoid all of this garbage use publicPath: '/editor/dist' and make sep routes for those files
     // if(path.endsWith('svg')){

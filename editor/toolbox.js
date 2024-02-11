@@ -60,6 +60,28 @@ export const toolbox = {
           'kind': 'block',
           'type': 'forever',
         },
+        {
+          'kind': 'block',
+          'type': 'set_size',
+          'inputs': {
+            'S': {
+              'shadow': {
+                'type': 'math_number',
+                'fields': {
+                  'NUM': 100,
+                },
+              },
+            },
+          },
+        },
+        {
+          'kind': 'block',
+          'type': 'sprite_url',
+        },
+        // {
+        //   'kind': 'block',
+        //   'type': 'set_sprite',
+        // },
       ],
     },
     {

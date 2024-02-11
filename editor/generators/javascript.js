@@ -43,6 +43,11 @@ forBlock['set_y'] = function (block, generator) {
   return `e.y = ${y};\n`;
 };
 
+forBlock['set_size'] = function (block, generator) {
+  const s = (generator.valueToCode(block, 'S', Order.NONE) || 100) * 0.3;// 100 = 30px
+  return `e.r = ${s};\n`;
+};
+
 forBlock['x_variable'] = function (block, generator) {
   return [`e.x`, Order.NONE];
 };
@@ -56,3 +61,14 @@ forBlock['forever'] = function(block, generator) {
   
   return `tickFunctions[e.id].push(() => {\n${innerBlockText}});`;
 }
+
+// forBlock['set_sprite'] = function (block, generator) {
+//   // const x = generator.valueToCode(block, 'X', Order.NONE) || 0;
+//   // return `e.x = ${x};\n`;
+//   return '';
+// };
+
+forBlock['sprite_url'] = function (block, generator) {
+  const url = generator.valueToCode(block, 'URL', Order.NONE) || "'https://memes.co.in/memes/update/uploads/2021/12/InShot_20211209_222013681.jpg'";
+  return `e.img = new Image();\ne.img.src = ${url};\ne.img.onload=()=>{e.drawImg=true;}`;
+};

@@ -30,9 +30,14 @@ window.render = () => {
     for(let i = 0; i < entities.length; i++){
         // i'll just render them as circles before we get images working
         // (TODO: image support)
+        if(entities[i].drawImg === true){
+            ctx.drawImage(entities[i].img, entities[i].x - entities[i].r, entities[i].y - entities[i].r, entities[i].r*2, entities[i].r*2);
+            continue;
+        }
+
         ctx.fillStyle = 'black';
         ctx.beginPath();
-        ctx.arc(entities[i].x, entities[i].y, 30, 0, TAU);
+        ctx.arc(entities[i].x, entities[i].y, entities[i].r, 0, TAU);
         ctx.fill();
         ctx.closePath();
     }
