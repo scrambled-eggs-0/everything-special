@@ -120,13 +120,14 @@ publishBtn.onclick = () => {
   uploadCode(getAllCode());
 }
 
+const uploadUrl = `${location.origin}/upload`;
 function uploadCode(code){
   const blob = new Blob([code], { type: 'application/javascript' });
 
   const formData = new FormData();
   formData.append('file', blob, 'upload.js');
 
-  fetch('http://localhost:3000/upload', {
+  fetch(uploadUrl, {
       method: 'POST',
       body: formData,
   })  .then(response => response.json())
