@@ -1,0 +1,35 @@
+1/31/24
++=======================================================================================================================================================================================================+
+I was thinking that we ought to try and get the AI to predict which games would get certain ratings and views, to backtest the accuracy of the model. 
+Mind you, it'll require quite a bit of data, so we'll either have to make a bunch of dummy data, or just wait until we have users.
+
+Of course, I can implement a basic algorithm to give a very rough estimation of the game's rating...
+
+Score = (Weight_Size * Normalized_Size) + (Weight_Likes * Normalized_Likes) + (Weight_Views * Normalized_Views) + (Weight_UpdateFrequency * Normalized_UpdateFrequency) + (Weight_CreatorTrackRecord * Normalized_CreatorTrackRecord)
+
+The score could be calculated off of the size of the game, the number of likes, the number of views, the update frequency, and the track record of the creator...
+
+Perhaps something like:
+
+def calculate_score(game):
+
+    normalized_size = normalize(game.size)
+    normalized_likes = normalize(game.likes)
+    normalized_views = normalize(game.views)
+    normalized_update_frequency = normalize(game.update_frequency)
+    normalized_creator_track_record = normalize(game.creator_track_record)
+
+    score = (Weight_Size * normalized_size) + (Weight_Likes * normalized_likes) + (Weight_Views * normalized_views) + (Weight_UpdateFrequency * normalized_update_frequency) + (Weight_CreatorTrackRecord * normalized_creator_track_record)
+
+    return score
+
+games = [...]
+
+sorted_games = sorted(games, key=calculate_score, reverse=True)
+
+print(sorted_games)
+
+
+
+
++=======================================================================================================================================================================================================+

@@ -1,0 +1,94 @@
+body {
+    margin: 0;
+    max-width: 100vw;
+}
+
+pre, code {
+    overflow: auto;
+}
+
+#pageContainer {
+    display: flex;
+    width: 100%;
+    max-width: 100vw;
+    height: 100vh;
+    flex-direction: column;
+}
+
+#blocklyDiv {
+    flex-basis: 100%;
+    height: 100%;
+    min-width: 600px;
+}
+
+#outputPane {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: min(400px, 100%);
+    overflow: auto;
+}
+
+#generatedCode {
+    height: 100%;
+    background-color: rgb(247, 240, 228);
+    margin: 0;
+}
+
+canvas {
+    left: 0;
+    top: 0;
+    cursor: crosshair;
+    height: 100%;
+    aspect-ratio: 9 / 16;
+}
+
+#sprites-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: min(80%, max(50%, 300px));
+}
+
+#buttondiv > input {
+    width: 36px;
+    height: 36px;
+    background-repeat: no-repeat;
+    background-position: 0;
+    background-position-y: 0;
+    background-size: 100%;
+    background-color: rgba(0,0,0,0);
+    border: none;
+    opacity: 0.4;
+    transition: opacity 0.2s;
+    z-index: 999;
+}
+
+#newentity {
+    background: #f0f0f0 url('./assets/newentity.svg');
+}
+
+#publish {
+    background: #f0f0f0 url('./assets/upload.svg');
+    width: 30px !important;
+    height: 30px !important;
+    margin: 3px !important;
+    margin-bottom: 1.5px !important;
+    margin-top: 2.5px !important;
+    /* margin-left: 4px !important; */
+}
+
+#buttondiv {
+    position: absolute;
+    right: 33.5px;
+    bottom: 232px;
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+    flex-direction: column;
+}
+
+#buttondiv > input:hover {
+    opacity: 0.55;
+}
