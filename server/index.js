@@ -57,8 +57,6 @@ app.get('/bundle.js', (res, req) => {
     res.cork(() => {
         res.writeHeader('Content-Type', 'text/javascript');
     })
-
-    console.log(path);
     
     // Check if the file exists
     if (fs.existsSync(path)) {
@@ -165,18 +163,37 @@ app.get("/:filename", (res, req) => {
         } else {
             res.writeHeader('Content-Type', 'text/javascript');
         }
-    })
-    
-    // Check if the file exists
-    if (fs.existsSync(path)) {
-        // Read and serve the file
-        const file = fs.readFileSync(path);
-        res.end(file);
-    } else {
-        // File not found
-        res.writeStatus('404 Not Found');
-        res.end();
-    }
+    });
+
+    // TODO: to avoid all of this garbage use publicPath: '/editor/dist' and make sep routes for those files
+    // if(path.endsWith('svg')){
+    //     const svgPath = 'editor/dist' + req.getUrl();
+    //     console.log(svgPath);
+
+    //     // Read and serve the file
+    //     if (fs.existsSync(path)) {
+    //         const file = fs.readFileSync(svgPath, 'utf-8');
+    //         res.cork(() => {
+    //             res.writeHeader('Content-Type', 'image/svg+xml');// TODO: Investigate if res.cork is faster for res.end as well
+    //         })
+    //         res.end(file);
+    //     } else {
+    //         // File not found
+    //         res.writeStatus('404 Not Found');
+    //         res.end();
+    //     }
+    // } else {
+        // Check if the file exists
+        if (fs.existsSync(path)) {
+            // Read and serve the file
+            const file = fs.readFileSync(path);
+            res.end(file);
+        } else {
+            // File not found
+            res.writeStatus('404 Not Found');
+            res.end();
+        }
+    // }
 });
 
 // we'll have a post request handler here that will take file content and upload it to the db

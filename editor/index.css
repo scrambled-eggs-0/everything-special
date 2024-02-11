@@ -66,11 +66,11 @@ canvas {
 }
 
 #newentity {
-    background: #f0f0f0 url('./assets/newentity.svg');
+    background: #f0f0f0 url('./assets/newentity.png');
 }
 
 #publish {
-    background: #f0f0f0 url('./assets/upload.svg');
+    background: #f0f0f0 url('./assets/upload.png');/*todo: remake it to svg*/
     width: 30px !important;
     height: 30px !important;
     margin: 3px !important;
