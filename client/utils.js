@@ -10,8 +10,8 @@ const until = (condition, checkInterval=400) => {
 }
 
 const SCROLL_PARAMS = Object.freeze({
-    sensitivity: 0,//10 * 700,
-    minAvgSpeed: 0,//0.5 * 700,
+    sensitivity: 10 * 700,
+    minAvgSpeed: 0.5 * 700,
     maxScrollTime: 150
 });
 
