@@ -27,7 +27,9 @@ window.onmousemove = (e) => {
     // scrolling
     if(dragging === false) return;
 
-    totalDist -= e.movementY;
+    totalDist -= e.movementY / window.innerHeight;
+
+    if(totalDist < 0) alert('negative total dist!');
 
     if(totalDist > SCROLL_PARAMS.sensitivity){
         const scrollTime = (Date.now() - dragStartTime);
