@@ -20,7 +20,7 @@ let cachedFontSize = -1;
 // const TAU = Math.PI * 2;
 window.render = () => {
     if(window.scrollAnimation < 1){
-        window.scrollAnimation += 0.032;// TODO: dt
+        window.scrollAnimation += (Date.now() - firstTime) / frames * .00384;// at 120fps this is +0.032/s;
         if(window.scrollAnimation > 1) window.scrollAnimation = 1;
         ctx.translate(0, (1-window.scrollAnimation) * canvas.height);
 
@@ -30,8 +30,6 @@ window.render = () => {
     ctx.fillRect(0,0,canvas.width,canvas.height);
 
     for(let i = 0; i < entities.length; i++){
-        // i'll just render them as circles before we get images working
-        // (TODO: image support)
         if(entities[i].drawImg === true){
             ctx.drawImage(entities[i].img, entities[i].x - entities[i].r, entities[i].y - entities[i].r, entities[i].r*2, entities[i].r*2);
             continue;
@@ -67,9 +65,38 @@ function tick(){
 }
 
 // gameloop
-// TODO: convert this to be fixed if significantly greater or less than 60fps
+let lastTime, now, firstTime, accum, dt, frames;
+lastTime = now = firstTime = Date.now();
+accum = dt = frames = 0;
+const FRAME_TIME = 1000 / 60;
 (function run(){
-    tick();
+    now = Date.now();
+    dt = now - lastTime;
+    accum += dt;
+    lastTime = now;
+    
+    // if we're not ahead
+    if(accum > 0){
+        // simulate the frame as usual
+        frames++;
+        accum -= FRAME_TIME;
+        tick();
+    } else {
+        // we don't want to re-render, we have no interpolation! So just wait until next frame ig
+        requestAnimationFrame(run);
+        return;
+    }
+
+    // if we're behind
+    if(accum > FRAME_TIME){
+        // if we're too behind then give up
+        if(accum > 2000) accum = 0;
+
+        // otherwise simulate an extra catch-up tick
+        accum -= FRAME_TIME;
+        tick();
+    }
+
     render();
 
     requestAnimationFrame(run);
