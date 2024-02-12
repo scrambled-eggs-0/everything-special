@@ -60,6 +60,7 @@ window.ontouchstart = (e) => {
 let lastTouchY = 0;
 window.ontouchmove = (e) => {
     const touch = (e.touches || e.originalEvent.touches)[0];
+    alert({movementY: touch.y - lastTouchY});
     window.onmousemove({pageX: touch.pageX, pageY: touch.pageY, movementY: touch.y - lastTouchY});
     lastTouchY = touch.pageY;
 }
