@@ -77,7 +77,6 @@ forBlock['mouse_y'] = function (block, generator) {
 
 forBlock['this_touching'] = function (block, generator) {
   const objectId = block.getFieldValue('SPRITE_ID', Order.NONE);
-  console.log(objectId);
   if(objectId === 'mouse'){
     return ['(e.x-mouseX)**2+(e.y-mouseY)**2<e.r**2', Order.NONE];
   }
