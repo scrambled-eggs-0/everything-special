@@ -25,7 +25,7 @@ window.onmousemove = (e) => {
     window.mouseY = Math.min(1, Math.max(0, (e.pageY - window.canvasDimensions.y) / window.canvasDimensions.height)) * canvas.height;
 
     // scrolling
-    if(dragging === false) return;
+    if(dragging === false) {alert('not dragging'); return;}
 
     totalDist -= e.movementY / window.innerHeight;
 
