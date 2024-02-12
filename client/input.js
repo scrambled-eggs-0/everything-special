@@ -48,3 +48,67 @@ window.onmouseout = () => {
     // scrolling
     dragging = false;
 }
+
+window.ontouchstart = (e) => {
+    if(dragging === true) return; // ignore >1 touches
+    window.onmousedown();
+    lastTouchY = (e.touches || e.originalEvent.touches)[0].pageY;
+}
+
+let lastTouchY = 0;
+window.ontouchmove = (e) => {
+    const touch = (e.touches || e.originalEvent.touches)[0];
+    window.onmousemove({pageX: touch.pageX, pageY: touch.pageY, movementY: touch.y - lastTouchY});
+    lastTouchY = touch.pageY;
+}
+
+window.ontouchend = (e) => {
+    if(dragging === false) return;// ignore >1 touches
+    window.onmouseup();
+    lastTouchY = (e.touches || e.originalEvent.touches)[0].pageY;
+}
+
+window.ontouchcancel = (e) => {
+    window.ontouchend();
+}
+
+// document.addEventListener('touchstart', handleTouchStart, false);        
+// document.addEventListener('touchmove', handleTouchMove, false);
+
+// var xDown = null;                                                        
+// var yDown = null;                                           
+                                                                         
+// function handleTouchStart(evt) {
+//     const firstTouch = getTouches(evt)[0];                                      
+//     xDown = firstTouch.clientX;                                      
+//     yDown = firstTouch.clientY;                                      
+// };                                                
+                                                                         
+// function handleTouchMove(evt) {
+//     if ( ! xDown || ! yDown ) {
+//         return;
+//     }
+
+//     var xUp = evt.touches[0].clientX;                                    
+//     var yUp = evt.touches[0].clientY;
+
+//     var xDiff = xDown - xUp;
+//     var yDiff = yDown - yUp;
+                                                                         
+//     if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
+//         if ( xDiff > 0 ) {
+//             /* right swipe */ 
+//         } else {
+//             /* left swipe */
+//         }                       
+//     } else {
+//         if ( yDiff > 0 ) {
+//             /* down swipe */ 
+//         } else { 
+//             /* up swipe */
+//         }                                                                 
+//     }
+//     /* reset values */
+//     xDown = null;
+//     yDown = null;                                             
+// };
