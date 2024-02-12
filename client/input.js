@@ -25,11 +25,9 @@ window.onmousemove = (e) => {
     window.mouseY = Math.min(1, Math.max(0, (e.pageY - window.canvasDimensions.y) / window.canvasDimensions.height)) * canvas.height;
 
     // scrolling
-    if(dragging === false) {alert('not dragging'); return;}
+    if(dragging === false) return;
 
     totalDist -= e.movementY / window.innerHeight;
-
-    if(totalDist < 0) alert('negative total dist!');
 
     if(totalDist > SCROLL_PARAMS.sensitivity){
         const scrollTime = (Date.now() - dragStartTime);
@@ -51,6 +49,7 @@ window.onmouseout = () => {
     dragging = false;
 }
 
+// mobile
 window.ontouchstart = (e) => {
     if(dragging === true) return; // ignore >1 touches
     window.onmousedown();
@@ -60,8 +59,7 @@ window.ontouchstart = (e) => {
 let lastTouchY = 0;
 window.ontouchmove = (e) => {
     const touch = (e.touches || e.originalEvent.touches)[0];
-    alert(touch.y - lastTouchY);
-    window.onmousemove({pageX: touch.pageX, pageY: touch.pageY, movementY: touch.y - lastTouchY});
+    window.onmousemove({pageX: touch.pageX, pageY: touch.pageY, movementY: touch.pageY - lastTouchY});
     lastTouchY = touch.pageY;
 }
 
