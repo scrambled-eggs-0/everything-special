@@ -48,6 +48,10 @@ const codes = window.codes = {
   /*windowName: code*/
 };
 
+window.workspaceToId = {
+
+}
+
 // TODO: import all data into a fake blockly div so that it can be compiled to code (dependency injection)
 // Blockly.serialization.workspaces.load(JSON.parse(data), workspace, false);
 
@@ -58,7 +62,7 @@ function getAllCode(){
 
   codes[workspaceName] = code;
 
-  return '{\n' + Object.values(codes).map(c => 'const e = {x:450,y:800,angle:0,img:undefined,drawImg:false,r:100,emoji:"😀"};\nI(e);\n' + c).join('}\n{') + '\n}';
+  return '{\n' + Object.keys(codes).map((c,i) => {window.workspaceToId[c] = i; return 'const e = {x:450,y:800,angle:0,img:undefined,drawImg:false,r:100,emoji:"😀"};\nI(e);\n' + codes[c];}).join('}\n{') + '\n}';
 }
 
 const runCode = () => {
@@ -149,3 +153,4 @@ for(let key in ls){
 }
 
 changeWorkspace('default');
+window.codeLoaded = true;

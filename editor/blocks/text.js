@@ -202,8 +202,6 @@ const blockData = [
   // },// output: "String"? not tested
 ]
 
-let lastRegeneratedWorkspace;
-let skipIndex;
 Blockly.Extensions.register('dynamic_menu_extension',
   function() {
     this.getInput('INPUT')
@@ -212,12 +210,9 @@ Blockly.Extensions.register('dynamic_menu_extension',
         function() {
           const arr = [['mouse-pointer', 'mouse']];
           const seenEmoji = {};
-          if(lastRegeneratedWorkspace !== window.workspaceName){
-            skipIndex = Object.keys(window.codes).findIndex(c => c === window.workspaceName);
-            if(skipIndex !== -1) lastRegeneratedWorkspace = window.workspaceName;
-          }
           for(let i = 0; i < entities.length; i++){
-            if(i === skipIndex) continue;// TODO: "clones of" x instead of just listing out all the current clones bc that can break. 
+            if(window.workspaceToId[window.workspaceName] === i && window.codeLoaded === true) continue;
+            // TODO: "clones of" x instead of just listing out all the current clones bc that can break. 
             arr.push([entities[i].emoji + (seenEmoji[entities[i].emoji] > 0 ? ` (${seenEmoji[entities[i].emoji]})` : ''), entities[i].id.toString()]);
             if(seenEmoji[entities[i].emoji] === undefined) seenEmoji[entities[i].emoji] = 1;
             else seenEmoji[entities[i].emoji]++;
