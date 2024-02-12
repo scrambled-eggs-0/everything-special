@@ -11,6 +11,28 @@ import * as Blockly from 'blockly/core';
 // This is just an example and you should replace this with your
 // own custom blocks.
 
+// time: 0.1 - 0.05ms. Performance is fine.
+const emojis = [["\u{1F680}", "\u{1F680}"]];// double list of emojis because that's what blockly accepts
+const emojiRange = [
+  [0x1F600, 0x1F64F],  // Emoticons
+  [0x1F7E0, 0x1F7EB],  // Geometric Shapes Extended
+  [0x1F90B, 0x1F9FF],  // Supplemental Symbols and Pictographs
+];
+for(let i = 0; i < emojiRange.length; i++){
+  for(let j = emojiRange[i][0]; j < emojiRange[i][1]; j++){
+    const emoji = String.fromCodePoint(j);
+    emojis.push([emoji, emoji]);
+  }
+}
+emojis.push(["\u2705", "\u2705"], ["\u26C5", "\u26C5"], ["\u{1F300}", "\u{1F300}"]);
+
+// swapping emojis to get a nicer default
+// let temp = emojis[0];
+// emojis[0] = emojis[1];
+// emojis[1] = temp;
+// emojis[1] = emojis[2];
+// emojis[2] = temp;
+
 const blockData = [
   // {
   //   'type': 'add_text',
@@ -46,7 +68,7 @@ const blockData = [
     'previousStatement': null,
     'nextStatement': null,
     'colour': '#07ced9',
-    'tooltip': '',// TODO: tooltips
+    'tooltip': "sets the current sprite's horizontal position, 0 being at the left of the screen and 900 being at the right",
     'helpUrl': '',
   },
   {
@@ -62,7 +84,7 @@ const blockData = [
     'previousStatement': null,
     'nextStatement': null,
     'colour': '#07ced9',
-    'tooltip': '',
+    'tooltip': "sets the current sprite's vertical position, 0 being at the top of the screen and 1600 being at the bottom",
     'helpUrl': '',
   },
   {
@@ -78,7 +100,7 @@ const blockData = [
     'previousStatement': null,
     'nextStatement': null,
     'colour': '#07ced9',
-    'tooltip': '',// TODO: tooltips
+    'tooltip': '',
     'helpUrl': '',
   },
   {
@@ -87,7 +109,7 @@ const blockData = [
     'args0': [],
     'output': 'Number',
     'colour': '#07ced9',
-    'tooltip': '',
+    'tooltip': 'gets the current horizonatl position',
     'helpUrl': '',
   },
   {
@@ -96,7 +118,7 @@ const blockData = [
     'args0': [],
     'output': 'Number',
     'colour': '#07ced9',
-    'tooltip': '',
+    'tooltip': 'gets the current vertical position',
     'helpUrl': '',
   },
   {
@@ -114,39 +136,97 @@ const blockData = [
     ],
     "colour": '#07ced9'
   },
-  // {
-  //   "type": "set_sprite",
-  //   "message0": "drop down: %1",
-  //   "args0": [
-  //     {
-  //       "type": "field_dropdown",
-  //       "name": "SPRITENAME",
-  //       "options": [
-  //         [ "🤔", "ITEM1" ],
-  //         [ "💪", "ITEM2" ],
-  //         [ "✅", "ITEM2" ],
-  //       ]
-  //     }
-  //   ],
-  //   "colour": '#07ced9'
-  // }
   {
-    'type': 'sprite_url',
-    'message0': 'Set sprite image to (https://) %1',
-    'args0': [
+    "type": "set_sprite",
+    "message0": "Set sprite %1",
+    "args0": [
       {
-        'type': 'input_value',
-        'name': 'URL',
-        'check': 'String',
-      },
+        "type": "field_dropdown",
+        "name": "SPRITENAME",
+        "options": [
+          // ...emojis.map(e => [e, e])
+          ...emojis
+        ]
+      }
     ],
-    'previousStatement': null,
-    'nextStatement': null,
     "colour": '#07ced9',
-    'tooltip': '',
+    "previousStatement": null,
+    "nextStatement" : null
+  },
+  {
+    'type': 'mouse_x',
+    'message0': 'mouse x position',
+    'args0': [],
+    'output': 'Number',
+    'colour': '#07ced9',
+    'tooltip': 'the horizontal position of the mouse, ranging from 0 to 900',
     'helpUrl': '',
   },
+  {
+    'type': 'mouse_y',
+    'message0': 'mouse y position',
+    'args0': [],
+    'output': 'Number',
+    'colour': '#07ced9',
+    'tooltip': 'the vertical position of the mouse, ranging from 0 to 1600',
+    'helpUrl': '',
+  },
+  {
+    "type": "this_touching",
+    "message0": "touching %1",
+    "args0": [
+      {
+        "type": "input_dummy",
+        "name": "INPUT",
+      }
+    ],
+    "extensions": ["dynamic_menu_extension"],
+    "colour": '#07ced9',
+    "output": 'Boolean'
+  },
+  // {
+  //   'type': 'sprite_url',
+  //   'message0': 'Set sprite image to (https://) %1',
+  //   'args0': [
+  //     {
+  //       'type': 'input_value',
+  //       'name': 'URL',
+  //       'check': 'String',
+  //     },
+  //   ],
+  //   'previousStatement': null,
+  //   'nextStatement': null,
+  //   "colour": '#07ced9',
+  //   'tooltip': '',
+  //   'helpUrl': '',
+  // },// output: "String"? not tested
 ]
+
+let lastRegeneratedWorkspace;
+let skipIndex;
+Blockly.Extensions.register('dynamic_menu_extension',
+  function() {
+    this.getInput('INPUT')
+      .appendField(
+      new Blockly.FieldDropdown(
+        function() {
+          const arr = [['mouse-pointer', 'mouse']];
+          const seenEmoji = {};
+          if(lastRegeneratedWorkspace !== window.workspaceName){
+            skipIndex = Object.keys(window.codes).findIndex(c => c === window.workspaceName);
+            if(skipIndex !== -1) lastRegeneratedWorkspace = window.workspaceName;
+          }
+          for(let i = 0; i < entities.length; i++){
+            if(i === skipIndex) continue;// TODO: "clones of" x instead of just listing out all the current clones bc that can break. 
+            arr.push([entities[i].emoji + (seenEmoji[entities[i].emoji] > 0 ? ` (${seenEmoji[entities[i].emoji]})` : ''), entities[i].id.toString()]);
+            if(seenEmoji[entities[i].emoji] === undefined) seenEmoji[entities[i].emoji] = 1;
+            else seenEmoji[entities[i].emoji]++;
+          }
+          return arr;
+        }
+      ), 'SPRITE_ID');
+  }
+);
 
 // Create the block definitions for the JSON-only blocks.
 // This does not register their definitions with Blockly.

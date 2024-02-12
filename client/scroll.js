@@ -1,5 +1,5 @@
 import Utils from './utils.js';
-const { until, SCROLL_PARAMS, isEditor } = Utils;
+const { until, isEditor } = Utils;
 
 let nextCode;
 const nextCodeLoaded = () => { return nextCode !== undefined; };
@@ -11,6 +11,7 @@ if(isEditor === true){
     getNextCode = async () => {
         await until(() => { return false; })
     };
+    scroll = () => {};
 }
 
 // get first code
@@ -98,41 +99,7 @@ window.removeScript = function removeScript(){
     window.tickFunctions.length = window.entities.length = 0;
 }
 
-// scrolling event listeners
-// TODO: When games require input convert this to mousedownfunctions.push
-let dragging = false;
-let totalDist = 0;
-let dragStartTime;
-
-// testing really fast
-window.onmousedown = () => {
-    dragging = true;
-    totalDist = 0;
-    dragStartTime = Date.now();
-}
-
-window.onmousemove = (e) => {
-    if(dragging === false) return;
-
-    totalDist -= e.movementY;
-
-    if(totalDist > SCROLL_PARAMS.sensitivity){
-        const scrollTime = (Date.now() - dragStartTime);
-        const averageSpeed = totalDist / scrollTime;
-        if(averageSpeed > SCROLL_PARAMS.minAvgSpeed && scrollTime < SCROLL_PARAMS.maxScrollTime){
-            dragging = false;
-            scroll();
-        }
-    }
-}
-
-window.onmouseup = () => {
-    dragging = false;
-}
-
-window.onmouseout = () => {
-    dragging = false;
-}
+export default scroll;
 
 // document.addEventListener('touchstart', handleTouchStart, false);        
 // document.addEventListener('touchmove', handleTouchMove, false);

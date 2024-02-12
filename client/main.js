@@ -10,12 +10,14 @@ window.tickFunctions = [];
 window.entities = [];
 
 import './gamefns.js';
-import './scroll.js';
+import './input.js';
 
 import Utils from './utils.js';
 const { isEditor } = Utils;
 
-const TAU = Math.PI * 2;
+let cachedFontSize = -1;
+
+// const TAU = Math.PI * 2;
 window.render = () => {
     if(window.scrollAnimation < 1){
         window.scrollAnimation += 0.032;// TODO: dt
@@ -35,11 +37,20 @@ window.render = () => {
             continue;
         }
 
-        ctx.fillStyle = 'black';
-        ctx.beginPath();
-        ctx.arc(entities[i].x, entities[i].y, entities[i].r, 0, TAU);
-        ctx.fill();
-        ctx.closePath();
+        // if(entities[i].emoji !== undefined){
+            if(cachedFontSize !== entities[i].r * 2){
+                ctx.font = `${entities[i].r*2}px "Times New Roman"`;
+                cachedFontSize = entities[i].r * 2;
+            }
+            ctx.fillText(entities[i].emoji, entities[i].x, entities[i].y);
+        //     continue;
+        // }
+
+        // ctx.fillStyle = 'black';
+        // ctx.beginPath();
+        // ctx.arc(entities[i].x, entities[i].y, entities[i].r, 0, TAU);
+        // ctx.fill();
+        // ctx.closePath();
     }
 
     if(window.scrollAnimation < 1){
@@ -75,7 +86,20 @@ if(isEditor !== true){
         canvas.style.transform = `scale(${scale})`;
         canvas.style.left = (window.innerWidth - canvas.width) / 2 + "px";
         canvas.style.top =  (window.innerHeight - canvas.height) / 2 +"px";
+
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        window.canvasDimensions = canvas.getBoundingClientRect();
     }
     window.addEventListener("resize", resize);
     resize();
+} else {
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    window.canvasDimensions = canvas.getBoundingClientRect();
+    setInterval(() => {
+        window.canvasDimensions = canvas.getBoundingClientRect();
+    }, 100)
 }

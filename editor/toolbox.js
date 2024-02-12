@@ -74,14 +74,26 @@ export const toolbox = {
             },
           },
         },
-        {
-          'kind': 'block',
-          'type': 'sprite_url',
-        },
         // {
         //   'kind': 'block',
-        //   'type': 'set_sprite',
+        //   'type': 'sprite_url',
         // },
+        {
+          'kind': 'block',
+          'type': 'set_sprite',
+        },
+        {
+          'kind': 'block',
+          'type': 'mouse_x',
+        },
+        {
+          'kind': 'block',
+          'type': 'mouse_y',
+        },
+        {
+          'kind': 'block',
+          'type': 'this_touching',
+        },
       ],
     },
     {
