@@ -8,6 +8,36 @@ const ctx = canvas.getContext('2d');
 window.scrollAnimation = 1;
 window.tickFunctions = [];
 window.entities = [];
+window.background = {
+    drawImg: false,
+    color: 'white',
+    img: undefined,
+    // TODO: preserve dimensions instead of drawing it stretched... or maybe a crop menu?
+    // width: canvas.width,
+    // height: canvas.height,
+    // offsetX: 0,
+    // offsetY: 0
+};
+window.defaultBackground = {
+    drawImg: false,
+    color: 'white',
+    img: undefined,
+    // TODO: preserve dimensions instead of drawing it stretched... or maybe a crop menu?
+    // width: canvas.width,
+    // height: canvas.height,
+    // offsetX: 0,
+    // offsetY: 0
+};
+window.lastBackground = {
+    drawImg: false,
+    color: 'white',
+    img: undefined,
+    // TODO: preserve dimensions instead of drawing it stretched... or maybe a crop menu?
+    // width: canvas.width,
+    // height: canvas.height,
+    // offsetX: 0,
+    // offsetY: 0
+};
 
 import './gamefns.js';
 import './input.js';
@@ -22,37 +52,50 @@ window.render = () => {
     if(window.scrollAnimation < 1){
         window.scrollAnimation += (Date.now() - firstTime) / frames * .00384;// at 120fps this is +0.032/s;
         if(window.scrollAnimation > 1) window.scrollAnimation = 1;
-        ctx.translate(0, (1-window.scrollAnimation) * canvas.height);
+        ctx.translate(0, -window.scrollAnimation * canvas.height);// not the same as the exit transform because we also want to translate (-canvas.height) in addition to (1 - window.scrollAnimation) * canvas.height
 
-        ctx.drawImage(window.lastGameImg, 0, -canvas.height);
+        // ctx.drawImage(window.lastGameImg, 0, -canvas.height);
+
+        _render(window.lastEntities, window.lastBackground);
+        ctx.translate(0, canvas.height);
     }
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0,0,canvas.width,canvas.height);
 
-    for(let i = 0; i < entities.length; i++){
-        if(entities[i].drawImg === true){
-            ctx.drawImage(entities[i].img, entities[i].x - entities[i].r, entities[i].y - entities[i].r, entities[i].r*2, entities[i].r*2);
+    _render(window.entities, window.background);
+
+    if(window.scrollAnimation < 1){
+        ctx.translate(0, (window.scrollAnimation-1) * canvas.height);
+    }
+}
+
+function _render(es, bg){
+    // can't if-else this bc what if the image isnt loaded
+    ctx.fillStyle = bg.color;
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    if(bg.drawImg === true){
+        ctx.drawImage(bg.img, 0, 0, canvas.width, canvas.height);
+    }
+    
+
+    for(let i = 0; i < es.length; i++){
+        if(es[i].drawImg === true){
+            ctx.drawImage(es[i].img, es[i].x - es[i].r, es[i].y - es[i].r, es[i].r*2, es[i].r*2);
             continue;
         }
 
-        // if(entities[i].emoji !== undefined){
-            if(cachedFontSize !== entities[i].r * 2){
-                ctx.font = `${entities[i].r*2}px "Times New Roman"`;
-                cachedFontSize = entities[i].r * 2;
+        // if(es[i].emoji !== undefined){
+            if(cachedFontSize !== es[i].r * 2){
+                ctx.font = `${es[i].r*2}px "Times New Roman"`;
+                cachedFontSize = es[i].r * 2;
             }
-            ctx.fillText(entities[i].emoji, entities[i].x, entities[i].y);
+            ctx.fillText(es[i].emoji, es[i].x, es[i].y);
         //     continue;
         // }
 
         // ctx.fillStyle = 'black';
         // ctx.beginPath();
-        // ctx.arc(entities[i].x, entities[i].y, entities[i].r, 0, TAU);
+        // ctx.arc(es[i].x, es[i].y, es[i].r, 0, TAU);
         // ctx.fill();
         // ctx.closePath();
-    }
-
-    if(window.scrollAnimation < 1){
-        ctx.translate(0, (window.scrollAnimation-1) * canvas.height);
     }
 }
 

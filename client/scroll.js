@@ -36,8 +36,16 @@ async function scroll(){
     // get old canvas for use as image
     window.scrollAnimation = 1;
     window.render();
-    window.lastGameImg = new Image();
-    window.lastGameImg.src = canvas.toDataURL();
+    // window.lastGameImg = new Image();
+    // window.lastGameImg.src = canvas.toDataURL();
+    window.lastEntities = [];
+    for(let i = 0; i < entities.length; i++){
+        window.lastEntities.push(entities[i]);
+    }
+    for(let key in window.background){
+        window.lastBackground = window.background[key];
+        window.background[key] = window.defaultBackground[key];
+    }
 
     // if we already have the next code
     if(nextCode !== undefined){
@@ -84,6 +92,7 @@ async function replaceScript(){
     removeScript();
 
     window.tickFunctions.length = window.entities.length = 0;
+    for(let key in defaultBackground) { window.background[key] = defaultBackground[key]; }
 
     const scriptElement = document.createElement('script');
     scriptElement.id = "gameScript";
@@ -97,6 +106,7 @@ window.removeScript = function removeScript(){
     const last = document.getElementById("gameScript");
     if(last !== null) last.remove();
     window.tickFunctions.length = window.entities.length = 0;
+    for(let key in defaultBackground) { window.background[key] = defaultBackground[key]; }
 }
 
 export default scroll;

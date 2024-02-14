@@ -64,7 +64,7 @@ forBlock['forever'] = function(block, generator) {
 
 forBlock['set_sprite'] = function (block, generator) {
   const sn = block.getFieldValue('SPRITENAME', Order.NONE) || "😀";
-  return `e.emoji="${sn}";`;
+  return `e.emoji="${sn}";e.drawImg=false;`;
 };
 
 forBlock['mouse_x'] = function (block, generator) {
@@ -83,7 +83,25 @@ forBlock['this_touching'] = function (block, generator) {
   return [`(e.x-entities[${objectId}].x)**2+(e.y-entities[${objectId}].y)**2<(e.r+entities[${objectId}].r)**2`, Order.NONE];
 };
 
-// forBlock['sprite_url'] = function (block, generator) {
-//   const url = generator.valueToCode(block, 'URL', Order.NONE) || "'https://memes.co.in/memes/update/uploads/2021/12/InShot_20211209_222013681.jpg'";
-//   return `e.img = new Image();\ne.img.src = ${url};\ne.img.onload=()=>{e.drawImg=true;};\n`;
-// };
+forBlock['sprite_url'] = function (block, generator) {
+  const url = generator.valueToCode(block, 'URL', Order.NONE) || "'https://memes.co.in/memes/update/uploads/2021/12/InShot_20211209_222013681.jpg'";
+  const setImg = generator.provideFunction_(
+    'setImg',
+    `function ${generator.FUNCTION_NAME_PLACEHOLDER_}(e,src){e.drawImg=true;if(e.img?.src === src){return;}e.img=new Image();e.img.src=src;}`
+  );
+  return `${setImg}(e,${url});\n`;
+};
+
+forBlock['bg_color'] = function (block, generator) {
+  const sn = block.getFieldValue('COLOR', Order.NONE) || "white";
+  return `background.color="${sn}";background.drawImg=false;\n`;
+};
+
+forBlock['bg_image'] = function (block, generator) {
+  const url = generator.valueToCode(block, 'URL', Order.NONE) || "'https://memes.co.in/memes/update/uploads/2021/12/InShot_20211209_222013681.jpg'";
+  const setBgImg = generator.provideFunction_(
+    'setBgImg',
+    `function ${generator.FUNCTION_NAME_PLACEHOLDER_}(src){background.drawImg=true;if(background.img?.src===src){return;}background.img=new Image();background.img.src=src;}`
+  );
+  return `${setBgImg}(${url});\n`;
+};

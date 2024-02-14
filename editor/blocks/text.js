@@ -154,6 +154,35 @@ const blockData = [
     "nextStatement" : null
   },
   {
+    "type": "bg_color",
+    "message0": "Set background color to %1",
+    "args0": [
+      {
+        "type": "field_colour",
+        "name": "COLOR",
+      }
+    ],
+    "colour": '#07ced9',
+    "previousStatement": null,
+    "nextStatement" : null,
+  },
+  {
+    'type': 'bg_image',
+    'message0': 'Set background image to %1',
+    'args0': [
+      {
+        'type': 'input_value',
+        'name': 'URL',
+        'check': 'String',
+      },
+    ],
+    'previousStatement': null,
+    'nextStatement': null,
+    "colour": '#07ced9',
+    'tooltip': 'sets the background image to a url on the internet. A url should look something like: https://example.com',
+    'helpUrl': '',
+  },
+  {
     'type': 'mouse_x',
     'message0': 'mouse x position',
     'args0': [],
@@ -184,22 +213,22 @@ const blockData = [
     "colour": '#07ced9',
     "output": 'Boolean'
   },
-  // {
-  //   'type': 'sprite_url',
-  //   'message0': 'Set sprite image to (https://) %1',
-  //   'args0': [
-  //     {
-  //       'type': 'input_value',
-  //       'name': 'URL',
-  //       'check': 'String',
-  //     },
-  //   ],
-  //   'previousStatement': null,
-  //   'nextStatement': null,
-  //   "colour": '#07ced9',
-  //   'tooltip': '',
-  //   'helpUrl': '',
-  // },// output: "String"? not tested
+  {
+    'type': 'sprite_url',
+    'message0': 'Set sprite image to %1',
+    'args0': [
+      {
+        'type': 'input_value',
+        'name': 'URL',
+        'check': 'String',
+      },
+    ],
+    'previousStatement': null,
+    'nextStatement': null,
+    "colour": '#07ced9',
+    'tooltip': 'sets the sprite image to a url on the internet. A url should look something like: https://example.com',
+    'helpUrl': '',
+  },
 ]
 
 Blockly.Extensions.register('dynamic_menu_extension',

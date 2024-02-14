@@ -71,6 +71,7 @@ const runCode = () => {
   codeDiv.innerText = allCode;
 
   window.entities.length = window.tickFunctions.length = 0;
+  for(let key in defaultBackground) { window.background[key] = defaultBackground[key]; }
 
   eval(allCode);
 };
