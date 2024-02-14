@@ -43,7 +43,7 @@ async function scroll(){
         window.lastEntities.push(entities[i]);
     }
     for(let key in window.background){
-        window.lastBackground = window.background[key];
+        window.lastBackground[key] = window.background[key];
         window.background[key] = window.defaultBackground[key];
     }
 
