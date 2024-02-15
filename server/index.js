@@ -166,10 +166,10 @@ app.get("/:filename", (res, req) => {
     });
 
     // hacky fix
-    if(path.endsWith('svg')){
-        path = 'editor/dist' + req.getUrl();
-        console.log(path);
-    }
+    // if(path.endsWith('svg')){
+    //     path = 'editor/dist' + req.getUrl();
+    //     console.log(path);
+    // }
 
     // TODO: to avoid all of this garbage use publicPath: '/editor/dist' and make sep routes for those files
     // if(path.endsWith('svg')){
