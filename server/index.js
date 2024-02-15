@@ -166,7 +166,7 @@ app.get("/:filename", (res, req) => {
     });
 
     // hacky fix
-    if(path.endsWith('png')){
+    if(path.endsWith('svg')){
         path = 'editor/dist' + req.getUrl();
         console.log(path);
     }
