@@ -188,20 +188,25 @@ hr {
     text-align: center;
     font-size: 70px;
     transform: translate(-50%, 0); 
+    user-select: none;
 }
 
 .spriteworkspaceimg {
     width: 70px;
     height: 70px;
     margin: -5px;
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
 .spriteworkspacelabel {
     margin: -20px;
     font-size: 20px;
+    user-select: none;
 }
 
 .bigspriteworkspacelabel {
     font-size: 42px;
     font-family: sans-serif;
+    user-select: none;
 }
