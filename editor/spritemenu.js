@@ -153,7 +153,7 @@ window.addEventListener("resize", () => {
 
     const minimumDimension = Math.min(window.innerWidth, window.innerHeight);
 
-    for(let i = 0; i < newEntityContainer.children.length-2/*dont count last 2 elems, they're special cases*/; i++){
+    for(let i = 0; i < newEntityContainer.children.length-/*2*/1/*dont count last element, it's not a button*/; i++){
         const newBtn = newEntityContainer.children[i];
         
         const angle = Math.PI * 2 * (i+1) / (window.entities.length+1);
