@@ -77,6 +77,16 @@ export const toolbox = {
         {
           'kind': 'block',
           'type': 'sprite_url',
+          'inputs': {
+            'URL': {
+              'shadow': {
+                'type': 'text',
+                'fields': {
+                  'TEXT': "http://tinyurl.com/dwayne-t-rj",
+                },
+              },
+            },
+          },
         },
         {
           'kind': 'block',
@@ -89,6 +99,34 @@ export const toolbox = {
         {
           'kind': 'block',
           'type': 'bg_image',
+          'inputs': {
+            'URL': {
+              'shadow': {
+                'type': 'text',
+                'fields': {
+                  'TEXT': "http://tinyurl.com/gd-bcg",
+                },
+              },
+            },
+          },
+        },
+        {
+          'kind': 'block',
+          'type': 'set_music',
+          'inputs': {
+            'URL': {
+              'shadow': {
+                'type': 'text',
+                'fields': {
+                  'TEXT': "https://www.youtube.com/watch?v=i_7ekMgvRIk",
+                },
+              },
+            },
+          },
+        },
+        {
+          'kind': 'block',
+          'type': 'stop_music'
         },
         {
           'kind': 'block',

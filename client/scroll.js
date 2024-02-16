@@ -91,8 +91,8 @@ async function getNextCode(){
 async function replaceScript(){
     removeScript();
 
-    window.tickFunctions.length = window.entities.length = 0;
-    for(let key in defaultBackground) { window.background[key] = defaultBackground[key]; }
+    window.resetGame();
+    stopMusic();
 
     const scriptElement = document.createElement('script');
     scriptElement.id = "gameScript";
@@ -105,8 +105,13 @@ async function replaceScript(){
 window.removeScript = function removeScript(){
     const last = document.getElementById("gameScript");
     if(last !== null) last.remove();
-    window.tickFunctions.length = window.entities.length = 0;
-    for(let key in defaultBackground) { window.background[key] = defaultBackground[key]; }
+    window.resetGame();
+    stopMusic();
 }
+
+window.resetGame = () => {
+    window.entities.length = window.tickFunctions.length = 0;
+    for(let key in defaultBackground) { window.background[key] = defaultBackground[key]; }
+}  
 
 export default scroll;

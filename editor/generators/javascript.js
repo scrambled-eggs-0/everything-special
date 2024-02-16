@@ -78,7 +78,7 @@ forBlock['mouse_y'] = function (block, generator) {
 forBlock['this_touching'] = function (block, generator) {
   const objectId = block.getFieldValue('SPRITE_ID', Order.NONE);
   if(objectId === 'mouse'){
-    return ['(e.x-mouseX)**2+(e.y-mouseY)**2<e.r**2', Order.NONE];
+    return ['((e.x-mouseX)**2+(e.y-mouseY)**2<e.r**2 && mouseX !== 0 && mouseX !== 900 && mouseY !== 0 && mouseY !== 1600)', Order.NONE];
   }
   return [`(e.x-entities[${objectId}].x)**2+(e.y-entities[${objectId}].y)**2<(e.r+entities[${objectId}].r)**2`, Order.NONE];
 };
@@ -104,4 +104,13 @@ forBlock['bg_image'] = function (block, generator) {
     `function ${generator.FUNCTION_NAME_PLACEHOLDER_}(src){background.drawImg=true;if(background.img?.src===src){return;}background.img=new Image();background.img.src=src;}`
   );
   return `${setBgImg}(${url});\n`;
+};
+
+forBlock['set_music'] = function (block, generator) {
+  const url = generator.valueToCode(block, 'URL', Order.NONE) || "'https://www.youtube.com/watch?v=i_7ekMgvRIk'";
+  return `playMusic(${url});\n`;
+};
+
+forBlock['stop_music'] = function (block, generator) {
+  return `stopMusic();\n`;
 };

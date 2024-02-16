@@ -70,10 +70,14 @@ const runCode = () => {
 
   codeDiv.innerText = allCode;
 
-  window.entities.length = window.tickFunctions.length = 0;
-  for(let key in defaultBackground) { window.background[key] = defaultBackground[key]; }
+  window.resetGame();
+  window.hasLoadedNewMusic = false;
 
   eval(allCode);
+
+  if(window.hasLoadedNewMusic === false){
+    window.stopMusic();
+  }
 };
 
 let ws;
@@ -81,7 +85,7 @@ export const changeWorkspace = (name) => {
   // save and previous if it exists
   if(ws) {
     save(ws, workspaceName);
-    (document.querySelector('.injectionDiv') ?? {remove:()=>{}}).remove();
+    // (document.querySelector('.injectionDiv') ?? {remove:()=>{}}).remove();
   }
 
   ws = Blockly.inject(blocklyDiv, {toolbox, zoom, theme});

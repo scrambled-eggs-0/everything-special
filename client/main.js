@@ -173,3 +173,5 @@ if(isEditor !== true){
         window.canvasDimensions = canvas.getBoundingClientRect();
     }, 100)
 }
+
+import './sound.js';
