@@ -147,6 +147,8 @@ function uploadCode(){
       });
 }
 
+Blockly.Events.disable();
+
 changeWorkspace('default');
 
 const ls = { ...localStorage };
@@ -157,4 +159,5 @@ for(let key in ls){
 }
 
 changeWorkspace('default');
+Blockly.Events.enable();
 window.codeLoaded = true;
