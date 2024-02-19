@@ -62,6 +62,14 @@ export default /*const toolbox =*/ {
         },
         {
           'kind': 'block',
+          'type': 'mouse_down',
+        },
+        {
+          'kind': 'block',
+          'type': 'mouse_up',
+        },
+        {
+          'kind': 'block',
           'type': 'set_size',
           'inputs': {
             'S': {

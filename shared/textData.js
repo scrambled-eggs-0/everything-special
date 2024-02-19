@@ -125,6 +125,36 @@ export default {
       "colour": '#07ced9'
     },
     {
+      "type": "mouse_down",
+      "message0": "when mouse clicked",
+      "args0": [
+        
+      ],
+      "message1": "%1",
+      "args1": [
+        {
+          "type": "input_statement",
+          "name": "CODE_INSIDE"
+        }
+      ],
+      "colour": '#07ced9'
+    },
+    {
+      "type": "mouse_up",
+      "message0": "when mouse released",
+      "args0": [
+        
+      ],
+      "message1": "%1",
+      "args1": [
+        {
+          "type": "input_statement",
+          "name": "CODE_INSIDE"
+        }
+      ],
+      "colour": '#07ced9'
+    },
+    {
       "type": "set_sprite",
       "message0": "Set sprite %1",
       "args0": [
@@ -255,16 +285,16 @@ export default {
         .appendField(
         new Blockly.FieldDropdown(
         function() {
-            const arr = [['mouse-pointer', 'mouse']];
-            const seenEmoji = {};
-            for(let i = 0; i < entities.length; i++){
-            if(window.workspaceToId[window.workspaceName] === i && window.codeLoaded === true) continue;
+          const arr = [['mouse-pointer', 'mouse']];
+          const seenEmoji = {};
+          for(let i = 0; i < entities.length; i++){
+          if(window.workspaceToId[window.workspaceName] === i && window.codeLoaded === true) continue;
             // TODO: "clones of" x instead of just listing out all the current clones bc that can break. 
             arr.push([entities[i].emoji + (seenEmoji[entities[i].emoji] > 0 ? ` (${seenEmoji[entities[i].emoji]})` : ''), entities[i].id.toString()]);
             if(seenEmoji[entities[i].emoji] === undefined) seenEmoji[entities[i].emoji] = 1;
             else seenEmoji[entities[i].emoji]++;
-            }
-            return arr;
+          }
+          return arr;
         }
         ), 'SPRITE_ID');
       };
