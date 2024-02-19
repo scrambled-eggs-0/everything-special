@@ -23,6 +23,7 @@ Blockly.common.defineBlocks(blocks);
 Object.assign(javascriptGenerator.forBlock, forBlock);
 
 const validatorWorkspace = new Blockly.Workspace();
+Blockly.Events.disable();
 
 export default function validate(workspaces) {
     const codes = [];
@@ -37,5 +38,5 @@ export default function validate(workspaces) {
         return false;
     }
 
-    return concatCode(codes);
+    return concatCode(codes).replaceAll('var ', 'let ');
 }

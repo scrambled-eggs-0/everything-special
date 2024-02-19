@@ -59,7 +59,7 @@ window.workspaceToId = {
 // const importData = { ...localStorage };
 
 function getAllCode(){
-  const code = javascriptGenerator.workspaceToCode(ws);
+  const code = javascriptGenerator.workspaceToCode(ws).replaceAll('var ', 'let ');
 
   codes[workspaceName] = code;
 
