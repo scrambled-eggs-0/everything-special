@@ -2,11 +2,12 @@ import './index.css';
 import '../client/main.js';
 
 import * as Blockly from 'blockly';
-import {blocks} from './blocks/text';
-import {forBlock} from './generators/javascript';
+import {blocks} from './blocks/text.js';
+import forBlock from '../shared/forBlock.js';
 import {javascriptGenerator} from 'blockly/javascript';
 import {save, load} from './serialization';
-import {toolbox} from './toolbox';
+import toolbox from '../shared/toolbox.js';
+import concatCode from '../shared/concatCode.js';
 
 // Register the blocks and generator with Blockly
 Blockly.common.defineBlocks(blocks);
@@ -62,7 +63,7 @@ function getAllCode(){
 
   codes[workspaceName] = code;
 
-  return '{\n' + Object.keys(codes).map((c,i) => {window.workspaceToId[c] = i; return 'const e = {x:450,y:800,angle:0,img:undefined,drawImg:false,r:100,emoji:"😀"};\nI(e);\n' + codes[c];}).join('}\n{') + '\n}';
+  return concatCode(codes);
 }
 
 const runCode = () => {
@@ -121,15 +122,18 @@ import './spritemenu.js';
 const publishBtn = document.getElementById('publish');
 publishBtn.onclick = () => {
   if(confirm('Ready to publish?') !== true) return;
-  uploadCode(getAllCode());
+  uploadCode();
 }
 
 const uploadUrl = `${location.origin}/upload`;
-function uploadCode(code){
-  const blob = new Blob([code], { type: 'application/javascript' });
+function uploadCode(){
+  const blob = new Blob([Object.values(localStorage).join('Z__DLMTR')], { type: 'application/javascript' });
 
   const formData = new FormData();
   formData.append('file', blob, 'upload.js');
+
+  console.log(Object.values(localStorage).join('Z__DLMTR'));
+  console.log({uploadUrl});
 
   fetch(uploadUrl, {
       method: 'POST',

@@ -4,12 +4,51 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Order} from 'blockly/javascript';
+// we only need Order here, so don't import from blockly
+const Order = {
+  ATOMIC: 0,
+  NEW: 1.1,
+  MEMBER: 1.2,
+  FUNCTION_CALL: 2,
+  INCREMENT: 3,
+  DECREMENT: 3,
+  BITWISE_NOT: 4.1,
+  UNARY_PLUS: 4.2,
+  UNARY_NEGATION: 4.3,
+  LOGICAL_NOT: 4.4,
+  TYPEOF: 4.5,
+  VOID: 4.6,
+  DELETE: 4.7,
+  AWAIT: 4.8,
+  EXPONENTIATION: 5.0,
+  MULTIPLICATION: 5.1,
+  DIVISION: 5.2,
+  MODULUS: 5.3,
+  SUBTRACTION: 6.1,
+  ADDITION: 6.2,
+  BITWISE_SHIFT: 7,
+  RELATIONAL: 8,
+  IN: 8,
+  INSTANCEOF: 8,
+  EQUALITY: 9,
+  BITWISE_AND: 10,
+  BITWISE_XOR: 11,
+  BITWISE_OR: 12,
+  LOGICAL_AND: 13,
+  LOGICAL_OR: 14,
+  CONDITIONAL: 15,
+  ASSIGNMENT: 16,
+  YIELD: 17,
+  COMMA: 18,
+  NONE: 99,
+};
 
 // Export all the code generators for our custom blocks,
 // but don't register them with Blockly yet.
 // This file has no side effects!
-export const forBlock = Object.create(null);
+
+const forBlock = Object.create(null);
+// export default /*const forBlock =*/ Object.create(null);
 
 // forBlock['add_text'] = function (block, generator) {
 //   const text = generator.valueToCode(block, 'TEXT', Order.NONE) || "''";
@@ -114,3 +153,5 @@ forBlock['set_music'] = function (block, generator) {
 forBlock['stop_music'] = function (block, generator) {
   return `stopMusic();\n`;
 };
+
+export default forBlock;

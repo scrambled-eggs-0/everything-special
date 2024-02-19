@@ -1,7 +1,8 @@
-const multipart = require('parse-multipart');
-const uWS = require('uWebSockets.js');
-const db = require('./db.js');
-const fs = require('fs');
+import multipart from 'parse-multipart';
+import uWS from 'uWebSockets.js';
+import db from './db.js';
+import fs from 'fs';
+import validateCode from './validateCode.js';
 
 const PORT = 3000;
 
@@ -141,8 +142,15 @@ app.post('/upload', (res, req) => {
 
             // Assume the first part is the file
             const fileContent = parts[0].data;
+            
+            // verification
+            const textContent = validateCode(fileContent.toString().split('Z__DLMTR'));
 
-            db.uploadFile(fileContent);
+            if(textContent === false){
+                return;
+            }
+
+            db.uploadFile(Buffer.from(textContent, 'utf8'));
         }
     });
     

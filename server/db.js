@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion, GridFSBucket } = require('mongodb');
+import { MongoClient, ServerApiVersion, GridFSBucket } from 'mongodb';
 
 const credentials = 'cert.pem';
 const client = new MongoClient('mongodb+srv://omni.afimhbq.mongodb.net/?authSource=%24external&authMechanism=MONGODB-X509&retryWrites=true&w=majority', {
@@ -99,7 +99,7 @@ function getRandomFileName(){
     return fileNames[Math.floor(Math.random() * fileNames.length)]
 }
 
-module.exports = {
+export default {
     uploadFile,
     getFile,
     getRandomFileName,
