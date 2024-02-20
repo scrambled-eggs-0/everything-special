@@ -284,18 +284,35 @@ export default {
         this.getInput('INPUT')
         .appendField(
         new Blockly.FieldDropdown(
-        function() {
-          const arr = [['mouse-pointer', 'mouse']];
-          const seenEmoji = {};
-          for(let i = 0; i < entities.length; i++){
-          if(window.workspaceToId[window.workspaceName] === i && window.codeLoaded === true) continue;
-            // TODO: "clones of" x instead of just listing out all the current clones bc that can break. 
-            arr.push([entities[i].emoji + (seenEmoji[entities[i].emoji] > 0 ? ` (${seenEmoji[entities[i].emoji]})` : ''), entities[i].id.toString()]);
-            if(seenEmoji[entities[i].emoji] === undefined) seenEmoji[entities[i].emoji] = 1;
-            else seenEmoji[entities[i].emoji]++;
+          function() {
+            const arr = [['mouse-pointer', 'mouse']];
+
+            // if we haven't loaded all the entities yet, then just keep the status quo
+            if(window.codeLoaded !== true){
+              const entityLength = window.initialLocalStorageLen;
+              for(let i = 0; i < entityLength; i++){
+                arr.push(['loading...', i.toString()]);
+              }
+              return arr;
+            }
+
+            for(let wsName in window.workspaceToId){
+              // exclude self
+              if(window.workspaceName === wsName) continue;
+
+              // id
+              const i = window.workspaceToId[wsName];
+
+              // TODO: "clones of" x instead of just listing out all the current clones bc that can break. 
+              arr.push([
+                entities[i].drawImg === true ?
+                  {"src": entities[i].img.src, "width": 25, "height": 25, "alt": wsName } :
+                  entities[i].emoji + " " + wsName,
+                entities[i].id.toString()
+              ]);
+            }
+            return arr;
           }
-          return arr;
-        }
         ), 'SPRITE_ID');
       };
     },

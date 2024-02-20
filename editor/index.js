@@ -53,6 +53,9 @@ window.workspaceToId = {
 
 }
 
+const ls = { ...localStorage };
+window.initialLocalStorageLen = Object.keys(ls).length;
+
 // TODO: import all data into a fake blockly div so that it can be compiled to code (dependency injection)
 // Blockly.serialization.workspaces.load(JSON.parse(data), workspace, false);
 
@@ -151,7 +154,6 @@ Blockly.Events.disable();
 
 changeWorkspace('default');
 
-const ls = { ...localStorage };
 for(let key in ls){
   window.workspaceName = key;
   load(ws, workspaceName);
@@ -160,4 +162,5 @@ for(let key in ls){
 
 changeWorkspace('default');
 Blockly.Events.enable();
+delete window.initialLocalStorageLen;
 window.codeLoaded = true;
