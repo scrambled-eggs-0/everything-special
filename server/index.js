@@ -2,7 +2,7 @@ import multipart from 'parse-multipart';
 import uWS from 'uWebSockets.js';
 import db from './db.js';
 import fs from 'fs';
-import validateCode from './validateCode.js';
+import validateCode from './validation/validateCode.js';
 
 const PORT = 3000;
 
