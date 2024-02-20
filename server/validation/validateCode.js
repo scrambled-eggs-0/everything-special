@@ -5,7 +5,7 @@ const Blockly = require('blockly');// THIS is the error
 const libraryBlocks = require('blockly/blocks');
 const { javascriptGenerator } = require('blockly/javascript');
 
-global.window = {workspaceToId: {}, codeLoaded: false/*triggers safeties for dynamic dropdowns*/, initialLocalStorageLen: 0};
+global.window = {workspaceNames: [], codeLoaded: false/*triggers safeties for dynamic dropdowns*/, initialLocalStorageLen: 0};
 global.entities = [];
 
 import blocks from './text.js';
@@ -30,7 +30,6 @@ export default function validate(workspaces) {
     const codes = [];
     try {
         window.initialLocalStorageLen = workspaces.length;
-        console.log(workspaces.length);
         for(let i = 0; i < workspaces.length; i++){
             Blockly.serialization.workspaces.load(JSON.parse(workspaces[i]), validatorWorkspace);
             const code = javascriptGenerator.workspaceToCode(validatorWorkspace);
@@ -41,7 +40,7 @@ export default function validate(workspaces) {
         return false;
     }
     
-    // console.log(concatCode(codes).replaceAll('var ', 'let '));
-    // return false;
-    return concatCode(codes).replaceAll('var ', 'let ');
+    console.log(concatCode(codes).replaceAll('var ', 'let '));
+    return false;
+    // return concatCode(codes).replaceAll('var ', 'let ');
 }

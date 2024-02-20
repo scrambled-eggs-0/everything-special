@@ -131,7 +131,7 @@ forBlock['this_touching'] = function (block, generator) {
   if(objectId === 'mouse'){
     return ['((e.x-mouseX)**2+(e.y-mouseY)**2<e.r**2 && !window.mouseOut)', Order.NONE];
   }
-  return [`entities[${objectId}]!==undefined&&((e.x-entities[${objectId}].x)**2+(e.y-entities[${objectId}].y)**2<(e.r+entities[${objectId}].r)**2)`, Order.NONE];
+  return [`(entities[${objectId}]!==undefined&&((e.x-entities[${objectId}].x)**2+(e.y-entities[${objectId}].y)**2<(e.r+entities[${objectId}].r)**2))`, Order.NONE];
 };
 
 forBlock['sprite_url'] = function (block, generator) {

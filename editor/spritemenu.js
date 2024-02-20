@@ -20,13 +20,11 @@ newEntityBtn.onclick = () => {
 
   newEntityContainer.classList.remove("hidden");
 
-  const wsNames = Object.keys(window.workspaceToId);
-  for(let i = 0; i < wsNames.length; i++){
-    const wsName = wsNames[i];
-    const id = window.workspaceToId[wsName];
-    const entity = window.entities[id];
+  for(let i = 0; i < window.workspaceNames.length; i++){
+    const wsName = window.workspaceNames[i];
+    const entity = window.entities[i];
 
-    const angle = Math.PI * 2 * (i+1) / (wsNames.length+1);
+    const angle = Math.PI * 2 * (i+1) / (window.workspaceNames.length+1);
 
     const newBtn = document.createElement('button');
     newBtn.type = 'button';
@@ -40,7 +38,7 @@ newEntityBtn.onclick = () => {
       newBtn.appendChild(img); 
     } else {
       const p = document.createElement('p');
-      p.innerText = window.entities[id].emoji;
+      p.innerText = entity.emoji;
       p.style.margin = '0';
       newBtn.appendChild(p);
     }
@@ -55,7 +53,7 @@ newEntityBtn.onclick = () => {
     newBtn.style.top = window.innerHeight / 2 + Math.sin(angle) * minimumDimension * 0.3 + 'px';
 
     newBtn.onclick = () => {
-      window.changeWorkspace(wsName);
+      window.changeWorkspace(i);
       while(newEntityContainer.firstChild){
         newEntityContainer.firstChild.remove();
       }
@@ -96,7 +94,8 @@ newEntityBtn.onclick = () => {
     newBtn.onclick = () => {
       const newName = prompt('enter workspace name');
       if(newName === null) return;
-      window.changeWorkspace(newName);
+      window.workspaceNames.push(newName);
+      window.changeWorkspace(window.workspaceNames.length-1);
       while(newEntityContainer.firstChild){
         newEntityContainer.firstChild.remove();
       }

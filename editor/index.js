@@ -45,26 +45,30 @@ const theme = Blockly.Theme.defineTheme('defaultTheme', {
   // 'startHats': true
 });
 
-const codes = window.codes = {
-  /*windowName: code*/
-};
+// ids go 0-n
+// codes
+// entities
+// workspaceNames
 
-window.workspaceToId = {
+// to change: window.codes from object of windowName index to array with id index, ✅
+// workspaceToId obselete, use workspaceNames from id ✅
+// changeWorkspace from name to id ✅
+// workspaceName changed to workspaceId ✅
+// save, load from name to id ✅
+// updating window.workspaceNames upon creating a new workspace ✅
 
-}
+const codes = window.codes = [
+  /*id: code*/
+];
 
-const ls = { ...localStorage };
-window.initialLocalStorageLen = Object.keys(ls).length;
-
-// TODO: import all data into a fake blockly div so that it can be compiled to code (dependency injection)
-// Blockly.serialization.workspaces.load(JSON.parse(data), workspace, false);
-
-// const importData = { ...localStorage };
+window.workspaceNames = [
+  /*id: workspaceName*/
+]
 
 function getAllCode(){
   const code = javascriptGenerator.workspaceToCode(ws).replaceAll('var ', 'let ');
 
-  codes[workspaceName] = code;
+  codes[window.workspaceId] = code;
 
   return concatCode(codes);
 }
@@ -85,16 +89,16 @@ const runCode = () => {
 };
 
 let ws;
-export const changeWorkspace = window.changeWorkspace = (name) => {
+export const changeWorkspace = window.changeWorkspace = (id) => {
   // save and previous if it exists
   if(ws) {
-    save(ws, workspaceName);
+    save(ws, window.workspaceId);
     (document.querySelector('.injectionDiv') ?? {remove:()=>{}}).remove();
   }
 
   ws = Blockly.inject(blocklyDiv, {toolbox, zoom, theme});
-  window.workspaceName = name;
-  load(ws, workspaceName);
+  window.workspaceId = id;
+  load(ws, window.workspaceId);
 
   // run code again
   runCode();
@@ -116,7 +120,7 @@ export const changeWorkspace = window.changeWorkspace = (name) => {
     // UI events are things like scrolling, zooming, etc.
     // No need to save after one of these.
     if (e.isUiEvent) return;
-    save(ws, workspaceName);
+    save(ws, window.workspaceId);
   });
 }
 
@@ -130,12 +134,12 @@ publishBtn.onclick = () => {
 
 const uploadUrl = `${location.origin}/upload`;
 function uploadCode(){
-  const blob = new Blob([Object.values(localStorage).join('Z__DLMTR')], { type: 'application/javascript' });
+  const blob = new Blob([codes.join('Z__DLMTR')], { type: 'application/javascript' });
 
   const formData = new FormData();
   formData.append('file', blob, 'upload.js');
 
-  console.log(Object.values(localStorage).join('Z__DLMTR'));
+  console.log(codes.join('Z__DLMTR'));
   console.log({uploadUrl});
 
   fetch(uploadUrl, {
@@ -152,15 +156,26 @@ function uploadCode(){
 
 Blockly.Events.disable();
 
-changeWorkspace('default');
+window.initialLocalStorageLen = parseInt(localStorage.getItem('wsLen') ?? 0);
+const initialWorkspaceNames = (localStorage.getItem('wsNames') ?? '').split(',');
 
-for(let key in ls){
-  window.workspaceName = key;
-  load(ws, workspaceName);
-  codes[workspaceName] = javascriptGenerator.workspaceToCode(ws);
+window.workspaceNames[0] = 'default';
+changeWorkspace(0);
+
+for(let i = 0; i < window.initialLocalStorageLen; i++){
+  window.workspaceId = i;
+  load(ws, i);
+  window.codes[i] = javascriptGenerator.workspaceToCode(ws);
+  window.workspaceNames[i] = initialWorkspaceNames[i];
 }
-
-changeWorkspace('default');
+changeWorkspace(0);
 Blockly.Events.enable();
-delete window.initialLocalStorageLen;
+delete window.initialLSLen;
 window.codeLoaded = true;
+
+window.onbeforeunload = () => {
+  localStorage.setItem('wsNames', window.workspaceNames.join(','));
+  localStorage.setItem('wsLen', window.workspaceNames.length);
+  // TODO: savedWorkspace
+  return null;
+}

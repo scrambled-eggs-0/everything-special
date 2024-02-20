@@ -296,12 +296,12 @@ export default {
               return arr;
             }
 
-            for(let wsName in window.workspaceToId){
+            for(let i = 0; i < entities.length; i++){
               // exclude self
-              if(window.workspaceName === wsName) continue;
+              if(window.workspaceId === i) continue;
 
-              // id
-              const i = window.workspaceToId[wsName];
+              // will be undefined on the server which is fine
+              const wsName = window.workspaceNames[i];
 
               // TODO: "clones of" x instead of just listing out all the current clones bc that can break. 
               arr.push([
