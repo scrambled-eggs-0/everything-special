@@ -52,7 +52,8 @@ function randomString(len=16){
 
 // upload file to db from buffer
 async function uploadFile(buffer){
-    const uploadStream = bucket.openUploadStream(`${randomString(16)}.js`); // , {metadata: {field: 'testfield', value: 'testvalue'}}
+    const fileName = `${randomString(16)}.js`;
+    const uploadStream = bucket.openUploadStream(fileName); // , {metadata: {field: 'testfield', value: 'testvalue'}}
     uploadStream.end(buffer);
 
     uploadStream.on('finish', () => {
@@ -64,7 +65,7 @@ async function uploadFile(buffer){
     });
 
     // TEMP, VERY INEFFICIENT !!
-    getAllFileNames().then((val) => fileNames = val);
+    fileNames.push(fileName);
 }
 
 // async function addTestUserToDb(){
