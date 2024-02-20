@@ -110,7 +110,7 @@ window.removeScript = function removeScript(){
 }
 
 window.resetGame = () => {
-    window.entities.length = window.tickFunctions.length = 0;
+    window.entities.length = window.tickFunctions.length = window.mouseUpFunctions.length = window.mouseDownFunctions.length = 0;
     for(let key in defaultBackground) { window.background[key] = defaultBackground[key]; }
 }  
 
