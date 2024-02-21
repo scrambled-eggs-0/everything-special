@@ -134,12 +134,12 @@ publishBtn.onclick = () => {
 
 const uploadUrl = `${location.origin}/upload`;
 function uploadCode(){
-  const blob = new Blob([codes.join('Z__DLMTR')], { type: 'application/javascript' });
+  const blob = new Blob([window.workspaceNames.map((_, index) => localStorage.getItem(index)).join('Z__DLMTR')], { type: 'application/javascript' });
 
   const formData = new FormData();
   formData.append('file', blob, 'upload.js');
 
-  console.log(codes.join('Z__DLMTR'));
+  console.log(window.workspaceNames.map((_, index) => localStorage.getItem(index)).join('Z__DLMTR'));
   console.log({uploadUrl});
 
   fetch(uploadUrl, {
@@ -176,6 +176,6 @@ window.codeLoaded = true;
 window.onbeforeunload = () => {
   localStorage.setItem('wsNames', window.workspaceNames.join(','));
   localStorage.setItem('wsLen', window.workspaceNames.length);
-  // TODO: savedWorkspace
+  // TODO: savedWorkspace (call it savedWs, its already present somewhere else in code)
   return null;
 }

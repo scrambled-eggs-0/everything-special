@@ -93,7 +93,7 @@ newEntityBtn.onclick = () => {
 
     newBtn.onclick = () => {
       const newName = prompt('enter workspace name');
-      if(newName === null) return;
+      if(newName === null || ['wsLen', 'wsNames', 'savedWs'].includes(newName)) return;
       window.workspaceNames.push(newName);
       window.changeWorkspace(window.workspaceNames.length-1);
       while(newEntityContainer.firstChild){

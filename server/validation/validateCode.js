@@ -40,7 +40,7 @@ export default function validate(workspaces) {
         return false;
     }
     
-    console.log(concatCode(codes).replaceAll('var ', 'let '));
-    return false;
-    // return concatCode(codes).replaceAll('var ', 'let ');
+    // console.log(concatCode(codes).replaceAll('var ', 'let '));
+    // return false;
+    return concatCode(codes).replaceAll('var ', 'let ');
 }
