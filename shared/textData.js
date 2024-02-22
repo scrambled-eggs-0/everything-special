@@ -291,8 +291,9 @@ export default {
             if(window.codeLoaded !== true){
               const entityLength = window.initialLocalStorageLen;
               for(let i = 0; i < entityLength; i++){
-                arr.push(['loading...', i.toString()]);
+                arr.push(['[entity]', i.toString()]);
               }
+              // TODO: get option loading instead of [entity].
               return arr;
             }
 
