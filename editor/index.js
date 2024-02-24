@@ -7,7 +7,6 @@ import forBlock from '../shared/forBlock.js';
 import {javascriptGenerator} from 'blockly/javascript';
 import {save, load} from './serialization';
 import toolbox from '../shared/toolbox.js';
-import concatCode from '../shared/concatCode.js';
 
 // Register the blocks and generator with Blockly
 Blockly.common.defineBlocks(blocks);
@@ -45,86 +44,58 @@ const theme = Blockly.Theme.defineTheme('defaultTheme', {
   // 'startHats': true
 });
 
-// ids go 0-n
-// codes
-// entities
-// workspaceNames
-
-// to change: window.codes from object of windowName index to array with id index, ✅
-// workspaceToId obselete, use workspaceNames from id ✅
-// changeWorkspace from name to id ✅
-// workspaceName changed to workspaceId ✅
-// save, load from name to id ✅
-// updating window.workspaceNames upon creating a new workspace ✅
-
-const codes = window.codes = [
-  /*id: code*/
-];
-
-window.workspaceNames = [
-  /*id: workspaceName*/
-]
-
-function getAllCode(){
-  const code = javascriptGenerator.workspaceToCode(ws).replaceAll('var ', 'let ');
-
-  codes[window.workspaceId] = code;
-
-  return concatCode(codes);
+function getCode(){
+  return javascriptGenerator.workspaceToCode(ws).replaceAll('var ', 'let ');
 }
 
 const runCode = () => {
-  const allCode = getAllCode();
+  const code = getCode();
 
-  codeDiv.innerText = allCode;
+  codeDiv.innerText = code;
 
   window.resetGame();
   window.hasLoadedNewMusic = false;
 
-  eval(allCode);
+  eval(code);
 
   if(window.hasLoadedNewMusic === false){
     window.stopMusic();
   }
 };
 
-let ws;
-export const changeWorkspace = window.changeWorkspace = (id) => {
-  // save and previous if it exists
-  if(ws) {
-    save(ws, window.workspaceId);
-    (document.querySelector('.injectionDiv') ?? {remove:()=>{}}).remove();
+let ws = Blockly.inject(blocklyDiv, {toolbox, zoom, theme});
+load(ws);
+
+// TODO: Get blockly div resizing when draggable dragged. Below works but is inefficient
+// let lastW = blocklyDiv.clientHeight;
+// setInterval(() => {
+//   if(lastW !== blocklyDiv.clientHeight){
+//     console.log('xd');
+//     Blockly.svgResize(ws);
+//   }
+// }, 1000)
+
+runCode();
+
+// Whenever the workspace changes meaningfully, run the code again.
+ws.addChangeListener((e) => {
+  // Don't run the code when the workspace finishes loading; we're
+  // already running it once when the application starts.
+  // Don't run the code during drags; we might have invalid state.
+  if (e.isUiEvent || e.type == Blockly.Events.FINISHED_LOADING ||
+    ws.isDragging()) {
+    return;
   }
-
-  ws = Blockly.inject(blocklyDiv, {toolbox, zoom, theme});
-  window.workspaceId = id;
-  load(ws, window.workspaceId);
-
-  // run code again
   runCode();
+});
 
-  // Whenever the workspace changes meaningfully, run the code again.
-  ws.addChangeListener((e) => {
-    // Don't run the code when the workspace finishes loading; we're
-    // already running it once when the application starts.
-    // Don't run the code during drags; we might have invalid state.
-    if (e.isUiEvent || e.type == Blockly.Events.FINISHED_LOADING ||
-      ws.isDragging()) {
-      return;
-    }
-    runCode();
-  });
-
-  // Every time the workspace changes state, save the changes to storage.
-  ws.addChangeListener((e) => {
-    // UI events are things like scrolling, zooming, etc.
-    // No need to save after one of these.
-    if (e.isUiEvent) return;
-    save(ws, window.workspaceId);
-  });
-}
-
-import './spritemenu.js';
+// Every time the workspace changes state, save the changes to storage.
+ws.addChangeListener((e) => {
+  // UI events are things like scrolling, zooming, etc.
+  // No need to save after one of these.
+  if (e.isUiEvent) return;
+  save(ws);
+});
 
 const publishBtn = document.getElementById('publish');
 publishBtn.onclick = () => {
@@ -134,13 +105,11 @@ publishBtn.onclick = () => {
 
 const uploadUrl = `${location.origin}/upload`;
 function uploadCode(){
-  const blob = new Blob([window.workspaceNames.map((_, index) => localStorage.getItem(index)).join('Z__DLMTR')], { type: 'application/javascript' });
+  save(ws);
+  const blob = new Blob([localStorage.getItem("ws")], { type: 'application/javascript' });
 
   const formData = new FormData();
   formData.append('file', blob, 'upload.js');
-
-  console.log(window.workspaceNames.map((_, index) => localStorage.getItem(index)).join('Z__DLMTR'));
-  console.log({uploadUrl});
 
   fetch(uploadUrl, {
       method: 'POST',
@@ -152,30 +121,4 @@ function uploadCode(){
       .catch(error => {
           console.error('Error uploading file:', error);
       });
-}
-
-Blockly.Events.disable();
-
-window.initialLocalStorageLen = parseInt(localStorage.getItem('wsLen') ?? 0);
-const initialWorkspaceNames = (localStorage.getItem('wsNames') ?? '').split(',');
-
-window.workspaceNames[0] = 'default';
-changeWorkspace(0);
-
-for(let i = 0; i < window.initialLocalStorageLen; i++){
-  window.workspaceId = i;
-  load(ws, i);
-  window.codes[i] = javascriptGenerator.workspaceToCode(ws);
-  window.workspaceNames[i] = initialWorkspaceNames[i];
-}
-changeWorkspace(0);
-Blockly.Events.enable();
-delete window.initialLSLen;
-window.codeLoaded = true;
-
-window.onbeforeunload = () => {
-  localStorage.setItem('wsNames', window.workspaceNames.join(','));
-  localStorage.setItem('wsLen', window.workspaceNames.length);
-  // TODO: savedWorkspace (call it savedWs, its already present somewhere else in code)
-  return null;
 }

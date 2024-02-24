@@ -144,7 +144,7 @@ app.post('/upload', (res, req) => {
             const fileContent = parts[0].data;
             
             // verification
-            const textContent = validateCode(fileContent.toString().split('Z__DLMTR'));
+            const textContent = validateCode(fileContent.toString());
 
             if(textContent === false){
                 return;

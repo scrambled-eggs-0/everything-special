@@ -11,9 +11,9 @@ import * as Blockly from 'blockly/core';
  * @param {Blockly.Workspace} workspace Blockly workspace to save.
  * @param {String} spriteId Sprite name to save workspace of.
  */
-export const save = function(workspace, spriteId) {
+export const save = function(workspace) {
   const data = Blockly.serialization.workspaces.save(workspace);
-  window.localStorage?.setItem(spriteId, JSON.stringify(data));
+  window.localStorage?.setItem("ws", JSON.stringify(data));
 };
 
 /**
@@ -21,9 +21,9 @@ export const save = function(workspace, spriteId) {
  * @param {Blockly.Workspace} workspace Blockly workspace to load into.
  * @param {String} spriteId Sprite name to save workspace of.
  */
-export const load = function(workspace, spriteId) {
-  const data = window.localStorage?.getItem(spriteId);
-  if (!data) return false;
+export const load = function(workspace) {
+  const data = window.localStorage?.getItem("ws");
+  if (!data) return;
 
   // Don't emit events during loading.
   Blockly.Events.disable();

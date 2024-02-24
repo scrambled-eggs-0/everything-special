@@ -38,13 +38,13 @@ async function scroll(){
     window.render();
     // window.lastGameImg = new Image();
     // window.lastGameImg.src = canvas.toDataURL();
-    window.lastEntities = [];
-    for(let i = 0; i < entities.length; i++){
-        window.lastEntities.push(entities[i]);
+    window.lastObstacles = [];
+    for(let i = 0; i < obstacles.length; i++){
+        window.lastObstacles.push(obstacles[i]);
     }
-    for(let key in window.background){
-        window.lastBackground[key] = window.background[key];
-        window.background[key] = window.defaultBackground[key];
+    for(let key in window.colors){
+        window.lastColors[key] = window.colors[key];
+        window.colors[key] = window.defaultColors[key];
     }
 
     // if we already have the next code
@@ -82,9 +82,10 @@ async function scroll(){
 }
 
 async function getNextCode(){
-    const response = await fetch(reqUrl);
-    if (!response.ok) throw new Error(`Failed to fetch ${reqUrl}`);
-    return response.text();
+    return 'E(1,[],[0,1,2,3],{x:200,y:200,w:500,h:1200,bounciness:1,decay:0.99})';
+    // const response = await fetch(reqUrl);
+    // if (!response.ok) throw new Error(`Failed to fetch ${reqUrl}`);
+    // return response.text();
 }
 
 // replaces code running with nextCode
@@ -110,8 +111,17 @@ window.removeScript = function removeScript(){
 }
 
 window.resetGame = () => {
-    window.entities.length = window.tickFunctions.length = window.mouseUpFunctions.length = window.mouseDownFunctions.length = 0;
-    for(let key in defaultBackground) { window.background[key] = defaultBackground[key]; }
+    window.obstacles.length = window.mouseUpFunctions.length = window.mouseDownFunctions.length = 0;
+    for(let key in window.defaultColors) { window.colors[key] = window.defaultColors[key]; }
+    window.mouseDownFunctions.push(() => {
+        if(player.dead === true){
+            player.pos.x = window.spawnPosition.x;
+            player.pos.y = window.spawnPosition.y;
+            player.dead = false;
+            player.forces.length = 0;
+            window.onmouseup();
+        }
+    })
 }  
 
 export default scroll;

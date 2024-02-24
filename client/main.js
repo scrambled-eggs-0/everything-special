@@ -1,52 +1,34 @@
 // 1 file project? Why not
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
+const canvas = window.canvas = document.getElementById('canvas');
+const ctx = window.ctx = canvas.getContext('2d');
+
+import simulate from './components.js';
 
 // run code
 // import gameData from './code.js';
 // const {tickFunctions, entities} = gameData;
-window.scrollAnimation = 1;
-window.tickFunctions = [];
-window.entities = [];
-window.background = {
-    drawImg: false,
-    color: 'white',
-    img: undefined,
-    // TODO: preserve dimensions instead of drawing it stretched... or maybe a crop menu?
-    // width: canvas.width,
-    // height: canvas.height,
-    // offsetX: 0,
-    // offsetY: 0
-};
-window.defaultBackground = {
-    drawImg: false,
-    color: 'white',
-    img: undefined,
-    // TODO: preserve dimensions instead of drawing it stretched... or maybe a crop menu?
-    // width: canvas.width,
-    // height: canvas.height,
-    // offsetX: 0,
-    // offsetY: 0
-};
-window.lastBackground = {
-    drawImg: false,
-    color: 'white',
-    img: undefined,
-    // TODO: preserve dimensions instead of drawing it stretched... or maybe a crop menu?
-    // width: canvas.width,
-    // height: canvas.height,
-    // offsetX: 0,
-    // offsetY: 0
-};
 
-import './gamefns.js';
-import './input.js';
+window.scrollAnimation = 1;
+
+window.defaultColors = {
+    tile: '#0d0d0d',// the stroke and outside of arena
+    background: '#383838',// the fillcolor
+}
+
+window.colors = {
+    tile: window.defaultColors.tile,
+    background: window.defaultColors.background,
+}
+
+window.lastColors = {
+    tile: window.defaultColors.tile,
+    background: window.defaultColors.background,
+}
 
 import Utils from './utils.js';
 const { isEditor } = Utils;
 
-let cachedFontSize = -1;
-
+// let cachedFontSize = -1;
 // const TAU = Math.PI * 2;
 window.render = () => {
     if(window.scrollAnimation < 1){
@@ -54,57 +36,104 @@ window.render = () => {
         if(window.scrollAnimation > 1) window.scrollAnimation = 1;
         ctx.translate(0, -window.scrollAnimation * canvas.height);// not the same as the exit transform because we also want to translate (-canvas.height) in addition to (1 - window.scrollAnimation) * canvas.height
 
-        // ctx.drawImage(window.lastGameImg, 0, -canvas.height);
-
-        _render(window.lastEntities, window.lastBackground);
+        _render(window.lastObstacles, window.lastColors);
         ctx.translate(0, canvas.height);
     }
 
-    _render(window.entities, window.background);
+    _render(window.obstacles, window.colors);
 
     if(window.scrollAnimation < 1){
         ctx.translate(0, (window.scrollAnimation-1) * canvas.height);
     }
 }
 
-function _render(es, bg){
-    // can't if-else this bc what if the image isnt loaded
-    ctx.fillStyle = bg.color;
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    if(bg.drawImg === true){
-        ctx.drawImage(bg.img, 0, 0, canvas.width, canvas.height);
-    }
-    
+const tileSize = 50;
+let opaqIndex, len, j = false;
+function _render(os, cols){
+    ctx.fillStyle = cols.background;
+    ctx.fillRect(0,0,canvas.width, canvas.height);
 
-    for(let i = 0; i < es.length; i++){
-        if(es[i].drawImg === true){
-            ctx.drawImage(es[i].img, es[i].x - es[i].r, es[i].y - es[i].r, es[i].r*2, es[i].r*2);
-            continue;
+    // render tiles
+    ctx.strokeStyle = cols.tile;
+    ctx.lineWidth = 2;
+
+    for (let x = 0; x < canvas.width + ctx.lineWidth + tileSize; x += tileSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+        ctx.closePath();
+    }
+
+    for (let y = 0; y < canvas.height + ctx.lineWidth + tileSize; y += tileSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+        ctx.closePath();
+    }
+
+    // render obstacles
+    for(let i = 0; i < os.length; i++){
+        len = os[i].effect.length;
+        if(len === 1){
+            j = 0;
+            ctx.toFill = true;
+            ctx.toStroke = false;
+            ctx.beginPath();
+            os[i].renderShape(os[i]);
+            os[i].renderEffect[j](os[i]);
+            if(ctx.toFill === true) ctx.fill();
+            if(ctx.toStroke === true) ctx.stroke();
+            ctx.closePath();
+            ctx.globalAlpha = 1;
+        } else {
+            // so we want to fade between the effect renders. We render a previous one with 1 opacity and then raise the next one from 0-1 opacity, until the next one becomes the previous and the cycle repeats
+            os[i].renderEffectTimer += 1/128;
+            if(os[i].renderEffectTimer >= len) os[i].renderEffectTimer -= len;
+
+            opaqIndex = Math.floor(os[i].renderEffectTimer);
+            /*let fullIndex*/j = opaqIndex - 1;
+            if(/*fullIndex*/j === -1) /*fullIndex*/j = len-1;
+            // j = fullIndex;
+
+            // render full index
+            ctx.toFill = true;
+            ctx.toStroke = false;
+            ctx.beginPath();
+            os[i].renderShape(os[i]);
+            os[i].renderEffect[j](os[i]);
+            ctx.globalAlpha = 1;
+            if(ctx.toFill === true) ctx.fill();
+            if(ctx.toStroke === true) ctx.stroke();
+            ctx.closePath();
+
+            // render opaq index
+            j = opaqIndex;
+            ctx.toFill = true;
+            ctx.toStroke = false;
+            ctx.beginPath();
+            os[i].renderShape(os[i]);
+            os[i].renderEffect[j](os[i]);
+            ctx.globalAlpha = os[i].renderEffectTimer - opaqIndex;
+            if(ctx.toFill === true) ctx.fill();
+            if(ctx.toStroke === true) ctx.stroke();
+            ctx.closePath();
         }
-
-        // if(es[i].emoji !== undefined){
-            if(cachedFontSize !== es[i].r * 2){
-                ctx.font = `${es[i].r*2}px "Times New Roman"`;
-                cachedFontSize = es[i].r * 2;
-            }
-            ctx.fillText(es[i].emoji, es[i].x, es[i].y);
-        //     continue;
-        // }
-
-        // ctx.fillStyle = 'black';
-        // ctx.beginPath();
-        // ctx.arc(es[i].x, es[i].y, es[i].r, 0, TAU);
-        // ctx.fill();
-        // ctx.closePath();
     }
-}
+    ctx.globalAlpha = 1;
 
-function tick(){
-    for(let i = 0; i < tickFunctions.length; i++){
-        for(let j = 0; j < tickFunctions[i].length; j++){
-            tickFunctions[i][j]();
-        }
-    }
+    // render player
+    ctx.fillStyle = player.dead === true ? 'red' : 'black';
+    ctx.beginPath();
+    player.renderShape(player);
+    ctx.fill();
+    ctx.closePath();
+
+    // if(player.dead === true){
+    //     ctx.fillStyle = 'white';
+    //     ctx.fillText('Tap to respawn', canvas.width / 2, canvas.height - 85);
+    // }
 }
 
 // gameloop
@@ -123,7 +152,7 @@ const FRAME_TIME = 1000 / 60;
         // simulate the frame as usual
         frames++;
         accum -= FRAME_TIME;
-        tick();
+        simulate();
     } else {
         // we don't want to re-render, we have no interpolation! So just wait until next frame ig
         requestAnimationFrame(run);
@@ -137,10 +166,10 @@ const FRAME_TIME = 1000 / 60;
 
         // otherwise simulate an extra catch-up tick
         accum -= FRAME_TIME;
-        tick();
+        simulate();
     }
 
-    render();
+    window.render();
 
     requestAnimationFrame(run);
 })();
@@ -171,7 +200,7 @@ if(isEditor !== true){
     window.canvasDimensions = canvas.getBoundingClientRect();
     setInterval(() => {
         window.canvasDimensions = canvas.getBoundingClientRect();
-    }, 100)
+    }, 1000)
 }
 
 import './sound.js';

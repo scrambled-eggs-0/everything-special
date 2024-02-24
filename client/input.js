@@ -3,7 +3,7 @@ import Utils from './utils.js';
 const { SCROLL_PARAMS } = Utils;
 
 // scrolling
-let dragging = false;
+window.dragging = false;
 let totalDist = 0;
 let dragStartTime;
 
@@ -20,7 +20,7 @@ window.onmousedown = () => {
     dragging = true;
     totalDist = 0;
     dragStartTime = Date.now();
-
+    
     for(let i = 0; i < window.mouseDownFunctions.length; i++){
         window.mouseDownFunctions[i]();
     }
@@ -28,7 +28,7 @@ window.onmousedown = () => {
 
 window.onmousemove = (e) => {
     // input
-    window.mouseX = ((e.pageX - window.canvasDimensions.x) / window.canvasDimensions.width) * canvas.width//Math.min(1, Math.max(0, ) ;
+    window.mouseX = ((e.pageX - window.canvasDimensions.x) / window.canvasDimensions.width) * canvas.width;//Math.min(1, Math.max(0, ) ;
     window.mouseY = ((e.pageY - window.canvasDimensions.y) / window.canvasDimensions.height) * canvas.height;
 
     window.mouseOut = false;
@@ -73,14 +73,14 @@ window.onmouseup = () => {
     }
 }
 
-window.onmouseout = () => {
-    // scrolling
-    dragging = false;
+// window.onmouseout = () => {
+//     // scrolling
+//     dragging = false;
 
-    for(let i = 0; i < window.mouseUpFunctions.length; i++){
-        window.mouseUpFunctions[i]();
-    }
-}
+//     for(let i = 0; i < window.mouseUpFunctions.length; i++){
+//         window.mouseUpFunctions[i]();
+//     }
+// }
 
 // mobile
 window.ontouchstart = (e) => {
