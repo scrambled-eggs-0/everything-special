@@ -17,139 +17,151 @@ export default /*const toolbox =*/ {
   'contents': [
     {
       'kind': 'category',
-      'name': 'Motion',
-      'categorystyle': 'motion_category',
+      'name': 'Obstacle',
+      'categorystyle': 'obstacle_category',
       'contents': [
         {
           'kind': 'block',
-          'type': 'set_x',
-          'inputs': {
-            'X': {
-              'shadow': {
-                'type': 'math_number',
-                'fields': {
-                  'NUM': 100,
-                },
-              },
-            },
-          },
-        },
-        {
-          'kind': 'block',
-          'type': 'set_y',
-          'inputs': {
-            'Y': {
-              'shadow': {
-                'type': 'math_number',
-                'fields': {
-                  'NUM': 100,
-                },
-              },
-            },
-          },
-        },
-        {
-          'kind': 'block',
-          'type': 'x_variable',
-        },
-        {
-          'kind': 'block',
-          'type': 'y_variable',
-        },
-        {
-          'kind': 'block',
-          'type': 'forever',
-        },
-        {
-          'kind': 'block',
-          'type': 'mouse_down',
-        },
-        {
-          'kind': 'block',
-          'type': 'mouse_up',
-        },
-        {
-          'kind': 'block',
-          'type': 'set_size',
-          'inputs': {
-            'S': {
-              'shadow': {
-                'type': 'math_number',
-                'fields': {
-                  'NUM': 100,
-                },
-              },
-            },
-          },
-        },
-        {
-          'kind': 'block',
-          'type': 'sprite_url',
-          'inputs': {
-            'URL': {
-              'shadow': {
-                'type': 'text',
-                'fields': {
-                  'TEXT': "http://tinyurl.com/dwayne-t-rj",
-                },
-              },
-            },
-          },
-        },
-        {
-          'kind': 'block',
-          'type': 'set_sprite',
-        },
-        {
-          'kind': 'block',
-          'type': 'bg_color',
-        },
-        {
-          'kind': 'block',
-          'type': 'bg_image',
-          'inputs': {
-            'URL': {
-              'shadow': {
-                'type': 'text',
-                'fields': {
-                  'TEXT': "http://tinyurl.com/gd-bcg",
-                },
-              },
-            },
-          },
-        },
-        {
-          'kind': 'block',
-          'type': 'set_music',
-          'inputs': {
-            'URL': {
-              'shadow': {
-                'type': 'text',
-                'fields': {
-                  'TEXT': "https://www.youtube.com/watch?v=i_7ekMgvRIk",
-                },
-              },
-            },
-          },
-        },
-        {
-          'kind': 'block',
-          'type': 'stop_music'
-        },
-        {
-          'kind': 'block',
-          'type': 'mouse_x',
-        },
-        {
-          'kind': 'block',
-          'type': 'mouse_y',
-        },
-        {
-          'kind': 'block',
-          'type': 'this_touching',
+          // 'type': 'create_obstacle',
+          'type': 'test_block'
         },
       ],
     },
+    // {
+    //   'kind': 'category',
+    //   'name': 'Motion',
+    //   'categorystyle': 'motion_category',
+    //   'contents': [
+    //     {
+    //       'kind': 'block',
+    //       'type': 'set_x',
+    //       'inputs': {
+    //         'X': {
+    //           'shadow': {
+    //             'type': 'math_number',
+    //             'fields': {
+    //               'NUM': 100,
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //     {
+    //       'kind': 'block',
+    //       'type': 'set_y',
+    //       'inputs': {
+    //         'Y': {
+    //           'shadow': {
+    //             'type': 'math_number',
+    //             'fields': {
+    //               'NUM': 100,
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //     {
+    //       'kind': 'block',
+    //       'type': 'x_variable',
+    //     },
+    //     {
+    //       'kind': 'block',
+    //       'type': 'y_variable',
+    //     },
+    //     {
+    //       'kind': 'block',
+    //       'type': 'forever',
+    //     },
+    //     {
+    //       'kind': 'block',
+    //       'type': 'mouse_down',
+    //     },
+    //     {
+    //       'kind': 'block',
+    //       'type': 'mouse_up',
+    //     },
+    //     {
+    //       'kind': 'block',
+    //       'type': 'set_size',
+    //       'inputs': {
+    //         'S': {
+    //           'shadow': {
+    //             'type': 'math_number',
+    //             'fields': {
+    //               'NUM': 100,
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //     {
+    //       'kind': 'block',
+    //       'type': 'sprite_url',
+    //       'inputs': {
+    //         'URL': {
+    //           'shadow': {
+    //             'type': 'text',
+    //             'fields': {
+    //               'TEXT': "http://tinyurl.com/dwayne-t-rj",
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //     {
+    //       'kind': 'block',
+    //       'type': 'set_sprite',
+    //     },
+    //     {
+    //       'kind': 'block',
+    //       'type': 'bg_color',
+    //     },
+    //     {
+    //       'kind': 'block',
+    //       'type': 'bg_image',
+    //       'inputs': {
+    //         'URL': {
+    //           'shadow': {
+    //             'type': 'text',
+    //             'fields': {
+    //               'TEXT': "http://tinyurl.com/gd-bcg",
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //     {
+    //       'kind': 'block',
+    //       'type': 'set_music',
+    //       'inputs': {
+    //         'URL': {
+    //           'shadow': {
+    //             'type': 'text',
+    //             'fields': {
+    //               'TEXT': "https://www.youtube.com/watch?v=i_7ekMgvRIk",
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //     {
+    //       'kind': 'block',
+    //       'type': 'stop_music'
+    //     },
+    //     {
+    //       'kind': 'block',
+    //       'type': 'mouse_x',
+    //     },
+    //     {
+    //       'kind': 'block',
+    //       'type': 'mouse_y',
+    //     },
+    //     {
+    //       'kind': 'block',
+    //       'type': 'this_touching',
+    //     },
+    //   ],
+    // },
     {
       'kind': 'category',
       'name': 'Logic',

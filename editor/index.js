@@ -7,6 +7,12 @@ import forBlock from '../shared/forBlock.js';
 import {javascriptGenerator} from 'blockly/javascript';
 import {save, load} from './serialization';
 import toolbox from '../shared/toolbox.js';
+import textData from '../shared/textData.js';
+const { JSBlockData, JSBlockNames } = textData;
+
+for(let i = 0; i < JSBlockNames.length; i++){
+  Blockly.Blocks[JSBlockNames[i]] = JSBlockData[i](Blockly);
+}
 
 // Register the blocks and generator with Blockly
 Blockly.common.defineBlocks(blocks);
@@ -35,7 +41,10 @@ const theme = Blockly.Theme.defineTheme('defaultTheme', {
     //  'math_blocks': {...}
   },
   'categoryStyles': {
-    'motion_category': {
+    // 'motion_category': {
+    //   'colour': '#07ced9'
+    // }
+    'obstacle_category': {
       'colour': '#07ced9'
     }
   },

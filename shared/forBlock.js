@@ -48,6 +48,72 @@ const Order = {
 // This file has no side effects!
 
 const forBlock = Object.create(null);
+
+const cachedCreate = {};
+
+// IMPORTANT: this function runs like 15 times! Please optimize this!! PLEASE!!!!!!!!!!
+// TODO: cache result for fast lookup
+forBlock[/*'create_obstacle'*/'test_block'] = function(block, generator) {
+  // const innerCode = generator.statementToCode(block, 'CODE_INSIDE', Order.ATOMIC);
+
+  // if(cachedCreate[innerCode] === undefined){
+  //   const innerStatements = innerCode.split('\n');
+  //   let shape = '0';
+  //   let simulates = '';
+  //   let effects = ',0';
+  //   let params = 'x:450,y:800,r:30';
+    
+  //   for(let i = 0; i < innerStatements.length; i++){
+  //     if(innerStatements[i][0] === 's'){
+  //       shape = innerStatements[i].slice(1);
+  //     } else if(innerStatements[i][0] === 'i'){
+  //       innerStatements[i][0] = ',';
+  //       simulates += innerStatements[i];
+  //     } else if(innerStatements[i][0] === 'e'){
+  //       innerStatements[i][0] = ',';
+  //       effects += innerStatements[i];
+  //     } else {
+  //       params += innerStatements[i];
+  //     }
+  //   }
+
+  //   cachedCreate[innerCode] = `${shape},[${simulates.slice(1)}],[${effects.slice(1)}],{${params}}`;
+  // }
+  
+  // return `E(${cachedCreate[innerCode]});`;
+
+  // if(block.shapeKeys === undefined) return '';
+
+  const shape = block.getFieldValue('SHAPE', Order.NONE);
+
+  // console.log(shapeParams);
+  // console.log(shape);
+
+  // let simulates = '[';
+
+  // for(let i = 0; i < block.numSimulateFields-1; i++){
+  //   simulates += block.getFieldValue(`SIMULATE_FIELD${i}`, Order.NONE) + ',';
+  // }
+  // simulates += block.getFieldValue(`SIMULATE_FIELD${block.numSimulateFields-1}`, Order.NONE) + ']';
+
+  // let effects = '[';
+
+  // for(let i = 0; i < block.numEffectFields-1; i++){
+  //   effects += block.getFieldValue(`EFFECT_FIELD${i}`, Order.NONE) + ',';
+  // }
+  // effects += block.getFieldValue(`EFFECT_FIELD${block.numEffectFields-1}`, Order.NONE) + ']';
+
+  // let params = '[{';
+
+  // for(let i = 0; i < block.shapeKeys.length; i++){
+  //   params += `${block.shapeKeys[i]}:${generator.valueToCode(block, `SHAPE${i}`, Order.NONE)},`;
+  // }
+
+  // params += '}';
+  
+  return '';//`C(${shape},${simulates},${effects},??)`;
+}
+
 // export default /*const forBlock =*/ Object.create(null);
 
 // forBlock['add_text'] = function (block, generator) {
@@ -72,98 +138,99 @@ const forBlock = Object.create(null);
 //   return code;
 // };
 
-forBlock['set_x'] = function (block, generator) {
-  const x = generator.valueToCode(block, 'X', Order.NONE) || 0;
-  return `e.x = ${x};\n`;
-};
+// // OLD
+// forBlock['set_x'] = function (block, generator) {
+//   const x = generator.valueToCode(block, 'X', Order.NONE) || 0;
+//   return `e.x = ${x};\n`;
+// };
 
-forBlock['set_y'] = function (block, generator) {
-  const y = generator.valueToCode(block, 'Y', Order.NONE) || 0;
-  return `e.y = ${y};\n`;
-};
+// forBlock['set_y'] = function (block, generator) {
+//   const y = generator.valueToCode(block, 'Y', Order.NONE) || 0;
+//   return `e.y = ${y};\n`;
+// };
 
-forBlock['set_size'] = function (block, generator) {
-  const s = generator.valueToCode(block, 'S', Order.NONE) || 100;// 100 = 30px
-  return `e.r = ${s};\n`;
-};
+// forBlock['set_size'] = function (block, generator) {
+//   const s = generator.valueToCode(block, 'S', Order.NONE) || 100;// 100 = 30px
+//   return `e.r = ${s};\n`;
+// };
 
-forBlock['x_variable'] = function (block, generator) {
-  return [`e.x`, Order.NONE];
-};
+// forBlock['x_variable'] = function (block, generator) {
+//   return [`e.x`, Order.NONE];
+// };
 
-forBlock['y_variable'] = function (block, generator) {
-  return [`e.y`, Order.NONE];
-};
+// forBlock['y_variable'] = function (block, generator) {
+//   return [`e.y`, Order.NONE];
+// };
 
-forBlock['forever'] = function(block, generator) {
-  const innerBlockText = generator.statementToCode(block, 'CODE_INSIDE', Order.ATOMIC);
+// forBlock['forever'] = function(block, generator) {
+//   const innerBlockText = generator.statementToCode(block, 'CODE_INSIDE', Order.ATOMIC);
   
-  return `tickFunctions[e.id].push(() => {\n${innerBlockText}});`;
-}
+//   return `tickFunctions[e.id].push(() => {\n${innerBlockText}});`;
+// }
 
-forBlock['mouse_down'] = function(block, generator) {
-  const innerBlockText = generator.statementToCode(block, 'CODE_INSIDE', Order.ATOMIC);
+// forBlock['mouse_down'] = function(block, generator) {
+//   const innerBlockText = generator.statementToCode(block, 'CODE_INSIDE', Order.ATOMIC);
   
-  return `mouseDownFunctions.push(() => {\n${innerBlockText}});`;
-}
+//   return `mouseDownFunctions.push(() => {\n${innerBlockText}});`;
+// }
 
-forBlock['mouse_up'] = function(block, generator) {
-  const innerBlockText = generator.statementToCode(block, 'CODE_INSIDE', Order.ATOMIC);
+// forBlock['mouse_up'] = function(block, generator) {
+//   const innerBlockText = generator.statementToCode(block, 'CODE_INSIDE', Order.ATOMIC);
   
-  return `mouseUpFunctions.push(() => {\n${innerBlockText}});`;
-}
+//   return `mouseUpFunctions.push(() => {\n${innerBlockText}});`;
+// }
 
-forBlock['set_sprite'] = function (block, generator) {
-  const sn = block.getFieldValue('SPRITENAME', Order.NONE) || "😀";
-  return `e.emoji="${sn}";e.drawImg=false;`;
-};
+// forBlock['set_sprite'] = function (block, generator) {
+//   const sn = block.getFieldValue('SPRITENAME', Order.NONE) || "😀";
+//   return `e.emoji="${sn}";e.drawImg=false;`;
+// };
 
-forBlock['mouse_x'] = function (block, generator) {
-  return [`mouseX`, Order.NONE];
-};
+// forBlock['mouse_x'] = function (block, generator) {
+//   return [`mouseX`, Order.NONE];
+// };
 
-forBlock['mouse_y'] = function (block, generator) {
-  return [`mouseY`, Order.NONE];
-};
+// forBlock['mouse_y'] = function (block, generator) {
+//   return [`mouseY`, Order.NONE];
+// };
 
-forBlock['this_touching'] = function (block, generator) {
-  const objectId = block.getFieldValue('SPRITE_ID', Order.NONE);
-  if(objectId === 'mouse'){
-    return ['((e.x-mouseX)**2+(e.y-mouseY)**2<e.r**2 && !window.mouseOut)', Order.NONE];
-  }
-  return [`(entities[${objectId}]!==undefined&&((e.x-entities[${objectId}].x)**2+(e.y-entities[${objectId}].y)**2<(e.r+entities[${objectId}].r)**2))`, Order.NONE];
-};
+// forBlock['this_touching'] = function (block, generator) {
+//   const objectId = block.getFieldValue('SPRITE_ID', Order.NONE);
+//   if(objectId === 'mouse'){
+//     return ['((e.x-mouseX)**2+(e.y-mouseY)**2<e.r**2 && !window.mouseOut)', Order.NONE];
+//   }
+//   return [`(entities[${objectId}]!==undefined&&((e.x-entities[${objectId}].x)**2+(e.y-entities[${objectId}].y)**2<(e.r+entities[${objectId}].r)**2))`, Order.NONE];
+// };
 
-forBlock['sprite_url'] = function (block, generator) {
-  const url = generator.valueToCode(block, 'URL', Order.NONE) || "'https://memes.co.in/memes/update/uploads/2021/12/InShot_20211209_222013681.jpg'";
-  const setImg = generator.provideFunction_(
-    'setImg',
-    `function ${generator.FUNCTION_NAME_PLACEHOLDER_}(e,src){e.drawImg=true;if(e.img?.src === src){return;}e.img=new Image();e.img.src=src;}`
-  );
-  return `${setImg}(e,${url});\n`;
-};
+// forBlock['sprite_url'] = function (block, generator) {
+//   const url = generator.valueToCode(block, 'URL', Order.NONE) || "'https://memes.co.in/memes/update/uploads/2021/12/InShot_20211209_222013681.jpg'";
+//   const setImg = generator.provideFunction_(
+//     'setImg',
+//     `function ${generator.FUNCTION_NAME_PLACEHOLDER_}(e,src){e.drawImg=true;if(e.img?.src === src){return;}e.img=new Image();e.img.src=src;}`
+//   );
+//   return `${setImg}(e,${url});\n`;
+// };
 
-forBlock['bg_color'] = function (block, generator) {
-  const sn = block.getFieldValue('COLOR', Order.NONE) || "white";
-  return `background.color="${sn}";background.drawImg=false;\n`;
-};
+// forBlock['bg_color'] = function (block, generator) {
+//   const sn = block.getFieldValue('COLOR', Order.NONE) || "white";
+//   return `background.color="${sn}";background.drawImg=false;\n`;
+// };
 
-forBlock['bg_image'] = function (block, generator) {
-  const url = generator.valueToCode(block, 'URL', Order.NONE) || "'https://memes.co.in/memes/update/uploads/2021/12/InShot_20211209_222013681.jpg'";
-  const setBgImg = generator.provideFunction_(
-    'setBgImg',
-    `function ${generator.FUNCTION_NAME_PLACEHOLDER_}(src){background.drawImg=true;if(background.img?.src===src){return;}background.img=new Image();background.img.src=src;}`
-  );
-  return `${setBgImg}(${url});\n`;
-};
+// forBlock['bg_image'] = function (block, generator) {
+//   const url = generator.valueToCode(block, 'URL', Order.NONE) || "'https://memes.co.in/memes/update/uploads/2021/12/InShot_20211209_222013681.jpg'";
+//   const setBgImg = generator.provideFunction_(
+//     'setBgImg',
+//     `function ${generator.FUNCTION_NAME_PLACEHOLDER_}(src){background.drawImg=true;if(background.img?.src===src){return;}background.img=new Image();background.img.src=src;}`
+//   );
+//   return `${setBgImg}(${url});\n`;
+// };
 
-forBlock['set_music'] = function (block, generator) {
-  const url = generator.valueToCode(block, 'URL', Order.NONE) || "'https://www.youtube.com/watch?v=i_7ekMgvRIk'";
-  return `playMusic(${url});\n`;
-};
+// forBlock['set_music'] = function (block, generator) {
+//   const url = generator.valueToCode(block, 'URL', Order.NONE) || "'https://www.youtube.com/watch?v=i_7ekMgvRIk'";
+//   return `playMusic(${url});\n`;
+// };
 
-forBlock['stop_music'] = function (block, generator) {
-  return `stopMusic();\n`;
-};
+// forBlock['stop_music'] = function (block, generator) {
+//   return `stopMusic();\n`;
+// };
 
 export default forBlock;

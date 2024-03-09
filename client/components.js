@@ -20,24 +20,27 @@ function create(shape, simulates, effects, params){
         simulate: [],
         effect: [],
         renderShape: renderShapeMap[shape],
-        renderEffect: effects.map(e => renderEffectMap[e])
+        renderEffect: effects.map(e => renderEffectMap[e]),
+        simulateParams: [],
+        effectParams: []
     };
     e.renderEffectTimer = 0;
     e.pos = e.sat.pos;
     for(let i = 0; i < simulates.length; i++){
         e.simulate.push(simulateMap[simulates[i]]);
-        initSimulateMap[simulates[i]](e, params);
+        e.simulateParams[i] = {};
+        initSimulateMap[simulates[i]](e.simulateParams[i], params, e);
     }
     for(let i = 0; i < effects.length; i++){
         e.effect.push(effectMap[effects[i]]);
-        initEffectMap[effects[i]](e, params);
+        e.effectParams[i] = {};
+        initEffectMap[effects[i]](e.effectParams[i], params, e);
     }
-    if(params.tf !== undefined) e.simulate.push(params.tf);
-    // TODO: init maps
+    if(params.tf !== undefined) { e.simulateParams.push({}); e.simulate.push(params.tf); }
+    
     obstacles.push(e);
-    // return e;
 }
-window.E = create;
+window.C = create;
 
 let angle;
 let res = new SAT.Response();
@@ -73,14 +76,14 @@ function simulate(){
         }
         if(collided === true){
             for(let j = 0; j < obstacles[i].effect.length; j++){
-                obstacles[i].effect[j](player, res, obstacles[i]);
+                obstacles[i].effect[j](player, res, obstacles[i].effectParams[j], obstacles[i]);
             }
         }
         res.clear();// TODO: test if this is really needed
 
         // obstacle simulation
         for(let j = 0; j < obstacles[i].simulate.length; j++){
-            obstacles[i].simulate[j](obstacles[i]);
+            obstacles[i].simulate[j](obstacles[i].simulateParams[j], obstacles[i]);
         }
     }
 
@@ -125,6 +128,26 @@ window.satMapI2N = [
     'circle',
     'rectangle',
     'polygon'
+];
+
+window.satDefaultMap = [
+    // circle
+    {
+        x: 450,
+        y: 800,
+        r: 30
+    },
+    // rectangle
+    {
+        x: 0,
+        y: 0,
+        w: 100,
+        h: 100
+    },
+    // polygon
+    {
+        points: [[0,0],[100,0],[50,75]]
+    }
 ]
 
 const TAU = Math.PI * 2;
@@ -153,7 +176,6 @@ const renderShapeMap = [
 const initSimulateMap = [
     /*pathMove*/
     (o, init) => {
-        // currentPoint, path: [[x,y,speed], ...], 
 		o.currentPoint = Math.floor(init.currentPoint);
         
 		o.path = init.path;// like [[x,y,speed], ...]
@@ -184,7 +206,6 @@ const initSimulateMap = [
     },
     // /*rotate*/
     (o, init) => {
-        // rotateSpeed, pivotX, pivotY
         o.rotateSpeed = init.rotateSpeed;
         o.pivotX = init.pivotX;
         o.pivotY = init.pivotY;
@@ -195,8 +216,8 @@ const simulateMap = [
     /*pathMove*/
     (o) => {
         // TODO: make it dt consistent
-        o.pos.x += o.xv //* timeStep;
-        o.pos.y += o.yv //* timeStep;
+        obs.pos.x += o.xv //* timeStep;
+        obs.pos.y += o.yv //* timeStep;
 
         o.timeRemain--;
         if (o.timeRemain <= 0) {
@@ -210,8 +231,8 @@ const simulateMap = [
     
             // snapping back to the point that we should be on
             // TODO: make sure this is pixel perfect and remaining time is not skipped
-            o.pos.x += o.xv * o.timeRemain;
-            o.pos.y += o.yv * o.timeRemain;
+            obs.pos.x += o.xv * o.timeRemain;
+            obs.pos.y += o.yv * o.timeRemain;
     
             let nextPointIndex = o.currentPoint + 1;
             if (nextPointIndex >= o.path.length) {
@@ -229,17 +250,17 @@ const simulateMap = [
         }
     },
     // /*rotate*/
-    (o) => {
-        if(o.sat.r !== undefined){
-            o.pos.x -= o.pivotX;
-            o.pos.y -= o.pivotY;
-            o.sat.rotate(o.rotateSpeed);
-            o.pos.x += o.pivotX;
-            o.pos.y += o.pivotY;
+    (o, obs) => {
+        if(obs.sat.r !== undefined){
+            obs.pos.x -= o.pivotX;
+            obs.pos.y -= o.pivotY;
+            obs.sat.rotate(o.rotateSpeed);
+            obs.pos.x += o.pivotX;
+            obs.pos.y += o.pivotY;
         } else {
-            o.sat.translate(o.pos.x-o.pivotX, o.pos.y-o.pivotY);
-            o.sat.rotate(o.rotateSpeed);
-            o.sat.translate(o.pivotX-o.pos.x, o.pivotY-o.pos.y);
+            obs.sat.translate(obs.pos.x-o.pivotX, obs.pos.y-o.pivotY);
+            obs.sat.rotate(o.rotateSpeed);
+            obs.sat.translate(o.pivotX-obs.pos.x, o.pivotY-obs.pos.y);
         }
         
         o.hasRotated = true;
@@ -249,6 +270,20 @@ const simulateMap = [
 window.simulateMapI2N = [
     'pathMove',
     'rotate'
+]
+
+window.simulateDefaultMap = [
+    // pathMove
+    {
+        currentPoint: 0,
+        path: [[0,0,1],[100,0,2],[0,100,3]]
+    },
+    // rotate
+    {
+        rotateSpeed: 0.01,
+        pivotX: 450,
+        pivotY: 800
+    }
 ]
 
 const initEffectMap = [
@@ -278,6 +313,7 @@ const effectMap = [
     },
     /*bounce*/
     (p, res, o) => {
+        // note that o is the parameters of the specific effect, not the obstacle itself. If i added a 4th parameter that would be the whole obstacle.
         p.pos.x += res.overlapV.x;
         p.pos.y += res.overlapV.y;
 
@@ -296,6 +332,20 @@ window.effectMapI2N = [
     'kill',
     'bounce',
     'stopForces'
+]
+
+window.effectDefaultMap = [
+    // bound
+    {},
+    // kill
+    {},
+    // bounce
+    {
+        bounciness: 1,
+        decay: 0.98
+    },
+    // stopForces
+    {}
 ]
 
 const renderEffectMap = [

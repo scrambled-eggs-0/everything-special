@@ -29,7 +29,7 @@ pre, code {
     width: 100%;
     height: min(400px, 100%);
     overflow: hidden;
-    resize: vertical;
+    /* resize: vertical; */ /*TODO*/
 }
 
 #generatedCode {
