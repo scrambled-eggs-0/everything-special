@@ -135,14 +135,14 @@ window.satDefaultMap = [
     {
         x: 450,
         y: 800,
-        r: 30
+        r: 120
     },
     // rectangle
     {
         x: 0,
         y: 0,
-        w: 100,
-        h: 100
+        w: 200,
+        h: 200
     },
     // polygon
     {

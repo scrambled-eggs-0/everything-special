@@ -5,7 +5,7 @@
  */
 
 // we only need Order here, so don't import from blockly
-const Order = {
+const Order = Object.freeze({
   ATOMIC: 0,
   NEW: 1.1,
   MEMBER: 1.2,
@@ -41,7 +41,7 @@ const Order = {
   YIELD: 17,
   COMMA: 18,
   NONE: 99,
-};
+});
 
 // Export all the code generators for our custom blocks,
 // but don't register them with Blockly yet.
@@ -84,10 +84,55 @@ forBlock[/*'create_obstacle'*/'test_block'] = function(block, generator) {
 
   // if(block.shapeKeys === undefined) return '';
 
-  const shape = block.getFieldValue('SHAPE', Order.NONE);
+  const shape = block.getFieldValue('SHAPE_DROPDOWN', Order.NONE);
+
+  const simulatesLen = block.getFieldValue('NUM_SIMULATES_DROPDOWN', Order.NONE);
+
+  let simulates = '[';
+  if(simulatesLen === 0){
+    simulates = '[]';
+  } else {
+    for(let i = 0; i < simulatesLen-1; i++){
+      simulates += block.getFieldValue(`SIMULATE_DROPDOWN${i}`, Order.NONE) + ',';
+    }
+    simulates += block.getFieldValue(`SIMULATE_DROPDOWN${simulatesLen-1}`, Order.NONE) + ']';
+  }
+
+  const effectsLen = block.getFieldValue('NUM_EFFECTS_DROPDOWN', Order.NONE);
+
+  let effects = '[';
+  if(effectsLen === 0){
+    effects = '[]';
+  } else {
+    for(let i = 0; i < effectsLen-1; i++){
+      effects += block.getFieldValue(`EFFECT_DROPDOWN${i}`, Order.NONE) + ',';
+    }
+    effects += block.getFieldValue(`EFFECT_DROPDOWN${effectsLen-1}`, Order.NONE) + ']';
+  }
+
+  let params = '{';
+
+  console.log(block.shapeParamToId);
+
+  for(let key in block.shapeParamToId){
+    params += `${key}:${generator.valueToCode(block, this.shapeParamToId[key], Order.NONE)},`;
+  }
+
+  for(let key in block.simulateParamToId){
+    params += `${key}:${generator.valueToCode(block, this.simulateParamToId[key], Order.NONE)},`;
+  }
+
+  for(let key in block.effectParamToId){
+    params += `${key}:${generator.valueToCode(block, this.effectParamToId[key], Order.NONE)},`;
+  }
+
+  params += '}';
+
+  // console.log({shape, simulates, effects, params});
+  
+  return `C(${shape},${simulates},${effects},${params})`;
 
   // console.log(shapeParams);
-  // console.log(shape);
 
   // let simulates = '[';
 
@@ -110,8 +155,6 @@ forBlock[/*'create_obstacle'*/'test_block'] = function(block, generator) {
   // }
 
   // params += '}';
-  
-  return '';//`C(${shape},${simulates},${effects},??)`;
 }
 
 // export default /*const forBlock =*/ Object.create(null);

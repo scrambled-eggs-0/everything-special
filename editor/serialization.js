@@ -13,7 +13,7 @@ import * as Blockly from 'blockly/core';
  */
 export const save = function(workspace) {
   const data = Blockly.serialization.workspaces.save(workspace);
-  window.localStorage?.setItem("ws", JSON.stringify(data));
+  // window.localStorage?.setItem("ws", JSON.stringify(data));
 };
 
 /**
