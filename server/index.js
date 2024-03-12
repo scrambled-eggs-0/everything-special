@@ -37,6 +37,24 @@ app.get('/', (res, req) => {
     })
 });
 
+app.get('/favicon.ico', (res, req) => {
+    const path = 'client/favicon.ico';
+    res.cork(() => {
+        res.writeHeader('Content-Type', 'image/x-icon');
+    })
+    
+    // Check if the file exists
+    if (fs.existsSync(path)) {
+        // Read and serve the file
+        const file = fs.readFileSync(path);
+        res.end(file);
+    } else {
+        // File not found
+        res.writeStatus('404 Not Found');
+        res.end();
+    }
+});
+
 app.get('/editor', (res, req) => {
     res.cork(() => {
         // res.writeHeader('Access-Control-Allow-Origin', '*');
@@ -118,6 +136,7 @@ app.get('/game', (res, req) => {
 
 app.post('/upload', (res, req) => {
     console.log('post recieved!');
+    return // TEMP; TODO get publishing working!
 
     // res.cork(() => {
     //     res.writeHeader('Access-Control-Allow-Origin', '*');
@@ -162,6 +181,8 @@ app.post('/upload', (res, req) => {
 
 app.get("/:filename", (res, req) => {
     let path = 'client' + req.getUrl();
+
+    // console.log(path);
     
     // only js files check for mime type so everything can be text/javascript lol
     // TODO: GET WEBPACK SET UP!!!!!! WITHOUT IT THERE's A PREFLIGHT REQUEST WHICH IS REALLY SLOW

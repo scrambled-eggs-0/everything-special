@@ -23,7 +23,7 @@ export default /*const toolbox =*/ {
         {
           'kind': 'block',
           // 'type': 'create_obstacle',
-          'type': 'test_block'
+          'type': 'create_obstacle'
         },
       ],
     },

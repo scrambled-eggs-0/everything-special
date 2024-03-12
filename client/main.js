@@ -47,7 +47,7 @@ window.render = () => {
     }
 }
 
-const tileSize = 50;
+const tileSize = 100; // 50
 let opaqIndex, len, j = false;
 function _render(os, cols){
     ctx.fillStyle = cols.background;
@@ -55,7 +55,7 @@ function _render(os, cols){
 
     // render tiles
     ctx.strokeStyle = cols.tile;
-    ctx.lineWidth = 2;
+    ctx.lineWidth = window.isEditor === true ? 4 : 2;
 
     for (let x = 0; x < canvas.width + ctx.lineWidth + tileSize; x += tileSize) {
         ctx.beginPath();

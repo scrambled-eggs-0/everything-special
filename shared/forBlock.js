@@ -53,7 +53,7 @@ const cachedCreate = {};
 
 // IMPORTANT: this function runs like 15 times! Please optimize this!! PLEASE!!!!!!!!!!
 // TODO: cache result for fast lookup
-forBlock[/*'create_obstacle'*/'test_block'] = function(block, generator) {
+forBlock['create_obstacle'] = function(block, generator) {
   // const innerCode = generator.statementToCode(block, 'CODE_INSIDE', Order.ATOMIC);
 
   // if(cachedCreate[innerCode] === undefined){
@@ -112,7 +112,7 @@ forBlock[/*'create_obstacle'*/'test_block'] = function(block, generator) {
 
   let params = '{';
 
-  console.log(block.shapeParamToId);
+  // console.log(block.shapeParamToId);
 
   for(let key in block.shapeParamToId){
     params += `${key}:${generator.valueToCode(block, this.shapeParamToId[key], Order.NONE)},`;
@@ -130,7 +130,7 @@ forBlock[/*'create_obstacle'*/'test_block'] = function(block, generator) {
 
   // console.log({shape, simulates, effects, params});
   
-  return `C(${shape},${simulates},${effects},${params})`;
+  return `C(${shape},${simulates},${effects},${params});`;
 
   // console.log(shapeParams);
 
@@ -155,6 +155,20 @@ forBlock[/*'create_obstacle'*/'test_block'] = function(block, generator) {
   // }
 
   // params += '}';
+}
+
+forBlock['lists_create_with'] = function(block, generator) {
+  // console.log(block);
+  let arr = '[';
+  for(let i = 0; i < block.itemCount_; i++){
+    const val = generator.valueToCode(block, `ADD${i}`, Order.NONE);
+    if(val !== '') arr += val + ',';
+  }
+  if(arr === '[') return '[]';
+  arr = arr.substring(0, arr.length-1);
+  arr += ']';
+
+  return [arr, Order.NONE];
 }
 
 // export default /*const forBlock =*/ Object.create(null);

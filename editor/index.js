@@ -18,6 +18,8 @@ for(let i = 0; i < JSBlockNames.length; i++){
 Blockly.common.defineBlocks(blocks);
 Object.assign(javascriptGenerator.forBlock, forBlock);
 
+window.isEditor = true;
+
 const zoom = {
   controls: true,
   wheel: true,

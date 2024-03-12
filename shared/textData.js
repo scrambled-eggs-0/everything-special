@@ -376,7 +376,7 @@ export default {
     // },
   ],
   JSBlockNames: [
-    'test_block'
+    'create_obstacle'
   ],
   JSBlockData: [
     function(Blockly) {
@@ -553,11 +553,7 @@ export default {
             this.appendValueInput(id)
               .appendField(key + ':')
               .setCheck(null)
-              .setShadowDom(Blockly.utils.xml.textToDom(
-                '<shadow type="math_number">' +
-                  `<field name="NUM">${newValueMap[key]}</field>` +
-                '</shadow>'
-              ));
+              .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(newValueMap[key])));
 
             this.inputList.splice(1, 0, this.inputList.pop())
           }
@@ -596,11 +592,7 @@ export default {
             this.appendValueInput(id)
               .appendField(key + ':')
               .setCheck(null)
-              .setShadowDom(Blockly.utils.xml.textToDom(
-                '<shadow type="math_number">' +
-                  `<field name="NUM">${newValueMap[key]}</field>` +
-                '</shadow>'
-              ));
+              .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(newValueMap[key])));
             
             this.inputList.splice(insertionIndex++, 0, this.inputList.pop());
           }
@@ -634,11 +626,7 @@ export default {
             this.appendValueInput(id)
               .appendField(key + ':')
               .setCheck(null)
-              .setShadowDom(Blockly.utils.xml.textToDom(
-                '<shadow type="math_number">' +
-                  `<field name="NUM">${newValueMap[key]}</field>` +
-                '</shadow>'
-              ));
+              .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(newValueMap[key])));
 
             this.inputList.splice(insertionIndex++, 0, this.inputList.pop());
           }
@@ -658,4 +646,33 @@ export default {
       };
     }
   ]
+}
+
+function generateShadowBlock(value){
+  // see https://blockly-demo.appspot.com/static/demos/code/index.html for xml decoding
+  const type = typeof value;
+  if(type === 'number'){
+    return '<shadow type="math_number">' +
+      `<field name="NUM">${value}</field>` +
+    '</shadow>'
+  } else if(type === 'string') {
+    return '<shadow type="text">' +
+      `<field name="TEXT">${value}</field>` +
+    '</shadow>'
+  } else if(type === 'boolean'){
+    return '<shadow type="logic_boolean">' +
+      `<field name="BOOL">${value === true ? 'TRUE' : 'FALSE'}</field>` +
+    '</shadow>'
+  } else if(Array.isArray(value)){
+    console.log(this);
+    return '<shadow type="lists_create_with">' +
+      `<mutation items="${value.length}"></mutation>` +
+      value.map((v, i) => {
+        if(v === null) return '';
+        return `<value name="ADD${i}">` + generateShadowBlock(v) + '</value>';
+      }) +
+    '</shadow>'
+  }// else {
+  //  // object?
+  // }
 }

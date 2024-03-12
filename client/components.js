@@ -21,22 +21,18 @@ function create(shape, simulates, effects, params){
         effect: [],
         renderShape: renderShapeMap[shape],
         renderEffect: effects.map(e => renderEffectMap[e]),
-        simulateParams: [],
-        effectParams: []
     };
     e.renderEffectTimer = 0;
     e.pos = e.sat.pos;
     for(let i = 0; i < simulates.length; i++){
         e.simulate.push(simulateMap[simulates[i]]);
-        e.simulateParams[i] = {};
-        initSimulateMap[simulates[i]](e.simulateParams[i], params, e);
+        initSimulateMap[simulates[i]](e, params);
     }
     for(let i = 0; i < effects.length; i++){
         e.effect.push(effectMap[effects[i]]);
-        e.effectParams[i] = {};
-        initEffectMap[effects[i]](e.effectParams[i], params, e);
+        initEffectMap[effects[i]](e, params);
     }
-    if(params.tf !== undefined) { e.simulateParams.push({}); e.simulate.push(params.tf); }
+    if(params.tf !== undefined) e.simulate.push(params.tf);
     
     obstacles.push(e);
 }
@@ -76,14 +72,14 @@ function simulate(){
         }
         if(collided === true){
             for(let j = 0; j < obstacles[i].effect.length; j++){
-                obstacles[i].effect[j](player, res, obstacles[i].effectParams[j], obstacles[i]);
+                obstacles[i].effect[j](player, res, obstacles[i]);
             }
         }
         res.clear();// TODO: test if this is really needed
 
         // obstacle simulation
         for(let j = 0; j < obstacles[i].simulate.length; j++){
-            obstacles[i].simulate[j](obstacles[i].simulateParams[j], obstacles[i]);
+            obstacles[i].simulate[j](obstacles[i]);
         }
     }
 
@@ -117,7 +113,8 @@ const satMap = [
     /*polygon*/
     (p) => {
         // points: [[x,y], ...]
-        const s = new SAT.Polygon(new SAT.Vector(), p.points.map(pt => new SAT.Vector(pt[0]-p.x, pt[1]-p.y)));
+        p.x = 0; p.y = 0;
+        const s = new SAT.Polygon(new SAT.Vector(), p.points.map(pt => new SAT.Vector(pt[0], pt[1])));
         s.pos.x = p.x;
         s.pos.y = p.y;
         return s;
@@ -139,14 +136,14 @@ window.satDefaultMap = [
     },
     // rectangle
     {
-        x: 0,
-        y: 0,
-        w: 200,
+        x: 300,
+        y: 700,
+        w: 300,
         h: 200
     },
     // polygon
     {
-        points: [[0,0],[100,0],[50,75]]
+        points: [[300,700],[600,700],[450,900]],
     }
 ]
 
@@ -216,8 +213,8 @@ const simulateMap = [
     /*pathMove*/
     (o) => {
         // TODO: make it dt consistent
-        obs.pos.x += o.xv //* timeStep;
-        obs.pos.y += o.yv //* timeStep;
+        o.pos.x += o.xv //* timeStep;
+        o.pos.y += o.yv //* timeStep;
 
         o.timeRemain--;
         if (o.timeRemain <= 0) {
@@ -231,8 +228,8 @@ const simulateMap = [
     
             // snapping back to the point that we should be on
             // TODO: make sure this is pixel perfect and remaining time is not skipped
-            obs.pos.x += o.xv * o.timeRemain;
-            obs.pos.y += o.yv * o.timeRemain;
+            o.pos.x += o.xv * o.timeRemain;
+            o.pos.y += o.yv * o.timeRemain;
     
             let nextPointIndex = o.currentPoint + 1;
             if (nextPointIndex >= o.path.length) {
@@ -250,17 +247,17 @@ const simulateMap = [
         }
     },
     // /*rotate*/
-    (o, obs) => {
-        if(obs.sat.r !== undefined){
-            obs.pos.x -= o.pivotX;
-            obs.pos.y -= o.pivotY;
-            obs.sat.rotate(o.rotateSpeed);
-            obs.pos.x += o.pivotX;
-            obs.pos.y += o.pivotY;
+    (o) => {
+        if(o.sat.r !== undefined){
+            o.pos.x -= o.pivotX;
+            o.pos.y -= o.pivotY;
+            o.sat.rotate(o.rotateSpeed);
+            o.pos.x += o.pivotX;
+            o.pos.y += o.pivotY;
         } else {
-            obs.sat.translate(obs.pos.x-o.pivotX, obs.pos.y-o.pivotY);
-            obs.sat.rotate(o.rotateSpeed);
-            obs.sat.translate(o.pivotX-obs.pos.x, o.pivotY-obs.pos.y);
+            o.sat.translate(o.pos.x-o.pivotX, o.pos.y-o.pivotY);
+            o.sat.rotate(o.rotateSpeed);
+            o.sat.translate(o.pivotX-o.pos.x, o.pivotY-o.pos.y);
         }
         
         o.hasRotated = true;
@@ -379,7 +376,7 @@ const obstacles = window.obstacles = [];
 
 window.spawnPosition = {x: 100, y: 1500};
 // a player is also an ecs
-create(0/*circle*/, [], [], /*no simulate/ effects*/ {x: window.spawnPosition.x, y: window.spawnPosition.y, r: 24.5})
+create(0/*circle*/, [], [], /*no simulate/ effects*/ {x: window.spawnPosition.x, y: window.spawnPosition.y, r: /*24.5*/49.5})
 const player = window.player = obstacles.pop();
 player.speed = 4;
 player.dead = false;
