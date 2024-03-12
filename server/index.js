@@ -22,19 +22,21 @@ const app = uWS./*SSL*/App().listen(PORT, (token) => {
 // });
 
 app.get('/', (res, req) => {
-    res.cork(() => {
-        // res.writeHeader('Access-Control-Allow-Origin', '*');
+    // TODO: get main app working
+    res.end('Not currently available, check out the /editor domain instead.');
+    // res.cork(() => {
+    //     // res.writeHeader('Access-Control-Allow-Origin', '*');
         
-        const path = 'client/index.html';
+    //     const path = 'client/index.html';
     
-        if (fs.existsSync(path)) {
-            const file = fs.readFileSync(path);
-            res.end(file);
-        } else {
-            res.writeStatus('404 Not Found');
-            res.end();
-        }
-    })
+    //     if (fs.existsSync(path)) {
+    //         const file = fs.readFileSync(path);
+    //         res.end(file);
+    //     } else {
+    //         res.writeStatus('404 Not Found');
+    //         res.end();
+    //     }
+    // })
 });
 
 app.get('/favicon.ico', (res, req) => {
@@ -136,7 +138,7 @@ app.get('/game', (res, req) => {
 
 app.post('/upload', (res, req) => {
     console.log('post recieved!');
-    return // TEMP; TODO get publishing working!
+    return; // TEMP; TODO get publishing working!
 
     // res.cork(() => {
     //     res.writeHeader('Access-Control-Allow-Origin', '*');
