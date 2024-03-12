@@ -664,7 +664,6 @@ function generateShadowBlock(value){
       `<field name="BOOL">${value === true ? 'TRUE' : 'FALSE'}</field>` +
     '</shadow>'
   } else if(Array.isArray(value)){
-    console.log(this);
     return '<shadow type="lists_create_with">' +
       `<mutation items="${value.length}"></mutation>` +
       value.map((v, i) => {
