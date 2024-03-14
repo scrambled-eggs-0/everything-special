@@ -803,7 +803,7 @@ export default {
   ]
 }
 
-function generateShadowBlock(value){
+window.generateShadowBlock = (value) => {
   // see https://blockly-demo.appspot.com/static/demos/code/index.html for xml decoding
   const type = typeof value;
   if(type === 'number'){

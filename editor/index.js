@@ -19,6 +19,11 @@ for(let i = 0; i < JSBlockNames.length; i++){
 Blockly.common.defineBlocks(blocks);
 Object.assign(javascriptGenerator.forBlock, forBlock);
 
+window.snap = 50;
+window.snapGrid = (val) => {
+  return Math.round(val / window.snap) * window.snap;
+}
+
 window.workspaceLoaded = false;
 window.isEditor = true;
 
