@@ -84,6 +84,7 @@ forBlock['create_obstacle'] = function(block, generator) {
 
   // if(block.shapeKeys === undefined) return '';
 
+  // TODO (NEW): cachedCreate!
   const shape = block.getFieldValue('SHAPE_DROPDOWN', Order.NONE);
 
   const simulatesLen = block.getFieldValue('NUM_SIMULATES_DROPDOWN', Order.NONE);

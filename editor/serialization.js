@@ -13,7 +13,7 @@ import * as Blockly from 'blockly/core';
  */
 export const save = function(workspace) {
   const data = Blockly.serialization.workspaces.save(workspace);
-  // window.localStorage?.setItem("ws", JSON.stringify(data));
+  window.localStorage?.setItem("ws", JSON.stringify(data));
 };
 
 /**
@@ -21,12 +21,16 @@ export const save = function(workspace) {
  * @param {Blockly.Workspace} workspace Blockly workspace to load into.
  * @param {String} spriteId Sprite name to save workspace of.
  */
+window.onWorkspaceLoadFunctions = [];
 export const load = function(workspace) {
   const data = window.localStorage?.getItem("ws");
-  if (!data) return;
+  if (!data) {window.workspaceLoaded = true; return;}
 
   // Don't emit events during loading.
   Blockly.Events.disable();
   Blockly.serialization.workspaces.load(JSON.parse(data), workspace, false);
   Blockly.Events.enable();
+
+  window.workspaceLoaded = true;
+  for(let i = 0; i < window.onWorkspaceLoadFunctions.length; i++) { window.onWorkspaceLoadFunctions[i](); }
 };

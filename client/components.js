@@ -167,6 +167,7 @@ const renderShapeMap = [
         for(let i = 0; i < o.sat.points.length; i++){
             ctx.lineTo(o.pos.x + o.sat.points[i].x, o.pos.y + o.sat.points[i].y);
         }
+        ctx.lineTo(o.pos.x + o.sat.points[0].x, o.pos.y + o.sat.points[0].y);
     },
 ]
 
@@ -310,7 +311,6 @@ const effectMap = [
     },
     /*bounce*/
     (p, res, o) => {
-        // note that o is the parameters of the specific effect, not the obstacle itself. If i added a 4th parameter that would be the whole obstacle.
         p.pos.x += res.overlapV.x;
         p.pos.y += res.overlapV.y;
 

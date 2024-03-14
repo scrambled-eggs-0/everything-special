@@ -8,6 +8,7 @@ import {javascriptGenerator} from 'blockly/javascript';
 import {save, load} from './serialization';
 import toolbox from '../shared/toolbox.js';
 import textData from '../shared/textData.js';
+import DarkTheme from '@blockly/theme-dark';
 const { JSBlockData, JSBlockNames } = textData;
 
 for(let i = 0; i < JSBlockNames.length; i++){
@@ -18,6 +19,7 @@ for(let i = 0; i < JSBlockNames.length; i++){
 Blockly.common.defineBlocks(blocks);
 Object.assign(javascriptGenerator.forBlock, forBlock);
 
+window.workspaceLoaded = false;
 window.isEditor = true;
 
 const zoom = {
@@ -35,7 +37,7 @@ const codeDiv = document.getElementById('generatedCode').firstChild;
 const blocklyDiv = document.getElementById('blocklyDiv');
 
 const theme = Blockly.Theme.defineTheme('defaultTheme', {
-  'base': Blockly.Themes.Classic,
+  'base': DarkTheme,
   'blockStyles': {
     'motion_blocks': {
       'colourPrimary': '#07ced9'
@@ -74,7 +76,7 @@ const runCode = () => {
   }
 };
 
-let ws = Blockly.inject(blocklyDiv, {toolbox, zoom, theme});
+const ws = window.ws = Blockly.inject(blocklyDiv, {toolbox, zoom, theme});
 load(ws);
 
 // TODO: Get blockly div resizing when draggable dragged. Below works but is inefficient
@@ -133,3 +135,24 @@ function uploadCode(){
           console.error('Error uploading file:', error);
       });
 }
+
+import './createMode.js';
+
+window.requestIdleCallback(() => {
+  // overriding the duplicate function 
+  const PASTE = Blockly.ShortcutItems.names.PASTE;
+  const oldPasteShortcut = Blockly.ShortcutRegistry.registry.getRegistry()[PASTE];
+  const newPasteShortcut = {
+    ...oldPasteShortcut,
+    callback(workspace) {
+      window.workspaceLoaded = false;
+      const returnVal = oldPasteShortcut.callback.call(this, workspace);
+      window.workspaceLoaded = true;
+      return returnVal;
+    }
+  }
+  Blockly.ShortcutRegistry.registry.register(newPasteShortcut, /*allowOverrides:*/ true);
+
+  // removing the duplicate function from the menu
+  Blockly.ContextMenuRegistry.registry.unregister('blockDuplicate');
+}, {timeout: 100})

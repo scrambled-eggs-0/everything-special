@@ -80,6 +80,7 @@ function _render(os, cols){
             j = 0;
             ctx.toFill = true;
             ctx.toStroke = false;
+            ctx.lineWidth = 2;
             ctx.beginPath();
             os[i].renderShape(os[i]);
             os[i].renderEffect[j](os[i]);
@@ -100,6 +101,7 @@ function _render(os, cols){
             // render full index
             ctx.toFill = true;
             ctx.toStroke = false;
+            ctx.lineWidth = 2;
             ctx.beginPath();
             os[i].renderShape(os[i]);
             os[i].renderEffect[j](os[i]);
@@ -112,6 +114,7 @@ function _render(os, cols){
             j = opaqIndex;
             ctx.toFill = true;
             ctx.toStroke = false;
+            ctx.lineWidth = 2;
             ctx.beginPath();
             os[i].renderShape(os[i]);
             os[i].renderEffect[j](os[i]);
@@ -119,6 +122,7 @@ function _render(os, cols){
             if(ctx.toFill === true) ctx.fill();
             if(ctx.toStroke === true) ctx.stroke();
             ctx.closePath();
+            ctx.globalAlpha = 1;
         }
     }
     ctx.globalAlpha = 1;

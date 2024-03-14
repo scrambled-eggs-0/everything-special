@@ -385,6 +385,9 @@ export default {
         init: function() {
           this.setColour(194);
 
+          this.setNextStatement(true, null);
+          this.setPreviousStatement(true, null);
+
           this.shapeOptions = [];
           for(let i = 0; i < window.satMapI2N.length; i++){
             this.shapeOptions.push([window.satMapI2N[i], i.toString()]);
@@ -447,6 +450,7 @@ export default {
         },
 
         updateNumberOfSimulatesDropdown: function(newValue) {
+          if(window.workspaceLoaded === false) return;
           // remove existing
           for(let i = 0; i < this.numSimulateFields; i++){
             this.removeInput(`SIMULATE_CONTAINER${i}`, true);
@@ -489,6 +493,7 @@ export default {
         },
 
         updateNumberOfEffectsDropdown: function(newValue) {
+          if(window.workspaceLoaded === false) return;
           // remove existing
           for(let i = 0; i < this.numEffectFields; i++){
             this.removeInput(`EFFECT_CONTAINER${i}`, true);
@@ -533,6 +538,9 @@ export default {
         },
 
         updateShapeDropdown: function(newValue) {
+          if(window.workspaceLoaded === false) return;
+          // if(window.blocklyLoaded !== true) return;
+          // return; // TODO: get this working with serialization. possibly set the value of num_simulates so that fields can be pre-appended?
           let oldValue = this.getFieldValue("SHAPE_DROPDOWN");
 
           const oldValueMap = window.satDefaultMap[oldValue];
@@ -567,6 +575,7 @@ export default {
         },
 
         updateSimulateDropdown: function(newValue, dropdownId) {
+          if(window.workspaceLoaded === false) return this.getIndexOfInput(`SIMULATE_CONTAINER${dropdownId}`) + 1;
           let oldValue = this.getFieldValue(`SIMULATE_DROPDOWN${dropdownId}`);
 
           if(oldValue !== undefined && oldValue !== null) this.simulateOptions[oldValue] = [window.simulateMapI2N[oldValue], oldValue.toString()];
@@ -601,6 +610,7 @@ export default {
         },
 
         updateEffectDropdown: function(newValue, dropdownId) {
+          if(window.workspaceLoaded === false) return this.getIndexOfInput(`EFFECT_CONTAINER${dropdownId}`) + 1;
           let oldValue = this.getFieldValue(`EFFECT_DROPDOWN${dropdownId}`);
 
           if(oldValue !== undefined && oldValue !== null) this.effectOptions[oldValue] = [window.effectMapI2N[oldValue], oldValue.toString()];
@@ -633,15 +643,160 @@ export default {
           return insertionIndex;
         },
 
-        // TODO: make this not crash lol
         saveExtraState: function() {
+          const simulateDropdownIndexToKey = [];
+          const effectDropdownIndexToKey = [];
+
+          for(let i = 0; i < this.inputList.length; i++){
+            const name = this.inputList[i].name;
+            if(name.slice(0,18) === "SIMULATE_CONTAINER"){
+              const num = parseInt(name.slice(18));
+              const value = this.getFieldValue(`SIMULATE_DROPDOWN${num}`);
+              simulateDropdownIndexToKey[num] = value;
+            } else if(name.slice(0,16) == "EFFECT_CONTAINER"){
+              const num = parseInt(name.slice(16));
+              const value = this.getFieldValue(`EFFECT_DROPDOWN${num}`);
+              effectDropdownIndexToKey[num] = value;
+            }
+          }
+
           return {
-            'itemCount': this.itemCount_,
+            shapeParamToId: this.shapeParamToId,
+            lastShapeIdGen: this.shapeIdGenerator,
+
+            numSimulateFields: this.numSimulateFields,
+            simulateParamToId: this.simulateParamToId,
+            lastSimulateIdGen: this.simulateIdGenerator,
+
+            numEffectFields: this.numEffectFields,
+            effectParamToId: this.effectParamToId,
+            lastEffectIdGen: this.effectIdGenerator,
+
+            sditk: simulateDropdownIndexToKey,
+            editk: effectDropdownIndexToKey
           };
         },
         
         loadExtraState: function(state) {
-          this.itemCount_ = state['itemCount'];
+          if(window.workspaceLoaded === true){
+            return;
+          }
+          // basic idea is to append param inputs like they're new as like done in the validators
+
+          // shape
+          {
+            this.shapeParamToId = state.shapeParamToId;
+
+            const newValueMap = this.shapeParamToId;
+
+            this.shapeIdGenerator = state.lastShapeIdGen - Object.keys(this.shapeParamToId).length;
+
+            for(let key in newValueMap){
+              const id = newValueMap[key];
+              this.appendValueInput(id)
+                .appendField(key + ':')
+                .setCheck(null)
+                .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(0)));
+
+              this.inputList.splice(1, 0, this.inputList.pop())
+            }
+          }
+
+          // simulate
+          const simulateOptionsToNull = [];
+          {
+            this.simulateParamToId = state.simulateParamToId;
+            this.simulateIdGenerator = state.lastSimulateIdGen;
+            this.numSimulateFields = state.numSimulateFields;
+
+            const simulateDropdownIndexToKey = state.sditk;
+
+            // inserting dropdowns
+            let insertionIndex = this.getIndexOfInput(`NUM_SIMULATES_CONTAINER`) + 1;
+            
+            for(let i = 0; i < this.numSimulateFields; i++){
+              const sourceBlock = this;
+              const dropdown = new Blockly.FieldDropdown(function() { return sourceBlock.generateSimulateDropdownOptions(this, sourceBlock) }, this.validateSimulateDropdown);
+              dropdown.id = i;
+              this.appendDummyInput(`SIMULATE_CONTAINER${i}`)
+                .appendField('simulate:')
+                .appendField(dropdown, `SIMULATE_DROPDOWN${i}`);
+
+              this.inputList.splice(insertionIndex, 0, this.inputList.pop());
+
+              // no need to call the function when we're doing this all manually
+              insertionIndex++; //= this.updateSimulateDropdown(this.getFieldValue(`SIMULATE_DROPDOWN${i}`), i);
+
+              // append all of the params in order
+              const dropdownValue = simulateDropdownIndexToKey[i];
+              const paramMap = simulateDefaultMap[dropdownValue];
+
+              for(let key in paramMap){
+                const id = this.simulateParamToId[key];
+                this.appendValueInput(id)
+                  .appendField(key + ':')
+                  .setCheck(null)
+                  .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(paramMap[key])));
+
+                this.inputList.splice(insertionIndex++, 0, this.inputList.pop());
+              }
+
+              simulateOptionsToNull.push(dropdownValue);
+            }
+          }
+
+          // effect
+          const effectOptionsToNull = [];
+          {
+            this.effectParamToId = state.effectParamToId;
+            this.simulateIdGenerator = state.lastEffectIdGen;
+            this.numEffectFields = state.numEffectFields;
+
+            const effectDropdownIndexToKey = state.editk;
+
+            // inserting dropdowns
+            let insertionIndex = this.getIndexOfInput(`NUM_EFFECTS_CONTAINER`) + 1;
+            
+            for(let i = 0; i < this.numEffectFields; i++){
+              const sourceBlock = this;
+              const dropdown = new Blockly.FieldDropdown(function() { return sourceBlock.generateEffectDropdownOptions(this, sourceBlock) }, this.validateEffectDropdown);
+              dropdown.id = i;
+              this.appendDummyInput(`EFFECT_CONTAINER${i}`)
+                .appendField('effect:')
+                .appendField(dropdown, `EFFECT_DROPDOWN${i}`);
+
+              this.inputList.splice(insertionIndex, 0, this.inputList.pop());
+
+              // no need to call the function when we're doing this all manually
+              insertionIndex++; //= this.updateEffectDropdown(this.getFieldValue(`EFFECT_DROPDOWN${i}`), i);
+
+              // append all of the params in order
+              const dropdownValue = effectDropdownIndexToKey[i];
+              const paramMap = effectDefaultMap[dropdownValue];
+
+              for(let key in paramMap){
+                const id = this.effectParamToId[key];
+                this.appendValueInput(id)
+                  .appendField(key + ':')
+                  .setCheck(null)
+                  .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(paramMap[key])));
+
+                this.inputList.splice(insertionIndex++, 0, this.inputList.pop());
+              }
+
+              effectOptionsToNull.push(dropdownValue);
+            }
+          }
+
+          const block = this;
+          window.onWorkspaceLoadFunctions.push(() => {
+            for(let i = 0; i < simulateOptionsToNull.length; i++){
+              block.simulateOptions[simulateOptionsToNull[i]] = null;
+            }
+            for(let i = 0; i < effectOptionsToNull.length; i++){
+              block.effectOptions[effectOptionsToNull[i]] = null;
+            }
+          })
         },
       };
     }

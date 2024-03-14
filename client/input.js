@@ -14,6 +14,8 @@ window.mouseY = -1;
 window.mouseDownFunctions = [];
 window.mouseUpFunctions = [];
 window.mouseOut = false;
+window.pageX = -1;
+window.pageY = -1;
 
 window.onmousedown = () => {
     // scrolling
@@ -30,6 +32,9 @@ window.onmousemove = (e) => {
     // input
     window.mouseX = ((e.pageX - window.canvasDimensions.x) / window.canvasDimensions.width) * canvas.width;//Math.min(1, Math.max(0, ) ;
     window.mouseY = ((e.pageY - window.canvasDimensions.y) / window.canvasDimensions.height) * canvas.height;
+
+    window.pageX = e.pageX;
+    window.pageY = e.pageY;
 
     window.mouseOut = false;
 
