@@ -5,8 +5,20 @@ const Blockly = require('blockly');// THIS is the error
 const libraryBlocks = require('blockly/blocks');
 const { javascriptGenerator } = require('blockly/javascript');
 
-global.window = {codeLoaded: false/*triggers safeties for dynamic dropdowns*/};
-global.entities = [];
+import '../../client/components.js';
+import textData from "../../shared/textData.js";
+const { JSBlockData, JSBlockNames } = textData;
+
+for(let i = 0; i < JSBlockNames.length; i++){
+  Blockly.Blocks[JSBlockNames[i]] = JSBlockData[i](Blockly);
+}
+
+for(let key in global.window){
+    global[key] = global.window[key];
+}
+global.isServer = true;
+global.window.onWorkspaceLoadFunctions=[];
+global.window.workspaceLoaded = false;
 
 // import blocks from './text.js';
 // import forBlock from '../../shared/forBlock.js';
@@ -20,6 +32,7 @@ Blockly.Events.disable();
 
 export default function validate(wsData) {
     let code;
+    // TODO: upload failed! Error: JavaScript generator does not know how to generate code for block type "create_obstacle". Get js generator assigned to forBlock. See commmented stuff above
     try {
         Blockly.serialization.workspaces.load(JSON.parse(wsData), validatorWorkspace);
         code = javascriptGenerator.workspaceToCode(validatorWorkspace);
@@ -30,5 +43,5 @@ export default function validate(wsData) {
     
     // console.log(code.replaceAll('var ', 'let '));
     // return false;
-    return code.replaceAll('var ', 'let ');
+    return code;
 }

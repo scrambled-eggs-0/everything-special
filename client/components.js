@@ -1,4 +1,3 @@
-import './input.js';
 import './SAT.js'; 
 
 window.mouseDownFunctions.push(() => {
@@ -10,6 +9,7 @@ window.mouseDownFunctions.push(() => {
         window.onmouseup();
     }
 })
+const SAT = window.SAT;
 SAT.Circle.prototype.rotate = function (angle) {
     this.pos.rotate(angle);
 }

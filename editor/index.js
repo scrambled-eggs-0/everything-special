@@ -54,7 +54,7 @@ const theme = Blockly.Theme.defineTheme('defaultTheme', {
     //   'colour': '#07ced9'
     // }
     'obstacle_category': {
-      'colour': '#07ced9'
+      'colour': '#00626e'//'#07ced9'
     }
   },
   // 'componentStyles': {...},
@@ -63,7 +63,7 @@ const theme = Blockly.Theme.defineTheme('defaultTheme', {
 });
 
 function getCode(){
-  return javascriptGenerator.workspaceToCode(ws).replaceAll('var ', 'let ');
+  return javascriptGenerator.workspaceToCode(ws);//.replaceAll('var ', 'let ');
 }
 
 const runCode = () => {

@@ -138,7 +138,6 @@ app.get('/game', (res, req) => {
 
 app.post('/upload', (res, req) => {
     console.log('post recieved!');
-    return; // TEMP; TODO get publishing working!
 
     // res.cork(() => {
     //     res.writeHeader('Access-Control-Allow-Origin', '*');

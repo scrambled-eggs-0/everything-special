@@ -3,7 +3,7 @@ const { until, isEditor } = Utils;
 
 let nextCode;
 const nextCodeLoaded = () => { return nextCode !== undefined; };
-const reqUrl = `${location.origin}/game`;
+// const reqUrl = `${location.origin}/game`;
 let loadingCurrent = false;
 
 // never get code from server in editor
@@ -102,6 +102,9 @@ async function replaceScript(){
 
     nextCode = undefined;
 }
+
+// for node.js
+if(typeof window === 'undefined') {global.window = {};}
 
 window.removeScript = function removeScript(){
     const last = document.getElementById("gameScript");

@@ -2,6 +2,7 @@
 const canvas = window.canvas = document.getElementById('canvas');
 const ctx = window.ctx = canvas.getContext('2d');
 
+import './input.js';
 import simulate from './components.js';
 
 // run code
@@ -144,11 +145,13 @@ function _render(os, cols){
 let lastTime, now, firstTime, accum, dt, frames;
 lastTime = now = firstTime = Date.now();
 accum = dt = frames = 0;
+window.time = 0;
 const FRAME_TIME = 1000 / 60;
 (function run(){
     now = Date.now();
     dt = now - lastTime;
     accum += dt;
+    window.time += dt;
     lastTime = now;
     
     // if we're not ahead
