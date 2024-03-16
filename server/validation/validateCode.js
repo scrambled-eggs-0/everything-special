@@ -20,19 +20,18 @@ global.isServer = true;
 global.window.onWorkspaceLoadFunctions=[];
 global.window.workspaceLoaded = false;
 
-// import blocks from './text.js';
-// import forBlock from '../../shared/forBlock.js';
+import blocks from './text.js';
+import forBlock from '../../shared/forBlock.js';
 
 Blockly.common.defineBlocks(libraryBlocks);
-// Blockly.common.defineBlocks(blocks);
-// Object.assign(javascriptGenerator.forBlock, forBlock);
+Blockly.common.defineBlocks(blocks);
+Object.assign(javascriptGenerator.forBlock, forBlock);
 
 const validatorWorkspace = new Blockly.Workspace();
 Blockly.Events.disable();
 
 export default function validate(wsData) {
     let code;
-    // TODO: upload failed! Error: JavaScript generator does not know how to generate code for block type "create_obstacle". Get js generator assigned to forBlock. See commmented stuff above
     try {
         Blockly.serialization.workspaces.load(JSON.parse(wsData), validatorWorkspace);
         code = javascriptGenerator.workspaceToCode(validatorWorkspace);

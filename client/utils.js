@@ -15,7 +15,6 @@ const SCROLL_PARAMS = Object.freeze({
     maxScrollTime: 150
 });
 
-if(typeof location === 'undefined') var location = {origin: '', href: ''};
-const isEditor = location.origin.endsWith('8080') || location.href.endsWith('editor');
+const isEditor = typeof location === 'undefined' ? false : (location.origin.endsWith('8080') || location.href.endsWith('editor'));
 
 export default { until, SCROLL_PARAMS, isEditor };

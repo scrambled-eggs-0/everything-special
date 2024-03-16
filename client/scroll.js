@@ -3,7 +3,7 @@ const { until, isEditor } = Utils;
 
 let nextCode;
 const nextCodeLoaded = () => { return nextCode !== undefined; };
-// const reqUrl = `${location.origin}/game`;
+const reqUrl = `${location.origin}/game`;
 let loadingCurrent = false;
 
 // never get code from server in editor
@@ -82,10 +82,9 @@ async function scroll(){
 }
 
 async function getNextCode(){
-    return 'E(1,[],[0,1,2,3],{x:200,y:200,w:500,h:1200,bounciness:1,decay:0.99})';
-    // const response = await fetch(reqUrl);
-    // if (!response.ok) throw new Error(`Failed to fetch ${reqUrl}`);
-    // return response.text();
+    const response = await fetch(reqUrl);
+    if (!response.ok) throw new Error(`Failed to fetch ${reqUrl}`);
+    return response.text();
 }
 
 // replaces code running with nextCode
@@ -102,9 +101,6 @@ async function replaceScript(){
 
     nextCode = undefined;
 }
-
-// for node.js
-if(typeof window === 'undefined') {global.window = {};}
 
 window.removeScript = function removeScript(){
     const last = document.getElementById("gameScript");
