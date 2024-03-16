@@ -3,11 +3,12 @@ const { until, isEditor } = Utils;
 
 let nextCode;
 const nextCodeLoaded = () => { return nextCode !== undefined; };
-const reqUrl = `${location.origin}/game`;
+const isServer = typeof location === 'undefined';
+const reqUrl = isServer === true ? '' : `${location.origin}/game`;
 let loadingCurrent = false;
 
 // never get code from server in editor
-if(isEditor === true){
+if(isEditor === true || isServer === true){
     getNextCode = async () => {
         await until(() => { return false; })
     };

@@ -87,6 +87,7 @@ function _render(os, cols){
             os[i].renderEffect[j](os[i]);
             if(ctx.toFill === true) ctx.fill();
             if(ctx.toStroke === true) ctx.stroke();
+            if(ctx.cleanUpFunction !== undefined) { ctx.cleanUpFunction(); ctx.cleanUpFunction = undefined; }
             ctx.closePath();
             ctx.globalAlpha = 1;
         } else {
@@ -109,6 +110,7 @@ function _render(os, cols){
             ctx.globalAlpha = 1;
             if(ctx.toFill === true) ctx.fill();
             if(ctx.toStroke === true) ctx.stroke();
+            if(ctx.cleanUpFunction !== undefined) { ctx.cleanUpFunction(); ctx.cleanUpFunction = undefined; }
             ctx.closePath();
 
             // render opaq index
@@ -122,6 +124,7 @@ function _render(os, cols){
             ctx.globalAlpha = os[i].renderEffectTimer - opaqIndex;
             if(ctx.toFill === true) ctx.fill();
             if(ctx.toStroke === true) ctx.stroke();
+            if(ctx.cleanUpFunction !== undefined) { ctx.cleanUpFunction(); ctx.cleanUpFunction = undefined; }
             ctx.closePath();
             ctx.globalAlpha = 1;
         }
@@ -180,6 +183,10 @@ const FRAME_TIME = 1000 / 60;
 
     requestAnimationFrame(run);
 })();
+
+window.onvisibilitychange = () => {
+    accum = 0;
+}
 
 if(isEditor !== true){
     // resizing canvas

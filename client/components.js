@@ -1,14 +1,18 @@
-import './SAT.js'; 
+import './SAT.js';
+import Utils from './utils.js';
+const { isEditor } = Utils;
+import scroll from './scroll.js';
+let toScroll = false;
 
-window.mouseDownFunctions.push(() => {
-    if(player.dead === true){
-        player.pos.x = window.spawnPosition.x;
-        player.pos.y = window.spawnPosition.y;
-        player.dead = false;
-        player.forces.length = 0;
-        window.onmouseup();
-    }
-})
+function respawnPlayer(){
+    player.pos.x = window.spawnPosition.x;
+    player.pos.y = window.spawnPosition.y;
+    player.dead = false;
+    player.forces.length = 0;
+    window.onmouseup();
+}
+window.mouseDownFunctions.push(()=>{if(player.dead===true){respawnPlayer()}});
+
 const SAT = window.SAT;
 SAT.Circle.prototype.rotate = function (angle) {
     this.pos.rotate(angle);
@@ -93,6 +97,14 @@ function simulate(){
         player.pos.y = player.sat.r;
     } else if(player.pos.y + player.sat.r > canvas.height){
         player.pos.y = canvas.height - player.sat.r;
+    }
+
+    // scrolling if specified by a simulate type
+    if(toScroll === true){
+        toScroll = false;
+        if(window.dragging === true) window.onmouseup();
+        scroll();
+        respawnPlayer();
     }
 
     // (rendering happens in between)
@@ -296,6 +308,8 @@ const initEffectMap = [
         o.decay = params.decay;
     },
     /*stopForces*/
+    () => {},
+    /*winpad*/
     () => {}
 ]
 
@@ -321,6 +335,19 @@ const effectMap = [
     /*stopForces*/
     (p) => {
         p.forces.length = 0;
+    },
+    /*winpad*/
+    (p) => {
+        // TODO: make winpad have a param that, if true, sends
+        // players that beat this level to another level of the
+        // level maker's choosing
+        if(isEditor === true){
+            // respawn
+            respawnPlayer();
+        } else {
+            // scroll
+            toScroll = true;
+        }
     }
 ]
 
@@ -328,7 +355,8 @@ window.effectMapI2N = [
     'bound',
     'kill',
     'bounce',
-    'stopForces'
+    'stopForces',
+    'winpad'
 ]
 
 window.effectDefaultMap = [
@@ -342,6 +370,8 @@ window.effectDefaultMap = [
         decay: 0.98
     },
     // stopForces
+    {},
+    // winpad
     {}
 ]
 
@@ -368,6 +398,15 @@ const renderEffectMap = [
         ctx.lineWidth = 6;
         ctx.globalAlpha = 0.1;
         ctx.toStroke = true;
+    },
+    /*winpad*/
+    (o) => {
+        ctx.fillStyle = `hsl(${window.time/12},50%,50%)`;
+        ctx.shadowColor = ctx.fillStyle;
+        ctx.shadowBlur = 15;
+        ctx.cleanUpFunction = () => {
+            ctx.shadowBlur = 0;
+        }
     },
 ]
 
