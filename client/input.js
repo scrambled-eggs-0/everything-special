@@ -90,12 +90,12 @@ window.onmouseup = () => {
 // mobile
 window.ontouchstart = (e) => {
     const touch = (e.touches || e.originalEvent.touches)[0];
-    if(dragging === false) {
-        window.mouseX = touch.pageX;
-        window.mouseY = touch.pageY;
-        for(let i = 0; i < window.mouseDownFunctions.length; i++){
-            window.mouseDownFunctions[i]();
-        }
+    if(dragging === true) {
+        // window.mouseX = touch.pageX;
+        // window.mouseY = touch.pageY;
+        // for(let i = 0; i < window.mouseDownFunctions.length; i++){
+        //     window.mouseDownFunctions[i]();
+        // }
         return;// ignore >1 touches
     }
     window.onmousedown();
@@ -111,9 +111,9 @@ window.ontouchmove = (e) => {
 
 window.ontouchend = (e) => {
     if(dragging === false) {
-        for(let i = 0; i < window.mouseUpFunctions.length; i++){
-            window.mouseUpFunctions[i]();
-        }
+        // for(let i = 0; i < window.mouseUpFunctions.length; i++){
+        //     window.mouseUpFunctions[i]();
+        // }
         return;// ignore >1 touches
     }
     window.onmouseup();

@@ -25,6 +25,7 @@ function create(shape, simulates, effects, params){
         effect: [],
         renderShape: renderShapeMap[shape],
         renderEffect: effects.map(e => renderEffectMap[e]),
+        initialDimensions: dimensionsMap[shape](params)
     };
     e.renderEffectTimer = 0;
     e.pos = e.sat.pos;
@@ -42,15 +43,18 @@ function create(shape, simulates, effects, params){
 }
 window.C = create;
 
-let angle;
+let angle, speed, distSq;
 let res = new SAT.Response();
 let collided = false;
 function simulate(){
     // player simulation
     if(window.dragging === true && player.dead === false){
+        distSq = (window.mouseY - player.pos.y) ** 2 + (window.mouseX - player.pos.x) ** 2;
+        if(player.speed ** 2 < distSq) speed = player.speed;
+        else speed = Math.sqrt(distSq);
         angle = Math.atan2(window.mouseY - player.pos.y, window.mouseX - player.pos.x);
-        player.pos.x += Math.cos(angle) * player.speed;
-        player.pos.y += Math.sin(angle) * player.speed;
+        player.pos.x += Math.cos(angle) * speed;
+        player.pos.y += Math.sin(angle) * speed;
     }
 
     for(let i = 0; i < player.forces.length; i++){
@@ -132,6 +136,49 @@ const satMap = [
         return s;
     },
 ];
+
+const dimensionsMap = [
+    /*circle*/
+    (p) => {
+        // x,y,r
+        return {
+            x: p.r * 2,
+            y: p.r * 2
+        }
+    },
+    /*rectangle*/
+    (p) => {
+        // x,y,w,h
+        return {
+            x: p.w,
+            y: p.h
+        }
+    },
+    /*polygon*/
+    (p) => {
+        let top, right, bottom, left;
+        top = right = bottom = left = null;
+        for(let [px, py] of p.points){
+            if(px < left || left === null){
+                left = px;
+            }
+            if(px > right || right === null){
+                right = px;
+            }
+            if(py > bottom || bottom === null){
+                bottom = py;
+            }
+            if(py < top || top === null){
+                top = py;
+            }
+        }
+
+        return {
+            x: right - left,
+            y: bottom - top
+        }
+    },
+]
 
 window.satMapI2N = [
     'circle',
@@ -310,7 +357,19 @@ const initEffectMap = [
     /*stopForces*/
     () => {},
     /*winpad*/
-    () => {}
+    () => {},
+    /*coin*/
+    (o, params) => {
+        o.collected = false;
+        o.coinAmount = params.coinAmount;
+        o.color = params.color;
+    },
+    /*coindoor*/
+    (o, params) => {
+        o.isCoindoor = true;
+        o.maxCoins = o.coins = params.coinAmount;
+        o.color = params.color;
+    },
 ]
 
 const effectMap = [
@@ -348,7 +407,26 @@ const effectMap = [
             // scroll
             toScroll = true;
         }
-    }
+    },
+    /*coin*/
+    (p, res, o) => {
+        if(o.collected === true){
+            return;
+        }
+        o.collected = true;
+        for(let i = 0; i < obstacles.length; i++){
+            if(obstacles[i].isCoindoor === true && obstacles[i].color === o.color){
+                obstacles[i].coins -= o.coinAmount;
+            }
+        }
+    },
+    /*coindoor*/
+    (p, res, o) => {
+        if(o.coins > 0){
+            p.pos.x += res.overlapV.x;
+            p.pos.y += res.overlapV.y;
+        }
+    },
 ]
 
 window.effectMapI2N = [
@@ -356,7 +434,9 @@ window.effectMapI2N = [
     'kill',
     'bounce',
     'stopForces',
-    'winpad'
+    'winpad',
+    'coin',
+    'coindoor'
 ]
 
 window.effectDefaultMap = [
@@ -372,7 +452,17 @@ window.effectDefaultMap = [
     // stopForces
     {},
     // winpad
-    {}
+    {},
+    // coin
+    {
+        coinAmount: 1,
+        color: '#d6d611'
+    },
+    // coindoor
+    {
+        coinAmount: 3,
+        color: '#d6d611'
+    }
 ]
 
 const renderEffectMap = [
@@ -406,6 +496,51 @@ const renderEffectMap = [
         ctx.shadowBlur = 15;
         ctx.cleanUpFunction = () => {
             ctx.shadowBlur = 0;
+        }
+    },
+    /*coin*/
+    (o) => {
+        ctx.fillStyle = o.color;
+        if(o.collected === true){
+            ctx.globalAlpha = 0.2;
+        } else {
+            ctx.globalAlpha = 0.8;
+        }
+        if(o.coinAmount !== 1){
+            ctx.cleanUpFunction = () => {
+                ctx.fillStyle = window.colors.tile;//'#313131';
+                ctx.font = `${Math.min(60, o.initialDimensions.x/4, o.initialDimensions.y/4)}px Inter`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(
+                    Math.max(0, o.coinAmount),
+                    o.pos.x,
+                    o.pos.y
+                );
+            }
+        }
+    },
+    /*coindoor*/
+    (o) => {
+        ctx.fillStyle = window.colors.tile;
+        ctx.globalAlpha = o.coins <= 0 ? 0.5 : 1;
+        ctx.cleanUpFunction = () => {
+            ctx.fillStyle = o.color;
+
+            ctx.beginPath();
+            ctx.roundRect(o.pos.x-o.initialDimensions.x/4, o.pos.y-o.initialDimensions.y/4, o.initialDimensions.x/2, o.initialDimensions.y/2, Math.min(o.initialDimensions.x,o.initialDimensions.y)/20);
+            ctx.fill();
+            ctx.closePath();
+    
+            ctx.fillStyle = colors.tile;//'#313131'//'#484a00';
+            ctx.font = `${Math.min(60, o.initialDimensions.x/4, o.initialDimensions.y/4)}px Inter`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(
+                Math.max(0, o.coins),
+                o.pos.x,
+                o.pos.y
+            );
         }
     },
 ]

@@ -811,6 +811,11 @@ window.generateShadowBlock = (value) => {
       `<field name="NUM">${value}</field>` +
     '</shadow>'
   } else if(type === 'string') {
+    if(value[0] === '#'){
+      return '<shadow type="colour_picker">' +
+        `<field name="COLOUR">${value}</field>` +
+      '</shadow>'
+    }
     return '<shadow type="text">' +
       `<field name="TEXT">${value}</field>` +
     '</shadow>'
