@@ -4,14 +4,14 @@ const { isEditor } = Utils;
 import scroll from './scroll.js';
 let toScroll = false;
 
-function respawnPlayer(){
+window.respawnPlayer = () => {
     player.pos.x = window.spawnPosition.x;
     player.pos.y = window.spawnPosition.y;
     player.dead = false;
     player.forces.length = 0;
     window.onmouseup();
 }
-window.mouseDownFunctions.push(()=>{if(player.dead===true){respawnPlayer()}});
+window.mouseDownFunctions.push(()=>{if(player.dead===true){window.respawnPlayer()}});
 
 const SAT = window.SAT;
 SAT.Circle.prototype.rotate = function (angle) {
