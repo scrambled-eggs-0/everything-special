@@ -18,4 +18,41 @@ const SCROLL_PARAMS = Object.freeze({
 
 const isEditor = typeof location === 'undefined' ? false : (location.origin.endsWith('8080') || location.href.endsWith('editor'));
 
-export default { until, SCROLL_PARAMS, isEditor };
+const memoizedColors = {};
+
+function blendColor(color1, color2, t) {
+	const memoizedIndex = color1 + '_' + color2 + '_' + t
+	if (memoizedColors[memoizedIndex] !== undefined) {
+		return memoizedColors[memoizedIndex];
+	}
+	const rgb1 = {
+		r: parseInt(color1.slice(1, 3), 16),
+		g: parseInt(color1.slice(3, 5), 16),
+		b: parseInt(color1.slice(5, 7), 16)
+	}
+	const rgb2 = {
+		r: parseInt(color2.slice(1, 3), 16),
+		g: parseInt(color2.slice(3, 5), 16),
+		b: parseInt(color2.slice(5, 7), 16)
+	}
+
+	const result = rgbToHex(Math.floor(rgb1.r * (1 - t) + rgb2.r * t), Math.floor(rgb1.g * (1 - t) + rgb2.g * t), Math.floor(rgb1.b * (1 - t) + rgb2.b * t))
+	memoizedColors[memoizedIndex] = result;
+	return result;
+}
+
+function rgbToHex(r, g, b) {
+	return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
+function componentToHex(c) {
+	var hex = c.toString(16);
+	return hex.length == 1 ? "0" + hex : hex;
+}
+
+const arrowImg = new Image();
+window.requestIdleCallback(() => {
+    arrowImg.src = '/arrow.png';
+}, 2000)
+
+export default { until, SCROLL_PARAMS, isEditor, blendColor, arrowImg };

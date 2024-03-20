@@ -123,6 +123,8 @@ window.resetGame = () => {
             window.onmouseup();
         }
     })
+    window.spawnPosition.x = 100;
+    window.spawnPosition.y = 1500;
 }  
 
 export default scroll;

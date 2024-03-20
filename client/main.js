@@ -33,7 +33,7 @@ const { isEditor } = Utils;
 // const TAU = Math.PI * 2;
 window.render = () => {
     if(window.scrollAnimation < 1){
-        window.scrollAnimation += (Date.now() - firstTime - offtabTime) / frames * .00384;// at 120fps this is +0.032/s;
+        window.scrollAnimation += (Date.now() - firstTime - offtabTime) / window.frames * .00384;// at 120fps this is +0.032/s;
         if(window.scrollAnimation > 1) window.scrollAnimation = 1;
         ctx.translate(0, -window.scrollAnimation * canvas.height);// not the same as the exit transform because we also want to translate (-canvas.height) in addition to (1 - window.scrollAnimation) * canvas.height
 
@@ -48,7 +48,7 @@ window.render = () => {
     }
 }
 
-const tileSize = 100; // 50
+window.tileSize = 100; // 50
 let opaqIndex, len, j = false;
 function _render(os, cols){
     ctx.fillStyle = cols.background;
@@ -58,7 +58,7 @@ function _render(os, cols){
     ctx.strokeStyle = cols.tile;
     ctx.lineWidth = window.isEditor === true ? 4 : 2;
 
-    for (let x = 0; x < canvas.width + ctx.lineWidth + tileSize; x += tileSize) {
+    for (let x = 0; x < canvas.width + ctx.lineWidth + window.tileSize; x += window.tileSize) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
         ctx.lineTo(x, canvas.height);
@@ -66,7 +66,7 @@ function _render(os, cols){
         ctx.closePath();
     }
 
-    for (let y = 0; y < canvas.height + ctx.lineWidth + tileSize; y += tileSize) {
+    for (let y = 0; y < canvas.height + ctx.lineWidth + window.tileSize; y += window.tileSize) {
         ctx.beginPath();
         ctx.moveTo(0, y);
         ctx.lineTo(canvas.width, y);
@@ -145,9 +145,9 @@ function _render(os, cols){
 }
 
 // gameloop
-let lastTime, now, firstTime, accum, dt, frames, offtabTime;
+let lastTime, now, firstTime, accum, dt, offtabTime;
 lastTime = now = firstTime = Date.now();
-accum = dt = frames = offtabTime = 0;
+accum = dt = window.frames = offtabTime = 0;
 window.time = 0;
 const FRAME_TIME = 1000 / 60;
 (function run(){
@@ -162,7 +162,7 @@ const FRAME_TIME = 1000 / 60;
     // if we're not ahead
     if(accum > 0){
         // simulate the frame as usual
-        frames++;
+        window.frames++;
         accum -= FRAME_TIME;
         simulate();
     } else {

@@ -1,6 +1,6 @@
 import './SAT.js';
 import Utils from './utils.js';
-const { isEditor } = Utils;
+const { isEditor, blendColor, arrowImg } = Utils;
 import scroll from './scroll.js';
 let toScroll = false;
 
@@ -25,7 +25,8 @@ function create(shape, simulates, effects, params){
         effect: [],
         renderShape: renderShapeMap[shape],
         renderEffect: effects.map(e => renderEffectMap[e]),
-        initialDimensions: dimensionsMap[shape](params)
+        initialDimensions: dimensionsMap[shape](params),
+        regenerateDimensions: dimensionsMap[shape]
     };
     e.renderEffectTimer = 0;
     e.pos = e.sat.pos;
@@ -36,6 +37,7 @@ function create(shape, simulates, effects, params){
     for(let i = 0; i < effects.length; i++){
         e.effect.push(effectMap[effects[i]]);
         initEffectMap[effects[i]](e, params);
+        if(idleEffectMap[effects[i]] !== undefined) e.simulate.push(idleEffectMap[effects[i]]);
     }
     if(params.tf !== undefined) e.simulate.push(params.tf);
     
@@ -53,8 +55,11 @@ function simulate(){
         if(player.speed ** 2 < distSq) speed = player.speed;
         else speed = Math.sqrt(distSq);
         angle = Math.atan2(window.mouseY - player.pos.y, window.mouseX - player.pos.x);
-        player.pos.x += Math.cos(angle) * speed;
-        player.pos.y += Math.sin(angle) * speed;
+        player.xv = Math.cos(angle) * speed * player.axisSpeedMultX;
+        player.yv = Math.sin(angle) * speed * player.axisSpeedMultY;
+        player.pos.x += player.xv;
+        player.pos.y += player.yv;
+        player.axisSpeedMultX = player.axisSpeedMultY = 1;
     }
 
     for(let i = 0; i < player.forces.length; i++){
@@ -89,6 +94,11 @@ function simulate(){
         for(let j = 0; j < obstacles[i].simulate.length; j++){
             obstacles[i].simulate[j](obstacles[i]);
         }
+    }
+
+    if(player.onSafe === true){
+        player.onSafe = false;
+        player.dead = false;
     }
 
     // bounding the player by the walls
@@ -369,6 +379,80 @@ const initEffectMap = [
         o.maxCoins = o.coins = params.coinAmount;
         o.color = params.color;
     },
+    /*checkpoint*/
+    (o, params) => {
+        o.collected = false;
+        o.checkpointOffsetX = params.checkpointOffsetX;
+        o.checkpointOffsetY = params.checkpointOffsetY;
+    },
+    /*breakable*/
+    (o, params) => {
+        o.maxStrength = params.maxStrength;//60
+        o.strength = o.maxStrength;
+        o.regenTime = params.regenTime;
+        o.lastBrokeTime = -1E99;
+        o.healSpeed = params.healSpeed;
+    },
+    /*safe*/
+    () => {},
+    /*tp*/
+    (o, params) => {
+        o.tpx = params.tpx;
+        o.tpy = params.tpy;
+    },
+    /*conveyor*/
+    (o, params) => {
+        o.conveyorForce = params.conveyorForce;
+        o.conveyorAngle = params.conveyorAngle * Math.PI / 180;
+        o.conveyorAngleRotateSpeed = params.conveyorAngleRotateSpeed * Math.PI/180;
+        o.conveyorFriction = params.conveyorFriction;
+    },
+    /*platformer*/
+    (o, params) => {
+        o.platformerForce = params.platformerForce;
+        o.platformerAngle = params.platformerAngle * Math.PI/180;
+        o.platformerAngleRotateSpeed = params.platformerAngleRotateSpeed * Math.PI/180;
+        o.platformerFriction = params.platformerFriction;
+
+        // o.maxJumps = params.maxJumps// TODO: IMPLEMENT JUMPS. also TODO: add a preserve jump parameter that makes jumps conserve even if you are not bounded that frame. If disabled, platformer only lets you jump when you're on a plat THAT FRAME
+        o.maxJumpCooldown = params.maxJumpCooldown;// in ticks
+        o.jumpCooldown = params.initJumpCooldown;
+        o.jumpForce = params.jumpForce;
+        o.jumpFriction = params.jumpDecay;
+    },
+    /*restrictAxis*/
+    (o, params) => {
+        o.axisSpeedMultX = params.axisSpeedMultX;
+        o.axisSpeedMultY = params.axisSpeedMultY;
+    },
+    /*snapGrid*/
+    (o, params) => {
+        o.toSnap = {
+            x: params.toSnapX,
+            y: params.toSnapY,
+        }
+        o.snapDistance = {
+            x: params.snapDistanceX,
+            y: params.snapDistanceY,
+        }
+        o.snapCooldown = o.maxSnapCooldown = params.snapCooldown;
+        o.snapAngle = params.snapAngle * Math.PI / 180;
+        o.snapAngleRotateSpeed = params.snapAngleRotateSpeed * Math.PI/180;
+
+        o.interpolatePlayerData = {};
+        // o.snapDistance.x = Math.max(35, o.snapDistance.x);
+        // o.snapDistance.y = Math.max(35, o.snapDistance.y);
+
+        o.snapToShowVelocity = Math.min(o.snapDistance.x, o.snapDistance.y) > 40;
+        o.snapMagnitude = Math.sqrt(o.snapDistance.x ** 2 + o.snapDistance.y ** 2); //(o.snapDistance.x + o.snapDistance.y)/2
+    },
+    /*timeTrap*/
+    (o, params) => {
+        o.timeTrapTime = o.timeTrapMaxTime = params.timeTrapMaxTime;
+        o.timeTrapRecoverySpeed = params.timeTrapRecoverySpeed;
+        o.timeTrapToKill = params.timeTrapToKill;
+        o.timeTrapToShowTenth = params.timeTrapToShowTenth;
+    },
 ]
 
 const effectMap = [
@@ -426,6 +510,180 @@ const effectMap = [
             p.pos.y += res.overlapV.y;
         }
     },
+    /*checkpoint*/
+    (p, res, o) => {
+        if(o.collected === true) return;
+        o.collected = true;
+        window.spawnPosition.x = o.pos.x + o.checkpointOffsetX;
+        window.spawnPosition.y = o.pos.y + o.checkpointOffsetY;
+    },
+    /*breakable*/
+    (p, res, o) => {
+        if(o.strength > 0){
+            p.pos.x += res.overlapV.x;
+            p.pos.y += res.overlapV.y;
+            o.strength--;
+            // if(o.strength < 0) o.strength = 0;
+        }
+
+        // breakable obs shouldn't regenerate on top of you
+        o.lastBrokeTime = tick;
+    },
+    /*safe*/
+    (p, res, o) => {
+        p.onSafe = true;
+    },
+    /*tp*/
+    (p, res, o) => {
+        // whoosh sound effect?
+        player.pos.x = o.tpx;
+        player.pos.y = o.tpy;
+    },
+    /*conveyor*/
+    (p, res, o) => {
+        p.forces.push([Math.cos(o.conveyorAngle) * o.conveyorForce, Math.sin(o.conveyorAngle) * o.conveyorForce, o.conveyorFriction]);
+    },
+    /*platformer*/
+    (p, res, o) => {
+        p.touching.platformer.push(obstacle);
+        obstacle.jumpCooldown--;
+
+        // add conveyor force
+        p.forces.push([Math.cos(o.platformerAngle) * o.platformerForce, Math.sin(o.platformerAngle) * o.platformerForce, o.platformerFriction]);
+
+        // TODO
+        // if(obstacle.jumpInput === 'up' || obstacle.jumpInput === 'down'){
+        //     player.axisSpeedMult.y = 0;
+        // } else if(obstacle.jumpInput === 'left' || obstacle.jumpInput === 'right'){
+        //     player.axisSpeedMult.x = 0;
+        // }
+    },
+    /*restrictAxis*/
+    (p, res, o) => {
+        p.axisSpeedMultX *= o.axisSpeedMultX;
+        p.axisSpeedMultY *= o.axisSpeedMultY;
+    },
+    /*snapGrid*/
+    (p, res, o) => {
+        // for those who haven't seen it, this is kind of my magnum opus of simulation functions.
+        // Developed back in 8th grade and later presented for my math final. Ask me (serum) about it!
+        // the basic idea of how it works is we have to snap to a rotated snap grid in space, so we
+        // translate the player to the snapGrid until its like the snap grid is unrotated. Then we snap
+        // by moduloing the x to the grid and then rotate back to get the final position.
+        o.snapCooldown--;
+
+        if(o.snapCooldown <= 0 && (Math.abs(p.xv) > 0.01 || Math.abs(p.yv) > 0.01)){
+            o.snapCooldown = o.maxSnapCooldown;
+            let playerSnapAngle = Math.atan2(p.yv, p.xv);
+            o.interpolatePlayerData = {
+                time: Math.min(o.maxSnapCooldown-1, 5),
+                nextX: p.x + Math.cos(playerSnapAngle) * o.snapMagnitude * 0.95,
+                nextY: p.y + Math.sin(playerSnapAngle) * o.snapMagnitude * 0.95
+            };
+            // p.x += Math.cos(o.pSnapAngle) * o.snapDistance.x;
+            // p.y += Math.sin(o.pSnapAngle) * o.snapDistance.y;
+        }
+
+        if(o.interpolatePlayerData.time > 1){
+            o.interpolatePlayerData.time--;
+            p.x = p.x * 0.8 + 0.2 * o.interpolatePlayerData.nextX;
+            p.y = p.y * 0.8 + 0.2 * o.interpolatePlayerData.nextY;
+        } else {
+            // in order to snap correctly, rotate both the p and the o the negative snapAngle relative to the o's center
+            // this means that the player will be relatively correct to the obs and the obs will be axis-aligned
+            let prt = {
+                angle: Math.atan2(p.y - o.y, p.x - o.x) - o.snapAngle,
+                distance: Math.sqrt((p.y - o.y)**2 + (p.x - o.x)**2)
+            }
+
+            prt.x = Math.cos(prt.angle) * prt.distance;
+            prt.y = Math.sin(prt.angle) * prt.distance;
+
+            // applying the transform just like the norotate snap that i coded earlier
+            // in other words, snap the relative p to the relative grid
+            prt.x = prt.x * 0.4 + 0.6 * (Math.round((prt.x - o.x % window.tileSize) / o.snapDistance.x) * o.snapDistance.x + o.x % window.tileSize + p.xv * (o.snapToShowVelocity*2-1));
+            prt.y = prt.y * 0.4 + 0.6 * (Math.round((prt.y - o.y % window.tileSize) / o.snapDistance.y) * o.snapDistance.y + o.y % window.tileSize + p.yv * (o.snapToShowVelocity*2-1));
+
+            prt.angle = Math.atan2(prt.y, prt.x) + o.snapAngle;
+            prt.distance = Math.sqrt(prt.y**2 + prt.x**2);
+
+            // rotating back
+            // translating the relative coordinates back to absolute ones
+            p.x = Math.cos(prt.angle) * prt.distance + o.x;
+            p.y = Math.sin(prt.angle) * prt.distance + o.y;
+
+            // TODO
+            // // checking if the original point was outside of the snapgrid as a result of rotation. If so, apply translations to make it right
+            // if(p.x < o.x - o.difference.x/2 - p.speed || p.x > o.x + o.difference.x/2 + p.speed){
+            //     p.x += Math.sign(p.xv) * o.snapDistance.x*0.6;
+            // }
+
+            // if(p.y < o.y - o.difference.y/2 - p.speed || p.y > o.y + o.difference.y/2 + p.speed){
+            //     p.y += Math.sign(p.yv) * o.snapDistance.y*0.6;
+            // }
+        }
+    },
+    /*timeTrap*/
+    (p, res, o) => {
+        o.timeTrapTime--;
+        o.timeTrapTime -= 2 * o.timeTrapRecoverySpeed;
+        if(o.timeTrapTime < 0){
+            if(o.timeTrapToKill === true) p.dead = true;
+            o.timeTrapTime = 0;
+        }
+    },
+]
+
+const idleEffectMap = [
+    // 'bound',
+    undefined,
+    // 'kill',
+    undefined,
+    // 'bounce',
+    undefined,
+    // 'stopForces',
+    undefined,
+    // 'winpad',
+    undefined,
+    // 'coin',
+    undefined,
+    // 'coindoor',
+    undefined,
+    // 'checkpoint',
+    undefined,
+    // 'breakable',
+    (o) => {
+        if (o.strength < o.maxStrength && window.frames-o.lastBrokeTime > o.regenTime) {
+            o.strength += o.healSpeed;
+            if(o.strength >= o.maxStrength){
+                o.lastBrokeTime = window.frames;
+                o.strength = o.maxStrength;
+            }
+        }
+    },
+    // 'safe',
+    undefined,
+    // 'tp',
+    undefined,
+    // 'conveyor',
+    (o) => {
+        o.conveyorAngle += o.conveyorAngleRotateSpeed;
+    },
+    // 'platformer',
+    (o) => {
+        o.platformerAngle += o.platformerAngleRotateSpeed;
+    },
+    // 'restrictAxis',
+    undefined,
+    // 'snapGrid',
+    (o) => {
+        o.snapAngle += o.snapAngleRotateSpeed;
+    },
+    // 'timeTrap'
+    (o) => {
+        o.timeTrapTime += o.timeTrapRecoverySpeed;
+        if(o.timeTrapTime > o.timeTrapMaxTime) o.timeTrapTime = o.timeTrapMaxTime;
+    },
 ]
 
 window.effectMapI2N = [
@@ -435,7 +693,16 @@ window.effectMapI2N = [
     'stopForces',
     'winpad',
     'coin',
-    'coindoor'
+    'coindoor',
+    'checkpoint',
+    'breakable',
+    'safe',
+    'tp',
+    'conveyor',
+    'platformer',
+    'restrictAxis',
+    'snapGrid',
+    'timeTrap'
 ]
 
 window.effectDefaultMap = [
@@ -461,7 +728,66 @@ window.effectDefaultMap = [
     {
         coinAmount: 3,
         color: '#d6d611'
-    }
+    },
+    // checkpoint
+    {
+        checkpointOffsetX: 0,
+        checkpointOffsetY: 0
+    },
+    // breakable
+    {
+        maxStrength: 60,
+        regenTime: 100,
+        healSpeed: 1
+    },
+    // safe
+    {},
+    // tp
+    {
+        tpx: 100,
+        tpy: 100
+    },
+    // conveyor
+    {
+        conveyorForce: 0.3,
+        conveyorAngle: 90,
+        conveyorAngleRotateSpeed: 0,
+        conveyorFriction: 0.8
+    },
+    // platformer
+    {
+        platformerForce: 1,
+        platformerAngle: 90,
+        platformerAngleRotateSpeed: 0,
+        platformerFriction: 0.875,
+        maxJumpCooldown: 30,
+        initJumpCooldown: 0,
+        jumpForce: 20,
+        jumpDecay: 0.95,
+        // maxJumps: 1
+    },
+    // restrictAxis
+    {
+        axisSpeedMultX: 0,
+        axisSpeedMultY: 1
+    },
+    // snapGrid
+    {
+        toSnapX: true,
+        toSnapY: true,
+        snapDistanceX: 50,
+        snapDistanceY: 50,
+        snapCooldown: 40,
+        snapAngle: 0,
+        snapAngleRotateSpeed: 0
+    },
+    // timeTrap
+    {
+        timeTrapMaxTime: 300,
+        timeTrapRecoverySpeed: 1,
+        timeTrapToKill: true,
+        timeTrapToShowTenth: false
+    },
 ]
 
 const renderEffectMap = [
@@ -542,6 +868,190 @@ const renderEffectMap = [
             );
         }
     },
+    /*checkpoint*/
+    (o) => {
+        if (o.collected === true) {
+            ctx.fillStyle = '#0fba09';
+            ctx.globalAlpha = 0.15;
+        } else {
+            ctx.fillStyle = '#05962b';
+            ctx.globalAlpha = 0.8;
+        }
+        // TODO
+        ctx.cleanUpFunction = () => {
+            ctx.globalAlpha /= 5;
+            let grd = ctx.createRadialGradient(o.pos.x, o.pos.y, 0, o.pos.x, o.pos.y, (o.difference.x + o.difference.y)/3);
+
+            grd.addColorStop(0, "rgba(255,255,255,1)");
+            grd.addColorStop(1, "rgba(255,255,255,0)");
+
+            ctx.fillStyle = grd;
+            renderShape(o, ctx, advanced);
+        }
+    },
+    /*breakable*/
+    (o) => {
+        ctx.fillStyle = window.colors.tile;// to make it into hex
+        ctx.fillStyle = blendColor('#000000', ctx.fillStyle, 0.5);
+        ctx.globalAlpha = o.strength / o.maxStrength;
+    },
+    /*safe*/
+    (o) => {
+        ctx.fillStyle = '#8c8c8c';
+        ctx.globalAlpha = 0.25;
+    },
+    /*tp*/
+    (o) => {
+        ctx.fillStyle = 'green';
+    },
+    /*conveyor*/
+    (o) => {
+        ctx.fillStyle = window.colors.tile;
+        ctx.globalAlpha = 0.1;
+        ctx.cleanUpFunction = () => {
+            const d = o.regenerateDimensions(o);
+            const halfW = d.x/2;
+            const halfH = d.y/2;
+            for(let x = o.pos.x - halfW + 50; x <= o.pos.x + 100 - o.pos.x%100 + halfW + 50; x += 100){
+                for(let y = o.pos.y - halfH + 50; y <= o.pos.y + 100 - o.pos.y%100 + halfH + 50; y += 100){
+                    ctx.translate(x,y);
+                    ctx.rotate(o.conveyorAngle+Math.PI/2);
+                    ctx.drawImage(arrowImg, -50, -50, 100, 100);
+                    ctx.rotate(-o.conveyorAngle-Math.PI/2);
+                    ctx.translate(-x,-y);
+                }
+            }
+        }
+    },
+    /*platformer*/
+    (o) => {
+        ctx.fillStyle = window.colors.tile;
+        ctx.globalAlpha = 0.3;
+        ctx.cleanUpFunction = () => {
+            const d = o.regenerateDimensions(o);
+            const halfW = d.x/2;
+            const halfH = d.y/2;
+            for(let x = o.pos.x - halfW + 50; x <= o.pos.x + 100 - o.pos.x%100 + halfW + 50; x += 100){
+                for(let y = o.pos.y - halfH + 50; y <= o.pos.y + 100 - o.pos.y%100 + halfH + 50; y += 100){
+                    ctx.translate(x,y);
+                    ctx.rotate(o.platformerAngle+Math.PI/2);
+                    ctx.drawImage(arrowImg, -50, -50, 100, 100);
+                    ctx.rotate(-o.platformerAngle-Math.PI/2);
+                    ctx.translate(-x,-y);
+                }
+            }
+        }
+    },
+    /*restrictAxis*/
+    (o) => {
+        if(o.axisSpeedMults.x < 0 && o.axisSpeedMults.y < 0){
+            ctx.strokeStyle = 'red';
+        } else if(o.axisSpeedMults.x < 0 || o.axisSpeedMults.y < 0){
+            ctx.strokeStyle = '#ff6969';
+        } else if(o.axisSpeedMults.y > 1 || o.axisSpeedMults.y > 1){
+            ctx.strokeStyle = '#c5c500';
+        } else {
+            ctx.strokeStyle = 'white';
+        }
+        ctx.lineWidth = 2;
+        ctx.toFill = false;
+        ctx.toStroke = true;
+        ctx.cleanUpFunction = () => {
+            ctx.translate(o.pos.x, o.pos.y);
+
+            ctx.globalAlpha = o.axisSpeedMults.x > 1 ? 0.8 : (Math.max(0.3,o.axisSpeedMults.x < 0 ? -o.axisSpeedMults.x : 1-o.axisSpeedMults.x));
+            ctx.strokeStyle = o.axisSpeedMults.x < 0 ? 'red' : (o.axisSpeedMults.x > 1 ? '#c5c500' : 'white');
+
+            const d = o.regenerateDimensions(o);
+
+            ctx.beginPath();
+            for(let x = -d.x/2; x <= d.x/2; x += 50){
+                ctx.moveTo(x,-d.y/2);
+                ctx.lineTo(x,d.y/2);
+            }
+            ctx.stroke();
+            ctx.closePath();
+
+            ctx.globalAlpha = o.axisSpeedMults.y > 1 ? 0.8 : (Math.max(0.3,o.axisSpeedMults.y < 0 ? -o.axisSpeedMults.y : 1-o.axisSpeedMults.y));
+            ctx.strokeStyle = o.axisSpeedMults.y < 0 ? 'red' : (o.axisSpeedMults.y > 1 ? '#c5c500' : 'white');
+
+            ctx.beginPath();
+            for(let y = -d.y/2; y <= d.y/2; y += 50){
+                ctx.moveTo(-d.x/2,y);
+                ctx.lineTo(d.x/2,y);
+            }
+            ctx.stroke();
+            ctx.closePath();
+        }
+    },
+    /*snapGrid*/
+    (o) => {
+        ctx.fillStyle = '#00008a';
+        ctx.globalAlpha = 0.1;
+
+        ctx.cleanUpFunction = () => {
+            ctx.strokeStyle = blendColor('#0f0000', '#000000', Math.max(0,o.pos.snapCooldown) / o.maxSnapCooldown);
+            ctx.lineWidth = 4;
+            ctx.globalAlpha = 0.25;
+            ctx.translate(o.pos.x, o.pos.y);
+
+            o.snapRotateMovementExpansion = {
+                base: (Math.max(o.difference.x,o.difference.y)**2/Math.sqrt(o.difference.x**2+o.difference.y**2))
+            }
+            o.snapRotateMovementExpansion.x = Math.ceil(o.snapRotateMovementExpansion.base/o.snapDistance.x+1)*o.snapDistance.x;
+            o.snapRotateMovementExpansion.y = Math.ceil(o.snapRotateMovementExpansion.base/o.snapDistance.y+1)*o.snapDistance.y;
+
+            ctx.rotate(o.snapAngle);
+
+            ctx.translate(o.pos.x%50,o.pos.y%50);
+
+            let renderPath = new Path2D();
+            if(o.toSnap.x === true){
+                for(let x = -o.snapRotateMovementExpansion.x; x <= o.snapRotateMovementExpansion.x; x += o.snapDistance.x){
+                    renderPath.rect(-5 + x, -o.snapRotateMovementExpansion.x - 5, 10, 2 * o.snapRotateMovementExpansion.x + 10);
+                    // ctx.moveTo(x,-o.snapRotateMovementExpansion);
+                    // ctx.lineTo(x,o.snapRotateMovementExpansion);
+                }
+            }
+
+            if(o.toSnap.y === true){
+                for(let y = -o.snapRotateMovementExpansion.y; y <= o.snapRotateMovementExpansion.y; y += o.snapDistance.y){
+                    renderPath.rect(-o.snapRotateMovementExpansion.y - 5, -5 + y, 2 * o.snapRotateMovementExpansion.y + 10, 10);
+                    // ctx.moveTo(-o.snapRotateMovementExpansion,y);
+                    // ctx.lineTo(o.snapRotateMovementExpansion,y);
+                }
+            }
+            ctx.stroke(renderPath);
+            ctx.closePath();
+            
+            // drawing snapMagnitude indicator
+            if(player.pos.x + o.snapMagnitude < o.pos.x - o.difference.x/2 || player.pos.x - o.snapMagnitude > o.pos.x + o.difference.x/2 || player.pos.y + o.snapMagnitude < o.pos.y - o.difference.y/2 || player.pos.y - o.snapMagnitude > o.pos.y + o.difference.y/2){
+                ctx.restore();
+                return;
+            }
+            ctx.strokeStyle = 'grey';
+            ctx.fillStyle = 'black';
+            ctx.globalAlpha = 0.22;
+            ctx.beginPath();
+
+            ctx.clip(renderPath);
+
+            ctx.translate(-o.pos.x%50,-o.pos.y%50);
+            ctx.rotate(-o.render.snapAngle);
+            ctx.translate(-o.pos.x,-o.pos.y);
+
+            ctx.arc(player.pos.x, player.pos.y, o.snapMagnitude, 0, Math.PI*2);
+            ctx.stroke();
+            ctx.fill();
+            ctx.closePath();
+
+            ctx.restore();
+        }
+    },
+    /*timeTrap*/
+    (o) => {
+        
+    }
 ]
 
 // an obstacle is an ECS
@@ -551,8 +1061,11 @@ window.spawnPosition = {x: 100, y: 1500};
 // a player is also an ecs
 create(0/*circle*/, [], [], /*no simulate/ effects*/ {x: window.spawnPosition.x, y: window.spawnPosition.y, r: /*24.5*/49.5})
 const player = window.player = obstacles.pop();
+player.axisSpeedMultX = player.axisSpeedMultY = 0;
+player.xv = player.yv = 0;
 player.speed = 4;
 player.dead = false;
+player.onSafe = false;
 player.forces = [];
 
 export default simulate;
