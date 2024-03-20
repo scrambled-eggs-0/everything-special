@@ -33,7 +33,7 @@ const { isEditor } = Utils;
 // const TAU = Math.PI * 2;
 window.render = () => {
     if(window.scrollAnimation < 1){
-        window.scrollAnimation += (Date.now() - firstTime) / frames * .00384;// at 120fps this is +0.032/s;
+        window.scrollAnimation += (Date.now() - firstTime - offtabTime) / frames * .00384;// at 120fps this is +0.032/s;
         if(window.scrollAnimation > 1) window.scrollAnimation = 1;
         ctx.translate(0, -window.scrollAnimation * canvas.height);// not the same as the exit transform because we also want to translate (-canvas.height) in addition to (1 - window.scrollAnimation) * canvas.height
 
@@ -145,9 +145,9 @@ function _render(os, cols){
 }
 
 // gameloop
-let lastTime, now, firstTime, accum, dt, frames;
+let lastTime, now, firstTime, accum, dt, frames, offtabTime;
 lastTime = now = firstTime = Date.now();
-accum = dt = frames = 0;
+accum = dt = frames = offtabTime = 0;
 window.time = 0;
 const FRAME_TIME = 1000 / 60;
 (function run(){
@@ -156,6 +156,8 @@ const FRAME_TIME = 1000 / 60;
     accum += dt;
     window.time += dt;
     lastTime = now;
+
+    if(dt > 2000) offtabTime += dt;
     
     // if we're not ahead
     if(accum > 0){
@@ -169,9 +171,11 @@ const FRAME_TIME = 1000 / 60;
         return;
     }
 
+    requestAnimationFrame(run);
+
     // if we're behind
     if(accum > FRAME_TIME){
-        // if we're too behind then give up
+        // if we're too far behind then give up
         if(accum > 2000) accum = 0;
 
         // otherwise simulate an extra catch-up tick
@@ -180,13 +184,7 @@ const FRAME_TIME = 1000 / 60;
     }
 
     window.render();
-
-    requestAnimationFrame(run);
 })();
-
-window.onvisibilitychange = () => {
-    accum = 0;
-}
 
 if(isEditor !== true){
     // resizing canvas

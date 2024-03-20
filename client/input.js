@@ -59,7 +59,7 @@ window.onmousemove = (e) => {
 
     totalDist -= e.movementY * window.innerHeight;
 
-    if(totalDist > SCROLL_PARAMS.sensitivity){
+    if(totalDist > SCROLL_PARAMS.sensitivity && (window.mouseX < SCROLL_PARAMS.edgeMargin || window.mouseX > canvas.width - SCROLL_PARAMS.edgeMargin)){
         const scrollTime = (Date.now() - dragStartTime);
         const averageSpeed = totalDist / scrollTime;
         if(averageSpeed > SCROLL_PARAMS.minAvgSpeed && scrollTime < SCROLL_PARAMS.maxScrollTime){

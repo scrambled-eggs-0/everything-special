@@ -108,7 +108,6 @@ function simulate(){
         toScroll = false;
         if(window.dragging === true) window.onmouseup();
         scroll();
-        respawnPlayer();
     }
 
     // (rendering happens in between)
