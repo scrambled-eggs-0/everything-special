@@ -150,10 +150,11 @@ window.requestIdleCallback(() => {
   const newPasteShortcut = {
     ...oldPasteShortcut,
     callback(workspace) {
-      window.workspaceLoaded = false;
-      const returnVal = oldPasteShortcut.callback.call(this, workspace);
-      window.workspaceLoaded = true;
-      return returnVal;
+      // this causes errors somehow... TODO: fix and allow pasting
+      // window.workspaceLoaded = false;
+      // const returnVal = oldPasteShortcut.callback.call(this, workspace);
+      // window.workspaceLoaded = true;
+      // return returnVal;
     }
   }
   Blockly.ShortcutRegistry.registry.register(newPasteShortcut, /*allowOverrides:*/ true);

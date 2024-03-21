@@ -60,20 +60,27 @@ function simulate(){
         player.pos.x += player.xv;
         player.pos.y += player.yv;
         player.axisSpeedMultX = player.axisSpeedMultY = 1;
+    } else {
+        player.xv = player.yv = 0;
     }
 
-    for(let i = 0; i < player.forces.length; i++){
-        // [x, y, decay]
-        player.pos.x += player.forces[i][0];
-        player.pos.y += player.forces[i][1];
-        player.forces[i][0] *= player.forces[i][2];
-        player.forces[i][1] *= player.forces[i][2];
-        if(Math.abs(player.forces[i][0]) < 0.01 && Math.abs(player.forces[i][1]) < 0.01){
-            player.forces.splice(i,1);
-            i--;
-            continue;
+    if(player.stopForces === true){
+        player.stopForces = false;
+        player.forces.length = 0;
+    } else {
+        for(let i = 0; i < player.forces.length; i++){
+            // [x, y, decay]
+            player.pos.x += player.forces[i][0];
+            player.pos.y += player.forces[i][1];
+            player.forces[i][0] *= player.forces[i][2];
+            player.forces[i][1] *= player.forces[i][2];
+            if(Math.abs(player.forces[i][0]) < 0.01 && Math.abs(player.forces[i][1]) < 0.01){
+                player.forces.splice(i,1);
+                i--;
+                continue;
+            }
         }
-    }
+    }    
 
     for(let i = 0; i < obstacles.length; i++){
         // collision (done before simulation because that is what last rendered frame sees)
@@ -478,7 +485,7 @@ const effectMap = [
     },
     /*stopForces*/
     (p) => {
-        p.forces.length = 0;
+        p.stopForces = true;
     },
     /*winpad*/
     (p) => {
@@ -573,7 +580,7 @@ const effectMap = [
         // the basic idea of how it works is we have to snap to a rotated snap grid in space, so we
         // translate the player to the snapGrid until its like the snap grid is unrotated. Then we snap
         // by moduloing the x to the grid and then rotate back to get the final position.
-        o.snapCooldown--;
+        o.snapCooldown--; 
 
         if(o.snapCooldown <= 0 && (Math.abs(p.xv) > 0.01 || Math.abs(p.yv) > 0.01)){
             o.snapCooldown = o.maxSnapCooldown;
@@ -592,11 +599,14 @@ const effectMap = [
             p.pos.x = p.pos.x * 0.8 + 0.2 * o.interpolatePlayerData.nextX;
             p.pos.y = p.pos.y * 0.8 + 0.2 * o.interpolatePlayerData.nextY;
         } else {
+            let [topLeftX, topLeftY] = generateTopLeftCoordinates(o);
+            let middleX = topLeftX + o.dimensions.x / 2;
+            let middleY = topLeftY + o.dimensions.y / 2;
             // in order to snap correctly, rotate both the p and the o the negative snapAngle relative to the o's center
             // this means that the player will be relatively correct to the obs and the obs will be axis-aligned
             let prt = {
-                angle: Math.atan2(p.pos.y - o.pos.y, p.pos.x - o.pos.x) - o.snapAngle,
-                distance: Math.sqrt((p.pos.y - o.pos.y)**2 + (p.pos.x - o.pos.x)**2)
+                angle: Math.atan2(p.pos.y - middleY, p.pos.x - middleX) - o.snapAngle,
+                distance: Math.sqrt((p.pos.y - middleY)**2 + (p.pos.x - middleX)**2)
             }
 
             prt.x = Math.cos(prt.angle) * prt.distance;
@@ -604,31 +614,31 @@ const effectMap = [
 
             // applying the transform just like the norotate snap that i coded earlier
             // in other words, snap the relative p to the relative grid
-            prt.x = prt.x * 0.4 + 0.6 * (Math.round((prt.x - o.pos.x % window.tileSize) / o.snapDistance.x) * o.snapDistance.x + o.pos.x % window.tileSize + p.xv * (o.snapToShowVelocity*2-1));
-            prt.y = prt.y * 0.4 + 0.6 * (Math.round((prt.y - o.pos.y % window.tileSize) / o.snapDistance.y) * o.snapDistance.y + o.pos.y % window.tileSize + p.yv * (o.snapToShowVelocity*2-1));
+            prt.x = prt.x * 0.4 + 0.6 * (Math.round(prt.x / o.snapDistance.x) * o.snapDistance.x + p.xv * (o.snapToShowVelocity*2-1));
+            prt.y = prt.y * 0.4 + 0.6 * (Math.round(prt.y / o.snapDistance.y) * o.snapDistance.y + p.yv * (o.snapToShowVelocity*2-1));
 
             prt.angle = Math.atan2(prt.y, prt.x) + o.snapAngle;
             prt.distance = Math.sqrt(prt.y**2 + prt.x**2);
 
             // rotating back
             // translating the relative coordinates back to absolute ones
-            p.pos.x = Math.cos(prt.angle) * prt.distance + o.pos.x;
-            p.pos.y = Math.sin(prt.angle) * prt.distance + o.pos.y;
+            p.pos.x = Math.cos(prt.angle) * prt.distance + middleX;
+            p.pos.y = Math.sin(prt.angle) * prt.distance + middleY;
 
             // checking if the original point was outside of the snapgrid as a result of rotation. If so, apply translations to make it right
-            if(p.pos.x < o.pos.x - o.dimensions.x/2 - p.speed || p.pos.x > o.pos.x + o.dimensions.x/2 + p.speed){
+            if(p.pos.x < topLeftX - p.speed || p.pos.x > topLeftX + o.dimensions.x + p.speed){
                 p.pos.x += Math.sign(p.xv) * o.snapDistance.x*0.6;
             }
 
-            if(p.pos.y < o.pos.y - o.dimensions.y/2 - p.speed || p.pos.y > o.pos.y + o.dimensions.y/2 + p.speed){
+            if(p.pos.y < topLeftY - p.speed || p.pos.y > topLeftY + o.dimensions.y + p.speed){
                 p.pos.y += Math.sign(p.yv) * o.snapDistance.y*0.6;
             }
         }
     },
     /*timeTrap*/
     (p, res, o) => {
-        o.timeTrapTime--;
-        o.timeTrapTime -= 2 * o.timeTrapRecoverySpeed;
+        if(p.dead === true) return;
+        o.timeTrapTime -= 1 + o.timeTrapRecoverySpeed;
         if(o.timeTrapTime < 0){
             if(o.timeTrapToKill === true) p.dead = true;
             o.timeTrapTime = 0;
@@ -672,9 +682,9 @@ const idleEffectMap = [
         o.conveyorAngle += o.conveyorAngleRotateSpeed;
     },
     // 'platformer',
-    (o) => {
-        o.platformerAngle += o.platformerAngleRotateSpeed;
-    },
+    // (o) => {
+    //     o.platformerAngle += o.platformerAngleRotateSpeed;
+    // },
     // 'restrictAxis',
     undefined,
     // 'snapGrid',
@@ -777,8 +787,8 @@ window.effectDefaultMap = [
     {
         toSnapX: true,
         toSnapY: true,
-        snapDistanceX: 50,
-        snapDistanceY: 50,
+        snapDistanceX: 100,
+        snapDistanceY: 100,
         snapCooldown: 40,
         snapAngle: 0,
         snapAngleRotateSpeed: 0
@@ -786,7 +796,7 @@ window.effectDefaultMap = [
     // timeTrap
     {
         timeTrapMaxTime: 300,
-        timeTrapRecoverySpeed: 1,
+        timeTrapRecoverySpeed: 1.5,
         timeTrapToKill: true,
         timeTrapToShowTenth: false
     },
@@ -794,7 +804,7 @@ window.effectDefaultMap = [
 
 const renderEffectMap = [
     /*bound*/
-    (o) => {
+    (o) => { 
         ctx.fillStyle = window.colors.tile;
     },
     /*kill*/
@@ -1016,7 +1026,10 @@ const renderEffectMap = [
             ctx.strokeStyle = blendColor('#0f0000', '#000000', Math.max(0,o.pos.snapCooldown) / o.maxSnapCooldown);
             ctx.lineWidth = 4;
             ctx.globalAlpha = 0.17;
-            ctx.translate(o.pos.x, o.pos.y);
+
+            let [middleX, middleY] = generateTopLeftCoordinates(o);
+            middleX += o.dimensions.x / 2; middleY += o.dimensions.y / 2;
+            ctx.translate(middleX, middleY);
 
             o.snapRotateMovementExpansion = {
                 base: (Math.max(o.dimensions.x,o.dimensions.y)**2/Math.sqrt(o.dimensions.x**2+o.dimensions.y**2))
@@ -1025,8 +1038,6 @@ const renderEffectMap = [
             o.snapRotateMovementExpansion.y = Math.ceil(o.snapRotateMovementExpansion.base/o.snapDistance.y+1)*o.snapDistance.y;
 
             ctx.rotate(o.snapAngle);
-
-            ctx.translate(o.pos.x%50,o.pos.y%50);
 
             let renderPath = new Path2D();
             if(o.toSnap.x === true){
@@ -1048,7 +1059,7 @@ const renderEffectMap = [
             ctx.closePath();
             
             // drawing snapMagnitude indicator
-            if(player.pos.x + o.snapMagnitude < o.pos.x - o.dimensions.x/2 || player.pos.x - o.snapMagnitude > o.pos.x + o.dimensions.x/2 || player.pos.y + o.snapMagnitude < o.pos.y - o.dimensions.y/2 || player.pos.y - o.snapMagnitude > o.pos.y + o.dimensions.y/2){
+            if(player.pos.x + o.snapMagnitude < middleX - o.dimensions.x/2 || player.pos.x - o.snapMagnitude > middleX + o.dimensions.x/2 || player.pos.y + o.snapMagnitude < middleY - o.dimensions.y/2 || player.pos.y - o.snapMagnitude > middleY + o.dimensions.y/2){
                 ctx.restore();
                 return;
             }
@@ -1059,9 +1070,8 @@ const renderEffectMap = [
 
             ctx.clip(renderPath);
 
-            ctx.translate(-o.pos.x%50,-o.pos.y%50);
             ctx.rotate(-o.snapAngle);
-            ctx.translate(-o.pos.x,-o.pos.y);
+            ctx.translate(-middleX,-middleY);
 
             ctx.arc(player.pos.x, player.pos.y, o.snapMagnitude, 0, Math.PI*2);
             ctx.stroke();
@@ -1073,7 +1083,10 @@ const renderEffectMap = [
     },
     /*timeTrap*/
     (o) => {
-        let grd = ctx.createRadialGradient(o.pos.x, o.pos.y, 0, o.pos.x, o.pos.y, Math.min(100, (o.dimensions.x + o.dimensions.y)/3));
+        let [middleX, middleY] = generateTopLeftCoordinates(o);
+        middleX += o.dimensions.x / 2; middleY += o.dimensions.y/2;
+
+        let grd = ctx.createRadialGradient(middleX, middleY, 0, middleX, middleY, Math.min(100, (o.dimensions.x + o.dimensions.y)/3));
 
         if(o.timeTrapToKill === false){
             grd.addColorStop(0, "rgba(199,199,199,0)");
@@ -1092,7 +1105,8 @@ const renderEffectMap = [
             ctx.font = `${Math.min(o.dimensions.x, o.dimensions.y)/2}px Inter`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(o.timeTrapToShowTenth === true ? Math.round(o.timeTrapTime / 60 * 10) / 10 : Math.round(o.timeTrapTime / 60), o.pos.x, o.pos.y);
+
+            ctx.fillText(o.timeTrapToShowTenth === true ? Math.round(o.timeTrapTime / 60 * 10) / 10 : Math.round(o.timeTrapTime / 60), middleX, middleY);
         }
     }
 ]
@@ -1109,6 +1123,7 @@ player.xv = player.yv = 0;
 player.speed = 4;
 player.dead = false;
 player.onSafe = false;
+player.stopForces = false;
 player.forces = [];
 
 export default simulate;

@@ -4,12 +4,27 @@ const { until, isEditor } = Utils;
 window.hasLoadedNewMusic = false;
 let lastLoadedLink;
 let audioIframe;
+let lastPlayTime = 0;
 const outputPane = document.getElementById('outputPane') ?? document.body;
 
 // TODO: optimize? "sub" time takes about 1ms, so we could optimize by statically creating an element
-window.stopMusic = () => {
-    if(audioIframe === undefined) return;
-    // audioElement.remove();
+window.stopMusic = async (toAwait=false) => {
+    if(toAwait === true){
+        let returnBig = false;
+        let callTime = Date.now();
+        await until(() => {
+            if(audioIframe === undefined) return false;
+            // we only want to stop music if we played it before this fn is called
+            if(lastPlayTime > callTime){
+                returnBig = true;
+            }
+            return true;
+        });
+        if(returnBig === true) return; 
+    } else if(audioIframe === undefined) {
+        return;
+    }
+
     audioIframe.remove();
     audioIframe = undefined;
     lastLoadedLink = undefined;
@@ -31,7 +46,6 @@ window.playMusic = async (link) => {
     audioIframe.width = 1;
     audioIframe.height = 1;
     
-    
     const videoId = link.split('?v=')[1];
     audioIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&enablejsapi=1`;
     
@@ -42,6 +56,8 @@ window.playMusic = async (link) => {
     // console.time("sub");
     outputPane.appendChild(audioIframe);
     // console.timeEnd("sub");
+
+    lastPlayTime = Date.now();
 }
 
 // function extractVideoID(url) {  

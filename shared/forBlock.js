@@ -282,13 +282,13 @@ forBlock['lists_create_with'] = function(block, generator) {
 //   return `${setBgImg}(${url});\n`;
 // };
 
-// forBlock['set_music'] = function (block, generator) {
-//   const url = generator.valueToCode(block, 'URL', Order.NONE) || "'https://www.youtube.com/watch?v=i_7ekMgvRIk'";
-//   return `playMusic(${url});\n`;
-// };
+forBlock['set_music'] = function (block, generator) {
+  const url = generator.valueToCode(block, 'URL', Order.NONE) || "'https://www.youtube.com/watch?v=i_7ekMgvRIk'";
+  return `playMusic(${url});\n`;
+};
 
-// forBlock['stop_music'] = function (block, generator) {
-//   return `stopMusic();\n`;
-// };
+forBlock['stop_music'] = function (block, generator) {
+  return `stopMusic(true);\n`;
+};
 
 export default forBlock;

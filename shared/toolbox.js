@@ -25,6 +25,24 @@ export default /*const toolbox =*/ {
           // 'type': 'create_obstacle',
           'type': 'create_obstacle'
         },
+        {
+          'kind': 'block',
+          'type': 'set_music',
+          'inputs': {
+            'URL': {
+              'shadow': {
+                'type': 'text',
+                'fields': {
+                  'TEXT': "https://www.youtube.com/watch?v=i_7ekMgvRIk",
+                },
+              },
+            },
+          },
+        },
+        {
+          'kind': 'block',
+          'type': 'stop_music'
+        },
       ],
     },
     // {

@@ -112,7 +112,7 @@ window.removeScript = function removeScript(){
 
 window.resetGame = () => {
     window.obstacles.length = window.mouseUpFunctions.length = window.mouseDownFunctions.length = 0;
-    window.respawnPlayer();
+    if(window.isEditor !== true) window.respawnPlayer();
     for(let key in window.defaultColors) { window.colors[key] = window.defaultColors[key]; }
     window.mouseDownFunctions.push(() => {
         if(player.dead === true){
