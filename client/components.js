@@ -21,15 +21,15 @@ SAT.Circle.prototype.rotate = function (angle) {
 function create(shape, simulates, effects, params){
     const e = {
         sat: satMap[shape](params),
+        shapeIndex: shape,
         simulate: [],
         effect: [],
         renderShape: renderShapeMap[shape],
         renderEffect: effects.map(e => renderEffectMap[e]),
-        initialDimensions: dimensionsMap[shape](params),
-        regenerateDimensions: dimensionsMap[shape]
     };
     e.renderEffectTimer = 0;
     e.pos = e.sat.pos;
+    e.dimensions = generateDimensions(e);
     for(let i = 0; i < simulates.length; i++){
         e.simulate.push(simulateMap[simulates[i]]);
         initSimulateMap[simulates[i]](e, params);
@@ -146,48 +146,47 @@ const satMap = [
     },
 ];
 
-const dimensionsMap = [
-    /*circle*/
-    (p) => {
-        // x,y,r
+function generateDimensions({sat}){
+    if(sat.r !== undefined){
         return {
-            x: p.r * 2,
-            y: p.r * 2
+            x: sat.r * 2,
+            y: sat.r * 2
         }
-    },
-    /*rectangle*/
-    (p) => {
-        // x,y,w,h
-        return {
-            x: p.w,
-            y: p.h
-        }
-    },
-    /*polygon*/
-    (p) => {
-        let top, right, bottom, left;
-        top = right = bottom = left = null;
-        for(let [px, py] of p.points){
-            if(px < left || left === null){
-                left = px;
-            }
-            if(px > right || right === null){
-                right = px;
-            }
-            if(py > bottom || bottom === null){
-                bottom = py;
-            }
-            if(py < top || top === null){
-                top = py;
-            }
-        }
+    }
 
-        return {
-            x: right - left,
-            y: bottom - top
+    let top, right, bottom, left;
+    bottom = right = -Infinity;
+    top = left = Infinity;
+    for(let p of sat.points){
+        if(p.x < left) left = p.x;
+        if(p.x > right) right = p.x;
+        if(p.y > bottom) bottom = p.y;
+        if(p.y < top) top = p.y;
+    }
+
+    return {
+        x: right - left,
+        y: bottom - top
+    }
+}
+
+function generateTopLeftCoordinates(o){
+    let topLeftX = o.pos.x, topLeftY = o.pos.y;
+    if(o.sat.r !== undefined) {
+        topLeftX -= o.sat.r;
+        topLeftY -= o.sat.r; 
+    } else {
+        let minX = Infinity;
+        let minY = Infinity;
+        for(let i = 0; i < o.sat.points.length; i++){
+            if(o.sat.points[i].x < minX) minX = o.sat.points[i].x;
+            if(o.sat.points[i].y < minY) minY = o.sat.points[i].y;
         }
-    },
-]
+        topLeftX += minX;
+        topLeftY += minY;
+    }
+    return [topLeftX, topLeftY];
+}
 
 window.satMapI2N = [
     'circle',
@@ -228,7 +227,7 @@ const renderShapeMap = [
             renderShapeMap[2](o);
             return;
         }
-        ctx.rect(o.pos.x, o.pos.y, o.sat.calcPoints[2].x - o.sat.calcPoints[0].x, o.sat.calcPoints[2].y - o.sat.calcPoints[0].y);
+        ctx.rect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y);
     },
     /*polygon*/
     (o) => {
@@ -315,7 +314,7 @@ const simulateMap = [
             o.timeRemain = Math.sqrt((o.pointOn[0] - o.pointTo[0])**2 + (o.pointOn[1] - o.pointTo[1])**2) / o.speed;
         }
     },
-    // /*rotate*/
+    /*rotate*/
     (o) => {
         if(o.sat.r !== undefined){
             o.pos.x -= o.pivotX;
@@ -330,7 +329,10 @@ const simulateMap = [
         }
         
         o.hasRotated = true;
+        o.dimensions = generateDimensions(o);
     }
+    /*grow*/
+    // TODO. Also make sure to: o.dimensions = generateDimensions(o);
 ]
 
 window.simulateMapI2N = [
@@ -408,18 +410,18 @@ const initEffectMap = [
         o.conveyorFriction = params.conveyorFriction;
     },
     /*platformer*/
-    (o, params) => {
-        o.platformerForce = params.platformerForce;
-        o.platformerAngle = params.platformerAngle * Math.PI/180;
-        o.platformerAngleRotateSpeed = params.platformerAngleRotateSpeed * Math.PI/180;
-        o.platformerFriction = params.platformerFriction;
+    // (o, params) => {
+    //     o.platformerForce = params.platformerForce;
+    //     o.platformerAngle = params.platformerAngle * Math.PI/180;
+    //     o.platformerAngleRotateSpeed = params.platformerAngleRotateSpeed * Math.PI/180;
+    //     o.platformerFriction = params.platformerFriction;
 
-        // o.maxJumps = params.maxJumps// TODO: IMPLEMENT JUMPS. also TODO: add a preserve jump parameter that makes jumps conserve even if you are not bounded that frame. If disabled, platformer only lets you jump when you're on a plat THAT FRAME
-        o.maxJumpCooldown = params.maxJumpCooldown;// in ticks
-        o.jumpCooldown = params.initJumpCooldown;
-        o.jumpForce = params.jumpForce;
-        o.jumpFriction = params.jumpDecay;
-    },
+    //     // o.maxJumps = params.maxJumps// TODO: IMPLEMENT JUMPS. also TODO: add a preserve jump parameter that makes jumps conserve even if you are not bounded that frame. If disabled, platformer only lets you jump when you're on a plat THAT FRAME
+    //     o.maxJumpCooldown = params.maxJumpCooldown;// in ticks
+    //     o.jumpCooldown = params.initJumpCooldown;
+    //     o.jumpForce = params.jumpForce;
+    //     o.jumpFriction = params.jumpDecay;
+    // },
     /*restrictAxis*/
     (o, params) => {
         o.axisSpeedMultX = params.axisSpeedMultX;
@@ -514,6 +516,7 @@ const effectMap = [
     (p, res, o) => {
         if(o.collected === true) return;
         o.collected = true;
+        
         window.spawnPosition.x = o.pos.x + o.checkpointOffsetX;
         window.spawnPosition.y = o.pos.y + o.checkpointOffsetY;
     },
@@ -527,7 +530,7 @@ const effectMap = [
         }
 
         // breakable obs shouldn't regenerate on top of you
-        o.lastBrokeTime = tick;
+        o.lastBrokeTime = window.frames;
     },
     /*safe*/
     (p, res, o) => {
@@ -544,20 +547,20 @@ const effectMap = [
         p.forces.push([Math.cos(o.conveyorAngle) * o.conveyorForce, Math.sin(o.conveyorAngle) * o.conveyorForce, o.conveyorFriction]);
     },
     /*platformer*/
-    (p, res, o) => {
-        p.touching.platformer.push(obstacle);
-        obstacle.jumpCooldown--;
+    // (p, res, o) => {
+    //     p.touching.platformer.push(obstacle);
+    //     obstacle.jumpCooldown--;
 
-        // add conveyor force
-        p.forces.push([Math.cos(o.platformerAngle) * o.platformerForce, Math.sin(o.platformerAngle) * o.platformerForce, o.platformerFriction]);
+    //     // add conveyor force
+    //     p.forces.push([Math.cos(o.platformerAngle) * o.platformerForce, Math.sin(o.platformerAngle) * o.platformerForce, o.platformerFriction]);
 
-        // TODO
-        // if(obstacle.jumpInput === 'up' || obstacle.jumpInput === 'down'){
-        //     player.axisSpeedMult.y = 0;
-        // } else if(obstacle.jumpInput === 'left' || obstacle.jumpInput === 'right'){
-        //     player.axisSpeedMult.x = 0;
-        // }
-    },
+    //     // TODO
+    //     // if(obstacle.jumpInput === 'up' || obstacle.jumpInput === 'down'){
+    //     //     player.axisSpeedMult.y = 0;
+    //     // } else if(obstacle.jumpInput === 'left' || obstacle.jumpInput === 'right'){
+    //     //     player.axisSpeedMult.x = 0;
+    //     // }
+    // },
     /*restrictAxis*/
     (p, res, o) => {
         p.axisSpeedMultX *= o.axisSpeedMultX;
@@ -577,23 +580,23 @@ const effectMap = [
             let playerSnapAngle = Math.atan2(p.yv, p.xv);
             o.interpolatePlayerData = {
                 time: Math.min(o.maxSnapCooldown-1, 5),
-                nextX: p.x + Math.cos(playerSnapAngle) * o.snapMagnitude * 0.95,
-                nextY: p.y + Math.sin(playerSnapAngle) * o.snapMagnitude * 0.95
+                nextX: p.pos.x + Math.cos(playerSnapAngle) * o.snapMagnitude * 0.95,
+                nextY: p.pos.y + Math.sin(playerSnapAngle) * o.snapMagnitude * 0.95
             };
-            // p.x += Math.cos(o.pSnapAngle) * o.snapDistance.x;
-            // p.y += Math.sin(o.pSnapAngle) * o.snapDistance.y;
+            // p.pos.x += Math.cos(o.pSnapAngle) * o.snapDistance.x;
+            // p.pos.y += Math.sin(o.pSnapAngle) * o.snapDistance.y;
         }
 
         if(o.interpolatePlayerData.time > 1){
             o.interpolatePlayerData.time--;
-            p.x = p.x * 0.8 + 0.2 * o.interpolatePlayerData.nextX;
-            p.y = p.y * 0.8 + 0.2 * o.interpolatePlayerData.nextY;
+            p.pos.x = p.pos.x * 0.8 + 0.2 * o.interpolatePlayerData.nextX;
+            p.pos.y = p.pos.y * 0.8 + 0.2 * o.interpolatePlayerData.nextY;
         } else {
             // in order to snap correctly, rotate both the p and the o the negative snapAngle relative to the o's center
             // this means that the player will be relatively correct to the obs and the obs will be axis-aligned
             let prt = {
-                angle: Math.atan2(p.y - o.y, p.x - o.x) - o.snapAngle,
-                distance: Math.sqrt((p.y - o.y)**2 + (p.x - o.x)**2)
+                angle: Math.atan2(p.pos.y - o.pos.y, p.pos.x - o.pos.x) - o.snapAngle,
+                distance: Math.sqrt((p.pos.y - o.pos.y)**2 + (p.pos.x - o.pos.x)**2)
             }
 
             prt.x = Math.cos(prt.angle) * prt.distance;
@@ -601,26 +604,25 @@ const effectMap = [
 
             // applying the transform just like the norotate snap that i coded earlier
             // in other words, snap the relative p to the relative grid
-            prt.x = prt.x * 0.4 + 0.6 * (Math.round((prt.x - o.x % window.tileSize) / o.snapDistance.x) * o.snapDistance.x + o.x % window.tileSize + p.xv * (o.snapToShowVelocity*2-1));
-            prt.y = prt.y * 0.4 + 0.6 * (Math.round((prt.y - o.y % window.tileSize) / o.snapDistance.y) * o.snapDistance.y + o.y % window.tileSize + p.yv * (o.snapToShowVelocity*2-1));
+            prt.x = prt.x * 0.4 + 0.6 * (Math.round((prt.x - o.pos.x % window.tileSize) / o.snapDistance.x) * o.snapDistance.x + o.pos.x % window.tileSize + p.xv * (o.snapToShowVelocity*2-1));
+            prt.y = prt.y * 0.4 + 0.6 * (Math.round((prt.y - o.pos.y % window.tileSize) / o.snapDistance.y) * o.snapDistance.y + o.pos.y % window.tileSize + p.yv * (o.snapToShowVelocity*2-1));
 
             prt.angle = Math.atan2(prt.y, prt.x) + o.snapAngle;
             prt.distance = Math.sqrt(prt.y**2 + prt.x**2);
 
             // rotating back
             // translating the relative coordinates back to absolute ones
-            p.x = Math.cos(prt.angle) * prt.distance + o.x;
-            p.y = Math.sin(prt.angle) * prt.distance + o.y;
+            p.pos.x = Math.cos(prt.angle) * prt.distance + o.pos.x;
+            p.pos.y = Math.sin(prt.angle) * prt.distance + o.pos.y;
 
-            // TODO
-            // // checking if the original point was outside of the snapgrid as a result of rotation. If so, apply translations to make it right
-            // if(p.x < o.x - o.difference.x/2 - p.speed || p.x > o.x + o.difference.x/2 + p.speed){
-            //     p.x += Math.sign(p.xv) * o.snapDistance.x*0.6;
-            // }
+            // checking if the original point was outside of the snapgrid as a result of rotation. If so, apply translations to make it right
+            if(p.pos.x < o.pos.x - o.dimensions.x/2 - p.speed || p.pos.x > o.pos.x + o.dimensions.x/2 + p.speed){
+                p.pos.x += Math.sign(p.xv) * o.snapDistance.x*0.6;
+            }
 
-            // if(p.y < o.y - o.difference.y/2 - p.speed || p.y > o.y + o.difference.y/2 + p.speed){
-            //     p.y += Math.sign(p.yv) * o.snapDistance.y*0.6;
-            // }
+            if(p.pos.y < o.pos.y - o.dimensions.y/2 - p.speed || p.pos.y > o.pos.y + o.dimensions.y/2 + p.speed){
+                p.pos.y += Math.sign(p.yv) * o.snapDistance.y*0.6;
+            }
         }
     },
     /*timeTrap*/
@@ -699,7 +701,7 @@ window.effectMapI2N = [
     'safe',
     'tp',
     'conveyor',
-    'platformer',
+    // 'platformer',
     'restrictAxis',
     'snapGrid',
     'timeTrap'
@@ -755,17 +757,17 @@ window.effectDefaultMap = [
         conveyorFriction: 0.8
     },
     // platformer
-    {
-        platformerForce: 1,
-        platformerAngle: 90,
-        platformerAngleRotateSpeed: 0,
-        platformerFriction: 0.875,
-        maxJumpCooldown: 30,
-        initJumpCooldown: 0,
-        jumpForce: 20,
-        jumpDecay: 0.95,
-        // maxJumps: 1
-    },
+    // {
+    //     platformerForce: 1,
+    //     platformerAngle: 90,
+    //     platformerAngleRotateSpeed: 0,
+    //     platformerFriction: 0.875,
+    //     maxJumpCooldown: 30,
+    //     initJumpCooldown: 0,
+    //     jumpForce: 20,
+    //     jumpDecay: 0.95,
+    //     // maxJumps: 1
+    // },
     // restrictAxis
     {
         axisSpeedMultX: 0,
@@ -877,17 +879,16 @@ const renderEffectMap = [
             ctx.fillStyle = '#05962b';
             ctx.globalAlpha = 0.8;
         }
-        // TODO
-        ctx.cleanUpFunction = () => {
-            ctx.globalAlpha /= 5;
-            let grd = ctx.createRadialGradient(o.pos.x, o.pos.y, 0, o.pos.x, o.pos.y, (o.difference.x + o.difference.y)/3);
+        // ctx.cleanUpFunction = () => {
+        //     ctx.globalAlpha /= 5;
+        //     const grd = ctx.createRadialGradient(o.pos.x, o.pos.y, 0, o.pos.x, o.pos.y, (o.dimensions.x + o.dimensions.y)/3);
 
-            grd.addColorStop(0, "rgba(255,255,255,1)");
-            grd.addColorStop(1, "rgba(255,255,255,0)");
+        //     grd.addColorStop(0, "rgba(255,255,255,1)");
+        //     grd.addColorStop(1, "rgba(255,255,255,0)");
 
-            ctx.fillStyle = grd;
-            renderShape(o, ctx, advanced);
-        }
+        //     ctx.fillStyle = grd;
+        //     renderEffectMap[7](o);
+        // }
     },
     /*breakable*/
     (o) => {
@@ -909,11 +910,13 @@ const renderEffectMap = [
         ctx.fillStyle = window.colors.tile;
         ctx.globalAlpha = 0.1;
         ctx.cleanUpFunction = () => {
-            const d = o.regenerateDimensions(o);
-            const halfW = d.x/2;
-            const halfH = d.y/2;
-            for(let x = o.pos.x - halfW + 50; x <= o.pos.x + 100 - o.pos.x%100 + halfW + 50; x += 100){
-                for(let y = o.pos.y - halfH + 50; y <= o.pos.y + 100 - o.pos.y%100 + halfH + 50; y += 100){
+            ctx.save();
+            ctx.clip();
+            let [topLeftX, topLeftY] = generateTopLeftCoordinates(o);
+
+            ctx.globalAlpha = 1;
+            for(let x = topLeftX + 50; x <= topLeftX + o.dimensions.x + 50; x += 100){
+                for(let y = topLeftY + 50; y <= topLeftY + o.dimensions.y + 50; y += 100){
                     ctx.translate(x,y);
                     ctx.rotate(o.conveyorAngle+Math.PI/2);
                     ctx.drawImage(arrowImg, -50, -50, 100, 100);
@@ -921,82 +924,102 @@ const renderEffectMap = [
                     ctx.translate(-x,-y);
                 }
             }
+
+            ctx.restore();
+            // ctx.beginPath();
+            // ctx.fillStyle = 'red';
+            // ctx.arc(topLeftX, topLeftY, 30, 0, Math.PI * 2);
+            // ctx.fill();
+            // ctx.closePath();
         }
     },
     /*platformer*/
-    (o) => {
-        ctx.fillStyle = window.colors.tile;
-        ctx.globalAlpha = 0.3;
-        ctx.cleanUpFunction = () => {
-            const d = o.regenerateDimensions(o);
-            const halfW = d.x/2;
-            const halfH = d.y/2;
-            for(let x = o.pos.x - halfW + 50; x <= o.pos.x + 100 - o.pos.x%100 + halfW + 50; x += 100){
-                for(let y = o.pos.y - halfH + 50; y <= o.pos.y + 100 - o.pos.y%100 + halfH + 50; y += 100){
-                    ctx.translate(x,y);
-                    ctx.rotate(o.platformerAngle+Math.PI/2);
-                    ctx.drawImage(arrowImg, -50, -50, 100, 100);
-                    ctx.rotate(-o.platformerAngle-Math.PI/2);
-                    ctx.translate(-x,-y);
-                }
-            }
-        }
-    },
+    // (o) => {
+    //     ctx.fillStyle = window.colors.tile;
+    //     ctx.globalAlpha = 0.3;
+    //     // ctx.toClip = true;
+    //     ctx.cleanUpFunction = () => {
+    //         ctx.save();
+    //         ctx.clip();
+    //         const halfW = o.dimensions.x/2;
+    //         const halfH = o.dimensions.y/2;
+    //         for(let x = o.pos.x - halfW + 50; x <= o.pos.x + 100 - o.pos.x%100 + halfW + 50; x += 100){
+    //             for(let y = o.pos.y - halfH + 50; y <= o.pos.y + 100 - o.pos.y%100 + halfH + 50; y += 100){
+    //                 ctx.translate(x,y);
+    //                 ctx.rotate(o.platformerAngle+Math.PI/2);
+    //                 ctx.drawImage(arrowImg, -50, -50, 100, 100);
+    //                 ctx.rotate(-o.platformerAngle-Math.PI/2);
+    //                 ctx.translate(-x,-y);
+    //             }
+    //         }
+    //         ctx.restore();
+    //     }
+    // },
     /*restrictAxis*/
     (o) => {
-        if(o.axisSpeedMults.x < 0 && o.axisSpeedMults.y < 0){
+        if(o.axisSpeedMultX < 0 && o.axisSpeedMultY < 0){
             ctx.strokeStyle = 'red';
-        } else if(o.axisSpeedMults.x < 0 || o.axisSpeedMults.y < 0){
+        } else if(o.axisSpeedMultX < 0 || o.axisSpeedMultY < 0){
             ctx.strokeStyle = '#ff6969';
-        } else if(o.axisSpeedMults.y > 1 || o.axisSpeedMults.y > 1){
+        } else if(o.axisSpeedMultY > 1 || o.axisSpeedMultY > 1){
             ctx.strokeStyle = '#c5c500';
         } else {
             ctx.strokeStyle = 'white';
         }
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 4;
         ctx.toFill = false;
         ctx.toStroke = true;
         ctx.cleanUpFunction = () => {
-            ctx.translate(o.pos.x, o.pos.y);
+            ctx.lineWidth = 3;
+            ctx.save();
 
-            ctx.globalAlpha = o.axisSpeedMults.x > 1 ? 0.8 : (Math.max(0.3,o.axisSpeedMults.x < 0 ? -o.axisSpeedMults.x : 1-o.axisSpeedMults.x));
-            ctx.strokeStyle = o.axisSpeedMults.x < 0 ? 'red' : (o.axisSpeedMults.x > 1 ? '#c5c500' : 'white');
+            let [topLeftX, topLeftY] = generateTopLeftCoordinates(o);
+            ctx.translate(topLeftX + o.dimensions.x / 2, topLeftY + o.dimensions.y / 2);
 
-            const d = o.regenerateDimensions(o);
+            ctx.clip();
+
+            ctx.globalAlpha = o.axisSpeedMultX > 1 ? 0.8 : (Math.max(0.3,o.axisSpeedMultX < 0 ? -o.axisSpeedMultX : 1-o.axisSpeedMultX));
+            ctx.strokeStyle = o.axisSpeedMultX < 0 ? 'red' : (o.axisSpeedMultX > 1 ? '#c5c500' : 'white');
 
             ctx.beginPath();
-            for(let x = -d.x/2; x <= d.x/2; x += 50){
-                ctx.moveTo(x,-d.y/2);
-                ctx.lineTo(x,d.y/2);
+            for(let x = -o.dimensions.x/2; x <= o.dimensions.x/2; x += 50){
+                ctx.moveTo(x,-o.dimensions.y/2);
+                ctx.lineTo(x,o.dimensions.y/2);
             }
             ctx.stroke();
             ctx.closePath();
 
-            ctx.globalAlpha = o.axisSpeedMults.y > 1 ? 0.8 : (Math.max(0.3,o.axisSpeedMults.y < 0 ? -o.axisSpeedMults.y : 1-o.axisSpeedMults.y));
-            ctx.strokeStyle = o.axisSpeedMults.y < 0 ? 'red' : (o.axisSpeedMults.y > 1 ? '#c5c500' : 'white');
+            ctx.globalAlpha = o.axisSpeedMultY > 1 ? 0.8 : (Math.max(0.3,o.axisSpeedMultY < 0 ? -o.axisSpeedMultY : 1-o.axisSpeedMultY));
+            ctx.strokeStyle = o.axisSpeedMultY < 0 ? 'red' : (o.axisSpeedMultY > 1 ? '#c5c500' : 'white');
 
             ctx.beginPath();
-            for(let y = -d.y/2; y <= d.y/2; y += 50){
-                ctx.moveTo(-d.x/2,y);
-                ctx.lineTo(d.x/2,y);
+            for(let y = -o.dimensions.y/2; y <= o.dimensions.y/2; y += 50){
+                ctx.moveTo(-o.dimensions.x/2,y);
+                ctx.lineTo(o.dimensions.x/2,y);
             }
             ctx.stroke();
             ctx.closePath();
+
+            ctx.restore();
         }
     },
     /*snapGrid*/
     (o) => {
         ctx.fillStyle = '#00008a';
         ctx.globalAlpha = 0.1;
+        ctx.toClip = true;
 
         ctx.cleanUpFunction = () => {
+            ctx.save();
+            ctx.clip();
+
             ctx.strokeStyle = blendColor('#0f0000', '#000000', Math.max(0,o.pos.snapCooldown) / o.maxSnapCooldown);
             ctx.lineWidth = 4;
-            ctx.globalAlpha = 0.25;
+            ctx.globalAlpha = 0.17;
             ctx.translate(o.pos.x, o.pos.y);
 
             o.snapRotateMovementExpansion = {
-                base: (Math.max(o.difference.x,o.difference.y)**2/Math.sqrt(o.difference.x**2+o.difference.y**2))
+                base: (Math.max(o.dimensions.x,o.dimensions.y)**2/Math.sqrt(o.dimensions.x**2+o.dimensions.y**2))
             }
             o.snapRotateMovementExpansion.x = Math.ceil(o.snapRotateMovementExpansion.base/o.snapDistance.x+1)*o.snapDistance.x;
             o.snapRotateMovementExpansion.y = Math.ceil(o.snapRotateMovementExpansion.base/o.snapDistance.y+1)*o.snapDistance.y;
@@ -1008,7 +1031,7 @@ const renderEffectMap = [
             let renderPath = new Path2D();
             if(o.toSnap.x === true){
                 for(let x = -o.snapRotateMovementExpansion.x; x <= o.snapRotateMovementExpansion.x; x += o.snapDistance.x){
-                    renderPath.rect(-5 + x, -o.snapRotateMovementExpansion.x - 5, 10, 2 * o.snapRotateMovementExpansion.x + 10);
+                    renderPath.rect(-10 + x, -o.snapRotateMovementExpansion.x - 10, 20, 2 * o.snapRotateMovementExpansion.x + 20);
                     // ctx.moveTo(x,-o.snapRotateMovementExpansion);
                     // ctx.lineTo(x,o.snapRotateMovementExpansion);
                 }
@@ -1016,7 +1039,7 @@ const renderEffectMap = [
 
             if(o.toSnap.y === true){
                 for(let y = -o.snapRotateMovementExpansion.y; y <= o.snapRotateMovementExpansion.y; y += o.snapDistance.y){
-                    renderPath.rect(-o.snapRotateMovementExpansion.y - 5, -5 + y, 2 * o.snapRotateMovementExpansion.y + 10, 10);
+                    renderPath.rect(-o.snapRotateMovementExpansion.y - 10, -10 + y, 2 * o.snapRotateMovementExpansion.y + 20, 20);
                     // ctx.moveTo(-o.snapRotateMovementExpansion,y);
                     // ctx.lineTo(o.snapRotateMovementExpansion,y);
                 }
@@ -1025,19 +1048,19 @@ const renderEffectMap = [
             ctx.closePath();
             
             // drawing snapMagnitude indicator
-            if(player.pos.x + o.snapMagnitude < o.pos.x - o.difference.x/2 || player.pos.x - o.snapMagnitude > o.pos.x + o.difference.x/2 || player.pos.y + o.snapMagnitude < o.pos.y - o.difference.y/2 || player.pos.y - o.snapMagnitude > o.pos.y + o.difference.y/2){
+            if(player.pos.x + o.snapMagnitude < o.pos.x - o.dimensions.x/2 || player.pos.x - o.snapMagnitude > o.pos.x + o.dimensions.x/2 || player.pos.y + o.snapMagnitude < o.pos.y - o.dimensions.y/2 || player.pos.y - o.snapMagnitude > o.pos.y + o.dimensions.y/2){
                 ctx.restore();
                 return;
             }
             ctx.strokeStyle = 'grey';
             ctx.fillStyle = 'black';
-            ctx.globalAlpha = 0.22;
+            ctx.globalAlpha = 0.2;
             ctx.beginPath();
 
             ctx.clip(renderPath);
 
             ctx.translate(-o.pos.x%50,-o.pos.y%50);
-            ctx.rotate(-o.render.snapAngle);
+            ctx.rotate(-o.snapAngle);
             ctx.translate(-o.pos.x,-o.pos.y);
 
             ctx.arc(player.pos.x, player.pos.y, o.snapMagnitude, 0, Math.PI*2);
@@ -1050,7 +1073,27 @@ const renderEffectMap = [
     },
     /*timeTrap*/
     (o) => {
+        let grd = ctx.createRadialGradient(o.pos.x, o.pos.y, 0, o.pos.x, o.pos.y, Math.min(100, (o.dimensions.x + o.dimensions.y)/3));
+
+        if(o.timeTrapToKill === false){
+            grd.addColorStop(0, "rgba(199,199,199,0)");
+            grd.addColorStop(1, "rgba(199,199,199,1)");
+        } else {
+            grd.addColorStop(0, "rgba(199,0,0,0)");
+            grd.addColorStop(1, "rgba(199,0,0,1)");
+        }
+
+        ctx.fillStyle = grd;
+        ctx.globalAlpha = Math.max(0.12, 0.5 - o.timeTrapTime / o.timeTrapMaxTime / 2);
         
+        ctx.cleanUpFunction = () => {
+            ctx.globalAlpha = Math.max(0.3, o.timeTrapTime / o.timeTrapMaxTime / 3);
+            ctx.fillStyle = 'white';
+            ctx.font = `${Math.min(o.dimensions.x, o.dimensions.y)/2}px Inter`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(o.timeTrapToShowTenth === true ? Math.round(o.timeTrapTime / 60 * 10) / 10 : Math.round(o.timeTrapTime / 60), o.pos.x, o.pos.y);
+        }
     }
 ]
 

@@ -120,6 +120,7 @@ createModeBg.onclick = () => {
 
 createModeBg.oncontextmenu = (e) => {
     isDragging = false;
+    previewPolygonPoints.length = 0;
     return e.preventDefault();
 }
 

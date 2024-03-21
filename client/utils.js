@@ -50,9 +50,10 @@ function componentToHex(c) {
 	return hex.length == 1 ? "0" + hex : hex;
 }
 
+import ArrowAsset from './arrow.png';
 const arrowImg = new Image();
-window.requestIdleCallback(() => {
-    arrowImg.src = '/arrow.png';
-}, 2000)
+// window.requestIdleCallback(() => {
+    arrowImg.src = ArrowAsset;
+// }, {timeout: 2000})
 
 export default { until, SCROLL_PARAMS, isEditor, blendColor, arrowImg };
