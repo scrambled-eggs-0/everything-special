@@ -5,6 +5,7 @@ const Blockly = require('blockly');// THIS is the error
 const libraryBlocks = require('blockly/blocks');
 const { javascriptGenerator } = require('blockly/javascript');
 
+class Image{constructor(){this.src=null;}}
 import '../../client/components.js';
 import textData from "../../shared/textData.js";
 const { JSBlockData, JSBlockNames } = textData;

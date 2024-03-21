@@ -846,7 +846,7 @@ const renderEffectMap = [
         if(o.coinAmount !== 1){
             ctx.cleanUpFunction = () => {
                 ctx.fillStyle = window.colors.tile;//'#313131';
-                ctx.font = `${Math.min(60, o.initialDimensions.x/4, o.initialDimensions.y/4)}px Inter`;
+                ctx.font = `${Math.min(60, o.dimensions.x/4, o.dimensions.y/4)}px Inter`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillText(
@@ -865,12 +865,12 @@ const renderEffectMap = [
             ctx.fillStyle = o.color;
 
             ctx.beginPath();
-            ctx.roundRect(o.pos.x-o.initialDimensions.x/4, o.pos.y-o.initialDimensions.y/4, o.initialDimensions.x/2, o.initialDimensions.y/2, Math.min(o.initialDimensions.x,o.initialDimensions.y)/20);
+            ctx.roundRect(o.pos.x-o.dimensions.x/4, o.pos.y-o.dimensions.y/4, o.dimensions.x/2, o.dimensions.y/2, Math.min(o.dimensions.x,o.dimensions.y)/20);
             ctx.fill();
             ctx.closePath();
     
             ctx.fillStyle = colors.tile;//'#313131'//'#484a00';
-            ctx.font = `${Math.min(60, o.initialDimensions.x/4, o.initialDimensions.y/4)}px Inter`;
+            ctx.font = `${Math.min(60, o.dimensions.x/4, o.dimensions.y/4)}px Inter`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(
