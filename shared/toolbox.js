@@ -43,6 +43,14 @@ export default /*const toolbox =*/ {
           'kind': 'block',
           'type': 'stop_music'
         },
+        {
+          'kind': 'block',
+          'type': 'get_parameter'
+        },
+        {
+          'kind': 'block',
+          'type': 'set_parameter'
+        },
       ],
     },
     // {

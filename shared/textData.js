@@ -260,7 +260,7 @@ export default {
       ],
       'previousStatement': null,
       'nextStatement': null,
-      "colour": '#07ced9',
+      "colour": '194',
       'tooltip': 'sets the music to a url on the internet. A music url should look something like: https://youtube.com/watch?v=SOMEDIGITS. You must interact with the webpage before the audio can play.',
       'helpUrl': '',
     },
@@ -270,10 +270,42 @@ export default {
       'args0': [],
       'previousStatement': null,
       'nextStatement': null,
-      "colour": '#07ced9',
+      "colour": '194',
       'tooltip': 'stops music if it is playing',
       'helpUrl': '',
     },
+    // {
+    //   "type": "get_parameter",
+    //   "message0": "get obstacle data %1",
+    //   "args0": [
+    //     {
+    //       "type": "field_dropdown",
+    //       "name": "INPUT",
+    //       "options": generateParameterDropdownOptions
+    //     },
+    //   ],
+    //   "colour": '#07ced9',
+    //   "output": null//'Boolean'
+    // },
+    // {
+    //   "type": "set_parameter",
+    //   "message0": "set %1 to %2",
+    //   "args0": [
+    //     {
+    //       "type": "field_dropdown",
+    //       "name": "INPUT",
+    //       "options": generateParameterDropdownOptions
+    //     },
+    //     {
+    //       "type": "input_value",
+    //       "name": "VALUE"
+    //     }
+    //   ],
+    //   "colour": '#07ced9',
+    //   'previousStatement': null,
+    //   'nextStatement': null,
+    // },
+
     // {
     //   'type': 'mouse_x',
     //   'message0': 'mouse x position',
@@ -376,9 +408,12 @@ export default {
     // },
   ],
   JSBlockNames: [
-    'create_obstacle'
+    'create_obstacle',
+    'get_parameter',
+    'set_parameter'
   ],
   JSBlockData: [
+    // create_obstacle
     function(Blockly) {
       return {
         // TODO: use insertFieldAt method and some getter to insert fields in the right place. https://developers.google.com/blockly/reference/js/blockly.input_class.insertfieldat_1_method
@@ -422,6 +457,11 @@ export default {
           this.appendDummyInput("NUM_EFFECTS_CONTAINER")
             .appendField("number of effects")
             .appendField(new Blockly.FieldNumber(1, 1, window.effectMapI2N.length, 1, this.validateNumberOfEffectsDropdown), 'NUM_EFFECTS_DROPDOWN');
+
+          this.appendDummyInput()
+          .appendField("tick function:");
+
+          this.appendStatementInput('TICK_FN');
         },
 
         validateNumberOfSimulatesDropdown: function(newValue) {
@@ -509,9 +549,7 @@ export default {
             this.effectOptions.push([window.effectMapI2N[i], i.toString()]);
           }
 
-          // lol we already are at the end so we don't need to do this 
-
-          // let insertionIndex = this.getIndexOfInput(`NUM_EFFECTS_CONTAINER`) + 1;
+          let insertionIndex = this.getIndexOfInput(`NUM_EFFECTS_CONTAINER`) + 1;
 
           // add new
           for(let i = 0; i < newValue; i++){
@@ -522,9 +560,9 @@ export default {
               .appendField('effect:')
               .appendField(dropdown, `EFFECT_DROPDOWN${i}`);
 
-            /*insertionIndex = */this.updateEffectDropdown(this.getFieldValue(`EFFECT_DROPDOWN${i}`), i);
+            this.inputList.splice(insertionIndex, 0, this.inputList.pop());
 
-            // this.inputList.splice(insertionIndex++, 0, this.inputList.pop());
+            insertionIndex = this.updateEffectDropdown(this.getFieldValue(`EFFECT_DROPDOWN${i}`), i);
           }
 
           // update amount
@@ -799,7 +837,71 @@ export default {
           })
         },
       };
-    }
+    },
+
+    // {
+    //   "type": "get_parameter",
+    //   "message0": "get obstacle data %1",
+    //   "args0": [
+    //     {
+    //       "type": "field_dropdown",
+    //       "name": "INPUT",
+    //       "options": generateParameterDropdownOptions
+    //     },
+    //   ],
+    //   "colour": '#07ced9',
+    //   "output": null//'Boolean'
+    // },
+
+    // get_parameter
+    function(Blockly) {
+      return {
+        init: function() {
+          const block = this;
+
+          this.setColour(194);
+          this.setOutput(true);
+
+          this.appendDummyInput()
+            .appendField('get obstacle ')
+            .appendField(new Blockly.FieldDropdown(()=>{return generateParameterDropdownOptions(block, true)}), 'INPUT');
+        },
+      }
+    },
+
+    // set_parameter
+    function(Blockly) {
+      return {
+        init: function() {
+          const block = this;
+
+          this.setColour(194);
+
+          this.setNextStatement(true, null);
+          this.setPreviousStatement(true, null);
+
+          this.defaults = {'pos.x': 100, 'pos.y': 100};
+
+          this.appendValueInput("VALUE")
+            .appendField('set obstacle ')
+            .appendField(new Blockly.FieldDropdown(()=>{return generateParameterDropdownOptions(block)}, this.validateParamDropdown), 'INPUT')
+            .appendField(' to')
+            .setCheck(null)
+            .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(this.defaults['pos.y'])));
+        },
+
+        validateParamDropdown: function(newValue) {
+          if(newValue === 'INVALID') return newValue;
+
+          const childBlock = this.getSourceBlock();
+          const field = childBlock.getInput("VALUE");
+
+          field.setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(childBlock.defaults[newValue])));
+
+          return newValue;
+        },
+      }
+    },
   ]
 }
 
@@ -835,3 +937,83 @@ window.generateShadowBlock = (value) => {
   //  // object?
   // }
 }
+
+function generateParameterDropdownOptions(childBlock, isPlug=false){
+  // const parent = this.getSourceBlock();
+  // if(parent === null) return [['x', 'INVALID'], ['y', 'INVALID']]
+  let block;
+  if(isPlug === false) block = window.getParentBlockOfType(childBlock);///*.getSourceBlock()*/.getSurroundParent();
+  else {
+    let firstParent = childBlock.getParent();
+    if(firstParent === null) return [['x', 'INVALID'], ['y', 'INVALID']];
+    block = window.getParentBlockOfType(firstParent);
+  }
+
+  if(block === null) return [['x', 'INVALID'], ['y', 'INVALID']];
+  const shape = block.getFieldValue('SHAPE_DROPDOWN');
+  if(shape === null) return [['x', 'INVALID'], ['y', 'INVALID']];// TODO: r for circle type
+
+  const params = {};
+
+  const simulates = [];
+  const effects = [];
+
+  for(let key in satDefaultMap[shape]){
+    params[key] = satDefaultMap[shape][key];
+  }
+
+  const simulatesLen = block.getFieldValue('NUM_SIMULATES_DROPDOWN');
+  for(let i = 0; i < simulatesLen; i++){
+    const simulate = block.getFieldValue(`SIMULATE_DROPDOWN${i}`);
+    simulates.push(simulate);
+    for(let key in simulateDefaultMap[simulate]){
+      params[key] = simulateDefaultMap[simulate][key];
+    }
+  }
+
+  const effectsLen = block.getFieldValue('NUM_EFFECTS_DROPDOWN');
+  for(let i = 0; i < effectsLen; i++){
+    const effect = block.getFieldValue(`EFFECT_DROPDOWN${i}`);
+    effects.push(effect);
+    for(let key in effectDefaultMap[effect]){
+      params[key] = effectDefaultMap[effect][key];
+    }
+  }
+
+  window.C(shape, simulates, effects, params);
+  const o = window.obstacles.pop();
+
+  const arr = [['x', 'pos.x'], ['y', 'pos.y']];
+
+  childBlock.defaults = {'pos.x': 100, 'pos.y': 100};
+
+  for(let key in o){
+    if(excludedKeys[key] === undefined && (!(typeof o[key] === 'object') || Array.isArray(o[key]))){
+      childBlock.defaults[key] = o[key];
+      arr.push([key, key]);
+    }
+  }
+
+  return arr;
+}
+
+window.getParentBlockOfType = (block, type='create_obstacle') => {
+  let parent = block.getSurroundParent();
+  while(parent !== null){
+    if(parent.type === type) return parent;
+    parent = parent.getSurroundParent();
+  }
+  return null;
+}
+
+const excludedKeys = {
+  simulate: true,
+  effect: true,
+  renderShape: true,
+  renderEffect: true,
+  renderEffectTimer: true,
+  hasRotated: true,
+  lastBrokeTime: true
+};
+
+// TODO: constraints. SnapDistance shouldn't be negative (could be abs'ed which could be a type of constraint) but some stuff just needs to stay between 0,1, e.g. decay

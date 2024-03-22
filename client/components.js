@@ -21,7 +21,6 @@ SAT.Circle.prototype.rotate = function (angle) {
 function create(shape, simulates, effects, params){
     const e = {
         sat: satMap[shape](params),
-        shapeIndex: shape,
         simulate: [],
         effect: [],
         renderShape: renderShapeMap[shape],
@@ -386,7 +385,7 @@ const initEffectMap = [
     (o, params) => {
         o.isCoindoor = true;
         o.maxCoins = o.coins = params.coinAmount;
-        o.color = params.color;
+        o.coinDoorColor = params.coinDoorColor;
     },
     /*checkpoint*/
     (o, params) => {
@@ -436,24 +435,20 @@ const initEffectMap = [
     },
     /*snapGrid*/
     (o, params) => {
-        o.toSnap = {
-            x: params.toSnapX,
-            y: params.toSnapY,
-        }
-        o.snapDistance = {
-            x: params.snapDistanceX,
-            y: params.snapDistanceY,
-        }
+        o.toSnapX = params.toSnapX;
+        o.toSnapY = params.toSnapY;
+        o.snapDistanceX = params.snapDistanceX;
+        o.snapDistanceY = params.snapDistanceY;
         o.snapCooldown = o.maxSnapCooldown = params.snapCooldown;
         o.snapAngle = params.snapAngle * Math.PI / 180;
         o.snapAngleRotateSpeed = params.snapAngleRotateSpeed * Math.PI/180;
 
         o.interpolatePlayerData = {};
-        // o.snapDistance.x = Math.max(35, o.snapDistance.x);
-        // o.snapDistance.y = Math.max(35, o.snapDistance.y);
+        // o.snapDistanceX = Math.max(35, o.snapDistanceX);
+        // o.snapDistanceY = Math.max(35, o.snapDistanceY);
 
-        o.snapToShowVelocity = Math.min(o.snapDistance.x, o.snapDistance.y) > 40;
-        o.snapMagnitude = Math.sqrt(o.snapDistance.x ** 2 + o.snapDistance.y ** 2); //(o.snapDistance.x + o.snapDistance.y)/2
+        o.snapToShowVelocity = Math.min(o.snapDistanceX, o.snapDistanceY) > 40;
+        o.snapMagnitude = Math.sqrt(o.snapDistanceX ** 2 + o.snapDistanceY ** 2); //(o.snapDistanceX + o.snapDistanceY)/2
     },
     /*timeTrap*/
     (o, params) => {
@@ -507,7 +502,7 @@ const effectMap = [
         }
         o.collected = true;
         for(let i = 0; i < obstacles.length; i++){
-            if(obstacles[i].isCoindoor === true && obstacles[i].color === o.color){
+            if(obstacles[i].isCoindoor === true && obstacles[i].coinDoorColor === o.color){
                 obstacles[i].coins -= o.coinAmount;
             }
         }
@@ -590,8 +585,8 @@ const effectMap = [
                 nextX: p.pos.x + Math.cos(playerSnapAngle) * o.snapMagnitude * 0.95,
                 nextY: p.pos.y + Math.sin(playerSnapAngle) * o.snapMagnitude * 0.95
             };
-            // p.pos.x += Math.cos(o.pSnapAngle) * o.snapDistance.x;
-            // p.pos.y += Math.sin(o.pSnapAngle) * o.snapDistance.y;
+            // p.pos.x += Math.cos(o.pSnapAngle) * o.snapDistanceX;
+            // p.pos.y += Math.sin(o.pSnapAngle) * o.snapDistanceY;
         }
 
         if(o.interpolatePlayerData.time > 1){
@@ -614,8 +609,8 @@ const effectMap = [
 
             // applying the transform just like the norotate snap that i coded earlier
             // in other words, snap the relative p to the relative grid
-            prt.x = prt.x * 0.4 + 0.6 * (Math.round(prt.x / o.snapDistance.x) * o.snapDistance.x + p.xv * (o.snapToShowVelocity*2-1));
-            prt.y = prt.y * 0.4 + 0.6 * (Math.round(prt.y / o.snapDistance.y) * o.snapDistance.y + p.yv * (o.snapToShowVelocity*2-1));
+            prt.x = prt.x * 0.4 + 0.6 * (Math.round(prt.x / o.snapDistanceX) * o.snapDistanceX + p.xv * (o.snapToShowVelocity*2-1));
+            prt.y = prt.y * 0.4 + 0.6 * (Math.round(prt.y / o.snapDistanceY) * o.snapDistanceY + p.yv * (o.snapToShowVelocity*2-1));
 
             prt.angle = Math.atan2(prt.y, prt.x) + o.snapAngle;
             prt.distance = Math.sqrt(prt.y**2 + prt.x**2);
@@ -627,11 +622,11 @@ const effectMap = [
 
             // checking if the original point was outside of the snapgrid as a result of rotation. If so, apply translations to make it right
             if(p.pos.x < topLeftX - p.speed || p.pos.x > topLeftX + o.dimensions.x + p.speed){
-                p.pos.x += Math.sign(p.xv) * o.snapDistance.x*0.6;
+                p.pos.x += Math.sign(p.xv) * o.snapDistanceX*0.6;
             }
 
             if(p.pos.y < topLeftY - p.speed || p.pos.y > topLeftY + o.dimensions.y + p.speed){
-                p.pos.y += Math.sign(p.yv) * o.snapDistance.y*0.6;
+                p.pos.y += Math.sign(p.yv) * o.snapDistanceY*0.6;
             }
         }
     },
@@ -739,7 +734,7 @@ window.effectDefaultMap = [
     // coindoor
     {
         coinAmount: 3,
-        color: '#d6d611'
+        coinDoorColor: '#d6d611'
     },
     // checkpoint
     {
@@ -1034,22 +1029,22 @@ const renderEffectMap = [
             o.snapRotateMovementExpansion = {
                 base: (Math.max(o.dimensions.x,o.dimensions.y)**2/Math.sqrt(o.dimensions.x**2+o.dimensions.y**2))
             }
-            o.snapRotateMovementExpansion.x = Math.ceil(o.snapRotateMovementExpansion.base/o.snapDistance.x+1)*o.snapDistance.x;
-            o.snapRotateMovementExpansion.y = Math.ceil(o.snapRotateMovementExpansion.base/o.snapDistance.y+1)*o.snapDistance.y;
+            o.snapRotateMovementExpansion.x = Math.ceil(o.snapRotateMovementExpansion.base/o.snapDistanceX+1)*o.snapDistanceX;
+            o.snapRotateMovementExpansion.y = Math.ceil(o.snapRotateMovementExpansion.base/o.snapDistanceY+1)*o.snapDistanceY;
 
             ctx.rotate(o.snapAngle);
 
             let renderPath = new Path2D();
-            if(o.toSnap.x === true){
-                for(let x = -o.snapRotateMovementExpansion.x; x <= o.snapRotateMovementExpansion.x; x += o.snapDistance.x){
+            if(o.toSnapX === true){
+                for(let x = -o.snapRotateMovementExpansion.x; x <= o.snapRotateMovementExpansion.x; x += o.snapDistanceX){
                     renderPath.rect(-10 + x, -o.snapRotateMovementExpansion.x - 10, 20, 2 * o.snapRotateMovementExpansion.x + 20);
                     // ctx.moveTo(x,-o.snapRotateMovementExpansion);
                     // ctx.lineTo(x,o.snapRotateMovementExpansion);
                 }
             }
 
-            if(o.toSnap.y === true){
-                for(let y = -o.snapRotateMovementExpansion.y; y <= o.snapRotateMovementExpansion.y; y += o.snapDistance.y){
+            if(o.toSnapY === true){
+                for(let y = -o.snapRotateMovementExpansion.y; y <= o.snapRotateMovementExpansion.y; y += o.snapDistanceY){
                     renderPath.rect(-o.snapRotateMovementExpansion.y - 10, -10 + y, 2 * o.snapRotateMovementExpansion.y + 20, 20);
                     // ctx.moveTo(-o.snapRotateMovementExpansion,y);
                     // ctx.lineTo(o.snapRotateMovementExpansion,y);

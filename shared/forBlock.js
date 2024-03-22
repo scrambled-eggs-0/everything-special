@@ -127,6 +127,11 @@ forBlock['create_obstacle'] = function(block, generator) {
     params += `${key}:${generator.valueToCode(block, this.effectParamToId[key], Order.NONE)},`;
   }
 
+  const tf = generator.statementToCode(block, 'TICK_FN', Order.ATOMIC);
+  if(tf.length !== 0){
+    params += `tf:(e)=>{\n${tf}},`;
+  }
+
   params += '}';
 
   // console.log({shape, simulates, effects, params});
@@ -289,6 +294,27 @@ forBlock['set_music'] = function (block, generator) {
 
 forBlock['stop_music'] = function (block, generator) {
   return `stopMusic(true);\n`;
+};
+
+forBlock['get_parameter'] = function (block, generator) {
+  // get parent once because it's a plug --
+  // getSurroundParent doesn't account for it 
+  // so just use the thing that it's attached to
+  const parentBlock = block.getParent();
+  if(parentBlock === null) return '';
+  if(window.getParentBlockOfType(parentBlock) === null) return '';
+  const parameter = block.getFieldValue('INPUT', Order.NONE);
+  if(parameter === 'INVALID') return '';
+  return [`e.${parameter}`, Order.NONE];
+};
+
+forBlock['set_parameter'] = function (block, generator) {
+  if(window.getParentBlockOfType(block) === null) return '';
+  const parameter = block.getFieldValue('INPUT', Order.NONE);
+  if(parameter === 'INVALID') return '';
+  const value = generator.valueToCode(block, 'VALUE', Order.NONE);
+  if(value === '') return '';
+  return `e.${parameter} = ${value};\n`;
 };
 
 export default forBlock;
