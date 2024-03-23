@@ -8,6 +8,7 @@ let previewY = 0;
 let previewShape = -1;
 let previewPolygonPoints = [];
 let isDragging = false;
+window.inClearCheckMode = false;
 // let newBlockPos = {x: 0, y: 0};
 // let createBlockWidth = 0;
 // const blockPadding = 32; // const moveDist = 30;// Blockly.SNAP_RADIUS
@@ -52,10 +53,19 @@ createModeBg.onmousedown = () => {
     previewX = window.mouseX;
     previewY = window.mouseY;
     isDragging = true;
+
+    if(window.mouseOut === true){
+        // exit create mode
+        createModeBg.classList.add('hidden');
+        canvas.remove();
+        outputPane.insertBefore(canvas, publishBtn);
+        isDragging = false;
+        window.inClearCheckMode = false;
+    }
 }
 createModeBg.onclick = () => {
     // if we click the canvas, create a block
-    if(window.mouseOut === false) {
+    if(window.mouseOut === false && window.inClearCheckMode === false) {
         if(previewShape === 2){
             const nextPt = [snapGrid(window.mouseX), snapGrid(window.mouseY)];
             previewPolygonPoints.push(nextPt);
@@ -110,12 +120,6 @@ createModeBg.onclick = () => {
         // // newBlockPos.y += moveDist;
         return;
     }
-
-    // otherwise, exit
-    createModeBg.classList.add('hidden');
-    canvas.remove();
-    outputPane.insertBefore(canvas, publishBtn);
-    isDragging = false;
 }
 
 createModeBg.oncontextmenu = (e) => {
@@ -130,7 +134,7 @@ window.render = () => {
     oldRender();
 
     // render preview
-    if(!isDragging) return;
+    if(!isDragging || window.inClearCheckMode === true) return;
     ctx.beginPath();
     ctx.fillStyle = 'black';
     ctx.strokeStyle = 'black';
@@ -170,4 +174,28 @@ window.render = () => {
     ctx.globalAlpha = 1;
     ctx.stroke();
     ctx.closePath();
+}
+
+// upload mode! Same thing with the canvas
+window.enterClearCheckMode = () => {
+    window.spawnPosition.x = 100
+    window.spawnPosition.y = 1500;
+    window.resetGame();
+    window.inClearCheckMode = true;
+    createModeBg.classList.remove('hidden');
+    canvas.remove();
+    createModeBg.appendChild(canvas);
+
+    // resetting mouseOut checks in case mouse isnt moved between the time of 2 clicks
+    window.canvasDimensions = canvas.getBoundingClientRect();
+    window.onmousemove({pageX: window.pageX, pageY: window.pageY, movementY: 0});
+
+    blocklyDiv.style.cursor = '';
+}
+
+window.exitClearCheckMode = () => {
+    let last = window.mouseOut;
+    window.mouseOut = true;
+    createModeBg.onmousedown();
+    window.mouseOut = last;
 }

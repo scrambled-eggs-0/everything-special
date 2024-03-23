@@ -32,7 +32,7 @@ const zoom = {
   wheel: true,
   startScale: 1.0,
   maxScale: 2,
-  minScale: 0.6,
+  minScale: 0.3,
   scaleSpeed: 1.03,
   pinch: true
 };
@@ -118,11 +118,12 @@ ws.addChangeListener((e) => {
 const publishBtn = document.getElementById('publish');
 publishBtn.onclick = () => {
   if(confirm('Ready to publish?') !== true) return;
-  uploadCode();
+  alert('To prove your level is possible, you must clear it before uploading. Good Luck!');
+  window.enterClearCheckMode();
 }
 
 const uploadUrl = `${location.origin}/upload`;
-function uploadCode(){
+window.uploadCode = () => {
   save(ws);
   const blob = new Blob([localStorage.getItem("ws")], { type: 'application/javascript' });
 
@@ -135,6 +136,7 @@ function uploadCode(){
   })  .then(response => response.json())
       .then(data => {
           console.log('File uploaded successfully:', data);
+          alert('Code successfully uploaded to the servers!');
       })
       .catch(error => {
           console.error('Error uploading file:', error);

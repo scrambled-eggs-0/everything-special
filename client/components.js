@@ -490,6 +490,10 @@ const effectMap = [
         if(isEditor === true){
             // respawn
             respawnPlayer();
+            if(window.inClearCheckMode === true){
+                window.exitClearCheckMode();
+                uploadCode();
+            }
         } else {
             // scroll
             toScroll = true;
@@ -518,9 +522,11 @@ const effectMap = [
     (p, res, o) => {
         if(o.collected === true) return;
         o.collected = true;
+
+        let [topLeftX, topLeftY] = generateTopLeftCoordinates(o);
         
-        window.spawnPosition.x = o.pos.x + o.checkpointOffsetX;
-        window.spawnPosition.y = o.pos.y + o.checkpointOffsetY;
+        window.spawnPosition.x = topLeftX + o.dimensions.x / 2;
+        window.spawnPosition.y = topLeftY + o.dimensions.y / 2;
     },
     /*breakable*/
     (p, res, o) => {
@@ -546,6 +552,7 @@ const effectMap = [
     },
     /*conveyor*/
     (p, res, o) => {
+        if(p.dead === true) return;
         p.forces.push([Math.cos(o.conveyorAngle) * o.conveyorForce, Math.sin(o.conveyorAngle) * o.conveyorForce, o.conveyorFriction]);
     },
     /*platformer*/
