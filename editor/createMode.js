@@ -180,7 +180,7 @@ window.render = () => {
 window.enterClearCheckMode = () => {
     window.spawnPosition.x = 100
     window.spawnPosition.y = 1500;
-    window.resetGame();
+    window.respawnPlayer();
     window.inClearCheckMode = true;
     createModeBg.classList.remove('hidden');
     canvas.remove();
