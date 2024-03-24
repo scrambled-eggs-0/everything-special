@@ -50,6 +50,12 @@ function componentToHex(c) {
 	return hex.length == 1 ? "0" + hex : hex;
 }
 
+// function shortAngleDist(a0,a1) {
+// 	const max = Math.PI*2;
+// 	const da = (a1 - a0) % max;
+// 	return 2*da % max - da;
+// }
+
 // import ArrowAsset from './arrow.png';
 // const arrowImg = new Image();
 // // window.requestIdleCallback(() => {

@@ -81,25 +81,39 @@ function simulate(){
         }
     }    
 
-    for(let i = 0; i < obstacles.length; i++){
-        // collision (done before simulation because that is what last rendered frame sees)
-        // TODO: bounding box check
-        if(obstacles[i].sat.r !== undefined){
-            collided = SAT.testCircleCircle(obstacles[i].sat, player.sat, res);
-        } else {
-            collided = SAT.testPolygonCircle(obstacles[i].sat, player.sat, res);
-        }
-        if(collided === true){
-            for(let j = 0; j < obstacles[i].effect.length; j++){
-                obstacles[i].effect[j](player, res, obstacles[i]);
+    if(player.dead === true){
+        for(let i = 0; i < obstacles.length; i++){
+            // obstacle simulation
+            for(let j = 0; j < obstacles[i].simulate.length; j++){
+                obstacles[i].simulate[j](obstacles[i]);
             }
         }
-        res.clear();// TODO: test if this is really needed
-
-        // obstacle simulation
-        for(let j = 0; j < obstacles[i].simulate.length; j++){
-            obstacles[i].simulate[j](obstacles[i]);
+    } else {
+        for(let i = 0; i < obstacles.length; i++){
+            // collision (done before simulation because that is what last rendered frame sees)
+            // TODO: bounding box check
+            if(obstacles[i].sat.r !== undefined){
+                collided = SAT.testCircleCircle(obstacles[i].sat, player.sat, res);
+            } else {
+                collided = SAT.testPolygonCircle(obstacles[i].sat, player.sat, res);
+            }
+            if(collided === true){
+                for(let j = 0; j < obstacles[i].effect.length; j++){
+                    obstacles[i].effect[j](player, res, obstacles[i], i);
+                }
+            }
+            res.clear();// TODO: test if this is really needed
+    
+            // obstacle simulation
+            for(let j = 0; j < obstacles[i].simulate.length; j++){
+                obstacles[i].simulate[j](obstacles[i]);
+            }
         }
+    }
+
+    if(player.touchingNormalIndexes.length !== 0 || player.lastTouchingNormalIndexes.length !== 0){
+        player.lastTouchingNormalIndexes = player.touchingNormalIndexes;
+        player.touchingNormalIndexes = [];
     }
 
     if(player.onSafe === true){
@@ -108,15 +122,20 @@ function simulate(){
     }
 
     // bounding the player by the walls
+    player.touchingWall = false;
     if(player.pos.x - player.sat.r < 0){
         player.pos.x = player.sat.r;
+        player.touchingWall = true;
     } else if(player.pos.x + player.sat.r > canvas.width){
         player.pos.x = canvas.width - player.sat.r;
+        player.touchingWall = true;
     }
     if(player.pos.y - player.sat.r < 0){
         player.pos.y = player.sat.r;
+        player.touchingWall = true;
     } else if(player.pos.y + player.sat.r > canvas.height){
         player.pos.y = canvas.height - player.sat.r;
+        player.touchingWall = true;
     }
 
     // scrolling if specified by a simulate type
@@ -129,7 +148,6 @@ function simulate(){
     // (rendering happens in between)
 }
 
-// TODO: separate these off into different files
 const satMap = [
     /*circle*/
     (p) => {
@@ -416,18 +434,18 @@ const initEffectMap = [
         o.conveyorFriction = params.conveyorFriction;
     },
     /*platformer*/
-    // (o, params) => {
-    //     o.platformerForce = params.platformerForce;
-    //     o.platformerAngle = params.platformerAngle * Math.PI/180;
-    //     o.platformerAngleRotateSpeed = params.platformerAngleRotateSpeed * Math.PI/180;
-    //     o.platformerFriction = params.platformerFriction;
+    (o, params) => {
+        o.platformerForce = params.platformerForce;
+        o.platformerAngle = params.platformerAngle * Math.PI/180;
+        o.platformerAngleRotateSpeed = params.platformerAngleRotateSpeed * Math.PI/180;
+        o.platformerFriction = params.platformerFriction;
 
-    //     // o.maxJumps = params.maxJumps// TODO: IMPLEMENT JUMPS. also TODO: add a preserve jump parameter that makes jumps conserve even if you are not bounded that frame. If disabled, platformer only lets you jump when you're on a plat THAT FRAME
-    //     o.maxJumpCooldown = params.maxJumpCooldown;// in ticks
-    //     o.jumpCooldown = params.initJumpCooldown;
-    //     o.jumpForce = params.jumpForce;
-    //     o.jumpFriction = params.jumpDecay;
-    // },
+        // o.maxJumps = params.maxJumps// TODO: IMPLEMENT JUMPS. also TODO: add a preserve jump parameter that makes jumps conserve even if you are not bounded that frame. If disabled, platformer only lets you jump when you're on a plat THAT FRAME
+        o.maxJumpCooldown = params.maxJumpCooldown;// in ticks
+        o.jumpCooldown = 0;
+        o.jumpForce = params.jumpForce;
+        o.jumpFriction = params.jumpDecay;
+    },
     /*restrictAxis*/
     (o, params) => {
         o.axisSpeedMultX = params.axisSpeedMultX;
@@ -461,9 +479,10 @@ const initEffectMap = [
 
 const effectMap = [
     /*bound*/
-    (p, res) => {
+    (p, res, o, id) => {
         p.pos.x += res.overlapV.x;
         p.pos.y += res.overlapV.y;
+        p.touchingNormalIndexes.push(id);
     },
     /*kill*/
     (p) => {
@@ -552,24 +571,38 @@ const effectMap = [
     },
     /*conveyor*/
     (p, res, o) => {
-        if(p.dead === true) return;
         p.forces.push([Math.cos(o.conveyorAngle) * o.conveyorForce, Math.sin(o.conveyorAngle) * o.conveyorForce, o.conveyorFriction]);
     },
     /*platformer*/
-    // (p, res, o) => {
-    //     p.touching.platformer.push(obstacle);
-    //     obstacle.jumpCooldown--;
+    (p, res, o, id) => {
+        // p.touching.platformer.push(obstacle);
+        o.jumpCooldown--;
 
-    //     // add conveyor force
-    //     p.forces.push([Math.cos(o.platformerAngle) * o.platformerForce, Math.sin(o.platformerAngle) * o.platformerForce, o.platformerFriction]);
+        // add conveyor force
+        p.forces.push([Math.cos(o.platformerAngle) * o.platformerForce, Math.sin(o.platformerAngle) * o.platformerForce, o.platformerFriction]);
 
-    //     // TODO
-    //     // if(obstacle.jumpInput === 'up' || obstacle.jumpInput === 'down'){
-    //     //     player.axisSpeedMult.y = 0;
-    //     // } else if(obstacle.jumpInput === 'left' || obstacle.jumpInput === 'right'){
-    //     //     player.axisSpeedMult.x = 0;
-    //     // }
-    // },
+        // idea: find the amount of x/y the player moves in the platformer and move the opposite to effectively lock the player's motion perpendicular to the platformer's direction
+        const playerVelAngle = Math.atan2(p.yv, p.xv);
+
+        const angleBetween = o.platformerAngle - playerVelAngle;
+
+        const distMovedOnPlatAngle = Math.cos(angleBetween) * Math.sqrt(p.yv ** 2 + p.xv ** 2);
+
+        p.pos.x -= Math.cos(o.platformerAngle) * distMovedOnPlatAngle;
+        p.pos.y -= Math.sin(o.platformerAngle) * distMovedOnPlatAngle;
+
+        // checking if we were either intersecting with a normal last frame that's indexed after the obs or we are intersecting with a normal rn
+        if(o.jumpCooldown <= 0 && (p.touchingNormalIndexes.length !== 0 || p.lastTouchingNormalIndexes[p.lastTouchingNormalIndexes.length-1] >= id || p.touchingWall === true)){
+            o.canJump = true;
+            // OLD: if we're within 30 degrees, jump; NEW: if the mouse is above the thumbs up in the rendering
+            if(/*Math.abs(shortAngleDist(o.platformerAngle + Math.PI, playerVelAngle)) < Math.PI / 6*/window.dragging === true && player.pos.y - window.mouseY > player.sat.r + 50){
+                p.forces.push([-Math.cos(o.platformerAngle) * o.jumpForce, -Math.sin(o.platformerAngle) * o.jumpForce, o.jumpFriction]);
+                o.jumpCooldown = o.maxJumpCooldown;
+            }
+        } else {
+            o.canJump = false;
+        }
+    },
     /*restrictAxis*/
     (p, res, o) => {
         p.axisSpeedMultX *= o.axisSpeedMultX;
@@ -639,7 +672,6 @@ const effectMap = [
     },
     /*timeTrap*/
     (p, res, o) => {
-        if(p.dead === true) return;
         o.timeTrapTime -= 1 + o.timeTrapRecoverySpeed;
         if(o.timeTrapTime < 0){
             if(o.timeTrapToKill === true) p.dead = true;
@@ -684,9 +716,9 @@ const idleEffectMap = [
         o.conveyorAngle += o.conveyorAngleRotateSpeed;
     },
     // 'platformer',
-    // (o) => {
-    //     o.platformerAngle += o.platformerAngleRotateSpeed;
-    // },
+    (o) => {
+        o.platformerAngle += o.platformerAngleRotateSpeed;
+    },
     // 'restrictAxis',
     undefined,
     // 'snapGrid',
@@ -713,7 +745,7 @@ window.effectMapI2N = [
     'safe',
     'tp',
     'conveyor',
-    // 'platformer',
+    'platformer',
     'restrictAxis',
     'snapGrid',
     'timeTrap'
@@ -769,17 +801,16 @@ window.effectDefaultMap = [
         conveyorFriction: 0.8
     },
     // platformer
-    // {
-    //     platformerForce: 1,
-    //     platformerAngle: 90,
-    //     platformerAngleRotateSpeed: 0,
-    //     platformerFriction: 0.875,
-    //     maxJumpCooldown: 30,
-    //     initJumpCooldown: 0,
-    //     jumpForce: 20,
-    //     jumpDecay: 0.95,
-    //     // maxJumps: 1
-    // },
+    {
+        platformerForce: 1,
+        platformerAngle: 90,
+        platformerAngleRotateSpeed: 0,
+        platformerFriction: 0.875,
+        maxJumpCooldown: 30,
+        jumpForce: 20,
+        jumpDecay: 0.95,
+        // maxJumps: 1
+    },
     // restrictAxis
     {
         axisSpeedMultX: 0,
@@ -946,27 +977,39 @@ const renderEffectMap = [
         }
     },
     /*platformer*/
-    // (o) => {
-    //     ctx.fillStyle = window.colors.tile;
-    //     ctx.globalAlpha = 0.3;
-    //     // ctx.toClip = true;
-    //     ctx.cleanUpFunction = () => {
-    //         ctx.save();
-    //         ctx.clip();
-    //         const halfW = o.dimensions.x/2;
-    //         const halfH = o.dimensions.y/2;
-    //         for(let x = o.pos.x - halfW + 50; x <= o.pos.x + 100 - o.pos.x%100 + halfW + 50; x += 100){
-    //             for(let y = o.pos.y - halfH + 50; y <= o.pos.y + 100 - o.pos.y%100 + halfH + 50; y += 100){
-    //                 ctx.translate(x,y);
-    //                 ctx.rotate(o.platformerAngle+Math.PI/2);
-    //                 ctx.drawImage(arrowImg, -50, -50, 100, 100);
-    //                 ctx.rotate(-o.platformerAngle-Math.PI/2);
-    //                 ctx.translate(-x,-y);
-    //             }
-    //         }
-    //         ctx.restore();
-    //     }
-    // },
+    (o) => {
+        ctx.fillStyle = window.colors.tile;
+        ctx.globalAlpha = 0.1;
+        ctx.cleanUpFunction = () => {
+            ctx.save();
+            ctx.clip();
+            let [topLeftX, topLeftY] = generateTopLeftCoordinates(o);
+
+            ctx.globalAlpha = 1;
+            for(let x = topLeftX + 50; x <= topLeftX + o.dimensions.x + 50; x += 100){
+                for(let y = topLeftY + 50; y <= topLeftY + o.dimensions.y + 50; y += 100){
+                    ctx.translate(x,y);
+                    ctx.rotate(o.platformerAngle+Math.PI/2);
+                    ctx.drawImage(arrowImg, -50, -50, 100, 100);
+                    ctx.rotate(-o.platformerAngle-Math.PI/2);
+                    ctx.translate(-x,-y);
+                }
+            }
+
+            ctx.restore();
+
+            // rendering 👍 if player can jump
+            // if there ever is to be more emojis like this, then make an array of emojis that i can push to that render on top of each other every frame (w/ priority? sorted?)
+            if(o.canJump === true){
+                ctx.globalAlpha = 1;
+                ctx.fillStyle = 'white';
+                ctx.font = `56px Inter`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('👍', player.pos.x, player.pos.y - player.sat.r - 50);
+            }
+        }
+    },
     /*restrictAxis*/
     (o) => {
         if(o.axisSpeedMultX < 0 && o.axisSpeedMultY < 0){
@@ -1121,10 +1164,13 @@ window.spawnPosition = {x: 100, y: 1500};
 create(0/*circle*/, [], [], /*no simulate/ effects*/ {x: window.spawnPosition.x, y: window.spawnPosition.y, r: /*24.5*/49.5})
 const player = window.player = obstacles.pop();
 player.axisSpeedMultX = player.axisSpeedMultY = 0;
+player.touchingNormalIndexes = [];
+player.lastTouchingNormalIndexes = [];
 player.xv = player.yv = 0;
 player.speed = 4;
 player.dead = false;
 player.onSafe = false;
+player.touchingWall = false;
 player.stopForces = false;
 player.forces = [];
 
