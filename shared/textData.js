@@ -416,7 +416,6 @@ export default {
     // create_obstacle
     function(Blockly) {
       return {
-        // TODO: use insertFieldAt method and some getter to insert fields in the right place. https://developers.google.com/blockly/reference/js/blockly.input_class.insertfieldat_1_method
         init: function() {
           this.setColour(194);
 
@@ -458,10 +457,10 @@ export default {
             .appendField("number of effects")
             .appendField(new Blockly.FieldNumber(1, 1, window.effectMapI2N.length, 1, this.validateNumberOfEffectsDropdown), 'NUM_EFFECTS_DROPDOWN');
 
-          this.appendDummyInput()
-          .appendField("tick function:");
+          // this.appendDummyInput()
+          //   .appendField("tick function:");
 
-          this.appendStatementInput('TICK_FN');
+          // this.appendStatementInput('TICK_FN');
         },
 
         validateNumberOfSimulatesDropdown: function(newValue) {
@@ -499,6 +498,9 @@ export default {
           for(let key in this.simulateParamToId){
             this.removeInput(this.simulateParamToId[key]);
           }
+
+          this.removeInput('SIMULATE_CUSTOM_FN', true);
+
           this.simulateParamToId = {};
 
           this.simulateOptions = [];
@@ -542,6 +544,9 @@ export default {
           for(let key in this.effectParamToId){
             this.removeInput(this.effectParamToId[key]);
           }
+
+          this.removeInput('EFFECT_CUSTOM_FN', true);
+
           this.effectParamToId = {};
 
           this.effectOptions = [];
@@ -631,6 +636,17 @@ export default {
 
           let insertionIndex = this.getIndexOfInput(`SIMULATE_CONTAINER${dropdownId}`) + 1;
 
+          // Custom
+          if(newValue === '3'){
+            // this.appendDummyInput('TICK_FN_LABEL')
+            //   .appendField("simulate function:");
+            // this.inputList.splice(insertionIndex++, 0, this.inputList.pop())
+
+            this.appendStatementInput('SIMULATE_CUSTOM_FN');
+            this.inputList.splice(insertionIndex++, 0, this.inputList.pop())
+            return insertionIndex;
+          }
+
           const newValueArr = Object.keys(newValueMap);
           for(let i = newValueArr.length-1; i >= 0; i--){
             const key = newValueArr[i];
@@ -665,6 +681,17 @@ export default {
           }
 
           let insertionIndex = this.getIndexOfInput(`EFFECT_CONTAINER${dropdownId}`) + 1;
+
+          // Custom
+          if(newValue === '3'){
+            // this.appendDummyInput('TICK_FN_LABEL')
+            //   .appendField("simulate function:");
+            // this.inputList.splice(insertionIndex++, 0, this.inputList.pop())
+
+            this.appendStatementInput('EFFECT_CUSTOM_FN');
+            this.inputList.splice(insertionIndex++, 0, this.inputList.pop())
+            return insertionIndex;
+          }
 
           const newValueArr = Object.keys(newValueMap);
           for(let i = newValueArr.length-1; i >= 0; i--){
@@ -769,6 +796,13 @@ export default {
               const dropdownValue = simulateDropdownIndexToKey[i];
               const paramMap = simulateDefaultMap[dropdownValue];
 
+              // Custom
+              if(dropdownValue === '3'){
+                this.appendStatementInput('SIMULATE_CUSTOM_FN');
+                this.inputList.splice(insertionIndex++, 0, this.inputList.pop());
+                continue;
+              }
+
               for(let key in paramMap){
                 const id = this.simulateParamToId[key];
                 this.appendValueInput(id)
@@ -811,6 +845,13 @@ export default {
               // append all of the params in order
               const dropdownValue = effectDropdownIndexToKey[i];
               const paramMap = effectDefaultMap[dropdownValue];
+
+              // Custom
+              if(dropdownValue === '3'){
+                this.appendStatementInput('EFFECT_CUSTOM_FN');
+                this.inputList.splice(insertionIndex++, 0, this.inputList.pop());
+                continue;
+              }
 
               for(let key in paramMap){
                 const id = this.effectParamToId[key];

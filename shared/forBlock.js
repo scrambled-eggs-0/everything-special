@@ -127,9 +127,14 @@ forBlock['create_obstacle'] = function(block, generator) {
     params += `${key}:${generator.valueToCode(block, this.effectParamToId[key], Order.NONE)},`;
   }
 
-  const tf = generator.statementToCode(block, 'TICK_FN', Order.ATOMIC);
-  if(tf.length !== 0){
-    params += `tf:(e)=>{\n${tf}},`;
+  const sf = generator.statementToCode(block, 'SIMULATE_CUSTOM_FN', Order.NONE);
+  if(sf.length !== 0){
+    params += `sf:(e)=>{\n${sf}},`;
+  }
+  const ef = generator.statementToCode(block, 'EFFECT_CUSTOM_FN', Order.NONE);
+  if(ef.length !== 0){
+    // player, res, o. Maybe in future there could be things with res? Like specific blocks like "bound player" that only works in an effect block for ex.
+    params += `ef:(_, __, e)=>{\n${ef}},`;
   }
 
   params += '}';

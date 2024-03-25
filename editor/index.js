@@ -141,6 +141,8 @@ window.uploadCode = () => {
       .catch(error => {
           console.error('Error uploading file:', error);
       });
+  
+  alert('Congrats! Your code was uploaded to the servers!');
 }
 
 import './createMode.js';

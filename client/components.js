@@ -1,6 +1,6 @@
 import './SAT.js';
 import Utils from './utils.js';
-const { isEditor, blendColor, arrowImg } = Utils;
+const { isEditor, blendColor, arrowImg, starImg } = Utils;
 import scroll from './scroll.js';
 let toScroll = false;
 
@@ -38,7 +38,8 @@ function create(shape, simulates, effects, params){
         initEffectMap[effects[i]](e, params);
         if(idleEffectMap[effects[i]] !== undefined) e.simulate.push(idleEffectMap[effects[i]]);
     }
-    if(params.tf !== undefined) e.simulate.push(params.tf);
+    if(params.sf !== undefined) e.simulate.push(params.sf);
+    if(params.ef !== undefined) {e.effect.push(params.ef); e.renderEffect.push(renderEffectMap[3])}
     
     obstacles.push(e);
 }
@@ -298,7 +299,11 @@ const initSimulateMap = [
         o.rotateSpeed = init.rotateSpeed;
         o.pivotX = init.pivotX;
         o.pivotY = init.pivotY;
-    }
+    },
+    // /*grow*/
+    () => {},
+    // /*custom*/
+    () => {},
 ]
 
 const simulateMap = [
@@ -354,14 +359,19 @@ const simulateMap = [
         
         o.hasRotated = true;
         o.dimensions = generateDimensions(o);
-    }
+    },
     /*grow*/
+    () => {},
     // TODO. Also make sure to: o.dimensions = generateDimensions(o);
+    /*custom*/
+    () => {}
 ]
 
 window.simulateMapI2N = [
     'pathMove',
-    'rotate'
+    'rotate',
+    'grow',
+    'custom'
 ]
 
 window.simulateDefaultMap = [
@@ -375,7 +385,11 @@ window.simulateDefaultMap = [
         rotateSpeed: 0.01,
         pivotX: 450,
         pivotY: 800
-    }
+    },
+    // grow
+    {},
+    // custom
+    {},
 ]
 
 const initEffectMap = [
@@ -389,6 +403,8 @@ const initEffectMap = [
         o.bounciness = params.bounciness;
         o.decay = params.decay;
     },
+    /*custom*/
+    () => {},
     /*stopForces*/
     () => {},
     /*winpad*/
@@ -497,6 +513,8 @@ const effectMap = [
 
         p.forces.push([Math.cos(angle) * o.bounciness, Math.sin(angle) * o.bounciness, o.decay]);
     },
+    /*custom*/
+    () => {},
     /*stopForces*/
     (p) => {
         p.stopForces = true;
@@ -687,6 +705,8 @@ const idleEffectMap = [
     undefined,
     // 'bounce',
     undefined,
+    // 'custom'
+    undefined,
     // 'stopForces',
     undefined,
     // 'winpad',
@@ -736,6 +756,7 @@ window.effectMapI2N = [
     'bound',
     'kill',
     'bounce',
+    'custom',
     'stopForces',
     'winpad',
     'coin',
@@ -761,6 +782,8 @@ window.effectDefaultMap = [
         bounciness: 1,
         decay: 0.98
     },
+    // custom
+    {},
     // stopForces
     {},
     // winpad
@@ -850,6 +873,20 @@ const renderEffectMap = [
     /*bounce*/
     (o) => {
         ctx.fillStyle = 'blue';
+    },
+    /*custom*/
+    (o) => {
+        ctx.toFill = false;
+        
+        ctx.cleanUpFunction = () => {
+            ctx.save();
+            ctx.clip();
+
+            const [topLeftX, topLeftY] = generateTopLeftCoordinates(o);
+            ctx.drawImage(starImg, topLeftX, topLeftY, o.dimensions.x, o.dimensions.y);
+
+            ctx.restore();
+        }
     },
     /*stopForces*/
     (o) => {
