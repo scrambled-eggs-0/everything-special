@@ -301,7 +301,14 @@ const initSimulateMap = [
         o.pivotY = init.pivotY;
     },
     // /*grow*/
-    () => {},
+    (o, init) => {
+        o.growSpeed = init.growSpeed;
+        o.shrinkSpeed = init.shrinkSpeed;
+        o.maxGrowth = init.maxGrowth;
+        o.minGrowth = init.minGrowth;
+        o.growing = init.toStartGrowing;
+        o.growth = o.lastGrowth = init.startGrowth;
+    },
     // /*custom*/
     () => {},
 ]
@@ -361,8 +368,43 @@ const simulateMap = [
         o.dimensions = generateDimensions(o);
     },
     /*grow*/
-    () => {},
-    // TODO. Also make sure to: o.dimensions = generateDimensions(o);
+    (o) => {
+        if(o.growing === true) {
+            o.growth += o.growSpeed;
+            if(o.growth >= o.maxGrowth){
+                o.growing = false;
+                o.growth = o.maxGrowth;
+            }
+        }
+        else {
+            o.growth -= o.shrinkSpeed;
+            if(o.growth <= o.minGrowth){
+                o.growing = true;
+                o.growth = o.minGrowth;
+            }
+        }
+
+        const growthRatio = o.growth / o.lastGrowth;
+
+        if(o.sat.r !== undefined){
+            // circle
+            o.sat.r *= growthRatio;
+        } else {
+            // poly
+            let [middleX, middleY] = generateTopLeftCoordinates(o);
+            middleX += o.dimensions.x / 2;
+            middleY += o.dimensions.y / 2;
+
+            for(let i = 0; i < o.sat.points.length; i++){
+                o.sat.points[i].x = (o.sat.points[i].x + o.pos.x - middleX) * growthRatio - o.pos.x + middleX;
+                o.sat.points[i].y = (o.sat.points[i].y + o.pos.y - middleY) * growthRatio - o.pos.y + middleY;
+            }
+            o.sat.setPoints(o.sat.points);
+        }
+
+        o.dimensions = generateDimensions(o);
+        o.lastGrowth = o.growth;
+    },
     /*custom*/
     () => {}
 ]
@@ -387,7 +429,14 @@ window.simulateDefaultMap = [
         pivotY: 800
     },
     // grow
-    {},
+    {
+        growSpeed: 0.006,
+        shrinkSpeed: 0.006,
+        maxGrowth: 1.25,
+        minGrowth: 1,
+        startGrowth: 1,
+        toStartGrowing: true,
+    },
     // custom
     {},
 ]
@@ -877,7 +926,7 @@ const renderEffectMap = [
     /*custom*/
     (o) => {
         ctx.toFill = false;
-        
+
         ctx.cleanUpFunction = () => {
             ctx.save();
             ctx.clip();
@@ -932,21 +981,24 @@ const renderEffectMap = [
         ctx.fillStyle = window.colors.tile;
         ctx.globalAlpha = o.coins <= 0 ? 0.5 : 1;
         ctx.cleanUpFunction = () => {
-            ctx.fillStyle = o.color;
+            ctx.fillStyle = o.coinDoorColor;
+
+            let [middleX, middleY] = generateTopLeftCoordinates(o);
+            middleX += o.dimensions.x / 2; middleY += o.dimensions.y / 2;
 
             ctx.beginPath();
-            ctx.roundRect(o.pos.x-o.dimensions.x/4, o.pos.y-o.dimensions.y/4, o.dimensions.x/2, o.dimensions.y/2, Math.min(o.dimensions.x,o.dimensions.y)/20);
+            ctx.roundRect(middleX-o.dimensions.x/4, middleY-o.dimensions.y/4, o.dimensions.x/2, o.dimensions.y/2, Math.min(o.dimensions.x,o.dimensions.y)/20);
             ctx.fill();
             ctx.closePath();
     
-            ctx.fillStyle = colors.tile;//'#313131'//'#484a00';
+            ctx.fillStyle = window.colors.tile;//'#313131'//'#484a00';
             ctx.font = `${Math.min(60, o.dimensions.x/4, o.dimensions.y/4)}px Inter`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(
                 Math.max(0, o.coins),
-                o.pos.x,
-                o.pos.y
+                middleX,
+                middleY
             );
         }
     },
