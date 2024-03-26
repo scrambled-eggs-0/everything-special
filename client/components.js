@@ -7,11 +7,11 @@ let toScroll = false;
 window.respawnPlayer = () => {
     player.pos.x = window.spawnPosition.x;
     player.pos.y = window.spawnPosition.y;
+    player.renderRadius = 0;
     player.dead = false;
     player.forces.length = 0;
     window.onmouseup();
 }
-window.mouseDownFunctions.push(()=>{if(player.dead===true){window.respawnPlayer()}});
 
 const SAT = window.SAT;
 SAT.Circle.prototype.rotate = function (angle) {
@@ -50,6 +50,7 @@ let res = new SAT.Response();
 let collided = false;
 function simulate(){
     // player simulation
+    player.renderRadius = player.renderRadius * 0.83 + player.sat.r * 0.17;
     if(window.dragging === true && player.dead === false){
         distSq = (window.mouseY - player.pos.y) ** 2 + (window.mouseX - player.pos.x) ** 2;
         if(player.speed ** 2 < distSq) speed = player.speed;
@@ -547,6 +548,17 @@ const initEffectMap = [
         o.timeTrapToKill = params.timeTrapToKill;
         o.timeTrapToShowTenth = params.timeTrapToShowTenth;
     },
+    /*changeSize*/
+    (o, params) => {
+        o.sizeMult = params.sizeMult;
+        o.sizeChangePermanent = params.sizeChangePermanent;
+        o.lastChangeSizeColliding = o.changeSizeColliding = false;
+    },
+    /*changeSpeed*/
+    (o, params) => {
+        o.speedMult = params.speedMult;
+        o.speedChangePermanent = params.speedChangePermanent;
+    }
 ]
 
 const effectMap = [
@@ -584,7 +596,7 @@ const effectMap = [
         // level maker's choosing
         if(isEditor === true){
             // respawn
-            respawnPlayer();
+            window.respawnPlayer();
             if(window.inClearCheckMode === true){
                 window.exitClearCheckMode();
                 uploadCode();
@@ -754,6 +766,29 @@ const effectMap = [
             o.timeTrapTime = 0;
         }
     },
+    /*changeSize*/
+    (p, res, o) => {
+        if(o.sizeChangePermanent === true){
+            if(o.permanentSizeChangeDone === undefined){
+                o.permanentSizeChangeDone = true;
+                p.sat.r *= o.sizeMult;
+            }
+        } else {
+            o.changeSizeColliding = true;
+        }
+    },
+    /*changeSpeed*/
+    (p, res, o) => {
+        if(o.speedChangePermanent === true){
+            if(o.permanentSpeedChangeDone === undefined){
+                o.permanentSpeedChangeDone = true;
+                p.speed *= o.speedMult;
+            }
+        } else {
+            p.axisSpeedMultX *= o.speedMult;
+            p.axisSpeedMultY *= o.speedMult;
+        }
+    },
 ]
 
 const idleEffectMap = [
@@ -810,6 +845,23 @@ const idleEffectMap = [
         o.timeTrapTime += o.timeTrapRecoverySpeed;
         if(o.timeTrapTime > o.timeTrapMaxTime) o.timeTrapTime = o.timeTrapMaxTime;
     },
+    // 'changeSize'
+    (o) => {
+        if(o.sizeChangePermanent === true) return;
+
+        if(o.lastChangeSizeColliding === true && o.changeSizeColliding === false){
+            // exit
+            player.sat.r /= o.sizeMult;
+        } else if(o.lastChangeSizeColliding === false && o.changeSizeColliding === true){
+            // enter
+            player.sat.r *= o.sizeMult;
+        }
+
+        o.lastChangeSizeColliding = o.changeSizeColliding;
+        o.changeSizeColliding = false;
+    },
+    // 'changeSpeed'
+    undefined,
 ]
 
 window.effectMapI2N = [
@@ -830,7 +882,9 @@ window.effectMapI2N = [
     'platformer',
     'restrictAxis',
     'snapGrid',
-    'timeTrap'
+    'timeTrap',
+    'changeSize',
+    'changeSpeed',
 ]
 
 window.effectDefaultMap = [
@@ -920,6 +974,16 @@ window.effectDefaultMap = [
         timeTrapRecoverySpeed: 1.5,
         timeTrapToKill: true,
         timeTrapToShowTenth: false
+    },
+    // changeSize
+    {
+        sizeMult: 1.5,
+        sizeChangePermanent: false
+    },
+    // changeSpeed
+    {
+        speedMult: 2.5,
+        speedChangePermanent: false
     },
 ]
 
@@ -1272,7 +1336,61 @@ const renderEffectMap = [
 
             ctx.fillText(o.timeTrapToShowTenth === true ? Math.round(o.timeTrapTime / 60 * 10) / 10 : Math.round(o.timeTrapTime / 60), middleX, middleY);
         }
-    }
+    },
+    /*changeSize*/
+    (o) => {
+        if(o.sizeChangePermanent === true){
+            ctx.toStroke = true;
+            ctx.lineWidth = 10;
+            ctx.lineDashOffset = -window.time / 15;
+            if (o.sizeMult > 1){
+                ctx.strokeStyle = '#0e30ad';
+            } else {
+                ctx.strokeStyle = '#1c1852';
+            }
+            ctx.setLineDash([30, 40]);
+
+            ctx.cleanUpFunction = () => {
+                ctx.setLineDash([]);
+            }
+        }
+        
+        if(o.permanentSizeChangeDone === true) {
+            ctx.toFill = false;
+        } else {
+            if (o.sizeMult > 1){
+                ctx.fillStyle = '#0e30ad';
+            } else {
+                ctx.fillStyle = '#1c1852';
+            }
+        }
+
+        
+        ctx.globalAlpha = 0.28;
+    },
+    /*changeSpeed*/
+    (o) => {
+        if(o.speedChangePermanent === true){
+            ctx.toStroke = true;
+            ctx.lineWidth = 10;
+            ctx.lineDashOffset = -window.time / 15;
+            ctx.strokeStyle = '#eba500';
+            ctx.setLineDash([30, 40]);
+
+            ctx.cleanUpFunction = () => {
+                ctx.setLineDash([]);
+            }
+        }
+
+        if(o.permanentSpeedChangeDone === true) {
+            ctx.toFill = false;
+        } else {
+            ctx.fillStyle = '#eba500';
+        }
+        ctx.globalAlpha = 0.25;
+
+        // permanents should dissapear upon use i think
+    },
 ]
 
 // an obstacle is an ECS
@@ -1282,11 +1400,12 @@ window.spawnPosition = {x: 100, y: 1500};
 // a player is also an ecs
 create(0/*circle*/, [], [], /*no simulate/ effects*/ {x: window.spawnPosition.x, y: window.spawnPosition.y, r: /*24.5*/49.5})
 const player = window.player = obstacles.pop();
-player.axisSpeedMultX = player.axisSpeedMultY = 0;
+player.axisSpeedMultX = player.axisSpeedMultY = 1;
 player.touchingNormalIndexes = [];
 player.lastTouchingNormalIndexes = [];
+player.renderRadius = player.sat.r;
 player.xv = player.yv = 0;
-player.speed = 4;
+player.speed = player.baseSpeed = 4;
 player.dead = false;
 player.onSafe = false;
 player.touchingWall = false;

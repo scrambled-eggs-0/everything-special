@@ -25,6 +25,7 @@ window.lastColors = {
     tile: window.defaultColors.tile,
     background: window.defaultColors.background,
 }
+window.lastPlayerData = [0, 0];
 
 import Utils from './utils.js';
 const { isEditor } = Utils;
@@ -37,11 +38,11 @@ window.render = () => {
         if(window.scrollAnimation > 1) window.scrollAnimation = 1;
         ctx.translate(0, -window.scrollAnimation * canvas.height);// not the same as the exit transform because we also want to translate (-canvas.height) in addition to (1 - window.scrollAnimation) * canvas.height
 
-        _render(window.lastObstacles, window.lastColors);
+        _render(window.lastObstacles, window.lastColors, window.lastPlayerData);
         ctx.translate(0, canvas.height);
     }
 
-    _render(window.obstacles, window.colors);
+    _render(window.obstacles, window.colors, undefined);
 
     if(window.scrollAnimation < 1){
         ctx.translate(0, (window.scrollAnimation-1) * canvas.height);
@@ -49,8 +50,8 @@ window.render = () => {
 }
 
 window.tileSize = 100; // 50
-let opaqIndex, len, j = false;
-function _render(os, cols){
+let opaqIndex, len, lastPlayerX, lastPlayerY, lastPlayerRadius, j = false;
+function _render(os, cols, playerData=undefined){
     ctx.fillStyle = cols.background;
     ctx.fillRect(0,0,canvas.width, canvas.height);
 
@@ -133,10 +134,31 @@ function _render(os, cols){
 
     // render player
     ctx.fillStyle = player.dead === true ? 'red' : 'black';
+
+    // overriding data for player rendering specifics
+    if(playerData !== undefined){
+        lastPlayerX = player.pos.x;
+        lastPlayerY = player.pos.y;
+
+        player.pos.x = playerData[0];
+        player.pos.y = playerData[1];
+    } else {
+        lastPlayerRadius = player.sat.r;
+        player.sat.r = player.renderRadius;
+    }
+    
+    
     ctx.beginPath();
     player.renderShape(player);
     ctx.fill();
     ctx.closePath();
+
+    if(playerData !== undefined){
+        player.pos.x = lastPlayerX;
+        player.pos.y = lastPlayerY;
+    } else {
+        player.sat.r = lastPlayerRadius;
+    }
 
     // if(player.dead === true){
     //     ctx.fillStyle = 'white';

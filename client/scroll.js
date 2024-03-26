@@ -47,6 +47,7 @@ async function scroll(){
         window.lastColors[key] = window.colors[key];
         window.colors[key] = window.defaultColors[key];
     }
+    window.lastPlayerData = [player.pos.x, player.pos.y];
 
     // if we already have the next code
     if(nextCode !== undefined){
@@ -112,19 +113,14 @@ window.removeScript = function removeScript(){
 
 window.resetGame = () => {
     window.obstacles.length = window.mouseUpFunctions.length = window.mouseDownFunctions.length = 0;
-    if(window.isEditor !== true) window.respawnPlayer();
+    if(window.isEditor !== true) {window.respawnPlayer(); /*player.renderRadius = player.sat.r;*/ }
     for(let key in window.defaultColors) { window.colors[key] = window.defaultColors[key]; }
     window.mouseDownFunctions.push(() => {
-        if(player.dead === true){
-            player.pos.x = window.spawnPosition.x;
-            player.pos.y = window.spawnPosition.y;
-            player.dead = false;
-            player.forces.length = 0;
-            window.onmouseup();
-        }
+        if(player.dead === true) window.respawnPlayer();
     })
     window.spawnPosition.x = 100;
     window.spawnPosition.y = 1500;
+    player.speed = player.baseSpeed;
 }  
 
 export default scroll;
