@@ -181,6 +181,8 @@ app.post('/upload', (res, req) => {
 app.get("/:filename", (res, req) => {
     let path = 'client' + req.getUrl();
 
+    console.log(path);
+
     // console.log(path);
     
     // only js files check for mime type so everything can be text/javascript lol
