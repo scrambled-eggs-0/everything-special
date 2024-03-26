@@ -193,6 +193,11 @@ app.get("/:filename", (res, req) => {
         }
     });
 
+    if(path.endsWith('bundle.js') || path.endsWith('png')){
+        path = 'editor/dist' + req.getUrl();
+        console.log(path);
+    }
+
     // hacky fix
     // if(path.endsWith('svg')){
     //     path = 'editor/dist' + req.getUrl();
