@@ -197,7 +197,6 @@ app.get("/:filename", (res, req) => {
 
     if(path.endsWith('bundle.js') || path.endsWith('png')){
         path = 'editor/dist' + req.getUrl();
-        console.log(path);
     }
 
     // hacky fix
@@ -230,6 +229,7 @@ app.get("/:filename", (res, req) => {
             const file = fs.readFileSync(path);
             res.end(file);
         } else {
+            console.log('not found!');
             // File not found
             res.writeStatus('404 Not Found');
             res.end();

@@ -232,8 +232,9 @@ if(isEditor !== true){
     resize();
 
     (async () => {
-        renderUi = await import('./sideMenu.js');
+        renderUi = await import('./sidemenu.js');
         renderUi = renderUi.default;
+        console.log(renderUi);
     })();
 } else {
     ctx.textAlign = 'center';
