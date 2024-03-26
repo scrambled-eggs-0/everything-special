@@ -454,6 +454,13 @@ const initEffectMap = [
     },
     /*custom*/
     () => {},
+    /*customImage*/
+    (o, params) => {
+        o.img = typeof Image === 'undefined' ? {} : new Image();
+        o.img.src = params.url;
+        o.imgLoaded = false;
+        o.img.onload = () => {o.imgLoaded = true;}
+    },
     /*stopForces*/
     () => {},
     /*winpad*/
@@ -563,6 +570,8 @@ const effectMap = [
         p.forces.push([Math.cos(angle) * o.bounciness, Math.sin(angle) * o.bounciness, o.decay]);
     },
     /*custom*/
+    () => {},
+    /*customImage*/
     () => {},
     /*stopForces*/
     (p) => {
@@ -756,6 +765,8 @@ const idleEffectMap = [
     undefined,
     // 'custom'
     undefined,
+    // 'customImage'
+    undefined,
     // 'stopForces',
     undefined,
     // 'winpad',
@@ -806,6 +817,7 @@ window.effectMapI2N = [
     'kill',
     'bounce',
     'custom',
+    'customImage',
     'stopForces',
     'winpad',
     'coin',
@@ -833,6 +845,10 @@ window.effectDefaultMap = [
     },
     // custom
     {},
+    // customEffect
+    {
+        url: 'http://tinyurl.com/dwayne-t-rj'
+    },
     // stopForces
     {},
     // winpad
