@@ -26,6 +26,7 @@ window.lastColors = {
     background: window.defaultColors.background,
 }
 window.lastPlayerData = [0, 0];
+let renderUi = () => {};
 
 import Utils from './utils.js';
 const { isEditor } = Utils;
@@ -164,6 +165,8 @@ function _render(os, cols, playerData=undefined){
     //     ctx.fillStyle = 'white';
     //     ctx.fillText('Tap to respawn', canvas.width / 2, canvas.height - 85);
     // }
+
+    renderUi(canvas, ctx, playerData !== undefined);
 }
 
 // gameloop
@@ -210,7 +213,7 @@ const FRAME_TIME = 1000 / 60;
 
 if(isEditor !== true){
     // resizing canvas
-    function resize(){ 
+    function resize(){
         let scale = window.innerWidth / canvas.width;
         if(window.innerHeight / canvas.height < window.innerWidth / canvas.width){
             scale = window.innerHeight / canvas.height;
@@ -227,6 +230,11 @@ if(isEditor !== true){
     }
     window.addEventListener("resize", resize);
     resize();
+
+    (async () => {
+        renderUi = await import('./sideMenu.js');
+        renderUi = renderUi.default;
+    })();
 } else {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -235,6 +243,9 @@ if(isEditor !== true){
     setInterval(() => {
         window.canvasDimensions = canvas.getBoundingClientRect();
     }, 1000)
+
+    window.updateSettingsCog = () => {};
+    window.addSideMenuEvtListeners = () => {};
 }
 
 import './sound.js';

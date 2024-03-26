@@ -24,7 +24,7 @@ window.onmousedown = () => {
     dragStartTime = Date.now();
     
     for(let i = 0; i < window.mouseDownFunctions.length; i++){
-        window.mouseDownFunctions[i]();
+        window.mouseDownFunctions[i]()
     }
 }
 
@@ -123,3 +123,5 @@ window.ontouchend = (e) => {
 window.ontouchcancel = (e) => {
     window.ontouchend();
 }
+
+window.oncontextmenu = (e) => { return e.preventDefault(); }

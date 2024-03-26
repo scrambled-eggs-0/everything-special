@@ -1,6 +1,6 @@
 import './SAT.js';
 import Utils from './utils.js';
-const { isEditor, blendColor, arrowImg, starImg } = Utils;
+const { isEditor, blendColor } = Utils;
 import scroll from './scroll.js';
 let toScroll = false;
 
@@ -213,6 +213,7 @@ function generateTopLeftCoordinates(o){
     }
     return [topLeftX, topLeftY];
 }
+window.generateTopLeftCoordinates = generateTopLeftCoordinates;
 
 window.satMapI2N = [
     'circle',
@@ -465,7 +466,9 @@ const initEffectMap = [
     /*stopForces*/
     () => {},
     /*winpad*/
-    () => {},
+    (o) => {
+        o.isWinpad = true;
+    },
     /*coin*/
     (o, params) => {
         o.collected = false;
@@ -1012,7 +1015,7 @@ const renderEffectMap = [
             ctx.clip();
 
             const [topLeftX, topLeftY] = generateTopLeftCoordinates(o);
-            ctx.drawImage(starImg, topLeftX, topLeftY, o.dimensions.x, o.dimensions.y);
+            ctx.drawImage(window.starImg, topLeftX, topLeftY, o.dimensions.x, o.dimensions.y);
 
             ctx.restore();
         }
@@ -1145,7 +1148,7 @@ const renderEffectMap = [
                 for(let y = topLeftY + 50; y <= topLeftY + o.dimensions.y + 50; y += 100){
                     ctx.translate(x,y);
                     ctx.rotate(o.conveyorAngle+Math.PI/2);
-                    ctx.drawImage(arrowImg, -50, -50, 100, 100);
+                    ctx.drawImage(window.arrowImg, -50, -50, 100, 100);
                     ctx.rotate(-o.conveyorAngle-Math.PI/2);
                     ctx.translate(-x,-y);
                 }
@@ -1173,7 +1176,7 @@ const renderEffectMap = [
                 for(let y = topLeftY + 50; y <= topLeftY + o.dimensions.y + 50; y += 100){
                     ctx.translate(x,y);
                     ctx.rotate(o.platformerAngle+Math.PI/2);
-                    ctx.drawImage(arrowImg, -50, -50, 100, 100);
+                    ctx.drawImage(windwo.arrowImg, -50, -50, 100, 100);
                     ctx.rotate(-o.platformerAngle-Math.PI/2);
                     ctx.translate(-x,-y);
                 }

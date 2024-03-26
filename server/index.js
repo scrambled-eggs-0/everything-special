@@ -230,6 +230,20 @@ app.get("/:filename", (res, req) => {
     // }
 });
 
+app.get("/gfx/:filename", (res, req) => {
+    let path = 'client' + req.getUrl();
+
+    if (fs.existsSync(path)) {
+        // Read and serve the file
+        const file = fs.readFileSync(path);
+        res.end(file);
+    } else {
+        // File not found
+        res.writeStatus('404 Not Found');
+        res.end();
+    }
+});
+
 // we'll have a post request handler here that will take file content and upload it to the db
 //onPost: db.uploadFile(data);
 

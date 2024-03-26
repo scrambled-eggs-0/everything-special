@@ -56,24 +56,27 @@ function componentToHex(c) {
 // 	return 2*da % max - da;
 // }
 
-// import ArrowAsset from './arrow.png';
-// const arrowImg = new Image();
-// // window.requestIdleCallback(() => {
-//     arrowImg.src = ArrowAsset;
-// // }, {timeout: 2000})
+if(typeof Image !== 'undefined'){
+	window.arrowImg = new Image();
+	window.starImg = new Image();
+	window.gearImg = new Image();
+	if(isEditor === true){
+		// editor
+		(async() => {
+			const exps = await import('./assets.js');
+			window.arrowImg = exps.default.arrowImg;
+			window.starImg = exps.default.starImg;
+			window.gearImg = exps.default.gearImg;
+		})();
+	} else {
+		// client
+		window.arrowImg.src = './gfx/arrow.png';
+		window.starImg.src = 'https://upload.wikimedia.org/wikipedia/commons/c/c3/A_Snapshot_of_the_Jewel_Box_cluster_with_the_ESO_VLT.jpg';
+		window.gearImg.src = './gfx/colorgear.png';
+	}
+} else {
+	// server
+	window.arrowImg = window.starImg = window.gearImg = {};
+}
 
-// arrowImg.onload = () => {
-// 	const c = document.createElement('canvas');
-// 	const x = c.getContext('2d');
-// 	c.width = arrowImg.width;
-// 	c.height = arrowImg.height;
-// 	x.drawImage(arrowImg, 0, 0);
-// 	console.log(c.toDataURL());
-// }
-const arrowImg = typeof Image === 'undefined' ? {} : new Image();
-arrowImg.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAmZJREFUaEPtmb+P0zAUx19MpdLYF7tpJcTGgIRAQkgMLOwMrCcxMbAhJBiAEY4BGPkhBiQYERviD7iJiYEF3YJuQEKMMLRJHOyESuCSDEXVqWlzia1rfOnY+j1/P/k+26+OA5Z8HEs4oAVZNydbRw6dI4wxNp1OHc55aBLeeGkhhO4BgKOUetxYEErpJuf8bA5AKf3COX9vCsaYIxjjY1LKG/PCMcavpJQ/TcCYAnEQQveVUkfmRSOEVPbdIwCY6oYxAuJ53tU4jk8uEosx/ialfLv2IIyxE1EUXVsmlFL6hnP+XSeMbkcQQmhLKbUqb15aeYkpXTCrJtzXPISQ60KI42WCXNf9kSTJ6zJjy4zRBuL7/pkgCK6UmXQ2hhDyTgixu5+YorG6QPLdaauioPyg/FMx9n+YFpBer3crTdNBFTHdbjecTCYvqsTOx9QGGQwGF8bj8eU6QjzP247j+FOdHLVBskPugVIKzURku9Zf13W/CiFOLxJGCNlNkuTUnsMy370eHigIY+xcmqaXOp3OjpTyIwD8zlsrALhdIOwpAPwCgKOU0otSyvMY4w+c888HClIw+UYm9m7Bb08AQNQRvSi2dmlZDTIcDjdGo5EVjngAcKctrQoLyNQaWebIbNeqILc4xAhIu0ZqeGTEEQBoz5GqprSOrHhybWmtVWnZtP3aUVqHxZHmtCi+73tBEBR1v80BAQA7mkabQJZdPjzL/nTFVc8L0zeNe/MvK63n2Q0LbwRIv9+nYRgWXQc1ByR/kxtF0c2CN1MvASBqhCO6RZbJZ6qNLzO31jEtiNbHqSGZNY78Ax52xjMYgmuJAAAAAElFTkSuQmCC';
-
-const starImg = typeof Image === 'undefined' ? {} : new Image();
-starImg.src = 'https://upload.wikimedia.org/wikipedia/commons/c/c3/A_Snapshot_of_the_Jewel_Box_cluster_with_the_ESO_VLT.jpg';
-
-export default { until, SCROLL_PARAMS, isEditor, blendColor, arrowImg, starImg };
+export default { until, SCROLL_PARAMS, isEditor, blendColor };

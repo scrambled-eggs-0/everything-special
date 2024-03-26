@@ -102,6 +102,9 @@ async function replaceScript(){
     document.body.appendChild(scriptElement);
 
     nextCode = undefined;
+
+    // update settings menu after new obstacles are added
+    window.updateSettingsCog();
 }
 
 window.removeScript = function removeScript(){
@@ -115,6 +118,7 @@ window.resetGame = () => {
     window.obstacles.length = window.mouseUpFunctions.length = window.mouseDownFunctions.length = 0;
     if(window.isEditor !== true) {window.respawnPlayer(); /*player.renderRadius = player.sat.r;*/ }
     for(let key in window.defaultColors) { window.colors[key] = window.defaultColors[key]; }
+    window.addSideMenuEvtListeners();
     window.mouseDownFunctions.push(() => {
         if(player.dead === true) window.respawnPlayer();
     })
