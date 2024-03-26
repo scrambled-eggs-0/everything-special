@@ -253,13 +253,13 @@ forBlock['lists_create_with'] = function(block, generator) {
 //   return `e.emoji="${sn}";e.drawImg=false;`;
 // };
 
-// forBlock['mouse_x'] = function (block, generator) {
-//   return [`mouseX`, Order.NONE];
-// };
+forBlock['mouse_x'] = function (block, generator) {
+  return [`mouseX`, Order.NONE];
+};
 
-// forBlock['mouse_y'] = function (block, generator) {
-//   return [`mouseY`, Order.NONE];
-// };
+forBlock['mouse_y'] = function (block, generator) {
+  return [`mouseY`, Order.NONE];
+};
 
 // forBlock['this_touching'] = function (block, generator) {
 //   const objectId = block.getFieldValue('SPRITE_ID', Order.NONE);
@@ -278,10 +278,11 @@ forBlock['lists_create_with'] = function(block, generator) {
 //   return `${setImg}(e,${url});\n`;
 // };
 
-// forBlock['bg_color'] = function (block, generator) {
-//   const sn = block.getFieldValue('COLOR', Order.NONE) || "white";
-//   return `background.color="${sn}";background.drawImg=false;\n`;
-// };
+forBlock['bg_color'] = function (block, generator) {
+  const tile = block.getFieldValue('TILE_COLOR', Order.NONE);
+  const bg = block.getFieldValue('BG_COLOR', Order.NONE);
+  return `colors.background="${bg}"; colors.tile="${tile}";\n`;
+};
 
 // forBlock['bg_image'] = function (block, generator) {
 //   const url = generator.valueToCode(block, 'URL', Order.NONE) || "'https://memes.co.in/memes/update/uploads/2021/12/InShot_20211209_222013681.jpg'";

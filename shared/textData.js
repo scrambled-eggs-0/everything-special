@@ -219,19 +219,27 @@ export default {
     //   "previousStatement": null,
     //   "nextStatement" : null
     // },
-    // {
-    //   "type": "bg_color",
-    //   "message0": "Set background color to %1",
-    //   "args0": [
-    //     {
-    //       "type": "field_colour",
-    //       "name": "COLOR",
-    //     }
-    //   ],
-    //   "colour": '#07ced9',
-    //   "previousStatement": null,
-    //   "nextStatement" : null,
-    // },
+    {
+      "type": "bg_color",
+      "message0": "Set background color to %1\nand tile color to %2",
+      "args0": [
+        {
+          "type": "field_input",
+          "name": "BG_COLOR",
+          "text": '#310f99',
+          "spellcheck": false
+        },
+        {
+          "type": "field_input",
+          "name": "TILE_COLOR",
+          "text": '#1d0a57',
+          "spellcheck": false
+        }
+      ],
+      "colour": '194',
+      "previousStatement": null,
+      "nextStatement" : null,
+    },
     // {
     //   'type': 'bg_image',
     //   'message0': 'Set background image to %1',
@@ -306,24 +314,24 @@ export default {
     //   'nextStatement': null,
     // },
 
-    // {
-    //   'type': 'mouse_x',
-    //   'message0': 'mouse x position',
-    //   'args0': [],
-    //   'output': 'Number',
-    //   'colour': '#07ced9',
-    //   'tooltip': 'the horizontal position of the mouse, ranging from 0 to 900',
-    //   'helpUrl': '',
-    // },
-    // {
-    //   'type': 'mouse_y',
-    //   'message0': 'mouse y position',
-    //   'args0': [],
-    //   'output': 'Number',
-    //   'colour': '#07ced9',
-    //   'tooltip': 'the vertical position of the mouse, ranging from 0 to 1600',
-    //   'helpUrl': '',
-    // },
+    {
+      'type': 'mouse_x',
+      'message0': 'mouse x position',
+      'args0': [],
+      'output': 'Number',
+      'colour': '194',
+      'tooltip': 'the horizontal position of the mouse, ranging from 0 to 900',
+      'helpUrl': '',
+    },
+    {
+      'type': 'mouse_y',
+      'message0': 'mouse y position',
+      'args0': [],
+      'output': 'Number',
+      'colour': '194',
+      'tooltip': 'the vertical position of the mouse, ranging from 0 to 1600',
+      'helpUrl': '',
+    },
     // {
     //   "type": "this_touching",
     //   "message0": "touching %1",

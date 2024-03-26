@@ -51,6 +51,22 @@ export default /*const toolbox =*/ {
           'kind': 'block',
           'type': 'set_parameter'
         },
+        {
+          'kind': 'block',
+          'type': 'mouse_x'
+        },
+        {
+          'kind': 'block',
+          'type': 'mouse_y'
+        },
+        {
+          'kind': 'block',
+          'type': 'mouse_x'
+        },
+        {
+          'kind': 'block',
+          'type': 'bg_color'
+        },
       ],
     },
     // {
