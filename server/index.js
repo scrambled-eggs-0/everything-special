@@ -181,8 +181,6 @@ app.post('/upload', (res, req) => {
 app.get("/:filename", (res, req) => {
     let path = 'client' + req.getUrl();
 
-    console.log(path);
-
     // console.log(path);
     
     // only js files check for mime type so everything can be text/javascript lol
@@ -229,7 +227,6 @@ app.get("/:filename", (res, req) => {
             const file = fs.readFileSync(path);
             res.end(file);
         } else {
-            console.log('not found!');
             // File not found
             res.writeStatus('404 Not Found');
             res.end();
