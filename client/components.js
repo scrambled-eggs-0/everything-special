@@ -953,6 +953,20 @@ const renderEffectMap = [
             ctx.restore();
         }
     },
+    /*customImage*/
+    (o) => {
+        if(o.imgLoaded === false) return;
+
+        ctx.cleanUpFunction = () => {
+            ctx.save();
+            ctx.clip();
+
+            const [topLeftX, topLeftY] = generateTopLeftCoordinates(o);
+            ctx.drawImage(o.img, topLeftX, topLeftY, o.dimensions.x, o.dimensions.y);
+
+            ctx.restore();
+        }
+    },
     /*stopForces*/
     (o) => {
         ctx.fillStyle = 'orange';
