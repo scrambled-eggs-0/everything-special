@@ -60,6 +60,8 @@ if(typeof Image !== 'undefined'){
 	window.arrowImg = new Image();
 	window.starImg = new Image();
 	window.gearImg = new Image();
+	window.lockImg = new Image();
+	window.unlockedImg = new Image();
 	if(isEditor === true){
 		// editor
 		(async() => {
@@ -67,16 +69,20 @@ if(typeof Image !== 'undefined'){
 			window.arrowImg = exps.default.arrowImg;
 			window.starImg = exps.default.starImg;
 			window.gearImg = exps.default.gearImg;
+			window.lockImg = exps.default.lockImg;
+			window.unlockedImg = exps.default.unlockedImg;
 		})();
 	} else {
 		// client
 		window.arrowImg.src = './gfx/arrow.png';
 		window.starImg.src = 'https://upload.wikimedia.org/wikipedia/commons/c/c3/A_Snapshot_of_the_Jewel_Box_cluster_with_the_ESO_VLT.jpg';
 		window.gearImg.src = './gfx/colorgear.png';
+		window.lockImg.src = './gfx/locked.png';
+		window.unlockedImg.src = './gfx/unlocked.png';
 	}
 } else {
 	// server
-	window.arrowImg = window.starImg = window.gearImg = {};
+	window.arrowImg = window.starImg = window.gearImg = window.lockImg = window.unlockedImg = {};
 }
 
 export default { until, SCROLL_PARAMS, isEditor, blendColor };

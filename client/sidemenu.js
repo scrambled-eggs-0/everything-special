@@ -7,6 +7,7 @@ let hoveringOverCog = false;
 let settingsMenuActive = false;
 let settingsGradient;
 let settingsMenuAnimation = 0;
+let hoveringOverLock = false;
 gearImg.src = generateGearImage(window.defaultColors.tile);
 function generateGearImage(col){
     const c = document.createElement('canvas');
@@ -60,6 +61,14 @@ export default function drawUi(canvas, ctx, isLast=false){
         ctx.translate((1-smoothAnim) * canvas.width, 0);
         ctx.fillStyle = settingsGradient;
         ctx.fillRect(0,0,canvas.width,canvas.height);
+
+        ctx.drawImage(window.scrollLocked === true ? window.lockImg : window.unlockedImg, 100, 100, 700, 700);
+        if(window.mouseX > 100 && window.mouseX < 800 && window.mouseY > 100 && window.mouseY < 800){
+            hoveringOverLock = true;
+        } else {
+            hoveringOverLock = false;
+        }
+
         ctx.translate((smoothAnim-1) * canvas.width, 0);
     }
 }
@@ -93,6 +102,11 @@ let settingsDrag = false; // whether the user is in the midst of a settings drag
 
 window.addSideMenuEvtListeners = () => {
     window.mouseDownFunctions.push(() => {
+        if(hoveringOverLock === true){
+            window.scrollLocked = !window.scrollLocked;
+            return;   
+        }
+
         if(hoveringOverCog === true) {
             settingsDrag = true;
             dragging = false;

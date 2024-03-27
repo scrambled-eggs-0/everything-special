@@ -11,6 +11,7 @@ let dragStartTime;
 const canvas = document.getElementById('canvas');
 window.mouseX = -1;
 window.mouseY = -1;
+window.scrollLocked = false;
 window.mouseDownFunctions = [];
 window.mouseUpFunctions = [];
 window.mouseOut = false;
@@ -59,7 +60,7 @@ window.onmousemove = (e) => {
 
     totalDist -= e.movementY * window.innerHeight;
 
-    if(totalDist > SCROLL_PARAMS.sensitivity && (window.mouseX < SCROLL_PARAMS.edgeMargin || window.mouseX > canvas.width - SCROLL_PARAMS.edgeMargin)){
+    if(totalDist > SCROLL_PARAMS.sensitivity && (window.mouseX < SCROLL_PARAMS.edgeMargin || window.mouseX > canvas.width - SCROLL_PARAMS.edgeMargin) && window.scrollLocked !== true){
         const scrollTime = (Date.now() - dragStartTime);
         const averageSpeed = totalDist / scrollTime;
         if(averageSpeed > SCROLL_PARAMS.minAvgSpeed && scrollTime < SCROLL_PARAMS.maxScrollTime){
