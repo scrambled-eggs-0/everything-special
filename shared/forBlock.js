@@ -168,14 +168,14 @@ forBlock['create_obstacle'] = function(block, generator) {
   // params += '}';
 }
 
-forBlock['lists_create_with'] = function(block, generator) {
+forBlock['create_list'] = function(block, generator) {
   // console.log(block);
   let arr = '[';
-  for(let i = 0; i < block.itemCount_; i++){
-    const val = generator.valueToCode(block, `ADD${i}`, Order.NONE);
+  for(let i = 0; i < block.lastItemsAmt; i++){
+    const val = generator.valueToCode(block, `ITEM${i}`, Order.NONE);
     if(val !== '') arr += val + ',';
   }
-  if(arr === '[') return '[]';
+  if(arr === '[') return ['[]', Order.NONE];
   arr = arr.substring(0, arr.length-1);
   arr += ']';
 
@@ -311,6 +311,11 @@ forBlock['get_parameter'] = function (block, generator) {
   if(window.getParentBlockOfType(parentBlock) === null) return '';
   const parameter = block.getFieldValue('INPUT', Order.NONE);
   if(parameter === 'INVALID') return '';
+  if(parameter === 'x'){
+    return [`generateTopLeftCoordinates(e)[0]`, Order.NONE];
+  } else if(parameter === 'y'){
+    return [`generateTopLeftCoordinates(e)[1]`, Order.NONE];
+  }
   return [`e.${parameter}`, Order.NONE];
 };
 
@@ -320,6 +325,11 @@ forBlock['set_parameter'] = function (block, generator) {
   if(parameter === 'INVALID') return '';
   const value = generator.valueToCode(block, 'VALUE', Order.NONE);
   if(value === '') return '';
+  if(parameter === 'x'){
+    return `e.pos.x = ${value} - generateTopLeftCoordinates(e)[0];\n`;
+  } else if(parameter === 'y'){
+    return `e.pos.y = ${value} - generateTopLeftCoordinates(e)[1];\n`;
+  }
   return `e.${parameter} = ${value};\n`;
 };
 

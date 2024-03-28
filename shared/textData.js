@@ -418,7 +418,8 @@ export default {
   JSBlockNames: [
     'create_obstacle',
     'get_parameter',
-    'set_parameter'
+    'set_parameter',
+    'create_list'
   ],
   JSBlockData: [
     // create_obstacle
@@ -888,20 +889,6 @@ export default {
       };
     },
 
-    // {
-    //   "type": "get_parameter",
-    //   "message0": "get obstacle data %1",
-    //   "args0": [
-    //     {
-    //       "type": "field_dropdown",
-    //       "name": "INPUT",
-    //       "options": generateParameterDropdownOptions
-    //     },
-    //   ],
-    //   "colour": '#07ced9',
-    //   "output": null//'Boolean'
-    // },
-
     // get_parameter
     function(Blockly) {
       return {
@@ -929,14 +916,14 @@ export default {
           this.setNextStatement(true, null);
           this.setPreviousStatement(true, null);
 
-          this.defaults = {'pos.x': 100, 'pos.y': 100};
+          this.defaults = {'x': 100, 'y': 100};
 
           this.appendValueInput("VALUE")
             .appendField('set obstacle ')
             .appendField(new Blockly.FieldDropdown(()=>{return generateParameterDropdownOptions(block)}, this.validateParamDropdown), 'INPUT')
             .appendField(' to')
             .setCheck(null)
-            .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(this.defaults['pos.y'])));
+            .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(this.defaults['y'])));
         },
 
         validateParamDropdown: function(newValue) {
@@ -951,6 +938,67 @@ export default {
         },
       }
     },
+
+    // create_list
+    function(Blockly) {
+      return {
+        init: function() {
+          this.setColour(194);
+          this.setOutput(true);
+
+          this.lastItemsAmt = 3;
+
+          this.appendDummyInput("ITEMS_AMT_CONTAINER")
+            .appendField("Create list with")
+            .appendField(new Blockly.FieldNumber(3, 0, 100, null, this.validate), 'ITEMS_AMT')
+            .appendField("items");
+
+          for(let i = 0; i < this.lastItemsAmt; i++){
+            this.appendValueInput(`ITEM${this.inputList.length-1}`)
+            .appendField(`item ${this.inputList.length-1}:`)
+            .setCheck(null);
+          }
+        },
+
+        validate: function(newValue) {
+          const block = this.getSourceBlock();
+          let itemDif = newValue - block.lastItemsAmt;
+          block.lastItemsAmt = newValue;
+
+          if(isNaN(itemDif) === true || itemDif === 0) return;
+
+          if(itemDif < 0){
+            // remove last
+            for(let i = 0; i < -itemDif; i++){
+              block.removeInput(`ITEM${block.inputList.length-2}`);
+            }
+          } else {
+            // add new
+            const childBlockToClone = block.childBlocks_[block.childBlocks_.length-1];
+            for(let i = 0; i < itemDif; i++){
+              const valueInput = block.appendValueInput(`ITEM${block.inputList.length-1}`)
+                .appendField(`item ${block.inputList.length-1}:`)
+                .setCheck(null);
+              if(childBlockToClone !== undefined){
+                const newBlock = Blockly.Xml.domToBlock(Blockly.Xml.blockToDom(childBlockToClone), block.workspace);
+                newBlock.outputConnection.connect(valueInput.connection);
+              }
+            }
+          }
+        },
+
+        saveExtraState: function() {
+          return {
+            'itemCount': this.lastItemsAmt
+          }
+        },
+
+        loadExtraState: function(state) {
+          const newValue = state['itemCount'];
+          this.validate.bind({getSourceBlock: () => {return this;}})(newValue);
+        }
+      }
+    }
   ]
 }
 
@@ -975,11 +1023,11 @@ window.generateShadowBlock = (value) => {
       `<field name="BOOL">${value === true ? 'TRUE' : 'FALSE'}</field>` +
     '</shadow>'
   } else if(Array.isArray(value)){
-    return '<shadow type="lists_create_with">' +
-      `<mutation items="${value.length}"></mutation>` +
+    // TODO
+    return '<shadow type="create_list">' +
       value.map((v, i) => {
         if(v === null) return '';
-        return `<value name="ADD${i}">` + generateShadowBlock(v) + '</value>';
+        return `<value name="ITEM${i}">` + generateShadowBlock(v) + '</value>';
       }) +
     '</shadow>'
   }// else {
@@ -1032,9 +1080,9 @@ function generateParameterDropdownOptions(childBlock, isPlug=false){
   window.C(shape, simulates, effects, params);
   const o = window.obstacles.pop();
 
-  const arr = [['x', 'pos.x'], ['y', 'pos.y']];
+  const arr = [['x', 'x'], ['y', 'y']];
 
-  childBlock.defaults = {'pos.x': 100, 'pos.y': 100};
+  childBlock.defaults = {'x': 100, 'y': 100};
 
   for(let key in o){
     if(excludedKeys[key] === undefined && (!(typeof o[key] === 'object') || Array.isArray(o[key]))){
@@ -1061,7 +1109,7 @@ const excludedKeys = {
   renderShape: true,
   renderEffect: true,
   renderEffectTimer: true,
-  hasRotated: true,
+  rotation: true,
   lastBrokeTime: true
 };
 

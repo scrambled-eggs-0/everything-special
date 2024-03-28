@@ -13,6 +13,17 @@ if(isEditor === true || isServer === true){
         await until(() => { return false; })
     };
     scroll = () => {};
+} else if(localStorage.getItem('tutorialCompleted') === null) {
+    let getNextCodeLoaded = false;
+    getNextCode = async () => {
+        await until(() => {return getNextCodeLoaded !== false});
+        return getNextCode();
+    };
+    (async () => {
+        const exps = await import('./tutorial.js');
+        getNextCode = exps.default;
+        getNextCodeLoaded = true;
+    })();
 }
 
 // get first code

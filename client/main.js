@@ -51,7 +51,7 @@ window.render = () => {
 }
 
 window.tileSize = 100; // 50
-let opaqIndex, len, lastPlayerX, lastPlayerY, lastPlayerRadius, j = false;
+let opaqIndex, len, lastPlayerX, lastPlayerY, lastPlayerRadius, lastGA, j = false;
 function _render(os, cols, playerData=undefined){
     ctx.fillStyle = cols.background;
     ctx.fillRect(0,0,canvas.width, canvas.height);
@@ -87,6 +87,29 @@ function _render(os, cols, playerData=undefined){
             ctx.beginPath();
             os[i].renderShape(os[i]);
             os[i].renderEffect[j](os[i]);
+            if(os[i].isText === true){
+                lastGA = ctx.globalAlpha;
+                // text
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'top';
+                ctx.font = `${os[i].fontSize}px Inter`;
+                ctx.translate(os[i].sat.points[0].x + os[i].sat.pos.x, os[i].sat.points[0].y + os[i].sat.pos.y);
+                if(os[i].rotation !== undefined) ctx.rotate(os[i].rotation);
+                if(ctx.globalAlpha < 0.5) ctx.globalAlpha = 0.5;
+                // console.log(os[i].dimensions);
+                if(ctx.toFill === true) ctx.fillText(os[i].text, 0, os[i].dimensions.hOffset);
+                if(ctx.toStroke === true) ctx.strokeText(os[i].text, 0, os[i].dimensions.hOffset);
+                else if(ctx.toFill === false) {
+                    // both false
+                    ctx.globalAlpha = 1;
+                    ctx.fillStyle = cols.tile;
+                    ctx.fillText(os[i].text, 0, 0);
+                }
+                if(os[i].rotation !== undefined) ctx.rotate(-os[i].rotation);
+                ctx.translate(-os[i].sat.points[0].x - os[i].sat.pos.x, -os[i].sat.points[0].y - os[i].sat.pos.y);
+
+                ctx.globalAlpha = Math.min(0.5, lastGA);
+            }
             if(ctx.toFill === true) ctx.fill();
             if(ctx.toStroke === true) ctx.stroke();
             if(ctx.cleanUpFunction !== undefined) { ctx.cleanUpFunction(); ctx.cleanUpFunction = undefined; }
@@ -110,8 +133,16 @@ function _render(os, cols, playerData=undefined){
             os[i].renderShape(os[i]);
             os[i].renderEffect[j](os[i]);
             ctx.globalAlpha = 1;
-            if(ctx.toFill === true) ctx.fill();
-            if(ctx.toStroke === true) ctx.stroke();
+            if(os[i].isText === true){
+                // text
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                if(ctx.toFill === true) ctx.fillText(os[i].text, os[i].pos.x, os[i].pos.y);
+                if(ctx.toStroke === true) ctx.strokeText(os[i].text, os[i].pos.x, os[i].pos.y);
+            } else {
+                if(ctx.toFill === true) ctx.fill();
+                if(ctx.toStroke === true) ctx.stroke();
+            }
             if(ctx.cleanUpFunction !== undefined) { ctx.cleanUpFunction(); ctx.cleanUpFunction = undefined; }
             ctx.closePath();
 
@@ -124,8 +155,16 @@ function _render(os, cols, playerData=undefined){
             os[i].renderShape(os[i]);
             os[i].renderEffect[j](os[i]);
             ctx.globalAlpha = os[i].renderEffectTimer - opaqIndex;
-            if(ctx.toFill === true) ctx.fill();
-            if(ctx.toStroke === true) ctx.stroke();
+            if(os[i].isText === true){
+                // text
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                if(ctx.toFill === true) ctx.fillText(os[i].text, os[i].pos.x, os[i].pos.y);
+                if(ctx.toStroke === true) ctx.strokeText(os[i].text, os[i].pos.x, os[i].pos.y);
+            } else {
+                if(ctx.toFill === true) ctx.fill();
+                if(ctx.toStroke === true) ctx.stroke();
+            }
             if(ctx.cleanUpFunction !== undefined) { ctx.cleanUpFunction(); ctx.cleanUpFunction = undefined; }
             ctx.closePath();
             ctx.globalAlpha = 1;

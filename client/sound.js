@@ -1,5 +1,5 @@
 import Utils from './utils.js';
-const { until, isEditor } = Utils;
+const { until } = Utils;
 
 window.hasLoadedNewMusic = false;
 let lastLoadedLink;
@@ -58,6 +58,11 @@ window.playMusic = async (link) => {
     // console.timeEnd("sub");
 
     lastPlayTime = Date.now();
+}
+
+window.playMusicIndefinitely = async (link) => {
+    await window.playMusic(link);
+    audioIframe = undefined;
 }
 
 // function extractVideoID(url) {  

@@ -28,6 +28,7 @@ function create(shape, simulates, effects, params){
     };
     e.renderEffectTimer = 0;
     e.pos = e.sat.pos;
+    if(shape === 3) {e.isText = true; e.text = params.text; e.fontSize = params.fontSize; }
     e.dimensions = generateDimensions(e);
     for(let i = 0; i < simulates.length; i++){
         e.simulate.push(simulateMap[simulates[i]]);
@@ -170,16 +171,39 @@ const satMap = [
         s.pos.y = p.y;
         return s;
     },
+    /*text*/
+    (p) => {
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = `${p.fontSize}px Inter`;
+        const dimensions = ctx.measureText(p.text);
+        const h = dimensions.actualBoundingBoxDescent + dimensions.actualBoundingBoxAscent;
+        const s = new SAT.Box(new SAT.Vector(p.x - dimensions.width / 2, p.y - h / 2), dimensions.width, h).toPolygon();
+        return s;
+    }
 ];
 
-function generateDimensions({sat}){
+function generateDimensions(o){
+    const sat = o.sat;
     if(sat.r !== undefined){
         return {
             x: sat.r * 2,
             y: sat.r * 2
         }
     }
-
+    
+    if(o.isText === true){
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = `${o.fontSize}px Inter`;
+        const dimensions = ctx.measureText(o.text);
+        return {
+            x: dimensions.width,
+            y: dimensions.actualBoundingBoxDescent + dimensions.actualBoundingBoxAscent,
+            hOffset: (dimensions.actualBoundingBoxDescent - dimensions.actualBoundingBoxAscent) / 2
+        }
+    }
+    
     let top, right, bottom, left;
     bottom = right = -Infinity;
     top = left = Infinity;
@@ -218,7 +242,8 @@ window.generateTopLeftCoordinates = generateTopLeftCoordinates;
 window.satMapI2N = [
     'circle',
     'rectangle',
-    'polygon'
+    'polygon',
+    'text'
 ];
 
 window.satDefaultMap = [
@@ -238,6 +263,13 @@ window.satDefaultMap = [
     // polygon
     {
         points: [[300,700],[600,700],[450,900]],
+    },
+    // text
+    {
+        x: 450,
+        y: 800,
+        text: ['Why hello there', 'I am a text :D', 'Evades X'][Math.floor(Math.random() * 3)],
+        fontSize: 80,
     }
 ]
 
@@ -250,7 +282,7 @@ const renderShapeMap = [
     /*rectangle*/
     (o) => {
         // o.sat.calcPoints[0] is at 0,0 so we can drop that from the first two args
-        if(o.hasRotated === true){
+        if(o.rotation !== undefined){
             renderShapeMap[2](o);
             return;
         }
@@ -263,6 +295,11 @@ const renderShapeMap = [
         }
         ctx.lineTo(o.pos.x + o.sat.points[0].x, o.pos.y + o.sat.points[0].y);
     },
+    /*text*/
+    (o) => {
+        // draw rectangle for clipping purposes
+        renderShapeMap[1](o);
+    }
 ]
 
 const initSimulateMap = [
@@ -301,6 +338,7 @@ const initSimulateMap = [
         o.rotateSpeed = init.rotateSpeed;
         o.pivotX = init.pivotX;
         o.pivotY = init.pivotY;
+        o.rotation = 0;
     },
     // /*grow*/
     (o, init) => {
@@ -366,7 +404,7 @@ const simulateMap = [
             o.sat.translate(o.pivotX-o.pos.x, o.pivotY-o.pos.y);
         }
         
-        o.hasRotated = true;
+        o.rotation += o.rotateSpeed;
         o.dimensions = generateDimensions(o);
     },
     /*grow*/
@@ -550,6 +588,7 @@ const initEffectMap = [
         o.timeTrapRecoverySpeed = params.timeTrapRecoverySpeed;
         o.timeTrapToKill = params.timeTrapToKill;
         o.timeTrapToShowTenth = params.timeTrapToShowTenth;
+        o.timeTrapIntersecting = false;
     },
     /*changeSize*/
     (o, params) => {
@@ -561,6 +600,10 @@ const initEffectMap = [
     (o, params) => {
         o.speedMult = params.speedMult;
         o.speedChangePermanent = params.speedChangePermanent;
+    },
+    /*solidColor*/
+    (o, params) => {
+        o.hex = params.hex;
     }
 ]
 
@@ -607,6 +650,10 @@ const effectMap = [
         } else {
             // scroll
             toScroll = true;
+
+            if(window.tutorial === true){
+                window.beatCurrentTutorialMap();
+            }
         }
     },
     /*coin*/
@@ -763,7 +810,8 @@ const effectMap = [
     },
     /*timeTrap*/
     (p, res, o) => {
-        o.timeTrapTime -= 1 + o.timeTrapRecoverySpeed;
+        o.timeTrapIntersecting = true;
+        o.timeTrapTime--;
         if(o.timeTrapTime < 0){
             if(o.timeTrapToKill === true) p.dead = true;
             o.timeTrapTime = 0;
@@ -792,6 +840,8 @@ const effectMap = [
             p.axisSpeedMultY *= o.speedMult;
         }
     },
+    /*solidColor*/
+    (p, res, o) => {}
 ]
 
 const idleEffectMap = [
@@ -845,8 +895,9 @@ const idleEffectMap = [
     },
     // 'timeTrap'
     (o) => {
-        o.timeTrapTime += o.timeTrapRecoverySpeed;
+        if(o.timeTrapIntersecting !== true) o.timeTrapTime += o.timeTrapRecoverySpeed;
         if(o.timeTrapTime > o.timeTrapMaxTime) o.timeTrapTime = o.timeTrapMaxTime;
+        o.timeTrapIntersecting = false;
     },
     // 'changeSize'
     (o) => {
@@ -864,6 +915,8 @@ const idleEffectMap = [
         o.changeSizeColliding = false;
     },
     // 'changeSpeed'
+    undefined,
+    // 'solidColor'
     undefined,
 ]
 
@@ -888,6 +941,7 @@ window.effectMapI2N = [
     'timeTrap',
     'changeSize',
     'changeSpeed',
+    'solidColor'
 ]
 
 window.effectDefaultMap = [
@@ -988,6 +1042,10 @@ window.effectDefaultMap = [
         speedMult: 2.5,
         speedChangePermanent: false
     },
+    // solidColor
+    {
+        hex: '#FFFFFF'
+    }
 ]
 
 const renderEffectMap = [
@@ -1176,7 +1234,7 @@ const renderEffectMap = [
                 for(let y = topLeftY + 50; y <= topLeftY + o.dimensions.y + 50; y += 100){
                     ctx.translate(x,y);
                     ctx.rotate(o.platformerAngle+Math.PI/2);
-                    ctx.drawImage(windwo.arrowImg, -50, -50, 100, 100);
+                    ctx.drawImage(window.arrowImg, -50, -50, 100, 100);
                     ctx.rotate(-o.platformerAngle-Math.PI/2);
                     ctx.translate(-x,-y);
                 }
@@ -1254,7 +1312,7 @@ const renderEffectMap = [
             ctx.save();
             ctx.clip();
 
-            ctx.strokeStyle = blendColor('#0f0000', '#000000', Math.max(0,o.pos.snapCooldown) / o.maxSnapCooldown);
+            ctx.strokeStyle = blendColor('#0f0000', '#000000', Math.max(0,o.snapCooldown) / o.maxSnapCooldown);
             ctx.lineWidth = 4;
             ctx.globalAlpha = 0.17;
 
@@ -1394,6 +1452,11 @@ const renderEffectMap = [
 
         // permanents should dissapear upon use i think
     },
+    /*solidColor*/
+    (o) => {
+        ctx.fillStyle = o.hex;
+        if(o.isText === true)ctx.globalAlpha = 0;
+    }
 ]
 
 // an obstacle is an ECS

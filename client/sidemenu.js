@@ -1,5 +1,8 @@
+import Utils from './utils.js';
+const { until } = Utils;
+
 let gearImageRotation = 0, renderGearImageRotation = 0;
-let gearImg = new Image();
+let gearImg = new Image(); let gearImgLoaded = false;
 let cachedBg = window.defaultColors.tile;
 let winpadIndex = 0;
 let lastWinpadIndex = 0;
@@ -8,8 +11,13 @@ let settingsMenuActive = false;
 let settingsGradient;
 let settingsMenuAnimation = 0;
 let hoveringOverLock = false;
-gearImg.src = generateGearImage(window.defaultColors.tile);
-function generateGearImage(col){
+gearImg.src = updateGearImage(window.defaultColors.tile);
+async function updateGearImage(col){
+    gearImg.src = await generateGearImage(col);
+}
+async function generateGearImage(col){
+    gearImgLoaded = false;
+    await until(()=>{return window.gearImg !== undefined});
     const c = document.createElement('canvas');
     const x = c.getContext('2d');
     c.width = window.gearImg.width;
@@ -19,6 +27,7 @@ function generateGearImage(col){
     x.fillStyle = col;
     cachedBg = col;
     x.fillRect(0,0,c.width,c.height);
+    gearImgLoaded = true;
     
     return c.toDataURL();
 }
@@ -39,13 +48,15 @@ export default function drawUi(canvas, ctx, isLast=false){
     }
     renderGearImageRotation = interpolateDirection(renderGearImageRotation, gearImageRotation, 0.1);
 
-    ctx.globalAlpha = 0.3;
-    ctx.translate(middleX, middleY);
-    if(renderGearImageRotation !== 0)ctx.rotate(renderGearImageRotation);
-    ctx.drawImage(gearImg, -imageSize/2, -imageSize/2, imageSize, imageSize);
-    if(renderGearImageRotation !== 0)ctx.rotate(-renderGearImageRotation);
-    ctx.translate(-middleX, -middleY);
-    ctx.globalAlpha = 1;
+    if(gearImgLoaded === true){
+        ctx.globalAlpha = 0.3;
+        ctx.translate(middleX, middleY);
+        if(renderGearImageRotation !== 0)ctx.rotate(renderGearImageRotation);
+        ctx.drawImage(gearImg, -imageSize/2, -imageSize/2, imageSize, imageSize);
+        if(renderGearImageRotation !== 0)ctx.rotate(-renderGearImageRotation);
+        ctx.translate(-middleX, -middleY);
+        ctx.globalAlpha = 1;
+    }
 
     if(settingsMenuActive === true && settingsMenuAnimation !== 1){
         settingsMenuAnimation += 0.03;
@@ -88,7 +99,7 @@ function smoothstep(t){
 }
 
 window.updateSettingsCog = () => {
-    if(window.colors.tile !== cachedBg) gearImg.src = generateGearImage(window.colors.tile);
+    if(window.colors.tile !== cachedBg) updateGearImage(window.colors.tile);
     lastWinpadIndex = winpadIndex;
     for(let i = 0; i < window.obstacles.length; i++){
         if(window.obstacles[i].isWinpad === true){

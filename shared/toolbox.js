@@ -715,11 +715,7 @@ export default /*const toolbox =*/ {
       'contents': [
         {
           'kind': 'block',
-          'type': 'lists_create_with',
-        },
-        {
-          'kind': 'block',
-          'type': 'lists_create_with',
+          'type': 'create_list',
         },
         {
           'kind': 'block',

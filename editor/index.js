@@ -65,6 +65,7 @@ const theme = Blockly.Theme.defineTheme('defaultTheme', {
 function getCode(){
   return javascriptGenerator.workspaceToCode(ws);//.replaceAll('var ', 'let ');
 }
+window.getCode = getCode;
 
 const runCode = () => {
   const code = getCode();

@@ -75,7 +75,7 @@ createModeBg.onclick = () => {
                 return;
             }
         }
-        const newBlock = Blockly.Xml.domToBlock(createBlockXML, ws);
+        const newBlock = Blockly.Xml.domToBlock(createBlockXML, window.ws);
 
         createBlock.nextConnection.connect(newBlock.previousConnection);
 
@@ -92,11 +92,11 @@ createModeBg.onclick = () => {
             newBlock.getInput(newBlock.shapeParamToId['r']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(dist)));
         } else if(previewShape === 1){
             // rect
-            let minX = Math.min(previewX, window.mouseX);
-            let maxX = Math.max(previewX, window.mouseX);
+            const minX = Math.min(previewX, window.mouseX);
+            const maxX = Math.max(previewX, window.mouseX);
 
-            let minY = Math.min(previewY, window.mouseY);
-            let maxY = Math.max(previewY, window.mouseY);
+            const minY = Math.min(previewY, window.mouseY);
+            const maxY = Math.max(previewY, window.mouseY);
 
             newBlock.getInput(newBlock.shapeParamToId['x']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(minX))));
             newBlock.getInput(newBlock.shapeParamToId['y']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(minY))));
@@ -108,6 +108,38 @@ createModeBg.onclick = () => {
             // points: [[300,700],[600,700],[450,900]]
             newBlock.getInput(newBlock.shapeParamToId['points']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(previewPolygonPoints)));
             previewPolygonPoints.length = 0;
+        } else if(previewShape === 3){
+            // text
+            const minX = snapGrid(Math.min(previewX, window.mouseX));
+            const maxX = snapGrid(Math.max(previewX, window.mouseX));
+
+            const minY = snapGrid(Math.min(previewY, window.mouseY));
+            const maxY = snapGrid(Math.max(previewY, window.mouseY));
+
+            const text = newBlock.getInput(newBlock.shapeParamToId['text']);
+
+            
+            ctx.font = '1px Inter';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            const metrics = ctx.measureText(text);
+
+            // console.log(metrics.width);
+            // const height = metrics.actualBoundingBoxDescent + metrics.actualBoundingBoxAscent;
+
+            const ratioX = (maxX - minX) / metrics.width;
+
+            // console.log(window.devicePixelRatio);
+
+            // const ratioY = (maxY - minY) / height;
+
+            // maximum font size that would fit within the bounds
+            const maxFontSize = ratioX * window.devicePixelRatio;//Math.min(ratioX, ratioY) * 2;
+
+            newBlock.getInput(newBlock.shapeParamToId['x']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock((minX+maxX)/2)));
+            newBlock.getInput(newBlock.shapeParamToId['y']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock((minY+maxY)/2)));
+
+            newBlock.getInput(newBlock.shapeParamToId['fontSize']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(maxFontSize)));
         } else {
             console.error('previewShapeToObs not defined | createMode.js');
         }
@@ -146,7 +178,7 @@ window.render = () => {
         const y = snapGrid(previewY);
         const dist = Math.sqrt((x - snapGrid(window.mouseX)) ** 2 + (y - snapGrid(window.mouseY)) ** 2);
         ctx.arc(x, y, dist, 0, Math.PI * 2);
-    } else if(previewShape === 1){
+    } else if(previewShape === 1 || previewShape === 3){
         // rectangle
         ctx.rect(snapGrid(previewX), snapGrid(previewY), snapGrid(window.mouseX)-snapGrid(previewX), snapGrid(window.mouseY)-snapGrid(previewY));
     } else if(previewShape === 2){
