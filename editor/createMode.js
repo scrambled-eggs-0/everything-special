@@ -7,6 +7,7 @@ let previewX = 0;
 let previewY = 0;
 let previewShape = -1;
 let previewPolygonPoints = [];
+let previewText = '';
 let isDragging = false;
 window.inClearCheckMode = false;
 // let newBlockPos = {x: 0, y: 0};
@@ -31,6 +32,11 @@ createModeBtn.onclick = () => {
 
         previewShape = parseInt(block.getFieldValue('SHAPE_DROPDOWN'));
         if(previewShape === 2) previewPolygonPoints.length = 0;
+        else if(previewShape === 3) {
+            window.generator.init(window.ws);
+            previewText = window.generator.valueToCode(createBlock, createBlock.shapeParamToId['text'], 0);
+            previewText = previewText.slice(1, previewText.length - 1);
+        }
 
         // const createBlockPos = block.getRelativeToSurfaceXY();
         // createBlockWidth = block.width;
@@ -63,10 +69,21 @@ createModeBg.onmousedown = () => {
         window.inClearCheckMode = false;
     }
 }
+let fixedPts;
 createModeBg.onclick = () => {
     // if we click the canvas, create a block
     if(window.mouseOut === false && window.inClearCheckMode === false) {
-        if(previewShape === 2){
+        if(previewShape === 0){
+            if(snapGrid(window.mouseX) === snapGrid(previewX) && snapGrid(window.mouseY) === snapGrid(previewY)) {
+                isDragging = false;
+                return;
+            }
+        } else if(previewShape === 1){
+            if(snapGrid(window.mouseX) === snapGrid(previewX) || snapGrid(window.mouseY) === snapGrid(previewY)) {
+                isDragging = false;
+                return;
+            }
+        } else if(previewShape === 2){
             const nextPt = [snapGrid(window.mouseX), snapGrid(window.mouseY)];
             previewPolygonPoints.push(nextPt);
 
@@ -74,7 +91,14 @@ createModeBg.onclick = () => {
             if(previewPolygonPoints.length === 1 || previewPolygonPoints[0][0] !== nextPt[0] || previewPolygonPoints[0][1] !== nextPt[1]){
                 return;
             }
+
+            fixedPts = fixPolygon(previewPolygonPoints);
+            if(fixedPts.length <= 2){
+                isDragging = false;
+                return;
+            }
         }
+        
         const newBlock = Blockly.Xml.domToBlock(createBlockXML, window.ws);
 
         createBlock.nextConnection.connect(newBlock.previousConnection);
@@ -106,40 +130,11 @@ createModeBg.onclick = () => {
         } else if(previewShape === 2){
             // polygon
             // points: [[300,700],[600,700],[450,900]]
-            newBlock.getInput(newBlock.shapeParamToId['points']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(previewPolygonPoints)));
+            newBlock.getInput(newBlock.shapeParamToId['points']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(fixedPts)));
             previewPolygonPoints.length = 0;
         } else if(previewShape === 3){
-            // text
-            const minX = snapGrid(Math.min(previewX, window.mouseX));
-            const maxX = snapGrid(Math.max(previewX, window.mouseX));
-
-            const minY = snapGrid(Math.min(previewY, window.mouseY));
-            const maxY = snapGrid(Math.max(previewY, window.mouseY));
-
-            const text = newBlock.getInput(newBlock.shapeParamToId['text']);
-
-            
-            ctx.font = '1px Inter';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            const metrics = ctx.measureText(text);
-
-            // console.log(metrics.width);
-            // const height = metrics.actualBoundingBoxDescent + metrics.actualBoundingBoxAscent;
-
-            const ratioX = (maxX - minX) / metrics.width;
-
-            // console.log(window.devicePixelRatio);
-
-            // const ratioY = (maxY - minY) / height;
-
-            // maximum font size that would fit within the bounds
-            const maxFontSize = ratioX * window.devicePixelRatio;//Math.min(ratioX, ratioY) * 2;
-
-            newBlock.getInput(newBlock.shapeParamToId['x']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock((minX+maxX)/2)));
-            newBlock.getInput(newBlock.shapeParamToId['y']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock((minY+maxY)/2)));
-
-            newBlock.getInput(newBlock.shapeParamToId['fontSize']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(maxFontSize)));
+            newBlock.getInput(newBlock.shapeParamToId['x']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(window.mouseX))));
+            newBlock.getInput(newBlock.shapeParamToId['y']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(window.mouseY))));
         } else {
             console.error('previewShapeToObs not defined | createMode.js');
         }
@@ -178,7 +173,7 @@ window.render = () => {
         const y = snapGrid(previewY);
         const dist = Math.sqrt((x - snapGrid(window.mouseX)) ** 2 + (y - snapGrid(window.mouseY)) ** 2);
         ctx.arc(x, y, dist, 0, Math.PI * 2);
-    } else if(previewShape === 1 || previewShape === 3){
+    } else if(previewShape === 1){
         // rectangle
         ctx.rect(snapGrid(previewX), snapGrid(previewY), snapGrid(window.mouseX)-snapGrid(previewX), snapGrid(window.mouseY)-snapGrid(previewY));
     } else if(previewShape === 2){
@@ -198,6 +193,27 @@ window.render = () => {
             }
             ctx.lineTo(previewPolygonPoints[0][0], previewPolygonPoints[0][1]);
         }
+    } else if(previewShape === 3){
+        // text
+        const x = snapGrid(window.mouseX); const y = snapGrid(window.mouseY);
+
+        ctx.setLineDash([28,8]);
+        ctx.lineDashOffset = -window.time / 55;
+
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.lineWidth = 4;
+
+        const dimensions = ctx.measureText(previewText);
+        const h = dimensions.actualBoundingBoxDescent + dimensions.actualBoundingBoxAscent;
+        const hOffset = (dimensions.actualBoundingBoxDescent - dimensions.actualBoundingBoxAscent) / 2;
+        ctx.rect(x - dimensions.width / 2, y - h/2 + hOffset, dimensions.width, h);
+
+        ctx.strokeText(previewText, x, y);
+
+        ctx.lineWidth = 8;
+
+        ctx.setLineDash([]);
     } else {
         console.error('previewShape not defined | createMode.js');
     }
@@ -230,4 +246,86 @@ window.exitClearCheckMode = () => {
     window.mouseOut = true;
     createModeBg.onmousedown();
     window.mouseOut = last;
+}
+
+// takes in a series of points and computes the minimum convex hull
+// which is what we need for SAT polygons.
+function fixPolygon(points){
+    return new GrahamScan(points).hull;
+}
+
+const X = 0;
+const Y = 1;
+const REMOVED = -1;
+class GrahamScan {
+    constructor(points=[[0,1],[1,1]]){
+        this.points = points;
+        this.hull = this.getHull();
+    }
+    getHull() {
+        const pivot = this.preparePivotPoint();
+
+        let indexes = Array.from(this.points, (point, i) => i);
+        const angles = Array.from(this.points, (point) => this.getAngle(pivot, point));
+        const distances = Array.from(this.points, (point) => this.euclideanDistanceSquared(pivot, point));
+
+        // sort by angle and distance
+        indexes.sort((i, j) => {
+            const angleA = angles[i];
+            const angleB = angles[j];
+            if (angleA === angleB) {
+                const distanceA = distances[i];
+                const distanceB = distances[j];
+                return distanceA - distanceB;
+            }
+            return angleA - angleB;
+        });
+
+        // remove points with repeated angle (but never the pivot, so start from i=1)
+        for (let i = 1; i < indexes.length - 1; i++) {
+            if (angles[indexes[i]] === angles[indexes[i + 1]]) {  // next one has same angle and is farther
+                indexes[i] = REMOVED;  // remove it logically to avoid O(n) operation to physically remove it
+            }
+        }
+
+        const hull = [];
+        for (let i = 0; i < indexes.length; i++) {
+            const index = indexes[i];
+            const point = this.points[index];
+
+            if (index !== REMOVED) {
+                if (hull.length < 3) {
+                    hull.push(point);
+                } else {
+                    while (this.checkOrientation(hull[hull.length - 2], hull[hull.length - 1], point) > 0) {
+                        hull.pop();
+                    }
+                    hull.push(point);
+                }
+            }
+        }
+
+        return hull.length < 3 ? [] : hull;
+    }
+    checkOrientation(p1, p2, p3) {
+        return (p2[Y] - p1[Y]) * (p3[X] - p2[X]) - (p3[Y] - p2[Y]) * (p2[X] - p1[X]);
+    }
+    getAngle(a, b) {
+        return Math.atan2(b[Y] - a[Y], b[X] - a[X]);
+    }
+    euclideanDistanceSquared(p1, p2) {
+        const a = p2[X] - p1[X];
+        const b = p2[Y] - p1[Y];
+        return a * a + b * b;
+    }
+    preparePivotPoint() {
+        let pivot = this.points[0];
+        for (let i = 1; i < this.points.length; i++) {
+            const point = this.points[i];
+            if (point[Y] < pivot[Y] || point[Y] === pivot[Y] && point[X] < pivot[X]) {
+                pivot = point;
+            }
+        }
+        return pivot;
+    }
 }

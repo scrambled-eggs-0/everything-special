@@ -20,8 +20,7 @@ async function updateGearImage(col){
     }
 }
 async function generateGearImage(col){
-    
-    await until(()=>{return window.gearImg !== undefined});
+    await until(()=>{return window.gearImgLoaded === true});
     const c = document.createElement('canvas');
     const x = c.getContext('2d');
     c.width = window.gearImg.width;
@@ -116,16 +115,15 @@ let settingsDrag = false; // whether the user is in the midst of a settings drag
 
 window.addSideMenuEvtListeners = () => {
     window.mouseDownFunctions.push(() => {
-        if(hoveringOverLock === true){
-            window.scrollLocked = !window.scrollLocked;
-            return;   
-        }
-
         if(hoveringOverCog === true) {
             settingsDrag = true;
             dragging = false;
         } else {
             settingsDrag = false;
+
+            if(hoveringOverLock === true){
+                window.scrollLocked = !window.scrollLocked;
+            }
         }
     })
     

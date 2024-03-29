@@ -325,10 +325,12 @@ forBlock['set_parameter'] = function (block, generator) {
   if(parameter === 'INVALID') return '';
   const value = generator.valueToCode(block, 'VALUE', Order.NONE);
   if(value === '') return '';
+  // what?? addition?? i thought this was a setter??
+  // all part of the plan :brain:
   if(parameter === 'x'){
-    return `e.pos.x = ${value} - generateTopLeftCoordinates(e)[0];\n`;
+    return `e.pos.x += ${value} - generateTopLeftCoordinates(e)[0];\n`;
   } else if(parameter === 'y'){
-    return `e.pos.y = ${value} - generateTopLeftCoordinates(e)[1];\n`;
+    return `e.pos.y += ${value} - generateTopLeftCoordinates(e)[1];\n`;
   }
   return `e.${parameter} = ${value};\n`;
 };

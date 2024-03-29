@@ -61,7 +61,9 @@ async function uploadFileAnalytics(fileName, buffer, fileContent, textContent){
         views: 0,               // likes and views will be updated in batches
         likes: 0,               // so they're close enough but not entirely accurate
         dislikes: 0,            // we're not youtube lmao
-        creatorTrackRecord: 0.5 // views to likes ratio of the creator's other levels. Start this at nonzero to give new creators a chance.
+        creatorTrackRecord: 0.5,// views to likes ratio of the creator's other levels. Start this at nonzero to give new creators a chance.
+        // ideas for more stats: theme, dateCreated, averagePlaytime
+        // also we probably want to feed the ai the raw numbers from the obstacle file data?? maybe?? idk paul
     }
 
     // addStatsToCreator(metaData);

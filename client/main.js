@@ -184,13 +184,23 @@ function _render(os, cols, playerData=undefined){
         player.pos.y = playerData[1];
     } else {
         lastPlayerRadius = player.sat.r;
-        player.sat.r = player.renderRadius;
+        player.sat.r = Math.abs(player.renderRadius);
     }
     
     
     ctx.beginPath();
     player.renderShape(player);
-    ctx.fill();
+    if(player.renderRadius > 0) ctx.fill();
+    else {
+        // negative radius
+        ctx.setLineDash([12, 30]);
+        ctx.lineDashOffset = -window.time / 26;
+        ctx.strokeStyle = ctx.fillStyle;
+        ctx.lineWidth = 8;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
     ctx.closePath();
 
     if(playerData !== undefined){
@@ -284,7 +294,6 @@ if(isEditor !== true){
     }, 1000)
 
     window.updateSettingsCog = () => {};
-    window.addSideMenuEvtListeners = () => {};
 }
 
 import './sound.js';

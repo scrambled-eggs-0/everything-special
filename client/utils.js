@@ -56,6 +56,7 @@ function componentToHex(c) {
 // 	return 2*da % max - da;
 // }
 
+window.gearImgLoaded = false;
 if(typeof Image !== 'undefined'){
 	window.arrowImg = new Image();
 	window.starImg = new Image();
@@ -80,9 +81,11 @@ if(typeof Image !== 'undefined'){
 		window.lockImg.src = './gfx/locked.png';
 		window.unlockedImg.src = './gfx/unlocked.png';
 	}
+	window.gearImg.onload = () => {window.gearImgLoaded = true;};
 } else {
 	// server
 	window.arrowImg = window.starImg = window.gearImg = window.lockImg = window.unlockedImg = {};
+	window.gearImgLoaded = true;
 }
 
 export default { until, SCROLL_PARAMS, isEditor, blendColor };

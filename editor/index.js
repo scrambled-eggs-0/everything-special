@@ -18,6 +18,7 @@ for(let i = 0; i < JSBlockNames.length; i++){
 // Register the blocks and generator with Blockly
 Blockly.common.defineBlocks(blocks);
 Object.assign(javascriptGenerator.forBlock, forBlock);
+window.generator = javascriptGenerator;
 
 window.snap = 50;
 window.snapGrid = (val) => {

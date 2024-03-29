@@ -61,10 +61,10 @@ function simulate(){
         player.yv = Math.sin(angle) * speed * player.axisSpeedMultY;
         player.pos.x += player.xv;
         player.pos.y += player.yv;
-        player.axisSpeedMultX = player.axisSpeedMultY = 1;
     } else {
         player.xv = player.yv = 0;
     }
+    player.axisSpeedMultX = player.axisSpeedMultY = 1;
 
     if(player.stopForces === true){
         player.stopForces = false;
@@ -559,6 +559,8 @@ const initEffectMap = [
         o.jumpCooldown = 0;
         o.jumpForce = params.jumpForce;
         o.jumpFriction = params.jumpDecay;
+
+        o.touchingPlatformer = false;
     },
     /*restrictAxis*/
     (o, params) => {
@@ -713,7 +715,7 @@ const effectMap = [
     },
     /*platformer*/
     (p, res, o, id) => {
-        // p.touching.platformer.push(obstacle);
+        o.touchingPlatformer = true;
         o.jumpCooldown--;
 
         // add conveyor force
@@ -819,14 +821,31 @@ const effectMap = [
     },
     /*changeSize*/
     (p, res, o) => {
+        if(o.sizeMult < 1 && o.lastChangeSizeColliding === false){
+            // if the player would not be colliding with the obstacle with the smaller radius,
+            // don't scale the player to avoid frame 1 yes frame 2 no jitter effects
+
+            // basically, we do this by effectively decreasing the obstacle's border radius (so poly would just be smaller poly)
+            // if the player has not already collided. If the player is colliding, we already decreased the radius so there's no need to decrease the border
+            res.clear();
+            p.sat.r *= o.sizeMult;
+            if(o.sat.r !== undefined){
+                collided = SAT.testCircleCircle(o.sat, p.sat, res);
+            } else {
+                collided = SAT.testPolygonCircle(o.sat, p.sat, res);
+            }
+            p.sat.r /= o.sizeMult;
+            if(collided === false){
+                return;
+            }
+        }
         if(o.sizeChangePermanent === true){
             if(o.permanentSizeChangeDone === undefined){
                 o.permanentSizeChangeDone = true;
                 p.sat.r *= o.sizeMult;
             }
-        } else {
-            o.changeSizeColliding = true;
         }
+        o.changeSizeColliding = true;
     },
     /*changeSpeed*/
     (p, res, o) => {
@@ -1244,7 +1263,7 @@ const renderEffectMap = [
 
             // rendering 👍 if player can jump
             // if there ever is to be more emojis like this, then make an array of emojis that i can push to that render on top of each other every frame (w/ priority? sorted?)
-            if(o.canJump === true){
+            if(o.canJump === true && o.touchingPlatformer === true){
                 ctx.globalAlpha = 1;
                 ctx.fillStyle = 'white';
                 ctx.font = `56px Inter`;
@@ -1252,6 +1271,7 @@ const renderEffectMap = [
                 ctx.textBaseline = 'middle';
                 ctx.fillText('👍', player.pos.x, player.pos.y - player.sat.r - 50);
             }
+            o.touchingPlatformer = false;
         }
     },
     /*restrictAxis*/

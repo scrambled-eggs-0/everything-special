@@ -643,6 +643,11 @@ export default {
             }
           }
 
+          // Custom
+          if(oldValue === "3"){
+            this.removeInput('SIMULATE_CUSTOM_FN', true);
+          }
+
           let insertionIndex = this.getIndexOfInput(`SIMULATE_CONTAINER${dropdownId}`) + 1;
 
           // Custom
@@ -687,6 +692,11 @@ export default {
               this.removeInput(this.effectParamToId[key], true);
               delete this.effectParamToId[key];
             }
+          }
+
+          // Custom
+          if(oldValue === '3'){
+            this.removeInput('EFFECT_CUSTOM_FN', true);
           }
 
           let insertionIndex = this.getIndexOfInput(`EFFECT_CONTAINER${dropdownId}`) + 1;
@@ -943,7 +953,7 @@ export default {
     function(Blockly) {
       return {
         init: function() {
-          this.setColour(194);
+          this.setColour('#4a148c');//#b094e3 <- default
           this.setOutput(true);
 
           this.lastItemsAmt = 3;
@@ -1025,6 +1035,7 @@ window.generateShadowBlock = (value) => {
   } else if(Array.isArray(value)){
     // TODO
     return '<shadow type="create_list">' +
+    `<field name="ITEMS_AMT">${value.length}</field>` +
       value.map((v, i) => {
         if(v === null) return '';
         return `<value name="ITEM${i}">` + generateShadowBlock(v) + '</value>';

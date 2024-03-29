@@ -129,13 +129,14 @@ window.resetGame = () => {
     window.obstacles.length = window.mouseUpFunctions.length = window.mouseDownFunctions.length = 0;
     if(window.isEditor !== true) {window.respawnPlayer(); /*player.renderRadius = player.sat.r;*/ }
     for(let key in window.defaultColors) { window.colors[key] = window.defaultColors[key]; }
-    window.addSideMenuEvtListeners();
     window.mouseDownFunctions.push(() => {
         if(player.dead === true) window.respawnPlayer();
     })
+    if(window.addSideMenuEvtListeners !== undefined) window.addSideMenuEvtListeners();
     window.spawnPosition.x = 100;
     window.spawnPosition.y = 1500;
-    player.speed = player.baseSpeed;
-}  
+    player.sat.r = 49.5;
+    player.speed = player.baseSpeed = 4;
+}
 
 export default scroll;
