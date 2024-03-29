@@ -142,12 +142,11 @@ const tutorialMaps = [
     `C(1,[],[17],{h:300,w:700,y:900,x:0,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:1.5,timeTrapMaxTime:450,});
     C(0,[],[15],{r:158.11388300841898,y:1050,x:35,axisSpeedMultY:0,axisSpeedMultX:1,});C(0,[],[15],{r:150,y:1200,x:400,axisSpeedMultY:1,axisSpeedMultX:0,});C(0,[],[15],{r:141.4213562373096,y:900,x:650,axisSpeedMultY:0,axisSpeedMultX:1,});
     C(0,[],[9],{r:100,y:900,x:800,checkpointOffsetY:50,checkpointOffsetX:50,});
-    C(0,[],[9],{r:75,y:300,x:800,checkpointOffsetY:0,checkpointOffsetX:0,});C(1,[],[15],{h:200,w:300,y:200,x:600,axisSpeedMultY:1,axisSpeedMultX:0,});C(0,[],[0],{r:100,y:800,x:300,});C(1,[],[0],{h:200,w:600,y:700,x:300,});C(1,[],[16],{h:300,w:900,y:400,x:0,snapAngleRotateSpeed:0.3,snapAngle:0,snapCooldown:30,snapDistanceY:50,snapDistanceX:50,toSnapY:true,toSnapX:true,});C(1,[],[17],{h:200,w:900,y:0,x:0,timeTrapToShowTenth:false,timeTrapToKill:true,timeTrapRecoverySpeed:1.5,timeTrapMaxTime:300,});
+    C(0,[],[9],{r:75,y:300,x:800,checkpointOffsetY:0,checkpointOffsetX:0,});C(1,[],[15],{h:200,w:300,y:200,x:600,axisSpeedMultY:1,axisSpeedMultX:0,});C(0,[],[0],{r:100,y:800,x:300,});C(1,[],[0],{h:200,w:600,y:700,x:300,});C(1,[],[16],{h:300,w:900,y:400,x:0,snapAngleRotateSpeed:0.3,snapAngle:0,snapCooldown:30,snapDistanceY:50,snapDistanceX:50,toSnapY:true,toSnapX:true,});C(1,[],[17],{h:200,w:900,y:0,x:0,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:4.5,timeTrapMaxTime:300,});
     C(0,[],[13],{r:100,y:1100,x:800,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorAngle:90,conveyorForce:0.3,});C(0,[],[18],{r:100,y:1300,x:800,sizeChangePermanent:false,sizeMult:0.5,});C(0,[],[19],{r:100,y:1500,x:800,speedChangePermanent:false,speedMult:0.8,});
-    C(0,[],[10],{r:50,y:950,x:250,healSpeed:1,regenTime:100,maxStrength:30,});C(0,[],[10],{r:50,y:1000,x:500,healSpeed:1,regenTime:100,maxStrength:20,});
+    C(0,[],[10],{r:50,y:950,x:250,healSpeed:1,regenTime:100,maxStrength:8,});C(0,[],[10],{r:50,y:1000,x:500,healSpeed:1,regenTime:100,maxStrength:8,});C(0,[],[10],{r:50,y:1100,x:650,healSpeed:1,regenTime:100,maxStrength:8,});
     C(0,[],[0],{r:100,y:300,x:600,});C(1,[],[0],{h:200,w:600,y:200,x:0,});C(2,[],[6],{points:[[100,100],[200,200],[100,200],[0,200],[0,100]],});C(3,[],[20],{fontSize:90,text:'Final Boss!',y:300,x:300,hex:'#ffffff',});
     C(2,[],[0],{points:[[0,1000],[200,1200],[0,1200]],});C(2,[],[0],{points:[[600,900],[800,900],[800,1100]],});C(2,[],[0],{points:[[900,1500],[900,1600],[800,1600]],});
-    C(0,[],[10],{r:50,y:1100,x:650,healSpeed:1,regenTime:100,maxStrength:40,});
     C(0,[],[0],{r:50,y:0,x:350,});C(0,[],[0],{r:50,y:200,x:550,});
     C(2,[],[0],{points:[[200,100],[300,200],[200,200],[100,100]],});
     C(2,[],[0],{points:[[700,0],[900,0],[900,100],[800,100]],});

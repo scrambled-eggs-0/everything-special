@@ -13,10 +13,14 @@ let settingsMenuAnimation = 0;
 let hoveringOverLock = false;
 gearImg.src = updateGearImage(window.defaultColors.tile);
 async function updateGearImage(col){
+    gearImgLoaded = false;
     gearImg.src = await generateGearImage(col);
+    gearImg.onload = () => {
+        gearImgLoaded = true;
+    }
 }
 async function generateGearImage(col){
-    gearImgLoaded = false;
+    
     await until(()=>{return window.gearImg !== undefined});
     const c = document.createElement('canvas');
     const x = c.getContext('2d');
@@ -27,7 +31,6 @@ async function generateGearImage(col){
     x.fillStyle = col;
     cachedBg = col;
     x.fillRect(0,0,c.width,c.height);
-    gearImgLoaded = true;
     
     return c.toDataURL();
 }
