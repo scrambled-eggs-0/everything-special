@@ -168,7 +168,7 @@ app.post('/upload', (res, req) => {
                 return;
             }
 
-            db.uploadFile(Buffer.from(textContent, 'utf8'));
+            db.uploadFile(Buffer.from(textContent, 'utf8'), fileContent, textContent);
         }
     });
     

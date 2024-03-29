@@ -224,16 +224,41 @@ hr {
 }
 
 .blocklyTreeLabel {
-    font-size: 2vw;
-    padding: 0 1vw;
+    cursor: default;
+    font: 2.2vh sans-serif;
+    padding: 0 0.6vh;
+    vertical-align: middle;
 }
 
 .blocklyTreeIcon {
-    width: 1.2vw;
+    background-image: url(https://blockly-demo.appspot.com/static/media/sprites.png);
+    height: 1.6vh;
+    vertical-align: middle;
+    visibility: hidden;
+    width: 1.6vh;
 }
 
 .blocklyTreeRow {
-    height: 3vw;
-    /* border-left: 1vw solid; */
-    border-left-width: 1vw !important;
+    height: 3vh;
+    line-height: 3vh;
+    margin-bottom: 0.34vh;
+    padding-right: 1.2vh;
+    white-space: nowrap;
+    border-left-width: 1.1vh !important;
 }
+
+/* .blocklyTreeLabel {
+    font-size: 2.2vh;
+    padding: 0 0.6vh;
+    align-self: center;
+}
+
+.blocklyTreeIcon {
+    width: 1.6vh;
+}
+
+.blocklyTreeRow {
+    height: 3vh;
+    line-height: 0;
+    border-left-width: 1vh !important;
+} */
