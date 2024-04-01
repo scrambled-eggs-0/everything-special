@@ -280,10 +280,17 @@ if(isEditor !== true){
     window.addEventListener("resize", resize);
     resize();
 
-    (async () => {
-        renderUi = await import('./sidemenu.js');
-        renderUi = renderUi.default;
-    })();
+    if(window.tutorial !== true){
+        (async () => {
+            renderUi = await import('./sidemenu.js');
+            renderUi = renderUi.default;
+        })();
+    } else {
+        window.updateSettingsCog = () => {};
+        renderUi = (canvas, ctx) => {
+            // draw the movement helper arrow
+        }
+    }
 } else {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -292,8 +299,6 @@ if(isEditor !== true){
     setInterval(() => {
         window.canvasDimensions = canvas.getBoundingClientRect();
     }, 1000)
-
-    window.updateSettingsCog = () => {};
 }
 
 import './sound.js';

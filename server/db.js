@@ -71,15 +71,21 @@ async function uploadFileAnalytics(fileName, buffer, fileContent, textContent){
     metdataCollection.insertOne(metaData);
 }
 
+async function addFileToCreator(fileName, username, hashedPassword){
+    // creatorCollection.updateOne()
+    await creatorCollection.updateOne({username, hashedPassword}, { $push: { levels: fileName } });
+}
+
 // TODO once we have accounts and account ids.
 // async function addStatsToCreator(metaData){
 
 // }
 
 // upload file to db from buffer
-async function uploadFile(buffer, fileContent, textContent){
+async function uploadFile(buffer, fileContent, textContent, username, hashedPassword){
     const fileName = `${randomString(16)}.js`;
     uploadFileAnalytics(fileName, buffer, fileContent, textContent);
+    addFileToCreator(fileName, username, hashedPassword);
     const uploadStream = bucket.openUploadStream(fileName); // , {metadata: {field: 'testfield', value: 'testvalue'}}
     uploadStream.end(buffer);
 
@@ -91,7 +97,7 @@ async function uploadFile(buffer, fileContent, textContent){
         console.error('Error uploading file to GridFS:', error);
     });
 
-    // TEMP, VERY INEFFICIENT !!
+    // TEMP
     fileNames.push(fileName);
 }
 
@@ -109,7 +115,7 @@ async function uploadFile(buffer, fileContent, textContent){
 
 // fileName will be determined by the python ai thing, later
 function getFile(filename){
-    console.log('filename', filename);
+    // console.log('filename', filename);
     return bucket.openDownloadStreamByName(filename);
 }
 
@@ -127,8 +133,24 @@ function getRandomFileName(){
     return fileNames[Math.floor(Math.random() * fileNames.length)]
 }
 
+async function createAccount(username, hashedPassword){
+    const nameTaken = await creatorCollection.findOne({username});
+    if(nameTaken) return false;
+    const newAccount = {
+        username, hashedPassword, levels: [], trackRecord: 0.5, followers: 0
+    }
+    creatorCollection.insertOne(newAccount);
+    return true;
+}
+
+async function getUserData(username, hashedPassword){
+    return await creatorCollection.findOne({username, hashedPassword});
+}
+
 export default {
     uploadFile,
     getFile,
     getRandomFileName,
+    createAccount,
+    getUserData
 };

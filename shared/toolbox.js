@@ -61,7 +61,11 @@ export default /*const toolbox =*/ {
         },
         {
           'kind': 'block',
-          'type': 'mouse_x'
+          'type': 'player_x'
+        },
+        {
+          'kind': 'block',
+          'type': 'player_y'
         },
         {
           'kind': 'block',

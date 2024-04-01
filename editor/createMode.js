@@ -27,8 +27,17 @@ createModeBtn.onclick = () => {
         const block = window.ws.getBlockById(e.blockId);
         if(block.type !== "create_obstacle") return;
 
+        const lastPreviousConnection = block.previousConnection.targetConnection;
+        const lastNextConnection = block.nextConnection.targetConnection;
+
+        block.previousConnection.disconnect();
+        block.nextConnection.disconnect();
+
         createBlock = block;
         createBlockXML = Blockly.Xml.blockToDom(block);
+
+        if(lastPreviousConnection !== null) block.previousConnection.connect(lastPreviousConnection);
+        if(lastNextConnection !== null) block.nextConnection.connect(lastNextConnection);
 
         previewShape = parseInt(block.getFieldValue('SHAPE_DROPDOWN'));
         if(previewShape === 2) previewPolygonPoints.length = 0;
@@ -101,7 +110,13 @@ createModeBg.onclick = () => {
         
         const newBlock = Blockly.Xml.domToBlock(createBlockXML, window.ws);
 
-        createBlock.nextConnection.connect(newBlock.previousConnection);
+        // get last child and connect
+        let lastBlock = createBlock;
+        let nextBlock;
+        while((nextBlock = lastBlock.getNextBlock()) !== null){
+            lastBlock = nextBlock;
+        }
+        lastBlock.nextConnection.connect(newBlock.previousConnection);
 
         // change x and y to reflect mouse pos
         // newBlock.getInput(newBlock.shapeParamToId['x'])

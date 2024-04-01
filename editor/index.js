@@ -124,27 +124,50 @@ publishBtn.onclick = () => {
   window.enterClearCheckMode();
 }
 
+let username = localStorage.getItem('username');
+let hashedPassword = localStorage.getItem('hashedPassword');
+
 const uploadUrl = `${location.origin}/upload`;
 window.uploadCode = () => {
+  // direct user to login page if we don't have a saved username
+  if(username === null){
+    const childWindowOrigin = `${location.origin}/account`;
+
+    const handleMessage = function(event) {
+      if (event.origin === location.origin) {
+        loginWindow.close();
+        window.removeEventListener('message', handleMessage);
+        username = localStorage.getItem('username');
+        hashedPassword = localStorage.getItem('hashedPassword');
+        window.uploadCode();
+      }
+    }
+    window.addEventListener('message', handleMessage);
+
+    const loginWindow = window.open(childWindowOrigin);
+    return;
+  }
+
   save(ws);
   const blob = new Blob([localStorage.getItem("ws")], { type: 'application/javascript' });
 
   const formData = new FormData();
   formData.append('file', blob, 'upload.js');
 
+  const headers = new Headers();
+  headers.append('u', username);
+  headers.append('hp', hashedPassword);
+
   fetch(uploadUrl, {
       method: 'POST',
       body: formData,
-  })  .then(response => response.json())
-      .then(data => {
-          console.log('File uploaded successfully:', data);
-          alert('Code successfully uploaded to the servers!');
-      })
-      .catch(error => {
-          console.error('Error uploading file:', error);
-      });
-  
-  alert('Congrats! Your code was uploaded to the servers!');
+      headers: headers
+  }).then(_ => {
+        alert('Congrats! Your code was uploaded to the servers!');
+    })
+    .catch(error => {
+        console.error('Error uploading file:', error);
+    });
 }
 
 import './createMode.js';
@@ -157,10 +180,10 @@ window.requestIdleCallback(() => {
     ...oldPasteShortcut,
     callback(workspace) {
       // this causes errors somehow... TODO: fix and allow pasting
-      // window.workspaceLoaded = false;
-      // const returnVal = oldPasteShortcut.callback.call(this, workspace);
-      // window.workspaceLoaded = true;
-      // return returnVal;
+      window.workspaceLoaded = false;
+      const returnVal = oldPasteShortcut.callback.call(this, workspace);
+      window.workspaceLoaded = true;
+      return returnVal;
     }
   }
   Blockly.ShortcutRegistry.registry.register(newPasteShortcut, /*allowOverrides:*/ true);

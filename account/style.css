@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
+body {
+    background-color: rgb(5, 5, 5);
+    font-family: 'Inter', sans-serif;
+    font-size: 2vh;
+    overflow: hidden;
+}
+
+.title {
+    position: relative;
+    top: -6vh;
+    font-size: 7.7vh;
+    text-shadow: 0px 0px 1.875vh white;
+    font-family: 'Inter';
+    color: white;
+    user-select: none;
+    text-align: center;
+}
+
+.menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+/*todo: make this look like the mockup*/
+.inputStyle {
+    box-shadow: 0px 0px 1vh 0.1vh rgba(255,255,255,0.59);
+    /* border-radius: 0.4vh; */
+    border: none;
+    outline: none;
+    background-color: rgba(0,0,0,0);
+    color: white;
+    font-size: 3.3vh;
+    width: 36.9vh;
+    height: 4vh;
+    text-align: center;
+    /* width: 37.3vh;
+    height: 4.28vh;
+    padding: 0;
+    margin: 0; */
+}/*padding: 2px top and bottom, 4px right and left (addition)*/
+
+/* .passwordInput {
+    margin-top: 2.72vh;
+} */
+
+.buttonDiv {
+    position: relative;
+    top: 2.86vh;
+    display: flex;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+button {
+    font-size: 2.8vh;
+    padding-left: 1vh;
+    padding-right: 1vh;
+    padding-top: 0.5vh;
+    padding-bottom: 0.5vh;
+    margin: 0;
+    border: none;
+    outline: none;
+    background-color: rgba(0,0,0,0);
+    color: white;
+    box-shadow: 0px 0px 1vh 0.1vh rgba(255,255,255,0.59);
+    user-select: none;
+    margin-left: 1.08vh;
+    margin-right: 1.08vh;
+}
+
+.hidden {
+    display: none;
+}
+
+.usernameInput {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}

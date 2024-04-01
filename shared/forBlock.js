@@ -261,6 +261,14 @@ forBlock['mouse_y'] = function (block, generator) {
   return [`mouseY`, Order.NONE];
 };
 
+forBlock['player_x'] = function (block, generator) {
+  return [`player.pos.x`, Order.NONE];
+};
+
+forBlock['player_y'] = function (block, generator) {
+  return [`player.pos.y`, Order.NONE];
+};
+
 // forBlock['this_touching'] = function (block, generator) {
 //   const objectId = block.getFieldValue('SPRITE_ID', Order.NONE);
 //   if(objectId === 'mouse'){

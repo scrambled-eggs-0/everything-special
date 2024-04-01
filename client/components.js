@@ -28,19 +28,41 @@ function create(shape, simulates, effects, params){
     };
     e.renderEffectTimer = 0;
     e.pos = e.sat.pos;
-    if(shape === 3) {e.isText = true; e.text = params.text; e.fontSize = params.fontSize; }
+    if(shape === 0) e.sat.r = Math.max(e.sat.r, 0.001);
+    else if(shape === 3) {e.isText = true; e.text = params.text; e.fontSize = params.fontSize; }
+    for(let key in window.satConstraintsMap[shape]){
+        // [min, max, mustBeInt, customValidator(e)]
+        const c = window.satConstraintsMap[shape][key];
+        if(c[2] === true) e[key] = Math.round(e[key]);
+        if(e[key] < c[0]) e[key] = c[0];
+        else if(e[key] > c[1]) e[key] = c[1];
+    }
     e.dimensions = generateDimensions(e);
     for(let i = 0; i < simulates.length; i++){
         e.simulate.push(simulateMap[simulates[i]]);
         initSimulateMap[simulates[i]](e, params);
+        for(let key in window.simulateConstraintsMap[simulates[i]]){
+            // [min, max, mustBeInt, customValidator(e)]
+            const c = window.simulateConstraintsMap[simulates[i]][key];
+            if(c[2] === true) e[key] = Math.round(e[key]);
+            if(e[key] < c[0]) e[key] = c[0];
+            else if(e[key] > c[1]) e[key] = c[1];
+        }
     }
     for(let i = 0; i < effects.length; i++){
         e.effect.push(effectMap[effects[i]]);
         initEffectMap[effects[i]](e, params);
         if(idleEffectMap[effects[i]] !== undefined) e.simulate.push(idleEffectMap[effects[i]]);
+        for(let key in window.effectConstraintsMap[effects[i]]){
+            // [min, max, mustBeInt, customValidator(e)]
+            const c = window.effectConstraintsMap[effects[i]][key];
+            if(c[2] === true) e[key] = Math.round(e[key]);
+            if(e[key] < c[0]) e[key] = c[0];
+            else if(e[key] > c[1]) e[key] = c[1];
+        }
     }
     if(params.sf !== undefined) e.simulate.push(params.sf);
-    if(params.ef !== undefined) {e.effect.push(params.ef); e.renderEffect.push(renderEffectMap[3])}
+    if(params.ef !== undefined) {e.effect.push(params.ef); e.renderEffect.push(renderEffectMap[3]);}
     
     obstacles.push(e);
 }
@@ -244,6 +266,13 @@ window.satMapI2N = [
     'rectangle',
     'polygon',
     'text'
+];
+
+window.satConstraintsMap = [
+    undefined,
+    undefined,
+    undefined,
+    {fontSize: [1]}
 ];
 
 window.satDefaultMap = [
@@ -460,7 +489,7 @@ window.simulateDefaultMap = [
     // pathMove
     {
         currentPoint: 0,
-        path: [[0,0,1],[100,0,2],[0,100,3]]
+        path: [[0,0,1],[100,0,2],[0,100,3]],
     },
     // rotate
     {
@@ -480,6 +509,13 @@ window.simulateDefaultMap = [
     // custom
     {},
 ]
+
+window.simulateConstraintsMap = [
+    {currentPoint: [0, true]},
+    undefined,
+    {growSpeed: [0], shrinkSpeed: [0], minGrowth: [0.001], maxGrowth: [0.001]},
+    undefined,
+];
 
 const initEffectMap = [
     /*bound*/
@@ -516,7 +552,7 @@ const initEffectMap = [
     /*coindoor*/
     (o, params) => {
         o.isCoindoor = true;
-        o.maxCoins = o.coins = params.coinAmount;
+        o.maxCoins = o.coins = params.coindoorCoinAmount;
         o.coinDoorColor = params.coinDoorColor;
     },
     /*checkpoint*/
@@ -939,6 +975,51 @@ const idleEffectMap = [
     undefined,
 ]
 
+window.effectConstraintsMap = [
+    /*bound*/
+    undefined,
+    /*kill*/
+    undefined,
+    /*bounce*/
+    {decay: [undefined, 1]},
+    /*custom*/
+    undefined,
+    /*customImage*/
+    undefined,
+    /*stopForces*/
+    undefined,
+    /*winpad*/
+    undefined,
+    /*coin*/
+    {coinAmount: [1]},
+    /*coindoor*/
+    {coins: [1], maxCoins: [1]},
+    /*checkpoint*/
+    undefined,
+    /*breakable*/
+    {maxStrength: [1], regenTime: [0], healSpeed: [0]},
+    /*safe*/
+    undefined,
+    /*tp*/
+    undefined,
+    /*conveyor*/
+    {conveyorFriction: [undefined, 1]},
+    /*platformer*/
+    {platformerFriction: [undefined, 1], jumpFriction: [undefined, 1]},
+    /*restrictAxis*/
+    undefined,
+    /*snapGrid*/
+    {snapDistanceX: [0.1], snapDistanceY: [0.1], snapCooldown: [0]},
+    /*timeTrap*/
+    {timeTrapTime: [0], timeTrapMaxTime: [0]},
+    /*changeSize*/
+    undefined,
+    /*changeSpeed*/
+    undefined,
+    /*solidColor*/
+    undefined,
+]
+
 window.effectMapI2N = [
     'bound',
     'kill',
@@ -990,7 +1071,7 @@ window.effectDefaultMap = [
     },
     // coindoor
     {
-        coinAmount: 3,
+        coindoorCoinAmount: 3,
         coinDoorColor: '#d6d611'
     },
     // checkpoint
@@ -1138,14 +1219,17 @@ const renderEffectMap = [
         }
         if(o.coinAmount !== 1){
             ctx.cleanUpFunction = () => {
+                let [middleX, middleY] = generateTopLeftCoordinates(o);
+                middleX += o.dimensions.x / 2; middleY += o.dimensions.y / 2;
+
                 ctx.fillStyle = window.colors.tile;//'#313131';
                 ctx.font = `${Math.min(60, o.dimensions.x/4, o.dimensions.y/4)}px Inter`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillText(
                     Math.max(0, o.coinAmount),
-                    o.pos.x,
-                    o.pos.y
+                    middleX,
+                    middleY
                 );
             }
         }

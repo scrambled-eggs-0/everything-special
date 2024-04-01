@@ -37,6 +37,81 @@ app.get('/', (res, req) => {
     })
 });
 
+app.get('/account', (res, req) => {
+    res.cork(() => {
+        // res.writeHeader('Access-Control-Allow-Origin', '*');
+        
+        const path = 'account/index.html';
+    
+        if (fs.existsSync(path)) {
+            const file = fs.readFileSync(path);
+            res.end(file);
+        } else {
+            res.writeStatus('404 Not Found');
+            res.end();
+        }
+    })
+});
+
+app.get("/account/:filename", (res, req) => {
+    let path = '.' + req.getUrl();
+
+    res.cork(() => {
+        if(path.endsWith('css')){
+            res.writeHeader('Content-Type', 'text/css');
+        } else {
+            res.writeHeader('Content-Type', 'text/javascript');
+        }
+    });
+
+    if (fs.existsSync(path)) {
+        // Read and serve the file
+        const file = fs.readFileSync(path);
+        res.end(file);
+    } else {
+        // File not found
+        res.writeStatus('404 Not Found');
+        res.end();
+    }
+});
+
+app.post("/createAccount", async (res, req) => {
+    res.onAborted(() => {
+        res.aborted = true;
+    });
+
+    // req.headers
+    const username = req.getHeader('u');
+    const hashedPassword = req.getHeader('hp');
+
+    let succeeded = await db.createAccount(username, hashedPassword);
+
+    if(!res.aborted){
+        res.cork(() => {
+            res.end(succeeded ? 'y' : 'n');
+        });
+    }
+    // res.end();
+});
+
+app.post("/login", async (res, req) => {
+    res.onAborted(() => {
+        res.aborted = true;
+    });
+
+    // req.headers
+    const username = req.getHeader('u');
+    const hashedPassword = req.getHeader('hp');
+
+    let userData = await db.getUserData(username, hashedPassword);
+
+    if(!res.aborted){
+        res.cork(() => {
+            res.end(userData !== null ? 'y' : 'n');
+        });
+    }
+});
+
 app.get('/favicon.ico', (res, req) => {
     const path = 'client/favicon.ico';
     res.cork(() => {
@@ -135,6 +210,15 @@ app.get('/game', (res, req) => {
 })
 
 app.post('/upload', (res, req) => {
+    // uploadState = enum[0: good, 1: aborted, 2: loginFailed]
+    let uploadState = 0;
+
+    res.onAborted(() => {
+        // Request was aborted, clean up if necessary
+        console.log('File upload aborted');
+        uploadState = 1;
+    });
+    
     console.log('post recieved!');
 
     // res.cork(() => {
@@ -147,14 +231,25 @@ app.post('/upload', (res, req) => {
 
     const boundary = req.getHeader('content-type').split('boundary=')[1];
 
+    const username = req.getHeader('u');
+    const hashedPassword = req.getHeader('hp');
+
     let buffer = Buffer.alloc(0);
   
     // handle data streaming
     res.onData((ab, isLast) => {
+        if(uploadState !== 0) {
+            // only send message if we're in loginFailed, which is the
+            // only state where we're aborted but still on the connection.
+            if(uploadState === 2){
+                res.end();
+            }
+            return;
+        }
         let chunk = Buffer.from(ab);
         buffer = Buffer.concat([buffer, chunk]);
   
-        if (isLast) {
+        if (isLast === true) {
             // Extract the file content using parse-multipart
             const parts = multipart.Parse(buffer, boundary);
 
@@ -165,17 +260,21 @@ app.post('/upload', (res, req) => {
             const textContent = validateCode(fileContent.toString());
 
             if(textContent === false){
+                res.end();
                 return;
             }
-
-            db.uploadFile(Buffer.from(textContent, 'utf8'), fileContent, textContent);
+            
+            db.uploadFile(Buffer.from(textContent, 'utf8'), fileContent, textContent, username, hashedPassword);
+            res.end();
         }
     });
-    
-    res.onAborted(() => {
-        // Request was aborted, clean up if necessary
-        console.log('File upload aborted');
-    });
+
+    (async()=>{
+        let userData = await db.getUserData(username, hashedPassword);
+        if(userData === null){
+            uploadState = 2;
+        }
+    })();
 });
 
 app.get("/:filename", (res, req) => {

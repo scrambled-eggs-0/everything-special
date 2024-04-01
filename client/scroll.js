@@ -19,6 +19,7 @@ if(isEditor === true || isServer === true){
         await until(() => {return getNextCodeLoaded !== false});
         return getNextCode();
     };
+    window.tutorial = true;
     (async () => {
         const exps = await import('./tutorial.js');
         getNextCode = exps.default;
