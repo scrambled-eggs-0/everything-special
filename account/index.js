@@ -34,7 +34,7 @@ createAccountButton.onclick = () => {
         if(succeeded === 'y'){
             alert('account successfully created!');
             updateCredsInLocalStorage(lastUsername, lastPassword);
-            window.opener.postMessage('finished!', window.opener.location.href);
+            window.parent.postMessage('finished!', window.parent.location.href);
         } else {
             alert('username taken! Please try again.');
             resetState();
@@ -74,7 +74,7 @@ loginButton.onclick = () => {
 
         if(succeeded === 'y'){
             updateCredsInLocalStorage(lastUsername, lastPassword);
-            window.opener.postMessage('finished!', window.opener.location.href);
+            window.parent.postMessage('finished!', window.parent.location.href);
         } else {
             alert('invalid login! Please try again.');
             resetState();

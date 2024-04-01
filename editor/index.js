@@ -133,10 +133,13 @@ window.uploadCode = () => {
   if(username === null){
     const childWindowOrigin = `${location.origin}/account`;
 
-    const loginWindow = window.open(childWindowOrigin);
+    const loginWindow = document.createElement('iframe');
+    loginWindow.src = childWindowOrigin;
+    loginWindow.classList.add('loginWindow');
     const handleMessage = function(event) {
+      console.log(event, event.origin);
       if (event.origin === location.origin) {
-        loginWindow.close();
+        loginWindow.remove();
         window.removeEventListener('message', handleMessage);
         username = localStorage.getItem('username');
         hashedPassword = localStorage.getItem('hashedPassword');
@@ -144,6 +147,8 @@ window.uploadCode = () => {
       }
     }
     window.addEventListener('message', handleMessage);
+
+    document.body.appendChild(loginWindow);
     return;
   }
 
