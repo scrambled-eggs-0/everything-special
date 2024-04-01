@@ -133,6 +133,7 @@ window.uploadCode = () => {
   if(username === null){
     const childWindowOrigin = `${location.origin}/account`;
 
+    const loginWindow = window.open(childWindowOrigin);
     const handleMessage = function(event) {
       if (event.origin === location.origin) {
         loginWindow.close();
@@ -143,8 +144,6 @@ window.uploadCode = () => {
       }
     }
     window.addEventListener('message', handleMessage);
-
-    const loginWindow = window.open(childWindowOrigin);
     return;
   }
 
