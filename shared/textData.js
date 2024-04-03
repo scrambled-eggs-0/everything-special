@@ -630,7 +630,7 @@ export default {
             this.shapeParamToId[key] = id;
             this.appendValueInput(id)
               .appendField(key + ':')
-              .setCheck(null)
+              .setCheck(generateConnectionType(newValueMap[key]))
               .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(newValueMap[key])));
 
             this.inputList.splice(1, 0, this.inputList.pop())
@@ -686,7 +686,7 @@ export default {
             this.simulateParamToId[key] = id;
             this.appendValueInput(id)
               .appendField(key + ':')
-              .setCheck(null)
+              .setCheck(generateConnectionType(newValueMap[key]))
               .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(newValueMap[key])));
             
             this.inputList.splice(insertionIndex++, 0, this.inputList.pop());
@@ -737,7 +737,7 @@ export default {
             this.effectParamToId[key] = id;
             this.appendValueInput(id)
               .appendField(key + ':')
-              .setCheck(null)
+              .setCheck(generateConnectionType(newValueMap[key]))
               .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(newValueMap[key])));
 
             this.inputList.splice(insertionIndex++, 0, this.inputList.pop());
@@ -775,7 +775,9 @@ export default {
             lastEffectIdGen: this.effectIdGenerator,
 
             sditk: simulateDropdownIndexToKey,
-            editk: effectDropdownIndexToKey
+            editk: effectDropdownIndexToKey,
+
+            lastShape: this.getFieldValue('SHAPE_DROPDOWN')
           };
         },
         
@@ -793,12 +795,14 @@ export default {
 
             this.shapeIdGenerator = state.lastShapeIdGen - Object.keys(this.shapeParamToId).length;
 
+            const params = window.satDefaultMap[state.lastShape];
+            
             for(let key in newValueMap){
               const id = newValueMap[key];
               this.appendValueInput(id)
                 .appendField(key + ':')
-                .setCheck(null)
-                .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(0)));
+                .setCheck(generateConnectionType(params[key]))
+                .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(params[key])));
 
               this.inputList.splice(1, 0, this.inputList.pop())
             }
@@ -844,7 +848,7 @@ export default {
                 const id = this.simulateParamToId[key];
                 this.appendValueInput(id)
                   .appendField(key + ':')
-                  .setCheck(null)
+                  .setCheck(generateConnectionType(paramMap[key]))
                   .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(paramMap[key])));
 
                 this.inputList.splice(insertionIndex++, 0, this.inputList.pop());
@@ -894,7 +898,7 @@ export default {
                 const id = this.effectParamToId[key];
                 this.appendValueInput(id)
                   .appendField(key + ':')
-                  .setCheck(null)
+                  .setCheck(generateConnectionType(paramMap[key]))
                   .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(paramMap[key])));
 
                 this.inputList.splice(insertionIndex++, 0, this.inputList.pop());
@@ -950,7 +954,7 @@ export default {
             .appendField('set obstacle ')
             .appendField(new Blockly.FieldDropdown(()=>{return generateParameterDropdownOptions(block)}, this.validateParamDropdown), 'INPUT')
             .appendField(' to')
-            .setCheck(null)
+            .setCheck(generateConnectionType(this.defaults['y']))
             .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(this.defaults['y'])));
         },
 
@@ -973,6 +977,8 @@ export default {
         init: function() {
           this.setColour('#4a148c');//#b094e3 <- default
           this.setOutput(true);
+
+          this.setOutput('Array');
 
           this.lastItemsAmt = 3;
 
@@ -1062,6 +1068,18 @@ window.generateShadowBlock = (value) => {
   }// else {
   //  // object?
   // }
+}
+
+function generateConnectionType(val){
+  const type = typeof val;
+  if(type === 'number') return 'Number';
+  if(type === 'string') {
+    // if(val[0] === '#') return 'Colour';
+    return ['String', 'Colour'];
+  }
+  if(type === 'boolean') return 'Boolean';
+  if(Array.isArray(val) === true) return 'Array';
+  return null;
 }
 
 function generateParameterDropdownOptions(childBlock, isPlug=false){

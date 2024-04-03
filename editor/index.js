@@ -69,6 +69,8 @@ function getCode(){
 window.getCode = getCode;
 
 const runCode = () => {
+  window.loopTrap = 1000;
+
   const code = getCode();
 
   codeDiv.innerText = code;
@@ -119,6 +121,11 @@ ws.addChangeListener((e) => {
 
 const publishBtn = document.getElementById('publish');
 publishBtn.onclick = () => {
+  let hasWinpad = false;
+  for(let i = 0; i < window.obstacles.length; i++){
+    if(window.obstacles[i].isWinpad === true) { hasWinpad = true; break; }
+  }
+  if(hasWinpad === false) { alert('You must add an obstacle with the "winpad" effect before you can upload!'); return; }
   if(confirm('Ready to publish?') !== true) return;
   alert('To prove your level is possible, you must clear it before uploading. Good Luck!');
   window.enterClearCheckMode();
@@ -149,6 +156,7 @@ window.uploadCode = () => {
     window.addEventListener('message', handleMessage);
 
     document.body.appendChild(loginWindow);
+
     return;
   }
 
@@ -168,6 +176,8 @@ window.uploadCode = () => {
       headers: headers
   }).then(_ => {
         alert('Congrats! Your code was uploaded to the servers!');
+        
+        if(!location.origin.startsWith('http://localhost')) ws.clear();
     })
     .catch(error => {
         console.error('Error uploading file:', error);
@@ -192,6 +202,22 @@ window.requestIdleCallback(() => {
   }
   Blockly.ShortcutRegistry.registry.register(newPasteShortcut, /*allowOverrides:*/ true);
 
+  const UNDO = Blockly.ShortcutItems.names.UNDO;
+  const oldUndoShortcut = Blockly.ShortcutRegistry.registry.getRegistry()[UNDO];
+  const newUndoShortcut = {
+    ...oldUndoShortcut,
+    callback(workspace) {
+      // this causes errors somehow... TODO: fix and allow pasting
+      window.workspaceLoaded = false;
+      const returnVal = oldUndoShortcut.callback.call(this, workspace);
+      window.workspaceLoaded = true;
+      return returnVal;
+    }
+  }
+  Blockly.ShortcutRegistry.registry.register(newUndoShortcut, /*allowOverrides:*/ true);
+
   // removing the duplicate function from the menu
   Blockly.ContextMenuRegistry.registry.unregister('blockDuplicate');
 }, {timeout: 100})
+
+javascriptGenerator.INFINITE_LOOP_TRAP = 'if(--window.loopTrap == 0) break;\n';

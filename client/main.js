@@ -87,29 +87,7 @@ function _render(os, cols, playerData=undefined){
             ctx.beginPath();
             os[i].renderShape(os[i]);
             os[i].renderEffect[j](os[i]);
-            if(os[i].isText === true){
-                lastGA = ctx.globalAlpha;
-                // text
-                ctx.textAlign = 'left';
-                ctx.textBaseline = 'top';
-                ctx.font = `${os[i].fontSize}px Inter`;
-                ctx.translate(os[i].sat.points[0].x + os[i].sat.pos.x, os[i].sat.points[0].y + os[i].sat.pos.y);
-                if(os[i].rotation !== undefined) ctx.rotate(os[i].rotation);
-                if(ctx.globalAlpha < 0.5) ctx.globalAlpha = 0.5;
-                // console.log(os[i].dimensions);
-                if(ctx.toFill === true) ctx.fillText(os[i].text, 0, os[i].dimensions.hOffset);
-                if(ctx.toStroke === true) ctx.strokeText(os[i].text, 0, os[i].dimensions.hOffset);
-                else if(ctx.toFill === false) {
-                    // both false
-                    ctx.globalAlpha = 1;
-                    ctx.fillStyle = cols.tile;
-                    ctx.fillText(os[i].text, 0, 0);
-                }
-                if(os[i].rotation !== undefined) ctx.rotate(-os[i].rotation);
-                ctx.translate(-os[i].sat.points[0].x - os[i].sat.pos.x, -os[i].sat.points[0].y - os[i].sat.pos.y);
-
-                ctx.globalAlpha = Math.min(0.5, lastGA);
-            }
+            if(os[i].isText === true) renderTextSpecials(os[i], cols);
             if(ctx.toFill === true) ctx.fill();
             if(ctx.toStroke === true) ctx.stroke();
             if(ctx.cleanUpFunction !== undefined) { ctx.cleanUpFunction(); ctx.cleanUpFunction = undefined; }
@@ -132,17 +110,10 @@ function _render(os, cols, playerData=undefined){
             ctx.beginPath();
             os[i].renderShape(os[i]);
             os[i].renderEffect[j](os[i]);
+            if(os[i].isText === true) renderTextSpecials(os[i], cols);
             ctx.globalAlpha = 1;
-            if(os[i].isText === true){
-                // text
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                if(ctx.toFill === true) ctx.fillText(os[i].text, os[i].pos.x, os[i].pos.y);
-                if(ctx.toStroke === true) ctx.strokeText(os[i].text, os[i].pos.x, os[i].pos.y);
-            } else {
-                if(ctx.toFill === true) ctx.fill();
-                if(ctx.toStroke === true) ctx.stroke();
-            }
+            if(ctx.toFill === true) ctx.fill();
+            if(ctx.toStroke === true) ctx.stroke();
             if(ctx.cleanUpFunction !== undefined) { ctx.cleanUpFunction(); ctx.cleanUpFunction = undefined; }
             ctx.closePath();
 
@@ -154,20 +125,12 @@ function _render(os, cols, playerData=undefined){
             ctx.beginPath();
             os[i].renderShape(os[i]);
             os[i].renderEffect[j](os[i]);
+            if(os[i].isText === true) renderTextSpecials(os[i], cols);
             ctx.globalAlpha = os[i].renderEffectTimer - opaqIndex;
-            if(os[i].isText === true){
-                // text
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                if(ctx.toFill === true) ctx.fillText(os[i].text, os[i].pos.x, os[i].pos.y);
-                if(ctx.toStroke === true) ctx.strokeText(os[i].text, os[i].pos.x, os[i].pos.y);
-            } else {
-                if(ctx.toFill === true) ctx.fill();
-                if(ctx.toStroke === true) ctx.stroke();
-            }
+            if(ctx.toFill === true) ctx.fill();
+            if(ctx.toStroke === true) ctx.stroke();
             if(ctx.cleanUpFunction !== undefined) { ctx.cleanUpFunction(); ctx.cleanUpFunction = undefined; }
             ctx.closePath();
-            ctx.globalAlpha = 1;
         }
     }
     ctx.globalAlpha = 1;
@@ -216,6 +179,26 @@ function _render(os, cols, playerData=undefined){
     // }
 
     renderUi(canvas, ctx, playerData !== undefined);
+}
+
+function renderTextSpecials(o, cols){
+    lastGA = ctx.globalAlpha;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.font = `${o.fontSize}px Inter`;
+    ctx.translate(o.sat.points[0].x + o.sat.pos.x, o.sat.points[0].y + o.sat.pos.y);
+    if(o.rotation !== undefined) ctx.rotate(o.rotation);
+    if(ctx.globalAlpha < 0.5) ctx.globalAlpha = 0.5;
+    if(ctx.toFill === true) ctx.fillText(o.text, 0, o.dimensions.hOffset);
+    if(ctx.toStroke === true) ctx.strokeText(o.text, 0, o.dimensions.hOffset);
+    else if(ctx.toFill === false) {
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = cols.tile;
+        ctx.fillText(o.text, 0, 0);
+    }
+    if(o.rotation !== undefined) ctx.rotate(-o.rotation);
+    ctx.translate(-o.sat.points[0].x - o.sat.pos.x, -o.sat.points[0].y - o.sat.pos.y);
+    ctx.globalAlpha = Math.min(0.5, lastGA);
 }
 
 // gameloop
@@ -280,7 +263,7 @@ if(isEditor !== true){
     window.addEventListener("resize", resize);
     resize();
 
-    if(window.tutorial !== true){
+    if(window.tutorial !== true && window.standalone !== true){
         (async () => {
             renderUi = await import('./sidemenu.js');
             renderUi = renderUi.default;

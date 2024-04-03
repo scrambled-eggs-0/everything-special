@@ -37,6 +37,65 @@ app.get('/', (res, req) => {
     })
 });
 
+app.get("/standalone/gfx/:filename", (res, req) => {
+    let fileName = req.getParameter(0);
+    let path = 'client/gfx/' + fileName;
+
+    if (fs.existsSync(path)) {
+        // Read and serve the file
+        const file = fs.readFileSync(path);
+        res.end(file);
+    } else {
+        // File not found
+        res.writeStatus('404 Not Found');
+        res.end();
+    }
+});
+
+
+app.get('/standalone/:filename', (res, req) => {
+    let fileName = req.getParameter(0);
+    if(fileName.includes('.') === true){
+        // it's a file
+        let path = 'client/' + fileName;
+        
+        res.cork(() => {
+            if(path.endsWith('css')){
+                res.writeHeader('Content-Type', 'text/css');
+            } else {
+                res.writeHeader('Content-Type', 'text/javascript');
+            }
+        });
+
+        if(path.endsWith('bundle.js') || path.endsWith('png')){
+            path = 'editor/dist' + req.getUrl();
+        }
+
+        if (fs.existsSync(path)) {
+            // Read and serve the file
+            const file = fs.readFileSync(path);
+            res.end(file);
+        } else {
+            // File not found
+            res.writeStatus('404 Not Found');
+            res.end();
+        }
+    } else {
+        // its the index.html file
+        res.cork(() => {  
+            const path = 'client/index.html';
+            
+            if (fs.existsSync(path)) {
+                const file = fs.readFileSync(path);
+                res.end(file);
+            } else {
+                res.writeStatus('404 Not Found');
+                res.end();
+            }
+        })
+    }
+});
+
 app.get('/account', (res, req) => {
     res.cork(() => {
         // res.writeHeader('Access-Control-Allow-Origin', '*');
@@ -209,6 +268,44 @@ app.get('/game', (res, req) => {
     });
 })
 
+// get a specific file. Used for standalone.
+app.get('/game/:filename', (res, req) => {
+    let fileName = req.getParameter(0) + '.js';
+
+    // temp, just serving a random file. TODO: in prod remove async and cache serving somehow??
+    const downloadStream = db.getFile(fileName);
+
+    // hack, TODO fix later?
+    let closed = false;
+
+    downloadStream.on('data', (chunk) => {
+        if(closed === true) return;
+        res.cork(() => {
+            res.write(chunk);
+        })
+    });
+
+    downloadStream.on('end', () => {
+        if(closed === true) return;
+        res.cork(() => {
+            res.end();
+        })
+    });
+
+    downloadStream.on('error', (error) => {
+        if(closed === true) return;
+        res.cork(() => {
+            console.error('Error fetching file from GridFS:', error);
+            res.end('Internal Server Error');
+        })
+    });
+
+    res.onAborted(() => {
+        console.log('aborted!!');
+        closed = true;
+    });
+})
+
 app.post('/upload', (res, req) => {
     // uploadState = enum[0: good, 1: aborted, 2: loginFailed]
     let uploadState = 0;
@@ -346,7 +443,6 @@ app.get("/gfx/:filename", (res, req) => {
         res.end();
     }
 });
-
 // we'll have a post request handler here that will take file content and upload it to the db
 //onPost: db.uploadFile(data);
 

@@ -205,6 +205,19 @@ const satMap = [
     }
 ];
 
+// font loading fix
+setTimeout(() => {
+    const os = window.obstacles;
+    for(let i = 0; i < os.length; i++){
+        if(os[i].isText !== true) continue;
+
+        const oldDimensions = os[i].dimensions;
+        os[i].dimensions = generateDimensions(os[i]);
+        os[i].pos.x += (oldDimensions.x - os[i].dimensions.x) / 2;
+        os[i].pos.y += (oldDimensions.y - os[i].dimensions.y) / 2;
+    }
+}, 1000)
+
 function generateDimensions(o){
     const sat = o.sat;
     if(sat.r !== undefined){
@@ -469,6 +482,10 @@ const simulateMap = [
                 o.sat.points[i].y = (o.sat.points[i].y + o.pos.y - middleY) * growthRatio - o.pos.y + middleY;
             }
             o.sat.setPoints(o.sat.points);
+
+            if(o.isText === true){
+                o.fontSize *= growthRatio;
+            }
         }
 
         o.dimensions = generateDimensions(o);
@@ -678,7 +695,7 @@ const effectMap = [
         // TODO: make winpad have a param that, if true, sends
         // players that beat this level to another level of the
         // level maker's choosing
-        if(isEditor === true){
+        if(isEditor === true || window.standalone === true){
             // respawn
             window.respawnPlayer();
             if(window.inClearCheckMode === true){

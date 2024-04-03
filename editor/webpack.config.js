@@ -39,6 +39,8 @@ const config = {
 
 module.exports = (env, argv) => {
   if (argv.mode === 'development') {
+    if (module.hot) module.hot.accept();
+
     // Set the output path to the `build` directory
     // so we don't clobber production builds.
     config.output.path = path.resolve(__dirname, 'build');

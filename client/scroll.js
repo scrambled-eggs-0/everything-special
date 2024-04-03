@@ -4,7 +4,7 @@ const { until, isEditor } = Utils;
 let nextCode;
 const nextCodeLoaded = () => { return nextCode !== undefined; };
 const isServer = typeof location === 'undefined';
-const reqUrl = isServer === true ? '' : `${location.origin}/game`;
+let reqUrl = isServer === true ? '' : `${location.origin}/game`;
 let loadingCurrent = false;
 
 // never get code from server in editor
@@ -12,6 +12,12 @@ if(isEditor === true || isServer === true){
     getNextCode = async () => {
         await until(() => { return false; })
     };
+    scroll = () => {};
+} else if(location.href.includes('standalone') === true){
+    window.standalone = true;
+    window.updateSettingsCog = () => {};
+    const split = location.href.split('/');
+    reqUrl += '/' + split[split.length - 1];
     scroll = () => {};
 } else if(localStorage.getItem('tutorialCompleted') === null) {
     let getNextCodeLoaded = false;
@@ -32,6 +38,13 @@ getNextCode().then(async (code) => {
     // load first request
     nextCode = code;
     replaceScript();
+
+    if(window.standalone === true){
+        getNextCode = async () => {
+            await until(() => { return false; })
+        };
+        return;
+    }
 
     // load next code when it arrives
     nextCode = await firstNextCode;
