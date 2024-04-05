@@ -1,14 +1,56 @@
 let gearImageRotation = 0, renderGearImageRotation = 0;
-let gearImg = new Image(); let gearImgLoaded = false;
-let cachedBg = window.defaultColors.tile;
+let gearImgLoaded = false;
 let gearRadius = 60, gearX = 850, gearY = 1550;
 let hoveringOverCog = false;
 let settingsMenuActive = false;
 let settingsGradient;
 let settingsMenuAnimation = 0;
-let hoveringOverLock = false;
+let hoverFn = undefined;
+
+let gearImg = new Image(); 
 gearImg.src = './gfx/yellowgear.png';
+let lockImg = new Image();
+lockImg.src = './gfx/locked.png';
+let unlockedImg = new Image();
+unlockedImg.src = './gfx/unlocked.png';
+let likeImg = new Image();
+likeImg.src = './gfx/thumbsup.png';
+let standaloneImg = new Image();
+standaloneImg.src = './gfx/standalone.png';
+
 gearImg.onload = () => {gearImgLoaded = true;}
+
+// 250 w by 250 h
+const iconData = [
+    {
+        x: 100, y: 100,
+        img: () => {return window.scrollLocked === true ? lockImg : unlockedImg},
+        hoverFn: () => {window.scrollLocked = !window.scrollLocked;},
+        text: 'Lock/Unlock Scroll',
+        fontSize: 38
+    },
+    {
+        x: 100, y: 550,
+        imgScale: 1.2,
+        img: () => {return likeImg;},
+        hoverFn: () => {console.log('like!');},
+        text: 'Like'
+    },
+    {
+        x: 550, y: 550,
+        imgScale: 1.2,
+        img: () => {return likeImg;},
+        hoverFn: () => {console.log('dislike!');},
+        text: 'Dislike'
+    },
+    {
+        x: 100, y: 1000,
+        fontSize: 38,
+        img: () => {return standaloneImg;},
+        hoverFn: () => {console.log('standalone!');},
+        text: 'View Standalone'
+    }
+]
 
 export default function drawUi(canvas, ctx, isLast=false){
     if((window.mouseX - gearX) ** 2 + (window.mouseY - gearY) ** 2 < gearRadius ** 2 / 4){
@@ -44,11 +86,28 @@ export default function drawUi(canvas, ctx, isLast=false){
         ctx.fillStyle = settingsGradient;
         ctx.fillRect(0,0,canvas.width,canvas.height);
 
-        ctx.drawImage(window.scrollLocked === true ? window.lockImg : window.unlockedImg, 100, 100, 700, 700);// TODO: make lockImg red and unlockedImg green
-        if(window.mouseX > 100 && window.mouseX < 800 && window.mouseY > 100 && window.mouseY < 800){
-            hoveringOverLock = true;
-        } else {
-            hoveringOverLock = false;
+        hoverFn = undefined;
+        for(let i = 0; i < iconData.length; i++){
+            const d = iconData[i];
+            if(d.imgScale !== undefined){
+                ctx.translate(d.x+125, d.y+125);
+                ctx.scale(d.imgScale, d.imgScale);
+                if(d.text === 'Dislike') ctx.rotate(Math.PI);
+                ctx.drawImage(d.img(), -125, -125, 250, 250);
+                if(d.text === 'Dislike') ctx.rotate(-Math.PI);
+                ctx.scale(1/d.imgScale, 1/d.imgScale);
+                ctx.translate(-d.x-125, -d.y-125);
+            } else {
+                ctx.drawImage(d.img(), d.x, d.y, 250, 250);
+            }
+
+            ctx.font = `${d.fontSize ?? 56}px Inter`;
+            ctx.fillStyle = 'white';
+            ctx.fillText(d.text, d.x + 125, d.y + 283);
+            
+            if(window.mouseX > d.x && window.mouseX < d.x + 250 && window.mouseY > d.y && window.mouseY < d.y + 250){
+                hoverFn = d.hoverFn;
+            }
         }
 
         ctx.translate((smoothAnim-1) * canvas.width, 0);
@@ -79,9 +138,7 @@ window.addSideMenuEvtListeners = () => {
         } else {
             settingsDrag = false;
 
-            if(hoveringOverLock === true){
-                window.scrollLocked = !window.scrollLocked;
-            }
+            if(hoverFn !== undefined) {hoverFn(); dragging = false;}
         }
     })
     

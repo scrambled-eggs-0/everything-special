@@ -56,36 +56,24 @@ function componentToHex(c) {
 // 	return 2*da % max - da;
 // }
 
-window.gearImgLoaded = false;
 if(typeof Image !== 'undefined'){
 	window.arrowImg = new Image();
 	window.starImg = new Image();
-	window.gearImg = new Image();
-	window.lockImg = new Image();
-	window.unlockedImg = new Image();
 	if(isEditor === true){
 		// editor
 		(async() => {
 			const exps = await import('./assets.js');
 			window.arrowImg = exps.default.arrowImg;
 			window.starImg = exps.default.starImg;
-			window.gearImg = exps.default.gearImg;
-			window.lockImg = exps.default.lockImg;
-			window.unlockedImg = exps.default.unlockedImg;
 		})();
 	} else {
 		// client
 		window.arrowImg.src = './gfx/arrow.png';
 		window.starImg.src = 'https://upload.wikimedia.org/wikipedia/commons/c/c3/A_Snapshot_of_the_Jewel_Box_cluster_with_the_ESO_VLT.jpg';
-		window.gearImg.src = './gfx/colorgear.png';
-		window.lockImg.src = './gfx/locked.png';
-		window.unlockedImg.src = './gfx/unlocked.png';
 	}
-	window.gearImg.onload = () => {window.gearImgLoaded = true;};
 } else {
 	// server
-	window.arrowImg = window.starImg = window.gearImg = window.lockImg = window.unlockedImg = {};
-	window.gearImgLoaded = true;
+	window.arrowImg = window.starImg = {};
 }
 
 export default { until, SCROLL_PARAMS, isEditor, blendColor };
