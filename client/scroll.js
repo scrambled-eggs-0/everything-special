@@ -15,7 +15,6 @@ if(isEditor === true || isServer === true){
     scroll = () => {};
 } else if(location.href.includes('standalone') === true){
     window.standalone = true;
-    window.updateSettingsCog = () => {};
     const split = location.href.split('/');
     reqUrl += '/' + split[split.length - 1];
     scroll = () => {};
@@ -127,9 +126,6 @@ async function replaceScript(){
     document.body.appendChild(scriptElement);
 
     nextCode = undefined;
-
-    // update settings menu after new obstacles are added
-    window.updateSettingsCog();
 }
 
 window.removeScript = function removeScript(){

@@ -1,48 +1,17 @@
-import Utils from './utils.js';
-const { until } = Utils;
-
 let gearImageRotation = 0, renderGearImageRotation = 0;
 let gearImg = new Image(); let gearImgLoaded = false;
 let cachedBg = window.defaultColors.tile;
-let winpadIndex = 0;
-let lastWinpadIndex = 0;
+let gearRadius = 60, gearX = 850, gearY = 1550;
 let hoveringOverCog = false;
 let settingsMenuActive = false;
 let settingsGradient;
 let settingsMenuAnimation = 0;
 let hoveringOverLock = false;
-gearImg.src = updateGearImage(window.defaultColors.tile);
-async function updateGearImage(col){
-    gearImgLoaded = false;
-    gearImg.src = await generateGearImage(col);
-    gearImg.onload = () => {
-        gearImgLoaded = true;
-    }
-}
-async function generateGearImage(col){
-    await until(()=>{return window.gearImgLoaded === true});
-    const c = document.createElement('canvas');
-    const x = c.getContext('2d');
-    c.width = window.gearImg.width;
-    c.height = window.gearImg.height;
-    x.drawImage(window.gearImg, 0, 0);
-    x.globalCompositeOperation = 'source-atop';
-    x.fillStyle = col;
-    cachedBg = col;
-    x.fillRect(0,0,c.width,c.height);
-    
-    return c.toDataURL();
-}
+gearImg.src = './gfx/yellowgear.png';
+gearImg.onload = () => {gearImgLoaded = true;}
 
 export default function drawUi(canvas, ctx, isLast=false){
-    const o = window.obstacles[isLast === true ? lastWinpadIndex : winpadIndex];
-    if(o === undefined) return;
-    let [middleX, middleY] = window.generateTopLeftCoordinates(o);
-    middleX += o.dimensions.x / 2;
-    middleY += o.dimensions.y / 2;
-    const imageSize = Math.max(50, Math.min(o.dimensions.x, o.dimensions.y) * 0.72);
-
-    if((window.mouseX - middleX) ** 2 + (window.mouseY - middleY) ** 2 < imageSize ** 2 / 4){
+    if((window.mouseX - gearX) ** 2 + (window.mouseY - gearY) ** 2 < gearRadius ** 2 / 4){
         gearImageRotation += 0.012;
         hoveringOverCog = true;
     } else {
@@ -52,11 +21,11 @@ export default function drawUi(canvas, ctx, isLast=false){
 
     if(gearImgLoaded === true){
         ctx.globalAlpha = 0.3;
-        ctx.translate(middleX, middleY);
+        ctx.translate(gearX, gearY);
         if(renderGearImageRotation !== 0)ctx.rotate(renderGearImageRotation);
-        ctx.drawImage(gearImg, -imageSize/2, -imageSize/2, imageSize, imageSize);
+        ctx.drawImage(gearImg, -gearRadius/2, -gearRadius/2, gearRadius, gearRadius);
         if(renderGearImageRotation !== 0)ctx.rotate(-renderGearImageRotation);
-        ctx.translate(-middleX, -middleY);
+        ctx.translate(-gearX, -gearY);
         ctx.globalAlpha = 1;
     }
 
@@ -75,7 +44,7 @@ export default function drawUi(canvas, ctx, isLast=false){
         ctx.fillStyle = settingsGradient;
         ctx.fillRect(0,0,canvas.width,canvas.height);
 
-        ctx.drawImage(window.scrollLocked === true ? window.lockImg : window.unlockedImg, 100, 100, 700, 700);
+        ctx.drawImage(window.scrollLocked === true ? window.lockImg : window.unlockedImg, 100, 100, 700, 700);// TODO: make lockImg red and unlockedImg green
         if(window.mouseX > 100 && window.mouseX < 800 && window.mouseY > 100 && window.mouseY < 800){
             hoveringOverLock = true;
         } else {
@@ -98,17 +67,6 @@ function interpolateDirection(d1, d2, time) {
 
 function smoothstep(t){
     return t * t * (1-t) + (1 - (1 - t) * (1 - t)) * t;
-}
-
-window.updateSettingsCog = () => {
-    if(window.colors.tile !== cachedBg) updateGearImage(window.colors.tile);
-    lastWinpadIndex = winpadIndex;
-    for(let i = 0; i < window.obstacles.length; i++){
-        if(window.obstacles[i].isWinpad === true){
-            winpadIndex = i;
-            break;
-        }
-    }
 }
 
 let settingsDrag = false; // whether the user is in the midst of a settings drag

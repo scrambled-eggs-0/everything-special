@@ -269,7 +269,6 @@ if(isEditor !== true){
             renderUi = renderUi.default;
         })();
     } else {
-        window.updateSettingsCog = () => {};
         renderUi = (canvas, ctx) => {
             // draw the movement helper arrow
         }
