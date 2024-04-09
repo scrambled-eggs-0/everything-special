@@ -265,7 +265,7 @@ window.exitClearCheckMode = () => {
 
 // takes in a series of points and computes the minimum convex hull
 // which is what we need for SAT polygons.
-function fixPolygon(points){
+window.fixPolygon = (points) => {
     return new GrahamScan(points).hull;
 }
 

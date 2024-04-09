@@ -6,6 +6,8 @@ const nextCodeLoaded = () => { return nextCode !== undefined; };
 const isServer = typeof location === 'undefined';
 let reqUrl = isServer === true ? '' : `${location.origin}/game`;
 let loadingCurrent = false;
+let nextFileName = '';
+window.levelFileName = '';
 
 // never get code from server in editor
 if(isEditor === true || isServer === true){
@@ -110,6 +112,7 @@ async function scroll(){
 async function getNextCode(){
     const response = await fetch(reqUrl);
     if (!response.ok) throw new Error(`Failed to fetch ${reqUrl}`);
+    nextFileName = response.headers.get('Fn');
     return response.text();
 }
 
@@ -126,6 +129,7 @@ async function replaceScript(){
     document.body.appendChild(scriptElement);
 
     nextCode = undefined;
+    window.levelFileName = nextFileName;
 }
 
 window.removeScript = function removeScript(){

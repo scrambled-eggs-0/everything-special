@@ -13,12 +13,56 @@ let lockImg = new Image();
 lockImg.src = './gfx/locked.png';
 let unlockedImg = new Image();
 unlockedImg.src = './gfx/unlocked.png';
-let likeImg = new Image();
-likeImg.src = './gfx/thumbsup.png';
+let thumbImg = new Image();
+thumbImg.src = './gfx/thumbsup.png';
+let likeImg = new Image()
+let dislikeImg = new Image();
 let standaloneImg = new Image();
 standaloneImg.src = './gfx/standalone.png';
+let creatorImg = new Image();
+creatorImg.src = './gfx/creator.png';
+let closeImg = new Image();
+closeImg.src = './gfx/close.png';
+closeImg.onload = () => {closeImg = generateModifiedImg(closeImg, 'blue');}
+lockImg.onload = () => {lockImg = generateModifiedImg(lockImg, 'red');}
+unlockedImg.onload = () => {unlockedImg = generateModifiedImg(unlockedImg, 'blue');}
+thumbImg.onload = () => {
+    likeImg = generateModifiedImg(thumbImg, 'green');
+    dislikeImg = generateModifiedImg(thumbImg, 'red');
+}
 
 gearImg.onload = () => {gearImgLoaded = true;}
+
+function generateModifiedImg(img, col='black', alpha=1){
+    if(img.complete === false){
+        setTimeout(() => {
+            generateModifiedImg(img, col, alpha);
+        }, 200)
+        return;
+    }
+    // if(img.generatedCol === col) return;
+    const c = document.createElement('canvas');
+    const x = c.getContext('2d');
+    c.width = img.width;
+    c.height = img.height;
+    x.globalAlpha = alpha;
+    x.drawImage(img, 0, 0);
+    x.globalAlpha = 1;
+    x.globalCompositeOperation = 'source-atop';
+    x.fillStyle = col;
+    x.fillRect(0,0,c.width,c.height);
+    
+    let newImg = new Image();
+    newImg.src = c.toDataURL();
+    newImg.generatedCol = col;
+    newImg.alpha = alpha;
+    return newImg;
+}
+
+let liked = false;
+let disliked = false;
+let messageAlpha = 0;
+let messageText = '';
 
 // 250 w by 250 h
 const iconData = [
@@ -30,25 +74,71 @@ const iconData = [
         fontSize: 38
     },
     {
+        x: 550, y: 100,
+        imgScale: 0.92,
+        img: () => {return creatorImg;},
+        hoverFn: () => {
+            fetch(`${location.origin}/getUser/${window.levelFileName}`, {
+                method: 'GET',
+            })  .then(async (d) => {
+                    const creatorName = await d.text();
+                    location.replace(`${location.origin}/profile/${creatorName}`);
+                }).catch(e => { console.error('err: ',e);});
+        },
+        text: 'View Creator'
+    },
+    {
         x: 100, y: 550,
         imgScale: 1.2,
         img: () => {return likeImg;},
-        hoverFn: () => {console.log('like!');},
-        text: 'Like'
+        hoverFn: () => {
+            fetch(`${location.origin}/like/${window.levelFileName}`, {
+                method: 'POST',
+            })  .then(_ => {
+                    liked = !liked;
+                    likeImg = generateModifiedImg(thumbImg, 'green', liked === true ? 0.5 : 2);
+                }).catch(e => { console.error('err: ',e);});
+        },
+        textFn: () => {return liked === true ? 'Unlike' : 'Like'}
     },
     {
         x: 550, y: 550,
         imgScale: 1.2,
-        img: () => {return likeImg;},
-        hoverFn: () => {console.log('dislike!');},
-        text: 'Dislike'
+        img: () => {return dislikeImg;},
+        hoverFn: () => {
+            fetch(`${location.origin}/dislike/${window.levelFileName}`, {
+                method: 'POST',
+            })  .then(_ => {
+                    disliked = !disliked;
+                    dislikeImg = generateModifiedImg(thumbImg, 'red', disliked === true ? 0.5 : 2);
+                }).catch(e => { console.error('err: ',e);});
+        },
+        textFn: () => {return disliked === true ? 'Un-dislike' : 'Dislike'},
+        label: 'Dislike'
     },
     {
         x: 100, y: 1000,
-        fontSize: 38,
+        // fontSize: 38,
         img: () => {return standaloneImg;},
-        hoverFn: () => {console.log('standalone!');},
-        text: 'View Standalone'
+        text: 'Share This Level',
+        fontSize: 38,
+        hoverFn: () => {
+            navigator.clipboard.writeText(`${location.origin}/standalone/${window.levelFileName.split('.')[0]}`);
+            messageAlpha = 1;
+            messageText = 'Link Copied to Clipboard!';
+        }
+    },
+    {
+        x: 550, y: 1000,
+        // fontSize: 38,
+        img: () => {return closeImg;},
+        hoverFn: () => {
+            if(settingsMenuActive === true){
+                toggleSettingsMenu();
+                settingsDrag = false;
+            }
+        },
+        text: 'Close',
     }
 ]
 
@@ -74,15 +164,19 @@ export default function drawUi(canvas, ctx, isLast=false){
     if(settingsMenuActive === true && settingsMenuAnimation !== 1){
         settingsMenuAnimation += 0.03;
         if(settingsMenuAnimation > 1) settingsMenuAnimation = 1;
-    } else if(settingsMenuAnimation !== 0) {
+    } else if(settingsMenuActive === false && settingsMenuAnimation !== 0) {
         settingsMenuAnimation -= 0.03;
         if(settingsMenuAnimation < 0) settingsMenuAnimation = 0;
     }
 
     if(settingsMenuAnimation !== 0){
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
         // rendering
         const smoothAnim = smoothstep(settingsMenuAnimation);
-        ctx.translate((1-smoothAnim) * canvas.width, 0);
+        const translateAmount = (1-smoothAnim) * canvas.width;
+        ctx.translate(translateAmount, 0);
         ctx.fillStyle = settingsGradient;
         ctx.fillRect(0,0,canvas.width,canvas.height);
 
@@ -92,9 +186,10 @@ export default function drawUi(canvas, ctx, isLast=false){
             if(d.imgScale !== undefined){
                 ctx.translate(d.x+125, d.y+125);
                 ctx.scale(d.imgScale, d.imgScale);
-                if(d.text === 'Dislike') ctx.rotate(Math.PI);
+                if(d.textFn !== undefined) d.text = d.textFn();
+                if(d.label === 'Dislike') ctx.rotate(Math.PI);
                 ctx.drawImage(d.img(), -125, -125, 250, 250);
-                if(d.text === 'Dislike') ctx.rotate(-Math.PI);
+                if(d.label === 'Dislike') ctx.rotate(-Math.PI);
                 ctx.scale(1/d.imgScale, 1/d.imgScale);
                 ctx.translate(-d.x-125, -d.y-125);
             } else {
@@ -105,12 +200,23 @@ export default function drawUi(canvas, ctx, isLast=false){
             ctx.fillStyle = 'white';
             ctx.fillText(d.text, d.x + 125, d.y + 283);
             
-            if(window.mouseX > d.x && window.mouseX < d.x + 250 && window.mouseY > d.y && window.mouseY < d.y + 250){
+            if(window.mouseX > d.x + translateAmount && window.mouseX < d.x + translateAmount + 250 && window.mouseY > d.y && window.mouseY < d.y + 250){
                 hoverFn = d.hoverFn;
             }
         }
 
-        ctx.translate((smoothAnim-1) * canvas.width, 0);
+        ctx.translate(-translateAmount, 0);
+    }
+
+    if(messageAlpha > 0){
+        ctx.font = `56px Inter`;
+        ctx.globalAlpha = messageAlpha;
+        messageAlpha -= 0.012;
+        ctx.fillStyle = 'white';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(messageText, 450, 930);
+        ctx.globalAlpha = 1;
     }
 }
 

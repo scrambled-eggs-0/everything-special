@@ -1,24 +1,61 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
+html {
+    scrollbar-color: #686868 #424242;
+}
+
 body {
     background-color: rgb(5, 5, 5);
     font-family: 'Inter', sans-serif;
     font-size: 2vh;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
-.title {
+.textStyle {
     position: relative;
     top: -6vh;
-    font-size: 7.7vh;
     text-shadow: 0px 0px 1.875vh white;
     color: white;
     user-select: none;
     text-align: center;
 }
 
-.menu {
+.title {
+    font-size: 12.2vh;
+    margin-top: 10vh;
+}
+
+.frameDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.backButton {
     position: fixed;
+    bottom: 0.3vh;
+    right: 0.3vh;
+    font-size: 4vh;
+    z-index: 999;
+    top: auto;
+}
+
+.gameTitle {
+    font-size: 6.2vh;
+}
+
+.gameDiv {
+    font-size: 2vh;
+    padding-top: 5vh;
+    display: flex;
+    max-width: 100vw;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.menu {
+    position: relative;
     top: 0;
     left: 0;
     width: 100%;
@@ -28,6 +65,7 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    min-height: 100vh;
 }
 /*todo: make this look like the mockup*/
 .inputStyle {
@@ -87,6 +125,19 @@ button {
     user-select: none; /* Standard syntax */
 }
 
-.pfp {
-    top: -1vh;
+.profileImg {
+    display: block;
+    width: 100%;
+    height: auto;
+    user-select: none;
+    -ms-user-select: none;
+    -webkit-user-drag: none;
+}
+
+.profileImgContainer {
+    width: 40vh;
+    /* padding-bottom: 8vh; */
+    top: -6vh;
+    position: relative;
+    margin: 2vh;
 }

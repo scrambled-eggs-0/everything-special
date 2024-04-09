@@ -54,7 +54,7 @@ function randomString(len=16){
     return str;
 }
 
-async function uploadFileAnalytics(fileName, buffer, fileContent, textContent){
+async function uploadFileAnalytics(fileName, buffer, fileContent, textContent, username){
     const metaData = {
         fileName: fileName,
         len: textContent.length,// length of code
@@ -69,6 +69,7 @@ async function uploadFileAnalytics(fileName, buffer, fileContent, textContent){
         relevance: 0.1,         // controversial omnis go brr
         playTime: 0,            // in integer seconds probably
         timeCreated: Date.now(),// Date.now() is sketch because system dependent but should be close enough
+        creator: username       // username of the account that created this level
     };
 
     // addStatsToCreator(metaData);
@@ -77,7 +78,6 @@ async function uploadFileAnalytics(fileName, buffer, fileContent, textContent){
 }
 
 async function addFileToCreator(fileName, username, hashedPassword){
-    // creatorCollection.updateOne()
     await creatorCollection.updateOne({username, hashedPassword}, { $push: { levels: fileName } });
 }
 
@@ -89,7 +89,7 @@ async function addFileToCreator(fileName, username, hashedPassword){
 // upload file to db from buffer
 async function uploadFile(buffer, fileContent, textContent, username, hashedPassword){
     const fileName = `${randomString(16)}.js`;
-    uploadFileAnalytics(fileName, buffer, fileContent, textContent);
+    uploadFileAnalytics(fileName, buffer, fileContent, textContent, username);
     addFileToCreator(fileName, username, hashedPassword);
     const uploadStream = bucket.openUploadStream(fileName); // , {metadata: {field: 'testfield', value: 'testvalue'}}
     uploadStream.end(buffer);
@@ -138,11 +138,31 @@ function getRandomFileName(){
     return fileNames[Math.floor(Math.random() * fileNames.length)]
 }
 
-async function createAccount(username, hashedPassword){
+async function createAccount(username, hashedPassword, profilePic=undefined, pfpFileType=undefined){
     const nameTaken = await creatorCollection.findOne({username});
     if(nameTaken) return false;
     const newAccount = {
         username, hashedPassword, levels: [], trackRecord: 0.5, followers: 0
+    }
+    if(profilePic !== undefined){
+        const fileName = `pfp_${randomString(16)}.${pfpFileType}`;
+        // upload profile pic
+        const uploadStream = bucket.openUploadStream(fileName);
+        uploadStream.end(profilePic);
+
+        let finished = false;
+
+        uploadStream.on('finish', () => {
+            console.log('Pfp uploaded to GridFS');
+            finished = true;
+            newAccount.pfp = fileName;
+        });
+
+        uploadStream.on('error', (error) => {
+            console.error('Error uploading pfp to GridFS:', error);
+        });
+
+        await until(() => {return finished === true});
     }
     creatorCollection.insertOne(newAccount);
     return true;
@@ -152,10 +172,37 @@ async function getUserData(username, hashedPassword){
     return await creatorCollection.findOne({username, hashedPassword});
 }
 
+async function getRecentFileNames(username, amount=5){
+    const userData = await creatorCollection.findOne({username});
+    if(!userData) return [];
+    const fileNames = [];
+    for(let i = 0; i < amount; i++){
+        if(userData.levels.length === 0) break;
+        fileNames.push(userData.levels.pop());
+    }
+    return fileNames;
+}
+
+async function getCreator(fileName){
+    // when we clear the db, do this (untested)
+    // return (await metdataCollection.findOne({fileName})).creator;
+
+    return 'test2';
+}
+
+async function getProfilePic(creatorName){
+    const creator = await creatorCollection.findOne({username: creatorName});
+    if(creator?.pfp === undefined) return false;
+    return bucket.openDownloadStreamByName(creator.pfp);
+}
+
 export default {
     uploadFile,
     getFile,
     getRandomFileName,
     createAccount,
-    getUserData
+    getUserData,
+    getRecentFileNames,
+    getCreator,
+    getProfilePic
 };

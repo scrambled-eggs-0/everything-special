@@ -4,12 +4,14 @@ const input = document.querySelector('.usernameInput');
 const nextButton = document.querySelector('.nextButton');
 const createAccountButton = document.querySelector('.createButton');
 const loginButton = document.querySelector('.loginButton');
+const pfpChooser = document.querySelector('.pfp');
 
 let username = '';
+let password = '';
 let state = 'username';
 
 nextButton.onclick = () => {
-    if(input.value.length === 0) {alert('Please enter your username!'); return;}
+    if(input.value.length === 0) {alert('Please enter the username you wish to create/ login to your account with!'); return;}
     username = input.value;
 
     state = 'password';
@@ -23,26 +25,45 @@ nextButton.onclick = () => {
 }
 
 createAccountButton.onclick = () => {
-    if(input.value.length === 0) {alert('Please enter your password!'); return;}
+    if(state === 'password'){
+        if(input.value.length === 0) {alert('Please enter your password!'); return;}
 
-    const lastUsername = username;
-    const lastPassword = input.value;
-
-    postReq(username, input.value, '/createAccount', async (data) => {
-        const succeeded = await data.text();
-
-        if(succeeded === 'y'){
-            alert('account successfully created!');
-            updateCredsInLocalStorage(lastUsername, lastPassword);
-            window.parent.postMessage('finished!', window.parent.location.href);
-        } else {
-            alert('username taken! Please try again.');
-            resetState();
-        }
-    });
-
-    username = '';
-    input.value = '';
+        password = input.value;
+        input.value = '';
+        state = 'profile pic';
+        pfpChooser.classList.remove('hidden');
+        input.classList.add('hidden');
+        title.innerText = 'Choose Profile Pic';
+        loginButton.classList.add('hidden');
+    } else {
+        // state is profile pic
+        const lastUsername = username;
+        const lastPassword = password;
+        postReq(lastUsername, lastPassword, pfpChooser.files[0], '/createAccount', async (data) => {
+            const succeeded = await data.text();
+    
+            if(succeeded === 'y'){
+                alert('account successfully created!');
+                updateCredsInLocalStorage(lastUsername, lastPassword);
+                window.parent.postMessage('finished!', window.parent.location.href);
+            } else {
+                if(succeeded === 'p'){
+                    // profile
+                    alert('profile picture not of type png/jpeg! Please try again.');
+                } else if(succeeded === 'p'){
+                    // profile
+                    alert('profile picture file size too large (exceeds 1MB)! Please try again.');
+                } else {
+                    alert('username taken! Please try again.');
+                }
+                resetState();
+            }
+        });
+    
+        username = '';
+        password = '';
+        input.value = '';
+    }
 }
 
 loginButton.onmouseover = () => {
@@ -50,7 +71,7 @@ loginButton.onmouseover = () => {
 }
 
 createAccountButton.onmouseover = () => {
-    title.innerText = 'Create Account';
+    if(state !== 'profile pic') title.innerText = 'Create Account';
 }
 
 input.oninput = () => {
@@ -60,6 +81,8 @@ input.oninput = () => {
     } else if(state === 'password'){
         loginButton.classList.remove('hidden');
         createAccountButton.classList.remove('hidden');
+    } else if(state === 'profile pic'){
+        loginButton.classList.add('hidden');
     }
 }
 
@@ -69,7 +92,7 @@ loginButton.onclick = () => {
     const lastUsername = username;
     const lastPassword = input.value;
 
-    postReq(username, input.value, '/login', async (data) => {
+    postReq(lastUsername, lastPassword, undefined, '/login', async (data) => {
         const succeeded = await data.text();
 
         if(succeeded === 'y'){
@@ -88,9 +111,12 @@ loginButton.onclick = () => {
 function resetState(){
     state = 'username';
     username = '';
+    password = '';
     nextButton.classList.add('hidden');
     createAccountButton.classList.add('hidden');
     loginButton.classList.add('hidden');
+    pfpChooser.classList.add('hidden');
+    input.classList.remove('hidden');
     input.value = '';
     input.type = "text";
     input.placeholder = 'Username';
@@ -101,18 +127,33 @@ function updateCredsInLocalStorage(username, password){
     localStorage.setItem('hashedPassword', SHA(password + 'xd'));
 }
 
-function postReq(username, password, path, lambda){
+function postReq(usr, pswd, file, path, lambda){
     const uploadUrl = location.origin + path;
-    const hashedPassword = SHA(password + 'xd');
+    const hashedPassword = SHA(pswd + 'xd');
 
     const headers = new Headers();
-    headers.append('u', username);
+    headers.append('u', usr);
     headers.append('hp', hashedPassword);
 
-    fetch(uploadUrl, {
+    const fetchObj = {
         method: 'POST',
         headers: headers,
-    })  .then(data => { //.then(response => response.json())
+    };
+
+    if(file !== undefined){
+        if(file.size > 1024 * 1024){
+            alert('file size too large! Please upload a profile picture smaller than 1MB.');
+            resetState();
+            return;
+        }
+        const data = new FormData();
+        data.append('file', file);
+        const fileSplit = file.name.split('.');
+        headers.append('ext', fileSplit[fileSplit.length-1]);
+        fetchObj.body = data;
+    }
+
+    fetch(uploadUrl, fetchObj).then(data => { //.then(response => response.json())
             lambda(data);// we might have to check if login succeeded or failed...
         })
         .catch(error => {
@@ -120,6 +161,7 @@ function postReq(username, password, path, lambda){
         });
 }
 
+window.SHA = SHA;
 function SHA(s) {
     var chrsz = 8;
     var hexcase = 0;

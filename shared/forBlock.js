@@ -114,9 +114,13 @@ forBlock['create_obstacle'] = function(block, generator) {
   let params = '{';
 
   // console.log(block.shapeParamToId);
-
-  for(let key in block.shapeParamToId){
-    params += `${key}:${generator.valueToCode(block, this.shapeParamToId[key], Order.NONE)},`;
+  if(shape === '2'){
+    const originalPoints = JSON.parse(generator.valueToCode(block, this.shapeParamToId['points'], Order.NONE));
+    params += `points:${JSON.stringify(window.fixPolygon(originalPoints))},`;
+  } else {
+    for(let key in block.shapeParamToId){
+      params += `${key}:${generator.valueToCode(block, this.shapeParamToId[key], Order.NONE)},`;
+    }
   }
 
   for(let key in block.simulateParamToId){

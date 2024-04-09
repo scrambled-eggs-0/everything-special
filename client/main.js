@@ -5,6 +5,9 @@ const ctx = window.ctx = canvas.getContext('2d');
 import './input.js';
 import simulate from './components.js';
 
+import Utils from './utils.js';
+const { isEditor, blendColor } = Utils;
+
 // run code
 // import gameData from './code.js';
 // const {tickFunctions, entities} = gameData;
@@ -12,8 +15,8 @@ import simulate from './components.js';
 window.scrollAnimation = 1;
 
 window.defaultColors = {
-    tile: '#0d0d0d',// the stroke and outside of arena
-    background: '#383838',// the fillcolor
+    tile: '#1b9456',//'#0d0d0d',// the stroke and outside of arena
+    background: blendColor('#1ea761', '#1b9456', -0.34)//'#5260ab'//'#41ba56'//'#383838',// the fillcolor
 }
 
 window.colors = {
@@ -27,9 +30,6 @@ window.lastColors = {
 }
 window.lastPlayerData = [0, 0];
 let renderUi = () => {};
-
-import Utils from './utils.js';
-const { isEditor } = Utils;
 
 // let cachedFontSize = -1;
 // const TAU = Math.PI * 2;
@@ -131,6 +131,7 @@ function _render(os, cols, playerData=undefined){
             if(ctx.toStroke === true) ctx.stroke();
             if(ctx.cleanUpFunction !== undefined) { ctx.cleanUpFunction(); ctx.cleanUpFunction = undefined; }
             ctx.closePath();
+            ctx.globalAlpha = 1;
         }
     }
     ctx.globalAlpha = 1;
@@ -153,7 +154,8 @@ function _render(os, cols, playerData=undefined){
     
     ctx.beginPath();
     player.renderShape(player);
-    if(player.renderRadius > 0) ctx.fill();
+    
+    if(player.renderRadius >= 0) ctx.fill();
     else {
         // negative radius
         ctx.setLineDash([12, 30]);

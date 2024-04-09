@@ -52,7 +52,6 @@ app.get("/standalone/gfx/:filename", (res, req) => {
     }
 });
 
-
 app.get('/standalone/:filename', (res, req) => {
     let fileName = req.getParameter(0);
     if(fileName.includes('.') === true){
@@ -134,7 +133,125 @@ app.get("/account/:filename", (res, req) => {
     }
 });
 
+app.get('/profile/:filename', (res, req) => {
+    let fileName = req.getParameter(0);
+    if(fileName.includes('.') === true){
+        // it's a file
+        let path = 'profile/' + fileName;
+        
+        res.cork(() => {
+            if(path.endsWith('css')){
+                res.writeHeader('Content-Type', 'text/css');
+            } else {
+                res.writeHeader('Content-Type', 'text/javascript');
+            }
+        });
+
+        if(path.endsWith('bundle.js') || path.endsWith('png')){
+            path = 'editor/dist' + req.getUrl();
+        }
+
+        if (fs.existsSync(path)) {
+            // Read and serve the file
+            const file = fs.readFileSync(path);
+            res.end(file);
+        } else {
+            // File not found
+            res.writeStatus('404 Not Found');
+            res.end();
+        }
+    } else {
+        // its the index.html file
+        res.cork(() => {
+            const path = 'profile/index.html';
+            
+            if (fs.existsSync(path)) {
+                const file = fs.readFileSync(path);
+                res.end(file);
+            } else {
+                res.writeStatus('404 Not Found');
+                res.end();
+            }
+        })
+    }
+});
+
+// get username from level
+app.get("/getUser/:levelName", async (res, req) => {
+    let aborted = false;
+    res.onAborted(() => {
+        aborted = true;
+    });
+
+    const levelName = req.getParameter(0);
+    const creator = await db.getCreator(levelName);
+    if(aborted === false){
+        res.cork(() => {
+            res.end(creator);
+        })
+    }
+});
+
+// get 5 most recent fileNames
+app.get("/getFns/:username", async (res, req) => {
+    let aborted = false;
+    res.onAborted(() => {
+        aborted = true;
+    });
+
+    const username = req.getParameter(0);
+    const fileNames = await db.getRecentFileNames(username);
+    if(aborted === false){
+        res.cork(() => {
+            res.end(fileNames.join('|'));
+        })
+    }
+});
+
+// get profile picture if any
+app.get("/getPfp/:username", async (res, req) => {
+    let aborted = false;
+    res.onAborted(() => {
+        aborted = true;
+    });
+
+    const creatorName = req.getParameter(0);
+
+    const downloadStream = await db.getProfilePic(creatorName);
+
+    if(downloadStream === false){
+        res.cork(() => {
+            res.end('n');
+        })
+        return;
+    }
+
+    downloadStream.on('data', (chunk) => {
+        if(aborted === true) return;
+        res.cork(() => {
+            res.write(chunk);
+        })
+    });
+
+    downloadStream.on('end', () => {
+        if(aborted === true) return;
+        res.cork(() => {
+            res.end();
+        })
+    });
+
+    downloadStream.on('error', (error) => {
+        if(aborted === true) return;
+        aborted = true;
+        res.cork(() => {
+            console.error('Error fetching file from GridFS:', error);
+            res.end('Internal Server Error');
+        })
+    });
+});
+
 app.post("/createAccount", async (res, req) => {
+    res.aborted = false;
     res.onAborted(() => {
         res.aborted = true;
     });
@@ -143,14 +260,47 @@ app.post("/createAccount", async (res, req) => {
     const username = req.getHeader('u');
     const hashedPassword = req.getHeader('hp');
 
-    let succeeded = await db.createAccount(username, hashedPassword);
+    const boundary = req.getHeader('content-type').split('boundary=')[1];
+  
+    if (req.getHeader('content-length') > 0) {
+        // profile picture provided
+        let fileExtension = req.getHeader('ext');
+        if(!['png', 'jpeg', 'jpg'].includes(fileExtension)) {res.end('p'); return;}
+        let dataLen = 0;
+        let buffer = Buffer.from('');
+        res.onData((ab, isLast) => {
+            if(res.aborted === true) return;
+            dataLen += ab.length;
+            if (dataLen > 1024 * 1024) {res.end('l'); return;}
+            let chunk = Buffer.from(ab);
+            buffer = Buffer.concat([buffer, chunk]);
+            if (isLast) {
+                (async()=>{
+                    const parts = multipart.Parse(buffer, boundary);
 
-    if(!res.aborted){
-        res.cork(() => {
-            res.end(succeeded ? 'y' : 'n');
+                    // Assume the first part is the file
+                    const fileContent = parts[0].data;
+
+                    let succeeded = await db.createAccount(username, hashedPassword, fileContent, fileExtension);
+
+                    if(!res.aborted){
+                        res.cork(() => {
+                            res.end(succeeded ? 'y' : 'n');
+                        });
+                    }
+                })();
+            }
         });
+    } else {
+        // no profile picture provided
+        let succeeded = await db.createAccount(username, hashedPassword);
+
+        if(!res.aborted){
+            res.cork(() => {
+                res.end(succeeded ? 'y' : 'n');
+            });
+        }
     }
-    // res.end();
 });
 
 app.post("/login", async (res, req) => {
@@ -235,9 +385,14 @@ app.get('/game', (res, req) => {
     // });
 
     // temp, just serving a random file. TODO: in prod remove async and cache serving somehow??
-    const downloadStream = db.getFile(db.getRandomFileName());
+    const fileName = db.getRandomFileName();
 
-    // hack, TODO fix later?
+    res.cork(() => {
+        res.writeHeader('Fn', fileName);
+    })
+
+    const downloadStream = db.getFile(fileName);
+
     let closed = false;
 
     downloadStream.on('data', (chunk) => {
@@ -256,6 +411,7 @@ app.get('/game', (res, req) => {
 
     downloadStream.on('error', (error) => {
         if(closed === true) return;
+        closed = true;
         res.cork(() => {
             console.error('Error fetching file from GridFS:', error);
             res.end('Internal Server Error');
@@ -294,6 +450,7 @@ app.get('/game/:filename', (res, req) => {
 
     downloadStream.on('error', (error) => {
         if(closed === true) return;
+        closed = true;
         res.cork(() => {
             console.error('Error fetching file from GridFS:', error);
             res.end('Internal Server Error');
@@ -443,6 +600,16 @@ app.get("/gfx/:filename", (res, req) => {
         res.end();
     }
 });
+
+app.post('/like/:filename', (res, req) => {
+    console.log('someone likes ' + req.getParameter(0));
+    res.cork(()=>{res.end();});
+})
+
+app.post('/dislike/:filename', (res, req) => {
+    console.log('someone dislikes ' + req.getParameter(0));
+    res.cork(()=>{res.end();});
+})
 // we'll have a post request handler here that will take file content and upload it to the db
 //onPost: db.uploadFile(data);
 

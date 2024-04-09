@@ -22,8 +22,30 @@ export default /*const toolbox =*/ {
       'contents': [
         {
           'kind': 'block',
-          // 'type': 'create_obstacle',
           'type': 'create_obstacle'
+        },
+        {
+          'kind': 'block',
+          "type": "create_obstacle",
+          "extraState": {
+            "shapeParamToId": {
+              "r": "SHAPE0",
+              "y": "SHAPE1",
+              "x": "SHAPE2"
+            },
+            "numSimulateFields": 1,
+            "numEffectFields": 1,
+            "sditk": ["3"],
+            "editk": ["3"],
+            "lastShape": "0"
+          },
+          "fields": {
+            "SHAPE_DROPDOWN": "0",
+            "NUM_SIMULATES_DROPDOWN": 1,
+            "SIMULATE_DROPDOWN0": "3",
+            "NUM_EFFECTS_DROPDOWN": 1,
+            "EFFECT_DROPDOWN0": "3"
+          },
         },
         {
           'kind': 'block',

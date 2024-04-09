@@ -517,6 +517,7 @@ export default {
 
         updateNumberOfSimulatesDropdown: function(newValue) {
           if(window.workspaceLoaded === false) return;
+
           // remove existing
           for(let i = 0; i < this.numSimulateFields; i++){
             this.removeInput(`SIMULATE_CONTAINER${i}`, true);
@@ -782,9 +783,34 @@ export default {
         },
         
         loadExtraState: function(state) {
-          if(window.workspaceLoaded === true){
-            return;
-          }
+          // console.log('calling');
+          // if(window.workspaceLoaded === true){
+          //   window.workspaceLoaded = false;
+          //   this.loadExtraState({
+          //     "shapeParamToId": {
+          //         "r": "SHAPE0",
+          //         "y": "SHAPE1",
+          //         "x": "SHAPE2"
+          //     },
+          //     "lastShapeIdGen": 3,
+          //     "numSimulateFields": 1,
+          //     "simulateParamToId": {},
+          //     "lastSimulateIdGen": 2,
+          //     "numEffectFields": 1,
+          //     "effectParamToId": {},
+          //     "lastEffectIdGen": 0,
+          //     "sditk": [
+          //         "3"
+          //     ],
+          //     "editk": [
+          //         "3"
+          //     ],
+          //     "lastShape": "0"
+          //   });
+          //   window.workspaceLoaded = true;
+          //   return;
+          // }
+
           // basic idea is to append param inputs like they're new as like done in the validators
 
           // shape
@@ -997,9 +1023,15 @@ export default {
         validate: function(newValue) {
           const block = this.getSourceBlock();
           let itemDif = newValue - block.lastItemsAmt;
-          block.lastItemsAmt = newValue;
 
           if(isNaN(itemDif) === true || itemDif === 0) return;
+
+          // if the block is a non-empty shadow list with numbers
+          if(block.isShadow() === true && block.childBlocks_.length !== 0 && block.childBlocks_[0].type !== 'create_list'){
+            return null;
+          }
+
+          block.lastItemsAmt = newValue;
 
           if(itemDif < 0){
             // remove last

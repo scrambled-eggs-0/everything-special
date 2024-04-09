@@ -5,7 +5,6 @@ window.hasLoadedNewMusic = false;
 let lastLoadedLink;
 let audioIframe;
 let lastPlayTime = 0;
-const outputPane = document.getElementById('outputPane') ?? document.body;
 
 // TODO: optimize? "sub" time takes about 1ms, so we could optimize by statically creating an element
 window.stopMusic = async (toAwait=false) => {
@@ -43,8 +42,8 @@ window.playMusic = async (link) => {
     audioIframe = document.createElement('iframe');
     audioIframe.frameborder = "0";
     audioIframe.setAttribute("frameBorder", "0");
-    audioIframe.width = 1;
-    audioIframe.height = 1;
+    audioIframe.width = 0;
+    audioIframe.height = 0;
     
     const videoId = link.split('?v=')[1];
     audioIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&enablejsapi=1`;
@@ -52,9 +51,11 @@ window.playMusic = async (link) => {
     audioIframe.allow = "autoplay";
     audioIframe.security = "restricted";
 
+    audioIframe.style.position = "fixed";
+
     // this is about 1ms...
     // console.time("sub");
-    outputPane.appendChild(audioIframe);
+    document.body.appendChild(audioIframe);
     // console.timeEnd("sub");
 
     lastPlayTime = Date.now();
