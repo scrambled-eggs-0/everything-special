@@ -13,6 +13,22 @@
 // }
 // emojis.push(["\u2705", "\u2705"], ["\u26C5", "\u26C5"], ["\u{1F300}", "\u{1F300}"]);
 
+const decoPaths = [window.jewelBoxUrl, /*'arrow.png',*/ 'https://static.wikia.nocookie.net/geometry-dash/images/0/01/RegularBlock01.png'];
+const decoOptions = []; 
+for(let i = 0; i < decoPaths.length; i++){
+  if(decoPaths[i].slice(0,4) === 'http'){
+    decoOptions.push([{src: decoPaths[i], width: 50, height: 50, alt: 'jewelBox'}, decoPaths[i]]);
+  } else {
+    // insert a placeholder so that there's no "invalid dropdown options" setting
+    decoOptions.push(['[unloaded image]', decoPaths[i]]);
+    import(`../client/gfx/decorations/${decoPaths[i]}`).then(data => {
+      const o = data.default;
+      decoOptions[i] = [{src: o, width: 50, height: 50, alt: decoPaths[i].split('.')[0]}, decoPaths[i]];
+    });
+  }
+}
+const getDecoOptions = ()=>{if(decoOptions.length === 0){return [[{src: window.jewelBoxUrl, width: 50, height: 50, alt: 'jewelBox'}, window.jewelBoxUrl]]}return decoOptions};
+
 export default {
   blockData: [
     // {
@@ -437,7 +453,7 @@ export default {
     'create_obstacle',
     'get_parameter',
     'set_parameter',
-    'create_list'
+    'create_list',
   ],
   JSBlockData: [
     // create_obstacle
@@ -574,6 +590,7 @@ export default {
           }
 
           this.removeInput('EFFECT_CUSTOM_FN', true);
+          this.removeInput('DECO_DROPDOWN_CONTAINER', true);
 
           this.effectParamToId = {};
 
@@ -716,6 +733,8 @@ export default {
           // Custom
           if(oldValue === '3'){
             this.removeInput('EFFECT_CUSTOM_FN', true);
+          } else if(oldValue === '21'){
+            this.removeInput('DECO_DROPDOWN_CONTAINER', true);
           }
 
           let insertionIndex = this.getIndexOfInput(`EFFECT_CONTAINER${dropdownId}`) + 1;
@@ -727,6 +746,13 @@ export default {
             // this.inputList.splice(insertionIndex++, 0, this.inputList.pop())
 
             this.appendStatementInput('EFFECT_CUSTOM_FN');
+            this.inputList.splice(insertionIndex++, 0, this.inputList.pop())
+            return insertionIndex;
+          } else if(newValue === '21'){
+            this.appendDummyInput("DECO_DROPDOWN_CONTAINER")
+              .appendField('decoration: ')
+              .appendField(new Blockly.FieldDropdown(getDecoOptions), "DECO_DROPDOWN");
+            
             this.inputList.splice(insertionIndex++, 0, this.inputList.pop())
             return insertionIndex;
           }
@@ -783,34 +809,7 @@ export default {
         },
         
         loadExtraState: function(state) {
-          // console.log('calling');
-          // if(window.workspaceLoaded === true){
-          //   window.workspaceLoaded = false;
-          //   this.loadExtraState({
-          //     "shapeParamToId": {
-          //         "r": "SHAPE0",
-          //         "y": "SHAPE1",
-          //         "x": "SHAPE2"
-          //     },
-          //     "lastShapeIdGen": 3,
-          //     "numSimulateFields": 1,
-          //     "simulateParamToId": {},
-          //     "lastSimulateIdGen": 2,
-          //     "numEffectFields": 1,
-          //     "effectParamToId": {},
-          //     "lastEffectIdGen": 0,
-          //     "sditk": [
-          //         "3"
-          //     ],
-          //     "editk": [
-          //         "3"
-          //     ],
-          //     "lastShape": "0"
-          //   });
-          //   window.workspaceLoaded = true;
-          //   return;
-          // }
-
+          if(window.workspaceLoaded === true) return;
           // basic idea is to append param inputs like they're new as like done in the validators
 
           // shape
@@ -916,6 +915,12 @@ export default {
               // Custom
               if(dropdownValue === '3'){
                 this.appendStatementInput('EFFECT_CUSTOM_FN');
+                this.inputList.splice(insertionIndex++, 0, this.inputList.pop());
+                continue;
+              } else if(dropdownValue === '21'){
+                this.appendDummyInput("DECO_DROPDOWN_CONTAINER")
+                  .appendField('decoration: ')
+                  .appendField(new Blockly.FieldDropdown(getDecoOptions), "DECO_DROPDOWN");
                 this.inputList.splice(insertionIndex++, 0, this.inputList.pop());
                 continue;
               }
@@ -1064,7 +1069,7 @@ export default {
           this.validate.bind({getSourceBlock: () => {return this;}})(newValue);
         }
       }
-    }
+    },
   ]
 }
 

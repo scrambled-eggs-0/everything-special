@@ -49,42 +49,9 @@ const Order = Object.freeze({
 
 const forBlock = Object.create(null);
 
-const cachedCreate = {};
-
-// IMPORTANT: this function runs like 15 times! Please optimize this!! PLEASE!!!!!!!!!!
-// TODO: cache result for fast lookup
+// Scrapped because building strings isn't expensive and we still have to get all the data to compare it to the hash.
+// const cachedCreate = {};
 forBlock['create_obstacle'] = function(block, generator) {
-  // const innerCode = generator.statementToCode(block, 'CODE_INSIDE', Order.ATOMIC);
-
-  // if(cachedCreate[innerCode] === undefined){
-  //   const innerStatements = innerCode.split('\n');
-  //   let shape = '0';
-  //   let simulates = '';
-  //   let effects = ',0';
-  //   let params = 'x:450,y:800,r:30';
-    
-  //   for(let i = 0; i < innerStatements.length; i++){
-  //     if(innerStatements[i][0] === 's'){
-  //       shape = innerStatements[i].slice(1);
-  //     } else if(innerStatements[i][0] === 'i'){
-  //       innerStatements[i][0] = ',';
-  //       simulates += innerStatements[i];
-  //     } else if(innerStatements[i][0] === 'e'){
-  //       innerStatements[i][0] = ',';
-  //       effects += innerStatements[i];
-  //     } else {
-  //       params += innerStatements[i];
-  //     }
-  //   }
-
-  //   cachedCreate[innerCode] = `${shape},[${simulates.slice(1)}],[${effects.slice(1)}],{${params}}`;
-  // }
-  
-  // return `E(${cachedCreate[innerCode]});`;
-
-  // if(block.shapeKeys === undefined) return '';
-
-  // TODO (NEW): cachedCreate!
   const shape = block.getFieldValue('SHAPE_DROPDOWN', Order.NONE);
 
   const simulatesLen = block.getFieldValue('NUM_SIMULATES_DROPDOWN', Order.NONE);
@@ -139,6 +106,11 @@ forBlock['create_obstacle'] = function(block, generator) {
   if(ef.length !== 0){
     // player, res, o. Maybe in future there could be things with res? Like specific blocks like "bound player" that only works in an effect block for ex.
     params += `ef:(_, __, e)=>{\n${ef}},`;
+  }
+
+  const dd = block.getFieldValue('DECO_DROPDOWN', Order.NONE);
+  if(dd !== null){
+    params += `decoFilePath:"${dd}",`;
   }
 
   params += '}';

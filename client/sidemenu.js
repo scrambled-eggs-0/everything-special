@@ -235,24 +235,47 @@ function smoothstep(t){
 }
 
 let settingsDrag = false; // whether the user is in the midst of a settings drag
+let settingsDragMove = false; // whether the gear is being dragged around
+let minDragDistSq = 40 ** 2;
+
+let lastMouseX, lastMouseY;
+lastMouseX = lastMouseY = 0;
 
 window.addSideMenuEvtListeners = () => {
     window.mouseDownFunctions.push(() => {
         if(hoveringOverCog === true) {
             settingsDrag = true;
             dragging = false;
+
+            lastMouseX = window.mouseX;
+            lastMouseY = window.mouseY;
         } else {
             settingsDrag = false;
 
             if(hoverFn !== undefined) {hoverFn(); dragging = false;}
         }
     })
+
+    window.mouseMoveFunctions.push(() => {
+        if(settingsDrag === true){
+            if(settingsDragMove === true || ((lastMouseX - window.mouseX) ** 2 + (lastMouseY - window.mouseY) ** 2 > minDragDistSq)){
+                settingsDragMove = true;
+                gearX = window.mouseX;
+                gearY = window.mouseY;
+            }
+        }
+    })
     
     window.mouseUpFunctions.push(() => {
-        if(settingsDrag === true && hoveringOverCog === true) {
+        if(settingsDrag === true && hoveringOverCog === true && settingsDragMove === false) {
             toggleSettingsMenu();
         }
+        // resetting to satisfying position if the gear is close
+        if(settingsDragMove === true && gearX > 800-gearRadius/2 && gearY > 1500-gearRadius/2){
+            gearX = 850; gearY = 1550;
+        }
         settingsDrag = false;
+        settingsDragMove = false;
     })
 }
 

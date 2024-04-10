@@ -21,7 +21,7 @@ const isEditor = typeof location === 'undefined' ? false : (location.origin.ends
 const memoizedColors = {};
 
 function blendColor(color1, color2, t) {
-	const memoizedIndex = color1 + '_' + color2 + '_' + t
+	const memoizedIndex = color1 + '_' + color2 + '_' + t;
 	if (memoizedColors[memoizedIndex] !== undefined) {
 		return memoizedColors[memoizedIndex];
 	}
@@ -56,6 +56,8 @@ function componentToHex(c) {
 // 	return 2*da % max - da;
 // }
 
+window.jewelBoxUrl = 'https://upload.wikimedia.org/wikipedia/commons/c/c3/A_Snapshot_of_the_Jewel_Box_cluster_with_the_ESO_VLT.jpg';
+window.decorationImgs = {};
 if(typeof Image !== 'undefined'){
 	window.arrowImg = new Image();
 	window.starImg = new Image();
@@ -69,7 +71,7 @@ if(typeof Image !== 'undefined'){
 	} else {
 		// client
 		window.arrowImg.src = './gfx/arrow.png';
-		window.starImg.src = 'https://upload.wikimedia.org/wikipedia/commons/c/c3/A_Snapshot_of_the_Jewel_Box_cluster_with_the_ESO_VLT.jpg';
+		window.starImg.src = window.jewelBoxUrl;
 	}
 } else {
 	// server

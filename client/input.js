@@ -13,6 +13,7 @@ window.mouseX = -1;
 window.mouseY = -1;
 window.scrollLocked = false;
 window.mouseDownFunctions = [];
+window.mouseMoveFunctions = [];
 window.mouseUpFunctions = [];
 window.mouseOut = false;
 window.pageX = -1;
@@ -53,6 +54,10 @@ window.onmousemove = (e) => {
     } else if(window.mouseY > canvas.height){
         window.mouseY = canvas.height;
         window.mouseOut = true;
+    }
+
+    for(let i = 0; i < window.mouseMoveFunctions.length; i++){
+        window.mouseMoveFunctions[i]();
     }
 
     // scrolling

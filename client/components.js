@@ -659,6 +659,10 @@ const initEffectMap = [
     /*solidColor*/
     (o, params) => {
         o.hex = params.hex;
+    },
+    /*decoration*/
+    (o, params) => {
+        o.decoFilePath = params.decoFilePath;
     }
 ]
 
@@ -913,7 +917,9 @@ const effectMap = [
         }
     },
     /*solidColor*/
-    (p, res, o) => {}
+    (p, res, o) => {},
+    /*decoration*/
+    (p, res, o) => {},
 ]
 
 const idleEffectMap = [
@@ -990,6 +996,8 @@ const idleEffectMap = [
     undefined,
     // 'solidColor'
     undefined,
+    // 'decoration'
+    undefined
 ]
 
 window.effectConstraintsMap = [
@@ -1035,6 +1043,8 @@ window.effectConstraintsMap = [
     undefined,
     /*solidColor*/
     undefined,
+    /*decoration*/
+    undefined,
 ]
 
 window.effectMapI2N = [
@@ -1058,7 +1068,8 @@ window.effectMapI2N = [
     'timeTrap',
     'changeSize',
     'changeSpeed',
-    'solidColor'
+    'solidColor',
+    'decoration'
 ]
 
 window.effectDefaultMap = [
@@ -1162,7 +1173,9 @@ window.effectDefaultMap = [
     // solidColor
     {
         hex: '#FFFFFF'
-    }
+    },
+    // decoration
+    {},
 ]
 
 const renderEffectMap = [
@@ -1577,6 +1590,48 @@ const renderEffectMap = [
     (o) => {
         ctx.fillStyle = o.hex;
         if(o.isText === true)ctx.globalAlpha = 0;
+    },
+    /*decoration*/
+    (o) => {
+        const decoImg = decorationImgs[o.decoFilePath];
+        if(decoImg === undefined){
+            decorationImgs[o.decoFilePath] = 'loading';
+            let img = new Image();
+            if(o.decoFilePath.slice(0,4) === 'http'){
+                img.src = o.decoFilePath;
+                img.onload = () => {
+                    decorationImgs[o.decoFilePath] = img;
+                }
+            } else {
+                if(isEditor === true){
+                    import(`./gfx/decorations/${o.decoFilePath}`).then(data => {
+                        img.src = data.default;
+                        decorationImgs[o.decoFilePath] = img;
+                    });
+                } else {
+                    img.src = `./gfx/decorations/${o.decoFilePath}`;
+                    img.onload = () => {
+                        decorationImgs[o.decoFilePath] = img;
+                    }
+                }
+            }
+            return;
+        } else if(decoImg === 'loading') {
+            return;
+        }
+
+        let [middleX, middleY] = generateTopLeftCoordinates(o);
+        middleX += o.dimensions.x / 2;
+        middleY += o.dimensions.y / 2;
+        const maxDimension = Math.max(o.dimensions.x, o.dimensions.y);
+
+        ctx.translate(middleX, middleY);
+        if(o.rotation !== undefined) ctx.rotate(o.rotation);
+        ctx.drawImage(decoImg, -maxDimension / 2, -maxDimension / 2, maxDimension, maxDimension);
+        if(o.rotation !== undefined) ctx.rotate(-o.rotation);
+        ctx.translate(-middleX, -middleY);
+
+        ctx.toFill = false;
     }
 ]
 
