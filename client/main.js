@@ -51,7 +51,7 @@ window.render = () => {
 }
 
 window.tileSize = 100; // 50
-let opaqIndex, len, lastPlayerX, lastPlayerY, lastPlayerRadius, lastGA, j = false;
+let opaqIndex, len, lastPlayerX, lastPlayerY, lastPlayerRadius, lastGA, j = false, lastNLDX = 0, lastNLDY = 0;
 function _render(os, cols, playerData=undefined){
     ctx.fillStyle = cols.background;
     ctx.fillRect(0,0,canvas.width, canvas.height);
@@ -158,7 +158,13 @@ function _render(os, cols, playerData=undefined){
     if(player.renderRadius >= 0) ctx.fill();
     else {
         // negative radius
-        ctx.setLineDash([12, 30]);
+        const diameter = 2 * Math.PI * Math.abs(lastPlayerRadius);
+        const timesAround = Math.floor(diameter / 42);
+        if(timesAround !== 0){
+            lastNLDX = lastNLDX * 0.96 + 2/7*diameter/timesAround * 0.04;
+            lastNLDY = lastNLDY * 0.96 + 5/7*diameter/timesAround * 0.04;
+            ctx.setLineDash([lastNLDX, lastNLDY]);
+        }
         ctx.lineDashOffset = -window.time / 26;
         ctx.strokeStyle = ctx.fillStyle;
         ctx.lineWidth = 8;
