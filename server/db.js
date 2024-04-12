@@ -10,7 +10,7 @@ let db;
 let connected = false;
 let bucket;
 let fileCollection;
-let metdataCollection;
+let metadataCollection;
 let creatorCollection;
 
 async function run() {
@@ -20,7 +20,7 @@ async function run() {
         db = client.db("Omni");
         bucket = new GridFSBucket(db);
         fileCollection = db.collection("fs.files");
-        metdataCollection = db.collection("metadata");
+        metadataCollection = db.collection("metadata");
         creatorCollection = db.collection("creators");
 
         connected = true;
@@ -74,7 +74,7 @@ async function uploadFileAnalytics(fileName, buffer, fileContent, textContent, u
 
     // addStatsToCreator(metaData);
 
-    metdataCollection.insertOne(metaData);
+    metadataCollection.insertOne(metaData);
 }
 
 async function addFileToCreator(fileName, username, hashedPassword){
@@ -119,9 +119,10 @@ async function uploadFile(buffer, fileContent, textContent, username, hashedPass
 // TEMP!!!!!
 
 // fileName will be determined by the python ai thing, later
-function getFile(filename){
+function getFile(fileName){
+    metadataCollection.updateOne({fileName}, {$inc: {views: 1}});
     // console.log('filename', filename);
-    return bucket.openDownloadStreamByName(filename);
+    return bucket.openDownloadStreamByName(fileName);
 }
 
 let fileNames = ['test.js'];
@@ -130,19 +131,19 @@ async function getAllFileNames(){
         if(err) console.log('err :(', err);
         return result;
     });
-    return arr.map(f => f.filename);
+    return arr.map(f => f.filename).filter(fn => !fn.startsWith('pfp_'));
 }
 
 // temp, for mvp. TODO: remove for prod
 function getRandomFileName(){
-    return fileNames[Math.floor(Math.random() * fileNames.length)]
+    return fileNames[Math.floor(Math.random() * fileNames.length)];
 }
 
 async function createAccount(username, hashedPassword, profilePic=undefined, pfpFileType=undefined){
     const nameTaken = await creatorCollection.findOne({username});
     if(nameTaken) return false;
     const newAccount = {
-        username, hashedPassword, levels: [], trackRecord: 0.5, followers: 0
+        username, hashedPassword, levels: [], trackRecord: 0.5, followers: 0, liked: {}, disliked: {}
     }
     if(profilePic !== undefined){
         const fileName = `pfp_${randomString(16)}.${pfpFileType}`;
@@ -184,16 +185,49 @@ async function getRecentFileNames(username, amount=5){
 }
 
 async function getCreator(fileName){
-    // when we clear the db, do this (untested)
-    // return (await metdataCollection.findOne({fileName})).creator;
-
-    return 'test2';
+    return (await metadataCollection.findOne({fileName})).creator;
 }
 
 async function getProfilePic(creatorName){
     const creator = await creatorCollection.findOne({username: creatorName});
     if(creator?.pfp === undefined) return false;
     return bucket.openDownloadStreamByName(creator.pfp);
+}
+
+async function toggleLike(fileName, username, hashedPassword){
+    const user = await creatorCollection.findOne({username, hashedPassword});
+    if(!user) return false;
+    
+    // remove the .js
+    fileName = fileName.slice(0, fileName.length-3);
+
+    // const fileData = await metadataCollection.findOne({fileName});
+    if(user.liked[fileName] === undefined){
+        metadataCollection.updateOne({fileName}, {$inc: {likes: 1}});
+        creatorCollection.updateOne({username}, { $set: {[`liked.${fileName}`]: true}});
+    } else {
+        metadataCollection.updateOne({fileName}, {$inc: {likes: -1}});
+        creatorCollection.updateOne({username}, { $unset: {[`liked.${fileName}`]: true}});
+    }
+    return true;
+}
+
+async function toggleDislike(fileName, username, hashedPassword){
+    const user = await creatorCollection.findOne({username, hashedPassword});
+    if(!user) return false;
+    
+    // remove the .js
+    fileName = fileName.slice(0, fileName.length-3);
+
+    // const fileData = await metadataCollection.findOne({fileName});
+    if(user.disliked[fileName] === undefined){
+        metadataCollection.updateOne({fileName}, {$inc: {dislikes: 1}});
+        creatorCollection.updateOne({username}, { $set: {[`disliked.${fileName}`]: true}});
+    } else {
+        metadataCollection.updateOne({fileName}, {$inc: {dislikes: -1}});
+        creatorCollection.updateOne({username}, { $unset: {[`disliked.${fileName}`]: true}});
+    }
+    return true;
 }
 
 export default {
@@ -204,5 +238,7 @@ export default {
     getUserData,
     getRecentFileNames,
     getCreator,
-    getProfilePic
+    getProfilePic,
+    toggleLike,
+    toggleDislike
 };

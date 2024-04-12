@@ -54,7 +54,12 @@ const forBlock = Object.create(null);
 forBlock['create_obstacle'] = function(block, generator) {
   const shape = block.getFieldValue('SHAPE_DROPDOWN', Order.NONE);
 
-  const simulatesLen = block.getFieldValue('NUM_SIMULATES_DROPDOWN', Order.NONE);
+  let simulatesLen = block.getFieldValue('NUM_SIMULATES_DROPDOWN', Order.NONE);
+  let effectsLen = block.getFieldValue('NUM_EFFECTS_DROPDOWN', Order.NONE);
+
+  if(Number.isFinite(simulatesLen) === false) simulatesLen = 0;
+  if(Number.isFinite(effectsLen) === false) effectsLen = block.lastEffectsLen ?? 1;
+  else block.lastEffectsLen = effectsLen;
 
   let simulates = '[';
   if(simulatesLen === 0){
@@ -65,8 +70,6 @@ forBlock['create_obstacle'] = function(block, generator) {
     }
     simulates += block.getFieldValue(`SIMULATE_DROPDOWN${simulatesLen-1}`, Order.NONE) + ']';
   }
-
-  const effectsLen = block.getFieldValue('NUM_EFFECTS_DROPDOWN', Order.NONE);
 
   let effects = '[';
   if(effectsLen === 0){
@@ -263,9 +266,9 @@ forBlock['player_y'] = function (block, generator) {
 // };
 
 forBlock['bg_color'] = function (block, generator) {
-  const tile = block.getFieldValue('TILE_COLOR', Order.NONE);
-  const bg = block.getFieldValue('BG_COLOR', Order.NONE);
-  return `colors.background="${bg}"; colors.tile="${tile}";\n`;
+  const tile = generator.valueToCode(block, 'TILE_COLOR', Order.NONE);
+  const bg = generator.valueToCode(block, 'BG_COLOR', Order.NONE);
+  return `colors.background=${bg}; colors.tile=${tile};\n`;
 };
 
 // forBlock['bg_image'] = function (block, generator) {
@@ -294,7 +297,7 @@ forBlock['get_parameter'] = function (block, generator) {
   if(parentBlock === null) return '';
   if(window.getParentBlockOfType(parentBlock) === null) return '';
   const parameter = block.getFieldValue('INPUT', Order.NONE);
-  if(parameter === 'INVALID') return '';
+  // if(parameter === 'INVALID') return '';
   if(parameter === 'x'){
     return [`generateTopLeftCoordinates(e)[0]`, Order.NONE];
   } else if(parameter === 'y'){
@@ -318,5 +321,19 @@ forBlock['set_parameter'] = function (block, generator) {
   }
   return `e.${parameter} = ${value};\n`;
 };
+
+forBlock['colour_rgb'] = function (block, generator) {
+  return [`colourRgb(${generator.valueToCode(block, 'RED', Order.NONE)},${generator.valueToCode(block, 'GREEN', Order.NONE)},${generator.valueToCode(block, 'BLUE', Order.NONE)})`, Order.NONE];
+}
+
+window.colourRgb = (r,g,b) => {
+  r = Math.max(Math.min(Number(r), 100), 0) * 2.55;
+  g = Math.max(Math.min(Number(g), 100), 0) * 2.55;
+  b = Math.max(Math.min(Number(b), 100), 0) * 2.55;
+  r = ('0' + (Math.round(r) || 0).toString(16)).slice(-2);
+  g = ('0' + (Math.round(g) || 0).toString(16)).slice(-2);
+  b = ('0' + (Math.round(b) || 0).toString(16)).slice(-2);
+  return '#' + r + g + b;
+}
 
 export default forBlock;

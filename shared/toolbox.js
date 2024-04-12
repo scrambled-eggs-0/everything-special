@@ -49,6 +49,21 @@ export default /*const toolbox =*/ {
         },
         {
           'kind': 'block',
+          'type': 'get_parameter'
+        },
+        {
+          'kind': 'block',
+          'type': 'set_parameter'
+        },
+      ],
+    },
+    {
+      'kind': 'category',
+      'name': 'Game',
+      'categorystyle': 'game_category',
+      'contents': [
+        {
+          'kind': 'block',
           'type': 'set_music',
           'inputs': {
             'URL': {
@@ -64,14 +79,6 @@ export default /*const toolbox =*/ {
         {
           'kind': 'block',
           'type': 'stop_music'
-        },
-        {
-          'kind': 'block',
-          'type': 'get_parameter'
-        },
-        {
-          'kind': 'block',
-          'type': 'set_parameter'
         },
         {
           'kind': 'block',

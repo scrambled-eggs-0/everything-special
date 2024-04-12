@@ -38,8 +38,6 @@ const zoom = {
   pinch: true
 };
 
-// Set up UI elements and inject Blockly
-const codeDiv = document.getElementById('generatedCode').firstChild;
 const blocklyDiv = document.getElementById('blocklyDiv');
 
 const theme = Blockly.Theme.defineTheme('defaultTheme', {
@@ -55,7 +53,10 @@ const theme = Blockly.Theme.defineTheme('defaultTheme', {
     //   'colour': '#07ced9'
     // }
     'obstacle_category': {
-      'colour': '#00626e'//'#07ced9'
+      'colour': 194
+    },
+    'game_category': {
+      'colour': 121//'#07ced9'
     }
   },
   // 'componentStyles': {...},
@@ -68,12 +69,10 @@ function getCode(){
 }
 window.getCode = getCode;
 
-const runCode = () => {
+let runCode = () => {
   window.loopTrap = 1000;
 
   const code = getCode();
-
-  codeDiv.innerText = code;
 
   window.resetGame();
   window.hasLoadedNewMusic = false;
@@ -83,7 +82,23 @@ const runCode = () => {
   if(window.hasLoadedNewMusic === false){
     window.stopMusic();
   }
+
+  return code;
 };
+
+if(location.origin === 'http://localhost:8080'){
+  const outputPane = document.getElementById('outputPane');
+  const generatedCodeContainer = document.createElement('pre');
+  generatedCodeContainer.id = "generatedCode";
+  const codeDiv = document.createElement('code');
+  generatedCodeContainer.appendChild(codeDiv);
+  let oldRunCode = runCode;
+  runCode = () => {
+    const code = oldRunCode();
+    codeDiv.innerText = code;
+  }
+  outputPane.insertBefore(generatedCodeContainer, outputPane.firstChild);
+}
 
 const ws = window.ws = Blockly.inject(blocklyDiv, {toolbox, zoom, theme});
 load(ws);
@@ -144,7 +159,6 @@ window.uploadCode = () => {
     loginWindow.src = childWindowOrigin;
     loginWindow.classList.add('loginWindow');
     const handleMessage = function(event) {
-      console.log(event, event.origin);
       if (event.origin === location.origin) {
         loginWindow.remove();
         window.removeEventListener('message', handleMessage);
@@ -193,7 +207,6 @@ window.requestIdleCallback(() => {
   const newPasteShortcut = {
     ...oldPasteShortcut,
     callback(workspace) {
-      // this causes errors somehow... TODO: fix and allow pasting
       window.workspaceLoaded = false;
       const returnVal = oldPasteShortcut.callback.call(this, workspace);
       window.workspaceLoaded = true;
@@ -207,7 +220,6 @@ window.requestIdleCallback(() => {
   const newUndoShortcut = {
     ...oldUndoShortcut,
     callback(workspace) {
-      // this causes errors somehow... TODO: fix and allow pasting
       window.workspaceLoaded = false;
       const returnVal = oldUndoShortcut.callback.call(this, workspace);
       window.workspaceLoaded = true;

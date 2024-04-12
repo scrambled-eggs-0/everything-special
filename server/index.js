@@ -227,7 +227,6 @@ app.get("/getPfp/:username", async (res, req) => {
     }
 
     downloadStream.on('data', (chunk) => {
-        if(aborted === true) return;
         res.cork(() => {
             res.write(chunk);
         })
@@ -242,6 +241,7 @@ app.get("/getPfp/:username", async (res, req) => {
 
     downloadStream.on('error', (error) => {
         if(aborted === true) return;
+        downloadStream.abort();
         aborted = true;
         res.cork(() => {
             console.error('Error fetching file from GridFS:', error);
@@ -396,7 +396,6 @@ app.get('/game', (res, req) => {
     let closed = false;
 
     downloadStream.on('data', (chunk) => {
-        if(closed === true) return;
         res.cork(() => {
             res.write(chunk);
         })
@@ -419,6 +418,7 @@ app.get('/game', (res, req) => {
     });
 
     res.onAborted(() => {
+        downloadStream.abort();
         console.log('aborted!!');
         closed = true;
     });
@@ -431,11 +431,9 @@ app.get('/game/:filename', (res, req) => {
     // temp, just serving a random file. TODO: in prod remove async and cache serving somehow??
     const downloadStream = db.getFile(fileName);
 
-    // hack, TODO fix later?
     let closed = false;
 
     downloadStream.on('data', (chunk) => {
-        if(closed === true) return;
         res.cork(() => {
             res.write(chunk);
         })
@@ -458,6 +456,7 @@ app.get('/game/:filename', (res, req) => {
     });
 
     res.onAborted(() => {
+        downloadStream.abort();
         console.log('aborted!!');
         closed = true;
     });
@@ -601,13 +600,35 @@ app.get("/gfx/:filename", (res, req) => {
     }
 });
 
+app.get("/gfx/decorations/:filename", (res, req) => {
+    let path = 'client' + req.getUrl();
+
+    if (fs.existsSync(path)) {
+        // Read and serve the file
+        const file = fs.readFileSync(path);
+        res.end(file);
+    } else {
+        // File not found
+        res.writeStatus('404 Not Found');
+        res.end();
+    }
+});
+
 app.post('/like/:filename', (res, req) => {
-    console.log('someone likes ' + req.getParameter(0));
+    const username = req.getHeader('u');
+    const hashedPassword = req.getHeader('hp');
+
+    db.toggleLike(req.getParameter(0), username, hashedPassword);
+
     res.cork(()=>{res.end();});
 })
 
 app.post('/dislike/:filename', (res, req) => {
-    console.log('someone dislikes ' + req.getParameter(0));
+    const username = req.getHeader('u');
+    const hashedPassword = req.getHeader('hp');
+
+    db.toggleDislike(req.getParameter(0), username, hashedPassword);
+
     res.cork(()=>{res.end();});
 })
 // we'll have a post request handler here that will take file content and upload it to the db

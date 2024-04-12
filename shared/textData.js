@@ -13,18 +13,24 @@
 // }
 // emojis.push(["\u2705", "\u2705"], ["\u26C5", "\u26C5"], ["\u{1F300}", "\u{1F300}"]);
 
-const decoPaths = [window.jewelBoxUrl, /*'arrow.png',*/ 'https://static.wikia.nocookie.net/geometry-dash/images/0/01/RegularBlock01.png'];
+const decoPaths = [window.jewelBoxUrl, 'arrow.png', 'https://static.wikia.nocookie.net/geometry-dash/images/0/01/RegularBlock01.png'];
 const decoOptions = []; 
-for(let i = 0; i < decoPaths.length; i++){
-  if(decoPaths[i].slice(0,4) === 'http'){
-    decoOptions.push([{src: decoPaths[i], width: 50, height: 50, alt: 'jewelBox'}, decoPaths[i]]);
-  } else {
-    // insert a placeholder so that there's no "invalid dropdown options" setting
+if(typeof location !== 'undefined'){
+  for(let i = 0; i < decoPaths.length; i++){
+    if(decoPaths[i].slice(0,4) === 'http'){
+      decoOptions.push([{src: decoPaths[i], width: 50, height: 50, alt: 'jewelBox'}, decoPaths[i]]);
+    } else {
+      // insert a placeholder so that there's no "invalid dropdown options" setting
+      decoOptions.push(['[unloaded image]', decoPaths[i]]);
+      import(`../client/gfx/decorations/${decoPaths[i]}`).then(data => {
+        const o = data.default;
+        decoOptions[i] = [{src: o, width: 50, height: 50, alt: decoPaths[i].split('.')[0]}, decoPaths[i]];
+      });
+    }
+  }
+} else {
+  for(let i = 0; i < decoPaths.length; i++){
     decoOptions.push(['[unloaded image]', decoPaths[i]]);
-    import(`../client/gfx/decorations/${decoPaths[i]}`).then(data => {
-      const o = data.default;
-      decoOptions[i] = [{src: o, width: 50, height: 50, alt: decoPaths[i].split('.')[0]}, decoPaths[i]];
-    });
   }
 }
 const getDecoOptions = ()=>{if(decoOptions.length === 0){return [[{src: window.jewelBoxUrl, width: 50, height: 50, alt: 'jewelBox'}, window.jewelBoxUrl]]}return decoOptions};
@@ -235,27 +241,27 @@ export default {
     //   "previousStatement": null,
     //   "nextStatement" : null
     // },
-    {
-      "type": "bg_color",
-      "message0": "Set background color to %1\nand tile color to %2",
-      "args0": [
-        {
-          "type": "field_input",
-          "name": "BG_COLOR",
-          "text": '#310f99',
-          "spellcheck": false
-        },
-        {
-          "type": "field_input",
-          "name": "TILE_COLOR",
-          "text": '#1d0a57',
-          "spellcheck": false
-        }
-      ],
-      "colour": '194',
-      "previousStatement": null,
-      "nextStatement" : null,
-    },
+    // {
+    //   "type": "bg_color",
+    //   "message0": "Set background color to %1\nand tile color to %2",
+    //   "args0": [
+    //     {
+    //       "type": "field_input",
+    //       "name": "BG_COLOR",
+    //       "text": '#310f99',
+    //       "spellcheck": false
+    //     },
+    //     {
+    //       "type": "field_input",
+    //       "name": "TILE_COLOR",
+    //       "text": '#1d0a57',
+    //       "spellcheck": false
+    //     }
+    //   ],
+    //   "colour": '121',
+    //   "previousStatement": null,
+    //   "nextStatement" : null,
+    // },
     // {
     //   'type': 'bg_image',
     //   'message0': 'Set background image to %1',
@@ -284,7 +290,7 @@ export default {
       ],
       'previousStatement': null,
       'nextStatement': null,
-      "colour": '194',
+      "colour": '121',
       'tooltip': 'sets the music to a url on the internet. A music url should look something like: https://youtube.com/watch?v=SOMEDIGITS. You must interact with the webpage before the audio can play.',
       'helpUrl': '',
     },
@@ -294,7 +300,7 @@ export default {
       'args0': [],
       'previousStatement': null,
       'nextStatement': null,
-      "colour": '194',
+      "colour": '121',
       'tooltip': 'stops music if it is playing',
       'helpUrl': '',
     },
@@ -335,7 +341,7 @@ export default {
       'message0': 'mouse x position',
       'args0': [],
       'output': 'Number',
-      'colour': '194',
+      'colour': '121',
       'tooltip': 'the horizontal position of the mouse, ranging from 0 to 900',
       'helpUrl': '',
     },
@@ -344,7 +350,7 @@ export default {
       'message0': 'mouse y position',
       'args0': [],
       'output': 'Number',
-      'colour': '194',
+      'colour': '121',
       'tooltip': 'the vertical position of the mouse, ranging from 0 to 1600',
       'helpUrl': '',
     },
@@ -353,7 +359,7 @@ export default {
       'message0': 'player x position',
       'args0': [],
       'output': 'Number',
-      'colour': '194',
+      'colour': '121',
       'tooltip': 'the horizontal position of the player, ranging from 0 to 1600',
       'helpUrl': '',
     },
@@ -362,7 +368,7 @@ export default {
       'message0': 'player y position',
       'args0': [],
       'output': 'Number',
-      'colour': '194',
+      'colour': '121',
       'tooltip': 'the vertical position of the player, ranging from 0 to 1600',
       'helpUrl': '',
     },
@@ -454,6 +460,7 @@ export default {
     'get_parameter',
     'set_parameter',
     'create_list',
+    'bg_color'
   ],
   JSBlockData: [
     // create_obstacle
@@ -990,8 +997,6 @@ export default {
         },
 
         validateParamDropdown: function(newValue) {
-          if(newValue === 'INVALID') return newValue;
-
           const childBlock = this.getSourceBlock();
           const field = childBlock.getInput("VALUE");
 
@@ -1070,6 +1075,82 @@ export default {
         }
       }
     },
+
+    // bg_color
+    // {
+    //   "type": "bg_color",
+    //   "message0": "Set background color to %1\nand tile color to %2",
+    //   "args0": [
+    //     {
+    //       "type": "field_input",
+    //       "name": "BG_COLOR",
+    //       "text": '#310f99',
+    //       "spellcheck": false
+    //     },
+    //     {
+    //       "type": "field_input",
+    //       "name": "TILE_COLOR",
+    //       "text": '#1d0a57',
+    //       "spellcheck": false
+    //     }
+    //   ],
+    //   "colour": '121',
+    //   "previousStatement": null,
+    //   "nextStatement" : null,
+    // },
+    function(Blockly) {
+      return {
+        init: function() {
+          this.setColour('121');
+
+          this.setNextStatement(true, null);
+          this.setPreviousStatement(true, null);
+
+          this.appendValueInput("BG_COLOR")
+            .appendField("Set background color to:")
+            .setCheck("Colour").setShadowDom(Blockly.utils.xml.textToDom(
+              `<shadow type="colour_rgb">
+              <value name="RED">
+                <shadow type="math_number">
+                  <field name="NUM">19</field>
+                </shadow>
+              </value>
+              <value name="GREEN">
+                <shadow type="math_number">
+                  <field name="NUM">6</field>
+                </shadow>
+              </value>
+              <value name="BLUE">
+                <shadow type="math_number">
+                  <field name="NUM">60</field>
+                </shadow>
+              </value>
+            </shadow>`));
+
+          this.appendValueInput("TILE_COLOR")
+            .appendField("Set grid lines color to:")
+            .setCheck("Colour")
+            .setShadowDom(Blockly.utils.xml.textToDom(
+              `<shadow type="colour_rgb">
+              <value name="RED">
+                <shadow type="math_number">
+                  <field name="NUM">11</field>
+                </shadow>
+              </value>
+              <value name="GREEN">
+                <shadow type="math_number">
+                  <field name="NUM">4</field>
+                </shadow>
+              </value>
+              <value name="BLUE">
+                <shadow type="math_number">
+                  <field name="NUM">34</field>
+                </shadow>
+              </value>
+            </shadow>`));
+        },
+      }
+    },
   ]
 }
 
@@ -1081,10 +1162,32 @@ window.generateShadowBlock = (value) => {
       `<field name="NUM">${value}</field>` +
     '</shadow>'
   } else if(type === 'string') {
-    if(value[0] === '#'){
-      return '<shadow type="colour_picker">' +
-        `<field name="COLOUR">${value}</field>` +
-      '</shadow>'
+    if(value[0] === '#' && (value.length === 4 || value.length === 7)){
+      let r, g, b;
+      if(value.length === 4){r=parseInt(value[1],16)*16;g=parseInt(value[2],16)*16;b=parseInt(value[3],16)*16;}else{r=parseInt(value[1]+value[2],16);g=parseInt(value[3]+value[4],16);b=parseInt(value[5]+value[6],16);}
+      if(Number.isFinite(r+g+b) === false){
+        return '<shadow type="text">' +
+          `<field name="TEXT">${value}</field>` +
+        '</shadow>';
+      }
+      r = Math.max(0,Math.min(100,Math.round(r / 2.55))); g = Math.max(0,Math.min(100,Math.round(g / 2.55))); b = Math.max(0,Math.min(100,Math.round(b / 2.55)));
+      return `<shadow type="colour_rgb">
+        <value name="RED">
+          <shadow type="math_number">
+            <field name="NUM">${r}</field>
+          </shadow>
+        </value>
+        <value name="GREEN">
+          <shadow type="math_number">
+            <field name="NUM">${g}</field>
+          </shadow>
+        </value>
+        <value name="BLUE">
+          <shadow type="math_number">
+            <field name="NUM">${b}</field>
+          </shadow>
+        </value>
+      </shadow>`;
     }
     return '<shadow type="text">' +
       `<field name="TEXT">${value}</field>` +
@@ -1126,13 +1229,13 @@ function generateParameterDropdownOptions(childBlock, isPlug=false){
   if(isPlug === false) block = window.getParentBlockOfType(childBlock);///*.getSourceBlock()*/.getSurroundParent();
   else {
     let firstParent = childBlock.getParent();
-    if(firstParent === null) return [['x', 'INVALID'], ['y', 'INVALID']];
+    if(firstParent === null) return [['x', 'x'], ['y', 'y']];
     block = window.getParentBlockOfType(firstParent);
   }
 
-  if(block === null) return [['x', 'INVALID'], ['y', 'INVALID']];
+  if(block === null) return [['x', 'x'], ['y', 'y']];
   const shape = block.getFieldValue('SHAPE_DROPDOWN');
-  if(shape === null) return [['x', 'INVALID'], ['y', 'INVALID']];// TODO: r for circle type
+  if(shape === null) return [['x', 'x'], ['y', 'y']];// TODO: r for circle type
 
   const params = {};
 

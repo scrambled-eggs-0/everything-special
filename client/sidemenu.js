@@ -1,3 +1,6 @@
+import Utils from './utils.js';
+const { until } = Utils;
+
 let gearImageRotation = 0, renderGearImageRotation = 0;
 let gearImgLoaded = false;
 let gearRadius = 60, gearX = 850, gearY = 1550;
@@ -33,10 +36,10 @@ thumbImg.onload = () => {
 
 gearImg.onload = () => {gearImgLoaded = true;}
 
-function generateModifiedImg(img, col='black', alpha=1){
+function generateModifiedImg(img, col='black'){
     if(img.complete === false){
         setTimeout(() => {
-            generateModifiedImg(img, col, alpha);
+            generateModifiedImg(img, col);
         }, 200)
         return;
     }
@@ -45,9 +48,7 @@ function generateModifiedImg(img, col='black', alpha=1){
     const x = c.getContext('2d');
     c.width = img.width;
     c.height = img.height;
-    x.globalAlpha = alpha;
     x.drawImage(img, 0, 0);
-    x.globalAlpha = 1;
     x.globalCompositeOperation = 'source-atop';
     x.fillStyle = col;
     x.fillRect(0,0,c.width,c.height);
@@ -55,7 +56,6 @@ function generateModifiedImg(img, col='black', alpha=1){
     let newImg = new Image();
     newImg.src = c.toDataURL();
     newImg.generatedCol = col;
-    newImg.alpha = alpha;
     return newImg;
 }
 
@@ -63,6 +63,15 @@ let liked = false;
 let disliked = false;
 let messageAlpha = 0;
 let messageText = '';
+let username = localStorage.getItem('username');
+let hashedPassword = localStorage.getItem('hashedPassword');
+let likedLevels = {}; let dislikedLevels = {};
+requestIdleCallback(() => {
+    const likedLevelsArr = (localStorage.getItem('likedLevels')??"").split('|');
+    const dislikedLevelsArr = (localStorage.getItem('dislikedLevels')??"").split('|');
+    for(let i = 0; i < likedLevelsArr.length; i++){ likedLevels[likedLevelsArr[i]] = true; }
+    for(let i = 0; i < dislikedLevelsArr.length; i++){ dislikedLevels[dislikedLevelsArr[i]] = true; }
+})
 
 // 250 w by 250 h
 const iconData = [
@@ -91,28 +100,47 @@ const iconData = [
         x: 100, y: 550,
         imgScale: 1.2,
         img: () => {return likeImg;},
-        hoverFn: () => {
+        hoverFn: async () => {
+            await processLogin();
+            const headers = new Headers();
+            headers.append('u', username);
+            headers.append('hp', hashedPassword);
+
             fetch(`${location.origin}/like/${window.levelFileName}`, {
-                method: 'POST',
+                method: 'POST', headers
             })  .then(_ => {
                     liked = !liked;
-                    likeImg = generateModifiedImg(thumbImg, 'green', liked === true ? 0.5 : 2);
+                    const withoutTheJs = window.levelFileName.slice(0, window.levelFileName.length-3);
+                    console.log({lfn: window.levelFileName, withoutTheJs});
+                    if(liked === true) likedLevels[withoutTheJs] = true;
+                    else delete likedLevels[withoutTheJs];
+                    localStorage.setItem('likedLevels', Object.keys(likedLevels).join('|'));
                 }).catch(e => { console.error('err: ',e);});
         },
+        imgAlphaFn: () => {return liked === true ? 0.67 : 1},
         textFn: () => {return liked === true ? 'Unlike' : 'Like'}
     },
     {
         x: 550, y: 550,
         imgScale: 1.2,
         img: () => {return dislikeImg;},
-        hoverFn: () => {
+        hoverFn: async () => {
+            await processLogin();
+            const headers = new Headers();
+            headers.append('u', username);
+            headers.append('hp', hashedPassword);
+
             fetch(`${location.origin}/dislike/${window.levelFileName}`, {
-                method: 'POST',
+                method: 'POST', headers
             })  .then(_ => {
                     disliked = !disliked;
-                    dislikeImg = generateModifiedImg(thumbImg, 'red', disliked === true ? 0.5 : 2);
+                    const withoutTheJs = window.levelFileName.slice(0, window.levelFileName.length-3);
+                    if(disliked === true) dislikedLevels[withoutTheJs] = true;
+                    else delete dislikedLevels[withoutTheJs];
+                    localStorage.setItem('dislikedLevels', Object.keys(dislikedLevels).join('|'));
                 }).catch(e => { console.error('err: ',e);});
         },
+        imgAlphaFn: () => {return disliked === true ? 0.67 : 1},
         textFn: () => {return disliked === true ? 'Un-dislike' : 'Dislike'},
         label: 'Dislike'
     },
@@ -141,6 +169,42 @@ const iconData = [
         text: 'Close',
     }
 ]
+
+async function processLogin(){
+    if(username !== null) return true;
+
+    const childWindowOrigin = `${location.origin}/account`;
+
+    let clientLoggedIn = false;
+
+    const loginWindow = document.createElement('iframe');
+    loginWindow.src = childWindowOrigin;
+    loginWindow.classList.add('loginWindow');
+    const handleMessage = function(event) {
+        if (event.origin === location.origin) {
+            loginWindow.remove();
+            window.removeEventListener('message', handleMessage);
+            clientLoggedIn = true;
+        }
+    }
+    window.addEventListener('message', handleMessage);
+
+    document.body.appendChild(loginWindow);
+
+    await until(()=>{return clientLoggedIn});
+
+    username = localStorage.getItem('username');
+    hashedPassword = localStorage.getItem('hashedPassword');
+
+    return true;
+    // const headers = new Headers();
+    // headers.append('u', localStorage.getItem('username'));
+    // headers.append('hp', localStorage.getItem('hashedPassword'));
+    // // plgn = player login
+    // fetch(`${location.origin}/plgn`, {
+    //     method: 'POST', headers
+    // }).catch(e=>{console.error('err: ',e);});
+}
 
 export default function drawUi(canvas, ctx, isLast=false){
     if((window.mouseX - gearX) ** 2 + (window.mouseY - gearY) ** 2 < gearRadius ** 2 / 4){
@@ -183,6 +247,7 @@ export default function drawUi(canvas, ctx, isLast=false){
         hoverFn = undefined;
         for(let i = 0; i < iconData.length; i++){
             const d = iconData[i];
+            if(d.imgAlphaFn !== undefined) ctx.globalAlpha = d.imgAlphaFn();
             if(d.imgScale !== undefined){
                 ctx.translate(d.x+125, d.y+125);
                 ctx.scale(d.imgScale, d.imgScale);
@@ -195,6 +260,7 @@ export default function drawUi(canvas, ctx, isLast=false){
             } else {
                 ctx.drawImage(d.img(), d.x, d.y, 250, 250);
             }
+            ctx.globalAlpha = 1;
 
             ctx.font = `${d.fontSize ?? 56}px Inter`;
             ctx.fillStyle = 'white';
@@ -241,7 +307,7 @@ let minDragDistSq = 40 ** 2;
 let lastMouseX, lastMouseY;
 lastMouseX = lastMouseY = 0;
 
-window.addSideMenuEvtListeners = () => {
+window.addSideMenuEvtListeners = (nextFileName) => {
     window.mouseDownFunctions.push(() => {
         if(hoveringOverCog === true) {
             settingsDrag = true;
@@ -277,6 +343,10 @@ window.addSideMenuEvtListeners = () => {
         settingsDrag = false;
         settingsDragMove = false;
     })
+
+    const withoutTheJs = nextFileName.slice(0, nextFileName.length-3);
+    liked = likedLevels[withoutTheJs] === true;
+    disliked = dislikedLevels[withoutTheJs] === true;
 }
 
 function toggleSettingsMenu() {

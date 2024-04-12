@@ -187,6 +187,7 @@ const satMap = [
     /*polygon*/
     (p) => {
         // points: [[x,y], ...]
+        if(p.points.length < 2) p.points = window.satDefaultMap[2].points;
         p.x = 0; p.y = 0;
         const s = new SAT.Polygon(new SAT.Vector(), p.points.map(pt => new SAT.Vector(pt[0], pt[1])));
         s.pos.x = p.x;
@@ -310,7 +311,7 @@ window.satDefaultMap = [
     {
         x: 450,
         y: 800,
-        text: ['Why hello there', 'I am a text :D', 'Evades X'][Math.floor(Math.random() * 3)],
+        text: ['Why hello there', 'I am a text :D', 'Evades X', 'Taste the Edge.'][Math.floor(Math.random() * 4)],
         fontSize: 80,
     }
 ]
@@ -350,6 +351,7 @@ const initSimulateMap = [
 		o.currentPoint = Math.floor(init.currentPoint);
         
 		o.path = init.path;// like [[x,y,speed], ...]
+        if(o.path.length < 2) o.path = window.simulateDefaultMap[0].path;
 
         o.pointOn = o.path[o.currentPoint];
         o.speed = o.pointOn[2];
@@ -1362,9 +1364,12 @@ const renderEffectMap = [
             ctx.clip();
             let [topLeftX, topLeftY] = generateTopLeftCoordinates(o);
 
+            const offsetX = (window.time * o.platformerForce * Math.cos(o.platformerAngle) / 10) % 100 - 100;
+            const offsetY = (window.time * o.platformerForce * Math.sin(o.platformerAngle) / 10) % 100 - 100;
+
             ctx.globalAlpha = 1;
-            for(let x = topLeftX + 50; x <= topLeftX + o.dimensions.x + 50; x += 100){
-                for(let y = topLeftY + 50; y <= topLeftY + o.dimensions.y + 50; y += 100){
+            for(let x = topLeftX + offsetX + 50; x <= topLeftX + o.dimensions.x + 50; x += 100){
+                for(let y = topLeftY + offsetY + 50; y <= topLeftY + o.dimensions.y + 50; y += 100){
                     ctx.translate(x,y);
                     ctx.rotate(o.platformerAngle+Math.PI/2);
                     ctx.drawImage(window.arrowImg, -50, -50, 100, 100);

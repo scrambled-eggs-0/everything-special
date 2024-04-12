@@ -58,7 +58,7 @@ function _render(os, cols, playerData=undefined){
 
     // render tiles
     ctx.strokeStyle = cols.tile;
-    ctx.lineWidth = window.isEditor === true ? 4 : 2;
+    ctx.lineWidth = isEditor === true ? 4 : 2;
 
     for (let x = 0; x < canvas.width + ctx.lineWidth + window.tileSize; x += window.tileSize) {
         ctx.beginPath();

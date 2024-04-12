@@ -10,3 +10,13 @@ canvas{
 body {
     background-color: #121212;
 }
+
+.loginWindow {
+    width: 100vw;
+    height: 100vh;
+    border: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999999;
+}

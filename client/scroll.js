@@ -146,7 +146,7 @@ window.resetGame = () => {
     window.mouseDownFunctions.push(() => {
         if(player.dead === true) window.respawnPlayer();
     })
-    if(window.addSideMenuEvtListeners !== undefined) window.addSideMenuEvtListeners();
+    if(window.addSideMenuEvtListeners !== undefined) window.addSideMenuEvtListeners(nextFileName);
     window.spawnPosition.x = 100;
     window.spawnPosition.y = 1500;
     player.sat.r = 49.5;
