@@ -379,10 +379,14 @@ const initSimulateMap = [
     },
     // /*rotate*/
     (o, init) => {
-        o.rotateSpeed = init.rotateSpeed;
         o.pivotX = init.pivotX;
         o.pivotY = init.pivotY;
         o.rotation = 0;
+        if(init.initialRotation !== 0 && init.initialRotation !== undefined){
+            o.rotateSpeed = init.initialRotation * Math.PI / 180;
+            simulateMap[1](o);
+        }
+        o.rotateSpeed = init.rotateSpeed;
     },
     // /*grow*/
     (o, init) => {
@@ -512,6 +516,7 @@ window.simulateDefaultMap = [
     },
     // rotate
     {
+        initialRotation: 0,
         rotateSpeed: 0.01,
         pivotX: 450,
         pivotY: 800
@@ -1212,6 +1217,7 @@ const renderEffectMap = [
     },
     /*customImage*/
     (o) => {
+        ctx.toFill = false;
         if(o.imgLoaded === false) return;
 
         ctx.cleanUpFunction = () => {
@@ -1598,6 +1604,8 @@ const renderEffectMap = [
     },
     /*decoration*/
     (o) => {
+        ctx.toFill = false;
+
         const decoImg = decorationImgs[o.decoFilePath];
         if(decoImg === undefined){
             decorationImgs[o.decoFilePath] = 'loading';
@@ -1635,8 +1643,6 @@ const renderEffectMap = [
         ctx.drawImage(decoImg, -maxDimension / 2, -maxDimension / 2, maxDimension, maxDimension);
         if(o.rotation !== undefined) ctx.rotate(-o.rotation);
         ctx.translate(-middleX, -middleY);
-
-        ctx.toFill = false;
     }
 ]
 

@@ -16,7 +16,7 @@ window.scrollAnimation = 1;
 
 window.defaultColors = {
     tile: '#1b9456',//'#0d0d0d',// the stroke and outside of arena
-    background: blendColor('#1ea761', '#1b9456', -0.34)//'#5260ab'//'#41ba56'//'#383838',// the fillcolor
+    background: '#1fad64'//blendColor('#1ea761', '#1b9456', -0.34)//'#5260ab'//'#41ba56'//'#383838',// the fillcolor
 }
 
 window.colors = {

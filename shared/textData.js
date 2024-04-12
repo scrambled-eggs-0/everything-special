@@ -817,6 +817,12 @@ export default {
         
         loadExtraState: function(state) {
           if(window.workspaceLoaded === true) return;
+
+          if(window.importNeedsStructuredClone !== undefined){
+            state.shapeParamToId = structuredClone(state.shapeParamToId);
+            state.simulateParamToId = structuredClone(state.simulateParamToId);
+            state.effectParamToId = structuredClone(state.effectParamToId);
+          }
           // basic idea is to append param inputs like they're new as like done in the validators
 
           // shape
@@ -947,6 +953,7 @@ export default {
           }
 
           const block = this;
+
           window.onWorkspaceLoadFunctions.push(() => {
             for(let i = 0; i < simulateOptionsToNull.length; i++){
               block.simulateOptions[simulateOptionsToNull[i]] = null;
@@ -970,7 +977,15 @@ export default {
 
           this.appendDummyInput()
             .appendField('get obstacle ')
-            .appendField(new Blockly.FieldDropdown(()=>{return generateParameterDropdownOptions(block, true)}), 'INPUT');
+            .appendField(new Blockly.FieldDropdown(()=>{return generateParameterDropdownOptions(block, true)}, this.validateParamDropdown), 'INPUT');
+        },
+
+        validateParamDropdown: function(newValue) {
+          const childBlock = this.getSourceBlock();
+          if(childBlock.defaults !== undefined){
+            childBlock.setOutput(true, generateConnectionType(childBlock.defaults[newValue]));
+          } 
+          return newValue;
         },
       }
     },
@@ -1000,7 +1015,10 @@ export default {
           const childBlock = this.getSourceBlock();
           const field = childBlock.getInput("VALUE");
 
-          field.setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(childBlock.defaults[newValue])));
+          field
+            .setCheck(null)
+            .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(childBlock.defaults[newValue])))
+            .setCheck(generateConnectionType(childBlock.defaults[newValue]));
 
           return newValue;
         },
@@ -1012,9 +1030,7 @@ export default {
       return {
         init: function() {
           this.setColour('#4a148c');//#b094e3 <- default
-          this.setOutput(true);
-
-          this.setOutput('Array');
+          this.setOutput(true, 'Array');
 
           this.lastItemsAmt = 3;
 
@@ -1297,7 +1313,8 @@ const excludedKeys = {
   renderEffect: true,
   renderEffectTimer: true,
   rotation: true,
-  lastBrokeTime: true
+  lastBrokeTime: true,
+  timeTrapIntersecting: true
 };
 
 // TODO: constraints. SnapDistance shouldn't be negative (could be abs'ed which could be a type of constraint) but some stuff just needs to stay between 0,1, e.g. decay

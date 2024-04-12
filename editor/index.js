@@ -207,9 +207,13 @@ window.requestIdleCallback(() => {
   const newPasteShortcut = {
     ...oldPasteShortcut,
     callback(workspace) {
+      window.onWorkspaceLoadFunctions.length = 0;
       window.workspaceLoaded = false;
+      window.importNeedsStructuredClone = true;
       const returnVal = oldPasteShortcut.callback.call(this, workspace);
       window.workspaceLoaded = true;
+      delete window.importNeedsStructuredClone;
+      for(let i = 0; i < window.onWorkspaceLoadFunctions.length; i++) window.onWorkspaceLoadFunctions[i]();
       return returnVal;
     }
   }
@@ -220,9 +224,13 @@ window.requestIdleCallback(() => {
   const newUndoShortcut = {
     ...oldUndoShortcut,
     callback(workspace) {
+      window.onWorkspaceLoadFunctions.length = 0;
       window.workspaceLoaded = false;
+      window.importNeedsStructuredClone = true;
       const returnVal = oldUndoShortcut.callback.call(this, workspace);
       window.workspaceLoaded = true;
+      delete window.importNeedsStructuredClone;
+      for(let i = 0; i < window.onWorkspaceLoadFunctions.length; i++) window.onWorkspaceLoadFunctions[i]();
       return returnVal;
     }
   }
