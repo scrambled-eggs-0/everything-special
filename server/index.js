@@ -37,6 +37,20 @@ app.get('/', (res, req) => {
     })
 });
 
+app.get("/standalone/gfx/decorations/:filename", (res, req) => {
+    let path = 'client/gfx/decorations/' + req.getParameter(0);
+
+    if (fs.existsSync(path)) {
+        // Read and serve the file
+        const file = fs.readFileSync(path);
+        res.end(file);
+    } else {
+        // File not found
+        res.writeStatus('404 Not Found');
+        res.end();
+    }
+});
+
 app.get("/standalone/gfx/:filename", (res, req) => {
     let fileName = req.getParameter(0);
     let path = 'client/gfx/' + fileName;
