@@ -245,6 +245,9 @@ window.enterClearCheckMode = () => {
     window.spawnPosition.y = 1500;
     window.respawnPlayer();
     window.inClearCheckMode = true;
+    if(document.activeElement.classList.contains('blocklyHtmlInput') === true){
+        document.activeElement.blur();
+    }
     createModeBg.classList.remove('hidden');
     canvas.remove();
     createModeBg.appendChild(canvas);

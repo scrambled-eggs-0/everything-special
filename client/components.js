@@ -73,7 +73,6 @@ let res = new SAT.Response();
 let collided = false;
 function simulate(){
     // player simulation
-    player.renderRadius = player.renderRadius * 0.83 + player.sat.r * 0.17;
     if(window.dragging === true && player.dead === false){
         distSq = (window.mouseY - player.pos.y) ** 2 + (window.mouseX - player.pos.x) ** 2;
         if(player.speed ** 2 < distSq) speed = player.speed;
@@ -114,6 +113,7 @@ function simulate(){
             }
         }
     } else {
+        player.renderRadius = player.renderRadius * 0.83 + player.sat.r * 0.17;
         for(let i = 0; i < obstacles.length; i++){
             // collision (done before simulation because that is what last rendered frame sees)
             // TODO: bounding box check
