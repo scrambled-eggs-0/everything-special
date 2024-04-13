@@ -7,8 +7,9 @@ let previewX = 0;
 let previewY = 0;
 let previewShape = -1;
 let previewPolygonPoints = [];
-let previewText = '';
+let previewText = ''; let previewFontSize = 80;
 let isDragging = false;
+let generatorInit = false;
 window.inClearCheckMode = false;
 // let newBlockPos = {x: 0, y: 0};
 // let createBlockWidth = 0;
@@ -42,9 +43,10 @@ createModeBtn.onclick = () => {
         previewShape = parseInt(block.getFieldValue('SHAPE_DROPDOWN'));
         if(previewShape === 2) previewPolygonPoints.length = 0;
         else if(previewShape === 3) {
-            window.generator.init(window.ws);
+            if(generatorInit === false) {generatorInit = true; window.generator.init(window.ws);}
             previewText = window.generator.valueToCode(createBlock, createBlock.shapeParamToId['text'], 0);
             previewText = previewText.slice(1, previewText.length - 1);
+            previewFontSize = parseFloat(window.generator.valueToCode(createBlock, createBlock.shapeParamToId['fontSize'], 0));
         }
 
         // const createBlockPos = block.getRelativeToSurfaceXY();
@@ -150,9 +152,24 @@ createModeBg.onclick = () => {
         } else if(previewShape === 3){
             newBlock.getInput(newBlock.shapeParamToId['x']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(window.mouseX))));
             newBlock.getInput(newBlock.shapeParamToId['y']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(window.mouseY))));
+            newBlock.getInput(newBlock.shapeParamToId['text']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(previewText)));
+            newBlock.getInput(newBlock.shapeParamToId['fontSize']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(previewFontSize)));
         } else {
             console.error('previewShapeToObs not defined | createMode.js');
         }
+
+        if(generatorInit === false) {generatorInit = true; window.generator.init(window.ws);}
+
+        for(let key in lastBlock.simulateParamToId){
+            const shadow = lastBlock.getInput(lastBlock.simulateParamToId[key]).connection.getShadowDom(true).cloneNode(true);
+            newBlock.getInput(newBlock.simulateParamToId[key]).setShadowDom(shadow);
+        }
+
+        for(let key in lastBlock.effectParamToId){
+            const shadow = lastBlock.getInput(lastBlock.effectParamToId[key]).connection.getShadowDom(true).cloneNode(true);
+            newBlock.getInput(newBlock.effectParamToId[key]).setShadowDom(shadow);
+        }
+        
 
         isDragging = false;
         // console.log(newBlock.shapeParamToId['x'])
@@ -218,13 +235,16 @@ window.render = () => {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.lineWidth = 4;
+        ctx.font = `${previewFontSize}px Inter`;
 
         const dimensions = ctx.measureText(previewText);
+        const w = dimensions.actualBoundingBoxRight + dimensions.actualBoundingBoxLeft;
         const h = dimensions.actualBoundingBoxDescent + dimensions.actualBoundingBoxAscent;
+        const wOffset = (dimensions.actualBoundingBoxRight - dimensions.actualBoundingBoxLeft) / 2;
         const hOffset = (dimensions.actualBoundingBoxDescent - dimensions.actualBoundingBoxAscent) / 2;
-        ctx.rect(x - dimensions.width / 2, y - h/2 + hOffset, dimensions.width, h);
+        ctx.rect(x - w/2, y - h/2, w, h);
 
-        ctx.strokeText(previewText, x, y);
+        ctx.strokeText(previewText, x - wOffset * (window.wOffsetMult??1), y - hOffset * (window.hOffsetMult??1));
 
         ctx.lineWidth = 8;
 

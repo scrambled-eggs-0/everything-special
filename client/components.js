@@ -10,7 +10,8 @@ window.respawnPlayer = () => {
     player.renderRadius = 0;
     player.dead = false;
     player.forces.length = 0;
-    window.onmouseup();
+    if(dragging === true) {window.onmouseup(); dragging = true;}
+    else window.onmouseup();
 }
 
 const SAT = window.SAT;
@@ -73,6 +74,7 @@ let res = new SAT.Response();
 let collided = false;
 function simulate(){
     // player simulation
+    player.renderRadius = player.renderRadius * 0.83 + player.sat.r * 0.17;
     if(window.dragging === true && player.dead === false){
         distSq = (window.mouseY - player.pos.y) ** 2 + (window.mouseX - player.pos.x) ** 2;
         if(player.speed ** 2 < distSq) speed = player.speed;
@@ -113,7 +115,6 @@ function simulate(){
             }
         }
     } else {
-        player.renderRadius = player.renderRadius * 0.83 + player.sat.r * 0.17;
         for(let i = 0; i < obstacles.length; i++){
             // collision (done before simulation because that is what last rendered frame sees)
             // TODO: bounding box check
@@ -148,6 +149,7 @@ function simulate(){
 
     // bounding the player by the walls
     player.touchingWall = false;
+    if(player.sat.r > 900) player.sat.r = 900;
     if(player.pos.x - player.sat.r < 0){
         player.pos.x = player.sat.r;
         player.touchingWall = true;
@@ -200,8 +202,9 @@ const satMap = [
         ctx.textBaseline = 'middle';
         ctx.font = `${p.fontSize}px Inter`;
         const dimensions = ctx.measureText(p.text);
+        const w = dimensions.actualBoundingBoxRight + dimensions.actualBoundingBoxLeft;
         const h = dimensions.actualBoundingBoxDescent + dimensions.actualBoundingBoxAscent;
-        const s = new SAT.Box(new SAT.Vector(p.x - dimensions.width / 2, p.y - h / 2), dimensions.width, h).toPolygon();
+        const s = new SAT.Box(new SAT.Vector(p.x - w / 2, p.y - h / 2), w, h).toPolygon();
         return s;
     }
 ];
@@ -234,9 +237,10 @@ function generateDimensions(o){
         ctx.font = `${o.fontSize}px Inter`;
         const dimensions = ctx.measureText(o.text);
         return {
-            x: dimensions.width,
+            x: dimensions.actualBoundingBoxRight + dimensions.actualBoundingBoxLeft,
+            wOffset: (dimensions.actualBoundingBoxRight - dimensions.actualBoundingBoxLeft) / 2,
             y: dimensions.actualBoundingBoxDescent + dimensions.actualBoundingBoxAscent,
-            hOffset: (dimensions.actualBoundingBoxDescent - dimensions.actualBoundingBoxAscent) / 2
+            hOffset: (dimensions.actualBoundingBoxDescent - dimensions.actualBoundingBoxAscent) / 2// *0.75?
         }
     }
     

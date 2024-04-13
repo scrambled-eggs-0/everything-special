@@ -26,7 +26,7 @@ window.onmousedown = () => {
     dragStartTime = Date.now();
     
     for(let i = 0; i < window.mouseDownFunctions.length; i++){
-        window.mouseDownFunctions[i]()
+        window.mouseDownFunctions[i]();
     }
 }
 

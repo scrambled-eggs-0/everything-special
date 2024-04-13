@@ -318,7 +318,7 @@ window.addSideMenuEvtListeners = (nextFileName) => {
         } else {
             settingsDrag = false;
 
-            if(hoverFn !== undefined) {hoverFn(); dragging = false;}
+            if(hoverFn !== undefined) {hoverFn(); dragging = false; }
         }
     })
 
