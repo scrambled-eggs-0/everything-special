@@ -307,7 +307,8 @@ forBlock['get_parameter'] = function (block, generator) {
 };
 
 forBlock['set_parameter'] = function (block, generator) {
-  if(window.getParentBlockOfType(block) === null) return '';
+  const parentBlock = window.getParentBlockOfType(block);
+  if(parentBlock === null) return '';
   const parameter = block.getFieldValue('INPUT', Order.NONE);
   if(parameter === 'INVALID') return '';
   const value = generator.valueToCode(block, 'VALUE', Order.NONE);
@@ -319,8 +320,51 @@ forBlock['set_parameter'] = function (block, generator) {
   } else if(parameter === 'y'){
     return `e.pos.y += ${value} - generateTopLeftCoordinates(e)[1];\n`;
   }
-  return `e.${parameter} = ${value};\n`;
+  
+  // we can't directly know what parmaeter corresponds to what. So, let's just look up all the shape, simulates, and effects in their corresponding maps and find out which one holds the constraints
+  const shape = parentBlock.getFieldValue('SHAPE_DROPDOWN', Order.NONE);
+  let simulatesLen = parentBlock.getFieldValue('NUM_SIMULATES_DROPDOWN', Order.NONE);
+  let effectsLen = parentBlock.getFieldValue('NUM_EFFECTS_DROPDOWN', Order.NONE);
+
+  let constraints;
+  let constraintsMap = window.satConstraintsMap[shape];
+  if(constraintsMap !== undefined)constraints = constraintsMap[parameter];
+
+  if(constraints === undefined){
+    for(let i = 0; i < simulatesLen; i++){
+      const simulate = parentBlock.getFieldValue(`SIMULATE_DROPDOWN${i}`, Order.NONE);
+      constraintsMap = window.simulateConstraintsMap[simulate];
+      if(constraintsMap !== undefined && constraintsMap[parameter] !== undefined){
+        constraints = constraintsMap[parameter];
+        break;
+      }
+    }
+  }
+  
+  if(constraints === undefined){
+    for(let i = 0; i < effectsLen; i++){
+      const effect = parentBlock.getFieldValue(`EFFECT_DROPDOWN${i}`, Order.NONE);
+      constraintsMap = window.effectConstraintsMap[effect];
+      if(constraintsMap !== undefined && constraintsMap[parameter] !== undefined){
+        constraints = constraintsMap[parameter];
+        break;
+      }
+    }
+  }
+
+  if(constraints === undefined){
+    return `e.${parameter} = ${value};\n`;
+  }
+
+  return `e.${parameter} = ${value};cset(e,"${parameter}",[${constraints.toString()}])\n`;
 };
+
+// constrain-set
+window.cset = (e, key, c) => {
+  if(c[2] === true) e[key] = Math.round(e[key]);
+  if(e[key] < c[0]) e[key] = c[0];
+  else if(e[key] > c[1]) e[key] = c[1];
+}
 
 forBlock['colour_rgb'] = function (block, generator) {
   return [`colourRgb(${generator.valueToCode(block, 'RED', Order.NONE)},${generator.valueToCode(block, 'GREEN', Order.NONE)},${generator.valueToCode(block, 'BLUE', Order.NONE)})`, Order.NONE];
