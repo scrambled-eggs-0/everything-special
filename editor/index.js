@@ -235,9 +235,13 @@ window.requestIdleCallback(() => {
     }
   }
   Blockly.ShortcutRegistry.registry.register(newUndoShortcut, /*allowOverrides:*/ true);
+  window.onLoopTrap = () => {
+    if(!!confirm("Infinite loop detected. Would you like to undo?")) newUndoShortcut.callback(window.ws);
+  }
+  javascriptGenerator.INFINITE_LOOP_TRAP = 'if(--window.loopTrap == 0){window.onLoopTrap();break;}\n';
 
   // removing the duplicate function from the menu
   Blockly.ContextMenuRegistry.registry.unregister('blockDuplicate');
 }, {timeout: 100})
 
-javascriptGenerator.INFINITE_LOOP_TRAP = 'if(--window.loopTrap == 0) break;\n';
+javascriptGenerator.INFINITE_LOOP_TRAP = 'if(--window.loopTrap == 0)break;\n';
