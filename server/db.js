@@ -185,7 +185,9 @@ async function getRecentFileNames(username, amount=5){
 }
 
 async function getCreator(fileName){
-    return (await metadataCollection.findOne({fileName})).creator;
+    const file = await metadataCollection.findOne({fileName});
+    if(file === null) return null;
+    return file.creator;
 }
 
 async function getProfilePic(creatorName){
@@ -230,6 +232,18 @@ async function toggleDislike(fileName, username, hashedPassword){
     return true;
 }
 
+async function deleteLevel(username, levelName){
+    const file = await fileCollection.findOne({filename: levelName});
+    if(file === null) return;
+    
+    bucket.delete(file._id);
+
+    creatorCollection.updateOne({username}, {$pull: {levels: levelName}});
+    fileNames = fileNames.filter(f => f !== levelName);
+
+    metadataCollection.deleteOne({fileName: levelName});
+}
+
 export default {
     uploadFile,
     getFile,
@@ -240,5 +254,6 @@ export default {
     getCreator,
     getProfilePic,
     toggleLike,
-    toggleDislike
+    toggleDislike,
+    deleteLevel
 };

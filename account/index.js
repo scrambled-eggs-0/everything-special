@@ -33,7 +33,7 @@ createAccountButton.onclick = () => {
         state = 'profile pic';
         pfpChooser.classList.remove('hidden');
         input.classList.add('hidden');
-        title.innerText = 'Choose Profile Pic';
+        title.innerText = 'Choose Profile Pic (Optional)';
         loginButton.classList.add('hidden');
     } else {
         // state is profile pic

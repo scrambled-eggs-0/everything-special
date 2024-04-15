@@ -3,6 +3,8 @@ const mainTitle = document.querySelector('.title');
 const split = location.href.split('/');
 const username = split[split.length-1];
 
+const isOwnProfile = username === localStorage.getItem('username');
+
 mainTitle.innerText = `${username}'s Profile`;
 
 const gameDiv = document.querySelector('.gameDiv');
@@ -33,6 +35,7 @@ fetch(uploadUrl, {
 
             const frameText = document.createElement('div');
             frameText.classList.add('textStyle');
+            frameText.style.fontSize = "80%";
             frameText.innerText = 'View in New Tab';
             frameText.style.top = "auto";
             frameText.style.paddingTop = "0.8vh";
@@ -42,6 +45,37 @@ fetch(uploadUrl, {
             }
 
             frameDiv.appendChild(frameText);
+
+            if(isOwnProfile === true){
+                const deleteText = document.createElement('div');
+                deleteText.classList.add('textStyle');
+                deleteText.innerText = 'Delete Level';
+                deleteText.style.fontSize = "80%";
+                deleteText.style.color = 'red';//'#c70000';
+                deleteText.style.top = "auto";
+                deleteText.style.paddingTop = "0.8vh";
+
+                deleteText.onclick = () => {
+                    const sure = confirm("Are you sure you want to delete this level?");
+                    if(!sure) return;
+
+                    const headers = new Headers();
+                    headers.append('u', localStorage.getItem('username'));
+                    headers.append('hp', localStorage.getItem('hashedPassword'));
+
+                    fetch(location.origin + '/deleteLevel/' + fileNameWithoutTheDotJS, {
+                        method: 'POST',
+                        headers: headers
+                    }).then(async (data) => {
+                        const succeeded = await data.text();
+                        if(succeeded === 'n') {alert('level deletion failed!'); return;}
+                        frameDiv.remove();
+                        alert('level successfully deleted!');
+                    });
+                }
+
+                frameDiv.appendChild(deleteText);
+            }
 
             gameDiv.appendChild(frameDiv);
         }

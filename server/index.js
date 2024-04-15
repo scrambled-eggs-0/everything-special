@@ -222,6 +222,37 @@ app.get("/getFns/:username", async (res, req) => {
     }
 });
 
+app.post("/deleteLevel/:levelName", async (res, req) => {
+    let aborted = false;
+    res.onAborted(() => {
+        aborted = true;
+    });
+
+    const username = req.getHeader('u');
+    const hashedPassword = req.getHeader('hp');
+
+    const levelName = req.getParameter(0) + '.js';
+
+    const creator = await db.getUserData(username, hashedPassword);
+
+    if(creator === null || creator.levels.includes(levelName) === false){
+        if(aborted === false){
+            res.cork(() => {
+                res.end('n');
+            })
+        }
+        return;
+    }
+
+    db.deleteLevel(username, levelName);
+
+    if(aborted === false){
+        res.cork(() => {
+            res.end('y');
+        })
+    }
+});
+
 // get profile picture if any
 app.get("/getPfp/:username", async (res, req) => {
     let aborted = false;
@@ -241,6 +272,7 @@ app.get("/getPfp/:username", async (res, req) => {
     }
 
     downloadStream.on('data', (chunk) => {
+        if(aborted === true) return;
         res.cork(() => {
             res.write(chunk);
         })
@@ -410,6 +442,7 @@ app.get('/game', (res, req) => {
     let closed = false;
 
     downloadStream.on('data', (chunk) => {
+        if(closed === true) return;
         res.cork(() => {
             res.write(chunk);
         })
@@ -448,6 +481,7 @@ app.get('/game/:filename', (res, req) => {
     let closed = false;
 
     downloadStream.on('data', (chunk) => {
+        if(closed === true) return;
         res.cork(() => {
             res.write(chunk);
         })
