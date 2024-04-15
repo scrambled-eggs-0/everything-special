@@ -240,6 +240,10 @@ forBlock['mouse_y'] = function (block, generator) {
   return [`mouseY`, Order.NONE];
 };
 
+forBlock['is_dragging'] = function (block, generator) {
+  return [`dragging`, Order.NONE];
+};
+
 forBlock['player_x'] = function (block, generator) {
   return [`player.pos.x`, Order.NONE];
 };

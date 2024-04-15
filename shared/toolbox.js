@@ -106,6 +106,10 @@ export default /*const toolbox =*/ {
         },
         {
           'kind': 'block',
+          'type': 'is_dragging'
+        },
+        {
+          'kind': 'block',
           'type': 'mouse_x'
         },
         {

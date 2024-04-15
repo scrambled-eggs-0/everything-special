@@ -191,7 +191,7 @@ window.uploadCode = () => {
   }).then(_ => {
         alert('Congrats! Your code was uploaded to the servers!');
         
-        if(!location.origin.startsWith('http://localhost')) ws.clear();
+        if(!location.origin.startsWith('http://localhost')) {ws.clear(); localStorage.removeItem('ws');}
     })
     .catch(error => {
         console.error('Error uploading file:', error);

@@ -9,6 +9,8 @@ let settingsMenuActive = false;
 let settingsGradient;
 let settingsMenuAnimation = 0;
 let hoverFn = undefined;
+let editorRotation = 0;
+let remixRotation = 0;
 
 let gearImg = new Image(); 
 gearImg.src = './gfx/yellowgear.png';
@@ -20,6 +22,10 @@ let thumbImg = new Image();
 thumbImg.src = './gfx/thumbsup.png';
 let likeImg = new Image()
 let dislikeImg = new Image();
+let editorImg = new Image();
+editorImg.src = './gfx/pencil.png';
+let remixImg = new Image();
+remixImg.src = './gfx/paintbrush.png';
 let standaloneImg = new Image();
 standaloneImg.src = './gfx/standalone.png';
 let creatorImg = new Image();
@@ -29,6 +35,8 @@ closeImg.src = './gfx/close.png';
 closeImg.onload = () => {closeImg = generateModifiedImg(closeImg, 'blue');}
 lockImg.onload = () => {lockImg = generateModifiedImg(lockImg, 'red');}
 unlockedImg.onload = () => {unlockedImg = generateModifiedImg(unlockedImg, 'blue');}
+editorImg.onload = () => {editorImg = generateModifiedImg(editorImg, 'red');}
+remixImg.onload = () => {remixImg = generateModifiedImg(remixImg, 'green');}
 thumbImg.onload = () => {
     likeImg = generateModifiedImg(thumbImg, 'green');
     dislikeImg = generateModifiedImg(thumbImg, 'red');
@@ -97,7 +105,7 @@ const iconData = [
         text: 'View Creator'
     },
     {
-        x: 100, y: 550,
+        x: 100, y: 465,
         imgScale: 1.2,
         img: () => {return likeImg;},
         hoverFn: async () => {
@@ -121,7 +129,7 @@ const iconData = [
         textFn: () => {return liked === true ? 'Unlike' : 'Like'}
     },
     {
-        x: 550, y: 550,
+        x: 550, y: 465,
         imgScale: 1.2,
         img: () => {return dislikeImg;},
         hoverFn: async () => {
@@ -145,7 +153,35 @@ const iconData = [
         label: 'Dislike'
     },
     {
-        x: 100, y: 1000,
+        x: 100, y: 830,
+        // fontSize: 38,
+        img: () => {return editorImg;},
+        text: 'Editor',
+        label: 'Editor',
+        imgScale: 1.18,
+        hoverFn: () => {
+            location.replace(location.origin + '/editor');
+        }
+    },
+    {
+        x: 550, y: 830,
+        // fontSize: 38,
+        img: () => {return remixImg;},
+        imgScale: 0.9,
+        text: 'Remix',
+        label: 'Remix',
+        hoverFn: () => {
+            fetch(`${location.origin}/remix/${window.levelFileName}`, {
+                method: 'GET',
+            })  .then(async (d) => {
+                    const levelData = await d.text();
+                    localStorage.setItem('ws', levelData);
+                    location.replace(location.origin + '/editor');
+                }).catch(e => { console.error('err: ',e);});
+        }
+    },
+    {
+        x: 100, y: 1195,
         // fontSize: 38,
         img: () => {return standaloneImg;},
         text: 'Share This Level',
@@ -157,7 +193,7 @@ const iconData = [
         }
     },
     {
-        x: 550, y: 1000,
+        x: 550, y: 1195,
         // fontSize: 38,
         img: () => {return closeImg;},
         hoverFn: () => {
@@ -253,8 +289,12 @@ export default function drawUi(canvas, ctx, isLast=false){
                 ctx.scale(d.imgScale, d.imgScale);
                 if(d.textFn !== undefined) d.text = d.textFn();
                 if(d.label === 'Dislike') ctx.rotate(Math.PI);
+                else if(d.label === 'Editor') ctx.rotate(editorRotation = editorRotation + 0.023);
+                else if(d.label === 'Remix') ctx.rotate(remixRotation = remixRotation - 0.024);
                 ctx.drawImage(d.img(), -125, -125, 250, 250);
                 if(d.label === 'Dislike') ctx.rotate(-Math.PI);
+                else if(d.label === 'Editor') ctx.rotate(-editorRotation);
+                else if(d.label === 'Remix') ctx.rotate(-remixRotation);
                 ctx.scale(1/d.imgScale, 1/d.imgScale);
                 ctx.translate(-d.x-125, -d.y-125);
             } else {

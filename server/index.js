@@ -510,6 +510,44 @@ app.get('/game/:filename', (res, req) => {
     });
 })
 
+app.get('/remix/:filename', (res, req) => {
+    let fileName = req.getParameter(0);
+
+    // temp, just serving a random file. TODO: in prod remove async and cache serving somehow??
+    const downloadStream = db.getRaw(fileName);
+
+    let closed = false;
+
+    downloadStream.on('data', (chunk) => {
+        if(closed === true) return;
+        res.cork(() => {
+            res.write(chunk);
+        })
+    });
+
+    downloadStream.on('end', () => {
+        if(closed === true) return;
+        res.cork(() => {
+            res.end();
+        })
+    });
+
+    downloadStream.on('error', (error) => {
+        if(closed === true) return;
+        closed = true;
+        res.cork(() => {
+            console.error('Error fetching file from GridFS:', error);
+            res.end('Internal Server Error');
+        })
+    });
+
+    res.onAborted(() => {
+        downloadStream.abort();
+        console.log('aborted!!');
+        closed = true;
+    });
+})
+
 app.post('/upload', (res, req) => {
     // uploadState = enum[0: good, 1: aborted, 2: loginFailed]
     let uploadState = 0;

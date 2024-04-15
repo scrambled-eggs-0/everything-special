@@ -91,6 +91,8 @@ async function uploadFile(buffer, fileContent, textContent, username, hashedPass
     const fileName = `${randomString(16)}.js`;
     uploadFileAnalytics(fileName, buffer, fileContent, textContent, username);
     addFileToCreator(fileName, username, hashedPassword);
+
+    // the servable code
     const uploadStream = bucket.openUploadStream(fileName); // , {metadata: {field: 'testfield', value: 'testvalue'}}
     uploadStream.end(buffer);
 
@@ -100,6 +102,14 @@ async function uploadFile(buffer, fileContent, textContent, username, hashedPass
 
     uploadStream.on('error', (error) => {
         console.error('Error uploading file to GridFS:', error);
+    });
+
+    // the exported data from the editor. Used for getting the block data back for remixing.
+    const rawUploadStream = bucket.openUploadStream('raw_' + fileName);
+    rawUploadStream.end(fileContent);
+
+    rawUploadStream.on('error', (error) => {
+        console.error('Error uploading ws raw file to GridFS:', error);
     });
 
     // TEMP
@@ -125,13 +135,17 @@ function getFile(fileName){
     return bucket.openDownloadStreamByName(fileName);
 }
 
+function getRaw(fileName){
+    return bucket.openDownloadStreamByName('raw_' + fileName);
+}
+
 let fileNames = ['test.js'];
 async function getAllFileNames(){
     const arr = await fileCollection.find({}).toArray((err, result) => {
         if(err) console.log('err :(', err);
         return result;
     });
-    return arr.map(f => f.filename).filter(fn => !fn.startsWith('pfp_'));
+    return arr.map(f => f.filename).filter(fn => !fn.startsWith('pfp_') && !fn.startsWith('raw_'));
 }
 
 // temp, for mvp. TODO: remove for prod
@@ -255,5 +269,6 @@ export default {
     getProfilePic,
     toggleLike,
     toggleDislike,
-    deleteLevel
+    deleteLevel,
+    getRaw
 };

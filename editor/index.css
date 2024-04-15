@@ -134,7 +134,7 @@ canvas {
     left: 0;
     right: 0;
     background: rgba(0, 0, 0, 0.82);
-    z-index: 9999;
+    z-index: 999999;
     text-align: center;
     /* display: flex;
     align-items: center;
@@ -270,7 +270,7 @@ hr {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 999999;
+    z-index: 9999999;
 }
 
 .blocklyWidgetDiv {

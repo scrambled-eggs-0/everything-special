@@ -335,7 +335,15 @@ export default {
     //   'previousStatement': null,
     //   'nextStatement': null,
     // },
-
+    {
+      'type': 'is_dragging',
+      'message0': 'is draggging',
+      'args0': [],
+      'output': 'Boolean',
+      'colour': '121',
+      'tooltip': 'true or false depending on if the user is currently dragging',
+      'helpUrl': '',
+    },
     {
       'type': 'mouse_x',
       'message0': 'mouse x position',
