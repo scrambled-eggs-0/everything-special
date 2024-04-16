@@ -247,3 +247,22 @@ window.requestIdleCallback(() => {
 javascriptGenerator.INFINITE_LOOP_TRAP = 'if(--window.loopTrap == 0)break;\n';
 
 ws.registerButtonCallback("returnToMainGame", ()=>{location.replace(location.origin)});
+
+const messageText = document.getElementById('messagetext');
+
+let animationCount = 0;
+window.alert = (msg, toFade=true) => {
+  messageText.innerText = msg;
+  if(toFade === true) {
+    window.fadeAlert();
+  }
+}
+
+window.fadeAlert = () => {
+  requestAnimationFrame(() => {
+    messageText.style.animation = "";
+    requestAnimationFrame(() => {
+      messageText.style.opacity = "0"; messageText.style.animation="fadeOut 1.5s ease-in-out 1";
+    })
+  })
+}

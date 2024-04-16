@@ -21,12 +21,14 @@ const outputPane = document.getElementById('outputPane');
 const publishBtn = document.getElementById('publish');
 const canvas = document.getElementById('canvas');
 createModeBtn.onclick = () => {
-    alert('select a block to mass create!');// probably TEMP, might get some html text like the old "create obstacle" text so that user doesn't have to go thru annoying popup
+    alert('select a block to mass create!', false);
     blocklyDiv.style.cursor = 'crosshair';
     const cl = window.ws.addChangeListener((e) => {
         if(e.blockId === undefined) return;
         const block = window.ws.getBlockById(e.blockId);
         if(block.type !== "create_obstacle") return;
+
+        window.fadeAlert();
 
         const lastPreviousConnection = block.previousConnection.targetConnection;
         const lastNextConnection = block.nextConnection.targetConnection;

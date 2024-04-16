@@ -280,3 +280,22 @@ hr {
 .blocklyFlyoutButton {
     fill: #37823c;
 }
+
+#messagetext {
+    z-index: 10000000;
+    font-size: 4.72vh;/*42px*/
+    font-family: sans-serif;
+    position: fixed;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    margin-top: 6vh;
+    width: 100%;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
