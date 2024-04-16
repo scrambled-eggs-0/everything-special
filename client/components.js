@@ -69,19 +69,17 @@ function create(shape, simulates, effects, params){
 }
 window.C = create;
 
-let angle, speed, distSq;
 let res = new SAT.Response();
-let collided = false;
+let angle, collided = false;
 function simulate(){
     // player simulation
     player.renderRadius = player.renderRadius * 0.83 + player.sat.r * 0.17;
     if(window.dragging === true && player.dead === false){
-        distSq = (window.mouseY - player.pos.y) ** 2 + (window.mouseX - player.pos.x) ** 2;
-        if(player.speed ** 2 < distSq) speed = player.speed;
-        else speed = Math.sqrt(distSq);
-        angle = Math.atan2(window.mouseY - player.pos.y, window.mouseX - player.pos.x);
-        player.xv = Math.cos(angle) * speed * player.axisSpeedMultX;
-        player.yv = Math.sin(angle) * speed * player.axisSpeedMultY;
+        angle = Math.atan2((window.mouseY - player.pos.y) / player.axisSpeedMultY, (window.mouseX - player.pos.x) / player.axisSpeedMultX);
+        player.xv = Math.cos(angle) * player.speed * player.axisSpeedMultX;
+        player.yv = Math.sin(angle) * player.speed * player.axisSpeedMultY;
+        if(Math.abs(player.xv) > Math.abs(player.pos.x - window.mouseX)) player.xv = window.mouseX - player.pos.x;
+        if(Math.abs(player.yv) > Math.abs(player.pos.y - window.mouseY)) player.yv = window.mouseY - player.pos.y;
         player.pos.x += player.xv;
         player.pos.y += player.yv;
     } else {

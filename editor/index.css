@@ -276,3 +276,7 @@ hr {
 .blocklyWidgetDiv {
     z-index: auto !important;
 }
+
+.blocklyFlyoutButton {
+    fill: #37823c;
+}

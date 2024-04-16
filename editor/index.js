@@ -245,3 +245,5 @@ window.requestIdleCallback(() => {
 }, {timeout: 100})
 
 javascriptGenerator.INFINITE_LOOP_TRAP = 'if(--window.loopTrap == 0)break;\n';
+
+ws.registerButtonCallback("returnToMainGame", ()=>{location.replace(location.origin)});

@@ -87,6 +87,11 @@ export default /*const toolbox =*/ {
       'categorystyle': 'game_category',
       'contents': [
         {
+          "kind": "button",
+          "text": "Click to return to the main page!",
+          "callbackKey": "returnToMainGame"
+        },
+        {
           'kind': 'block',
           'type': 'set_music',
           'inputs': {
