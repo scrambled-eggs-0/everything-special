@@ -702,7 +702,7 @@ export default {
           let insertionIndex = this.getIndexOfInput(`SIMULATE_CONTAINER${dropdownId}`) + 1;
 
           // Custom
-          if(newValue === '3'){
+          if(newValue === "3"){
             // this.appendDummyInput('TICK_FN_LABEL')
             //   .appendField("simulate function:");
             // this.inputList.splice(insertionIndex++, 0, this.inputList.pop())
@@ -883,6 +883,8 @@ export default {
               const dropdownValue = simulateDropdownIndexToKey[i];
               const paramMap = simulateDefaultMap[dropdownValue];
 
+              simulateOptionsToNull.push(dropdownValue);
+
               // Custom
               if(dropdownValue === '3'){
                 this.appendStatementInput('SIMULATE_CUSTOM_FN');
@@ -899,8 +901,6 @@ export default {
 
                 this.inputList.splice(insertionIndex++, 0, this.inputList.pop());
               }
-
-              simulateOptionsToNull.push(dropdownValue);
             }
           }
 
@@ -933,6 +933,8 @@ export default {
               const dropdownValue = effectDropdownIndexToKey[i];
               const paramMap = effectDefaultMap[dropdownValue];
 
+              effectOptionsToNull.push(dropdownValue);
+
               // Custom
               if(dropdownValue === '3'){
                 this.appendStatementInput('EFFECT_CUSTOM_FN');
@@ -955,8 +957,6 @@ export default {
 
                 this.inputList.splice(insertionIndex++, 0, this.inputList.pop());
               }
-
-              effectOptionsToNull.push(dropdownValue);
             }
           }
 
