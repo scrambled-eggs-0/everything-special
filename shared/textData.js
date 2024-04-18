@@ -711,43 +711,8 @@ export default {
           if(window.workspaceLoaded === false) return this.getIndexOfInput(`SIMULATE_CONTAINER${dropdownId}`) + 1;
           let oldValue = this.getFieldValue(`SIMULATE_DROPDOWN${dropdownId}`);
 
-          // console.log(this.isInsertionMarker());
-          // if(this.isInsertionMarker() === true && newValue !== oldValue && this.simulateOptions[newValue] === null && window.toSwitch !== false){// && this.simulateOptions[newValue] === null
-          //   console.log('doing', dropdownId);
-          //   // find the input that took the newValue and swap.
-          //   let simulatesLen = this.getFieldValue('NUM_SIMULATES_DROPDOWN');
-          //   for(let i = 0; i < simulatesLen; i++){
-          //     if(dropdownId == i) continue;
-          //     console.log(dropdownId, i);
-          //     const simulate = this.getFieldValue(`SIMULATE_DROPDOWN${i}`);
-          //     if(simulate === newValue){
-          //       this.simulateOptions[oldValue] = [window.simulateMapI2N[oldValue], oldValue.toString()];
-          //       console.log('setting value of ' +  `SIMULATE_DROPDOWN${i}` + ' to ', oldValue);
-          //       window.toSwitch = false;
-          //       this.getField(`SIMULATE_DROPDOWN${i}`).getOptions();
-          //       this.setFieldValue(oldValue, `SIMULATE_DROPDOWN${i}`);
-          //       delete window.toSwitch;
-          //       break;
-          //     }
-          //   }
-          //   this.simulateOptions[newValue] = [window.simulateMapI2N[newValue], newValue.toString()];
-          // } else {
-            if(oldValue !== undefined && oldValue !== null) this.simulateOptions[oldValue] = [window.simulateMapI2N[oldValue], oldValue.toString()];
-            this.simulateOptions[newValue] = null;
-          // }
-
-          
-          
-          // else {
-          //   this.simulateOptions[oldValue] = [window.simulateMapI2N[oldValue], oldValue.toString()];
-          // }
-          
-          // if(this.simulateOptions[newValue] === null) {
-          //   this.simulateOptions[oldValue] = null;
-          //   this.simulateOptions[newValue] = [window.simulateMapI2N[newValue], newValue.toString()];
-          // }
-          /*if(this.dontNullTemp === undefined)*/
-          // console.log(structuredClone(this.simulateOptions), `SIMULATE_CONTAINER${dropdownId}`, {oldValue, newValue, dropdownId});
+          if(oldValue !== undefined && oldValue !== null) this.simulateOptions[oldValue] = [window.simulateMapI2N[oldValue], oldValue.toString()];
+          this.simulateOptions[newValue] = null;
 
           const oldValueMap = window.simulateDefaultMap[oldValue];
           const newValueMap = window.simulateDefaultMap[newValue];
