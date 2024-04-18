@@ -75,7 +75,8 @@ function simulate(){
     // player simulation
     player.renderRadius = player.renderRadius * 0.83 + player.sat.r * 0.17;
     if(window.dragging === true && player.dead === false){
-        angle = Math.atan2((window.mouseY - player.pos.y) / player.axisSpeedMultY, (window.mouseX - player.pos.x) / player.axisSpeedMultX);
+        if(player.axisSpeedMultX === 0 || player.axisSpeedMultY === 0) angle = Math.atan2((window.mouseY - player.pos.y), (window.mouseX - player.pos.x));
+        else angle = Math.atan2((window.mouseY - player.pos.y) * player.axisSpeedMultX, (window.mouseX - player.pos.x) * player.axisSpeedMultY);
         player.xv = Math.cos(angle) * player.speed * player.axisSpeedMultX;
         player.yv = Math.sin(angle) * player.speed * player.axisSpeedMultY;
         if(Math.abs(player.xv) > Math.abs(player.pos.x - window.mouseX)) player.xv = window.mouseX - player.pos.x;

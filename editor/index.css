@@ -282,6 +282,7 @@ hr {
 }
 
 #messagetext {
+    color: white;
     z-index: 10000000;
     font-size: 4.72vh;/*42px*/
     font-family: sans-serif;

@@ -131,6 +131,10 @@ export default /*const toolbox =*/ {
         },
         {
           'kind': 'block',
+          'type': 'player_spawn'
+        },
+        {
+          'kind': 'block',
           'type': 'bg_color'
         },
       ],

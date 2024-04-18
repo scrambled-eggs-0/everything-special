@@ -252,6 +252,16 @@ forBlock['player_y'] = function (block, generator) {
   return [`player.pos.y`, Order.NONE];
 };
 
+forBlock['player_spawn'] = function (block, generator) {
+  const sx = block.getFieldValue('SPAWN_X', Order.NONE);
+  const sy = block.getFieldValue('SPAWN_Y', Order.NONE);
+  let str = `spawnPosition.x=${sx};spawnPosition.y=${sy};`;
+  if(block.getFieldValue('TO_RESPAWN', Order.NONE) === "TRUE"){
+    str += "window.respawnPlayer();"
+  }
+  return str + '\n';
+};
+
 // forBlock['this_touching'] = function (block, generator) {
 //   const objectId = block.getFieldValue('SPRITE_ID', Order.NONE);
 //   if(objectId === 'mouse'){
