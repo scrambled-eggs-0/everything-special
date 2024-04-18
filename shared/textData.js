@@ -396,7 +396,7 @@ export default {
           "name": "SPAWN_Y",
           "value": 100,
           "min": 0,
-          "max": 100,
+          "max": 1600,
         },
         {
           "type": "field_checkbox",

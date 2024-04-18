@@ -262,7 +262,7 @@ window.fadeAlert = () => {
   requestAnimationFrame(() => {
     messageText.style.animation = "";
     requestAnimationFrame(() => {
-      messageText.style.opacity = "0"; messageText.style.animation="fadeOut 1.5s ease-in-out 1";
+      messageText.style.opacity = "0"; messageText.style.animation="fadeOut 3s ease-in-out 1";
     })
   })
 }

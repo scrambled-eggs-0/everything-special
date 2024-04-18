@@ -19,6 +19,7 @@ for(let key in global.window){
 global.isServer = true;
 global.window.onWorkspaceLoadFunctions=[];
 global.window.workspaceLoaded = false;
+global.window.fixPolygon=(p)=>{return p;};
 
 import blocks from './text.js';
 import forBlock from '../../shared/forBlock.js';
