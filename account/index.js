@@ -55,8 +55,8 @@ createAccountButton.onclick = () => {
                     alert('profile picture file size too large (exceeds 1MB)! Please try again.');
                 } else {
                     alert('username taken! Please try again.');
+                    resetState();
                 }
-                resetState();
             }
         });
     
@@ -112,6 +112,7 @@ function resetState(){
     state = 'username';
     username = '';
     password = '';
+    title.innerText = 'Create Account';
     nextButton.classList.add('hidden');
     createAccountButton.classList.add('hidden');
     loginButton.classList.add('hidden');
@@ -143,7 +144,6 @@ function postReq(usr, pswd, file, path, lambda){
     if(file !== undefined){
         if(file.size > 1024 * 1024){
             alert('file size too large! Please upload a profile picture smaller than 1MB.');
-            resetState();
             return;
         }
         const data = new FormData();

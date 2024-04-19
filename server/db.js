@@ -129,9 +129,26 @@ async function uploadFile(buffer, fileContent, textContent, username, hashedPass
 // TEMP!!!!!
 
 // fileName will be determined by the python ai thing, later
-function getFile(fileName){
+
+const lastTime = {/*ip: fileName*/};
+const lastFile = {/*ip: timeThisFileServed*/};
+// we fetch 2 files from the client, so we actually want to update the playTime for the previous previous file
+const lastLastFile = {/*ip: timeThisFileServed*/};
+
+function getFile(fileName, ip){
     metadataCollection.updateOne({fileName}, {$inc: {views: 1}});
     // console.log('filename', filename);
+
+    const now = Date.now();
+    if(lastFile[ip] !== undefined){
+        if(lastLastFile[ip] !== undefined){
+            metadataCollection.updateOne({fileName: lastLastFile}, {$inc: {playTime: (now - lastTime[ip]) / 1000}});
+        }
+        lastLastFile[ip] = lastFile[ip];
+    }
+    lastTime[ip] = now;
+    lastFile[ip] = fileName;
+
     return bucket.openDownloadStreamByName(fileName);
 }
 
@@ -246,6 +263,13 @@ async function toggleDislike(fileName, username, hashedPassword){
     return true;
 }
 
+async function addShare(fileName){
+    // remove the .js
+    fileName = fileName.slice(0, fileName.length-3);
+    metadataCollection.updateOne({fileName}, {$inc: {shares: 1}});
+    return true;
+}
+
 async function deleteLevel(username, levelName){
     const file = await fileCollection.findOne({filename: levelName});
     if(file === null) return;
@@ -269,6 +293,7 @@ export default {
     getProfilePic,
     toggleLike,
     toggleDislike,
+    addShare,
     deleteLevel,
     getRaw
 };

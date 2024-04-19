@@ -250,7 +250,6 @@ ws.registerButtonCallback("returnToMainGame", ()=>{location.replace(location.ori
 
 const messageText = document.getElementById('messagetext');
 
-let animationCount = 0;
 window.alert = (msg, toFade=true) => {
   messageText.innerText = msg;
   if(toFade === true) {

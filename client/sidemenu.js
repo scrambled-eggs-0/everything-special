@@ -73,7 +73,7 @@ let messageAlpha = 0;
 let messageText = '';
 let username = localStorage.getItem('username');
 let hashedPassword = localStorage.getItem('hashedPassword');
-let likedLevels = {}; let dislikedLevels = {};
+let likedLevels = {}; let dislikedLevels = {}; let sendShare = true;
 requestIdleCallback(() => {
     const likedLevelsArr = (localStorage.getItem('likedLevels')??"").split('|');
     const dislikedLevelsArr = (localStorage.getItem('dislikedLevels')??"").split('|');
@@ -190,6 +190,11 @@ const iconData = [
             navigator.clipboard.writeText(`${location.origin}/standalone/${window.levelFileName.split('.')[0]}`);
             messageAlpha = 1;
             messageText = 'Link Copied to Clipboard!';
+            if(sendShare === true){
+                sendShare = false;
+                setTimeout(()=>{sendShare=true;}, 5000);
+                fetch(`${location.origin}/share`, {method: 'POST'})
+            }
         }
     },
     {
