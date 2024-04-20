@@ -109,6 +109,7 @@ async function scroll(){
     }
 }
 
+window.won = false;
 async function getNextCode(){
     const response = await fetch(reqUrl);
     if (!response.ok) throw new Error(`Failed to fetch ${reqUrl}`);

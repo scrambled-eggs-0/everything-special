@@ -422,7 +422,6 @@ const simulateMap = [
             o.speed = o.pointOn[2];
     
             // snapping back to the point that we should be on
-            // TODO: make sure this is pixel perfect and remaining time is not skipped
             o.pos.x += o.xv * o.timeRemain;
             o.pos.y += o.yv * o.timeRemain;
     
@@ -437,8 +436,11 @@ const simulateMap = [
             o.xv = Math.cos(angle) * o.speed;
             o.yv = Math.sin(angle) * o.speed;
 
+            o.pos.x -= o.xv * o.timeRemain;
+            o.pos.y -= o.yv * o.timeRemain;
+
             // distance / speed
-            o.timeRemain = Math.sqrt((o.pointOn[0] - o.pointTo[0])**2 + (o.pointOn[1] - o.pointTo[1])**2) / o.speed;
+            o.timeRemain = Math.sqrt((o.pointOn[0] - o.pointTo[0])**2 + (o.pointOn[1] - o.pointTo[1])**2) / o.speed - o.timeRemain;
         }
     },
     /*rotate*/
@@ -719,6 +721,7 @@ const effectMap = [
         } else {
             // scroll
             toScroll = true;
+            window.won = true;
 
             if(window.tutorial === true){
                 window.beatCurrentTutorialMap();

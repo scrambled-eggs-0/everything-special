@@ -329,7 +329,12 @@ app.get('/bundle.js', (res, req) => {
     })
 });
 
-app.get('/game', (res, req) => {
+app.get('/game', async (res, req) => {
+    res.onAborted(() => {
+        downloadStream.abort();
+        console.log('aborted!!');
+        closed = true;
+    });
     // res.cork(() => {
     //     res.writeHeader('Access-Control-Allow-Origin', '*'); // Allow requests from any origin
     //     res.writeHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
@@ -341,11 +346,12 @@ app.get('/game', (res, req) => {
     // });
 
     // temp, just serving a random file. TODO: in prod remove async and cache serving somehow??
-    const fileName = db.getRandomFileName();
+    const fileName = await db.getRandomFileName();
 
     res.cork(()=>{res.writeHeader('Fn', fileName)});
+    // console.log(ipStr);
 
-    const downloadStream = db.getFile(fileName, res.getRemoteAddressAsText());
+    const downloadStream = db.getFile(fileName, Array.from(new Uint8Array(res.getRemoteAddress())).join(''));
 
     let closed = false;
 
@@ -368,12 +374,6 @@ app.get('/game', (res, req) => {
             console.error('Error fetching file from GridFS:', error);
             res.end('Internal Server Error');
         })
-    });
-
-    res.onAborted(() => {
-        downloadStream.abort();
-        console.log('aborted!!');
-        closed = true;
     });
 })
 

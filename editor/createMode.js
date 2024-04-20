@@ -132,7 +132,7 @@ createModeBg.onclick = () => {
             newBlock.getInput(newBlock.shapeParamToId['y']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(previewY))));
 
             const dist = Math.sqrt((snapGrid(previewX) - snapGrid(window.mouseX)) ** 2 + (snapGrid(previewY) - snapGrid(window.mouseY)) ** 2);
-            newBlock.getInput(newBlock.shapeParamToId['r']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(dist)));
+            newBlock.getInput(newBlock.shapeParamToId['r']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(Math.floor(dist * 1000) / 1000)));
         } else if(previewShape === 1){
             // rect
             const minX = Math.min(previewX, window.mouseX);

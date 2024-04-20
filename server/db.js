@@ -26,7 +26,7 @@ async function run() {
         connected = true;
         console.log('connected to db!');
 
-        getAllFileNames().then((val) => fileNames = val);
+        // getAllFileNames().then((val) => fileNames = val);
     } catch(e){
         console.log('mongo connecting error: ', e);
     }
@@ -69,7 +69,8 @@ async function uploadFileAnalytics(fileName, buffer, fileContent, textContent, u
         relevance: 0.1,         // controversial omnis go brr
         playTime: 0,            // in integer seconds probably
         timeCreated: Date.now(),// Date.now() is sketch because system dependent but should be close enough
-        creator: username       // username of the account that created this level
+        creator: username,      // username of the account that created this level
+        difficulty: 5           // number from 1-10, 10 being the hardest
     };
 
     // addStatsToCreator(metaData);
@@ -156,18 +157,68 @@ function getRaw(fileName){
     return bucket.openDownloadStreamByName('raw_' + fileName);
 }
 
-let fileNames = ['test.js'];
-async function getAllFileNames(){
-    const arr = await fileCollection.find({}).toArray((err, result) => {
-        if(err) console.log('err :(', err);
-        return result;
-    });
-    return arr.map(f => f.filename).filter(fn => !fn.startsWith('pfp_') && !fn.startsWith('raw_'));
+// let fileNames = ['test.js'];
+// async function getAllFileNames(){
+//     const arr = await fileCollection.find({}).toArray((err, result) => {
+//         if(err) console.log('err :(', err);
+//         return result;
+//     });
+//     return arr.map(f => f.filename).filter(fn => !fn.startsWith('pfp_') && !fn.startsWith('raw_'));
+// }
+
+// function getRandomFileName(){
+//     return fileNames[Math.floor(Math.random() * fileNames.length)];
+// }
+
+// returns if the level is a banger or not and if it should be served a lot
+// {
+//     _id: new ObjectId('6621d907c28bc7c587577ec1'),
+//     fileName: 'djm6hl7GPRSH5jjJ.js',
+//     len: 2541,
+//     views: 66,
+//     likes: 0,
+//     dislikes: 0,
+//     devRep: 0.5,
+//     devActivity: 0,
+//     commentAuthors: [],
+//     comments: [],
+//     shares: 0,
+//     relevance: 0.1,
+//     playTime: 0,
+//     timeCreated: 1713494279170,
+//     creator: 'yqxud'
+// }
+function isFit(d){
+    // if it's new (uploaded within the last hour)
+    if(d.views < 50 || Date.now() - d.timeCreated < 3600) return true;
+    // if it's a bad level, give it a chance sometimes
+    if(Math.random() < 0.1) return true;
+    // if it's hated, don't serve it
+    if(d.dislikes > 5 && d.dislikes * 2 > d.likes) return false;
+    // if it's scrolled past (less than 1.2s of average playtime), don't serve it
+    if(d.views > 50 && d.playTime / d.views < 1.2) return false;
+    // if it's a little timmy level (small amount of obstacles), don't serve it as much
+    if(len < 200 && Math.random() < 0.3) return false;
+    // if it's fine, it's fine.
+    return true;
 }
 
-// temp, for mvp. TODO: remove for prod
-function getRandomFileName(){
-    return fileNames[Math.floor(Math.random() * fileNames.length)];
+async function getRandomFileName(){
+    // 10% of the time, serve a random level, 90% of the time, serve "fit" levels that are bangers
+    if(Math.random() > 0.1){
+        // pick 3 and only serve the good ones
+        const arr = (await metadataCollection.aggregate([{ $sample: { size: 3 } }]).toArray((err, result) => {
+            if(err) console.log('err :(', err);
+            return result;
+        })).filter(a => isFit(a)).map(a => a.fileName);
+        if(arr.length !== 0) return arr[Math.floor(arr.length * Math.random())];
+    }
+
+    // any random level
+    return (await metadataCollection.aggregate([{ $sample: { size: 1 } }]).toArray((err, result) => {
+        if(err) console.log('err :(', err);
+        return result;
+    }))[0].fileName;
 }
 
 async function createAccount(username, hashedPassword, profilePic=undefined, pfpFileType=undefined){
@@ -277,7 +328,7 @@ async function deleteLevel(username, levelName){
     bucket.delete(file._id);
 
     creatorCollection.updateOne({username}, {$pull: {levels: levelName}});
-    fileNames = fileNames.filter(f => f !== levelName);
+    // fileNames = fileNames.filter(f => f !== levelName);
 
     metadataCollection.deleteOne({fileName: levelName});
 }
