@@ -100,10 +100,7 @@ window.onmouseup = () => {
 // }
 
 // mobile
-window.ontouchstart = (e) => {
-    if (e.touches.length > 1 || event.touches[0].duration > 500) {
-        return e.preventDefault();
-    }
+document.body.ontouchstart = (e) => {
     const touch = (e.touches || e.originalEvent.touches)[0];
     // if(dragging === true) {
     //     // window.mouseX = touch.pageX;
@@ -115,18 +112,22 @@ window.ontouchstart = (e) => {
     // }
     window.onmousedown({pageX: touch.pageX, pageY: touch.pageY});
     lastTouchY = touch.pageY;
-    return e.preventDefault();
+
+    e.stopPropagation();
+    e.preventDefault();
+    document.body.style.userSelect = "none";
 }
 
 let lastTouchY = 0;
-window.ontouchmove = (e) => {
+document.body.ontouchmove = (e) => {
     const touch = (e.touches || e.originalEvent.touches)[0];
     window.onmousemove({pageX: touch.pageX, pageY: touch.pageY, movementY: touch.pageY - lastTouchY});
     lastTouchY = touch.pageY;
-    return e.preventDefault();
+
+    e.preventDefault();
 }
 
-window.ontouchend = (e) => {
+document.body.ontouchend = (e) => {
     // if(dragging === false) {
     //     // for(let i = 0; i < window.mouseUpFunctions.length; i++){
     //     //     window.mouseUpFunctions[i]();
@@ -135,11 +136,16 @@ window.ontouchend = (e) => {
     // }
     window.onmouseup();
     lastTouchY = (e.touches || e.originalEvent.touches)[0].pageY;
-    return e.preventDefault();
+
+    e.stopPropagation();
+    e.preventDefault();
+    document.body.style.userSelect = "default";
 }
 
-window.ontouchcancel = (e) => {
-    window.ontouchend();
+document.body.ontouchcancel = (e) => {
+    document.body.ontouchend();
+
+    e.preventDefault();
 }
 
-window.addEventListener("contextmenu", (e) => { return e.preventDefault(); }, true);
+window.oncontextmenu = (e) => { return e.preventDefault(); };
