@@ -139,4 +139,4 @@ window.ontouchcancel = (e) => {
     window.ontouchend();
 }
 
-window.oncontextmenu = (e) => { return e.preventDefault(); }
+window.addEventListener("contextmenu", (e) => { return e.preventDefault(); }, true);
