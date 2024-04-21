@@ -115,9 +115,7 @@ document.body.ontouchstart = (e) => {
     window.onmousedown({pageX: touch.pageX, pageY: touch.pageY});
     lastTouchY = touch.pageY;
 
-    e.stopPropagation();
     e.preventDefault();
-    document.body.style.userSelect = "none";
 
     eventList.push("touchStart");
 }
@@ -147,7 +145,6 @@ document.body.ontouchend = (e) => {
 
     e.stopPropagation();
     e.preventDefault();
-    document.body.style.userSelect = "default";
 
     eventList.push("touchend");
 }
