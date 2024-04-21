@@ -32,7 +32,7 @@ window.stopMusic = async (toAwait=false) => {
 window.playMusic = async (link) => {
     window.hasLoadedNewMusic = true;
 
-    await until(() => {return navigator.userActivation.hasBeenActive === true;});
+    await until(() => {return navigator.userActivation.hasBeenActive === true || window.hasDragEnded === true;});
     if(link === lastLoadedLink) return;
 
     stopMusic();
@@ -62,6 +62,7 @@ window.playMusic = async (link) => {
 }
 
 window.playMusicIndefinitely = async (link) => {
+    lastLoadedLink = undefined;
     await window.playMusic(link);
     audioIframe = undefined;
 }

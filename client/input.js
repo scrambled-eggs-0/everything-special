@@ -99,10 +99,12 @@ window.onmouseup = () => {
 //     }
 // }
 
-window.eventList = [];
+window.hasDragged = false;
+window.hasDragEnded = false;
 
 // mobile
 document.body.ontouchstart = (e) => {
+    window.hasDragged = true;
     const touch = (e.changedTouches || e.originalEvent.touches)[0];
     window.onmousedown({pageX: touch.pageX, pageY: touch.pageY});
     lastTouchY = touch.pageY;
@@ -122,7 +124,7 @@ document.body.ontouchmove = (e) => {
 document.body.ontouchend = (e) => {
     window.onmouseup();
     lastTouchY = e.changedTouches[e.changedTouches.length-1].pageY;
-
+    window.hasDragEnded = true;
     return absorbEvent_(e);
 }
 
