@@ -134,6 +134,7 @@ document.body.ontouchmove = (e) => {
 }
 
 document.body.ontouchend = (e) => {
+    eventList.push("touchend");
     // if(dragging === false) {
     //     // for(let i = 0; i < window.mouseUpFunctions.length; i++){
     //     //     window.mouseUpFunctions[i]();
@@ -145,8 +146,6 @@ document.body.ontouchend = (e) => {
 
     e.stopPropagation();
     e.preventDefault();
-
-    eventList.push("touchend");
 }
 
 document.body.ontouchcancel = (e) => {
