@@ -24,15 +24,14 @@ window.onmousedown = (e) => {
     dragging = true;
     totalDist = 0;
     dragStartTime = Date.now();
-
-    updateMousePos(e);
     
     for(let i = 0; i < window.mouseDownFunctions.length; i++){
         window.mouseDownFunctions[i]();
     }
 }
 
-function updateMousePos(e){
+window.onmousemove = (e) => {
+    // input
     window.mouseX = ((e.pageX - window.canvasDimensions.x) / window.canvasDimensions.width) * canvas.width;//Math.min(1, Math.max(0, ) ;
     window.mouseY = ((e.pageY - window.canvasDimensions.y) / window.canvasDimensions.height) * canvas.height;
 
@@ -56,11 +55,6 @@ function updateMousePos(e){
         window.mouseY = canvas.height;
         window.mouseOut = true;
     }
-}
-
-window.onmousemove = (e) => {
-    // input
-    updateMousePos(e);
 
     for(let i = 0; i < window.mouseMoveFunctions.length; i++){
         window.mouseMoveFunctions[i]();
@@ -99,13 +93,12 @@ window.onmouseup = () => {
 //     }
 // }
 
-// window.hasDragged = false;
 window.hasDragEnded = false;
 
 // mobile
 document.body.ontouchstart = (e) => {
-    // window.hasDragged = true;
     const touch = (e.changedTouches || e.originalEvent.touches)[0];
+    window.onmousemove({pageX: touch.pageX, pageY: touch.pageY, movementY: touch.pageY - lastTouchY});
     window.onmousedown({pageX: touch.pageX, pageY: touch.pageY});
     lastTouchY = touch.pageY;
     return absorbEvent_(e);
@@ -120,9 +113,6 @@ document.body.ontouchmove = (e) => {
 }
 
 document.body.ontouchend = (e) => {
-    const touch = e.changedTouches[e.changedTouches.length-1];
-    window.onmousemove({pageX: touch.pageX, pageY: touch.pageY, movementY: touch.pageY - lastTouchY});
-    lastTouchY = touch.pageY;
     window.onmouseup();
     window.hasDragEnded = true;
     return absorbEvent_(e);
