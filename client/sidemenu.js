@@ -359,6 +359,7 @@ window.addSideMenuEvtListeners = (nextFileName) => {
                 hoverFn(); dragging = false;
             } else if(hoveringOverCog === true){
                 toggleSettingsMenu();
+                hoveringOverCog = false;
             }
             return;
         }
@@ -376,7 +377,11 @@ window.addSideMenuEvtListeners = (nextFileName) => {
     })
 
     window.mouseMoveFunctions.push(() => {
-        if(window.hasDragged === true) { gearX = 850; gearY = 1550; return; }
+        if(window.hasDragged === true) {
+            gearX = 850; gearY = 1550;
+            if(hoverFn !== undefined) { hoverFn(); hoverFn = undefined; }
+            return;
+        }
         if(settingsDrag === true){
             if(settingsDragMove === true || ((lastMouseX - window.mouseX) ** 2 + (lastMouseY - window.mouseY) ** 2 > minDragDistSq)){
                 settingsDragMove = true;

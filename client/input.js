@@ -108,7 +108,6 @@ document.body.ontouchstart = (e) => {
     const touch = (e.changedTouches || e.originalEvent.touches)[0];
     window.onmousedown({pageX: touch.pageX, pageY: touch.pageY});
     lastTouchY = touch.pageY;
-
     return absorbEvent_(e);
 }
 
@@ -117,7 +116,6 @@ document.body.ontouchmove = (e) => {
     const touch = (e.changedTouches || e.originalEvent.touches)[0];
     window.onmousemove({pageX: touch.pageX, pageY: touch.pageY, movementY: touch.pageY - lastTouchY});
     lastTouchY = touch.pageY;
-
     return absorbEvent_(e);
 }
 
@@ -130,7 +128,6 @@ document.body.ontouchend = (e) => {
 
 document.body.ontouchcancel = (e) => {
     document.body.ontouchend();
-
     return absorbEvent_(e);
 }
 
