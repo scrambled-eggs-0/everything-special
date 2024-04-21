@@ -101,6 +101,9 @@ window.onmouseup = () => {
 
 // mobile
 window.ontouchstart = (e) => {
+    if (e.touches.length > 1 || event.touches[0].duration > 500) {
+        return e.preventDefault();
+    }
     const touch = (e.touches || e.originalEvent.touches)[0];
     // if(dragging === true) {
     //     // window.mouseX = touch.pageX;
