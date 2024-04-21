@@ -145,6 +145,8 @@ document.body.ontouchend = (e) => {
 
     e.stopPropagation();
     e.preventDefault();
+
+    eventList.push("touchend");
 }
 
 document.body.ontouchcancel = (e) => {
