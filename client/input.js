@@ -110,7 +110,7 @@ window.ontouchstart = (e) => {
         // }
         return;// ignore >1 touches
     }
-    window.onmousedown();
+    window.onmousedown({pageX: touch.pageX, pageY: touch.pageY});
     lastTouchY = touch.pageY;
 }
 
@@ -128,7 +128,7 @@ window.ontouchend = (e) => {
         // }
         return;// ignore >1 touches
     }
-    window.onmouseup();
+    window.onmouseup({pageX: touch.pageX, pageY: touch.pageY});
     lastTouchY = (e.touches || e.originalEvent.touches)[0].pageY;
 }
 
