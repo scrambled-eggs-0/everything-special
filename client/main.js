@@ -48,6 +48,9 @@ window.render = () => {
     if(window.scrollAnimation < 1){
         ctx.translate(0, (window.scrollAnimation-1) * canvas.height);
     }
+
+    ctx.fillStyle = 'green';
+    ctx.fillText(navigator.userActivation.hasBeenActive.toString(), canvas.width / 2, canvas.height / 2);
 }
 
 window.tileSize = 100; // 50
