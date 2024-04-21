@@ -141,3 +141,7 @@ function absorbEvent_(e) {
     e.returnValue = false;
     return false;
 }
+
+window.console.error = (e) => {
+    alert('Error! ', e);
+}
