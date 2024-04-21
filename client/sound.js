@@ -42,8 +42,8 @@ window.playMusic = async (link) => {
     audioIframe = document.createElement('iframe');
     audioIframe.frameborder = "0";
     audioIframe.setAttribute("frameBorder", "0");
-    // audioIframe.width = 0;
-    // audioIframe.height = 0;
+    audioIframe.width = 0;
+    audioIframe.height = 0;
     
     const videoId = link.split('?v=')[1];
     audioIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&enablejsapi=1`;
@@ -65,6 +65,10 @@ window.playMusicIndefinitely = async (link) => {
     lastLoadedLink = undefined;
     await window.playMusic(link);
     audioIframe = undefined;
+}
+
+window.reloadMusic = () => {
+    alert('reloading music!');
 }
 
 // function extractVideoID(url) {  
