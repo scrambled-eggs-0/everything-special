@@ -104,20 +104,8 @@ window.eventList = [];
 // mobile
 document.body.ontouchstart = (e) => {
     const touch = (e.changedTouches || e.originalEvent.touches)[0];
-    // if(dragging === true) {
-    //     // window.mouseX = touch.pageX;
-    //     // window.mouseY = touch.pageY;
-    //     // for(let i = 0; i < window.mouseDownFunctions.length; i++){
-    //     //     window.mouseDownFunctions[i]();
-    //     // }
-    //     return;// ignore >1 touches
-    // }
     window.onmousedown({pageX: touch.pageX, pageY: touch.pageY});
     lastTouchY = touch.pageY;
-
-    e.preventDefault();
-
-    eventList.push("touchStart");
 }
 
 let lastTouchY = 0;
@@ -125,36 +113,15 @@ document.body.ontouchmove = (e) => {
     const touch = (e.changedTouches || e.originalEvent.touches)[0];
     window.onmousemove({pageX: touch.pageX, pageY: touch.pageY, movementY: touch.pageY - lastTouchY});
     lastTouchY = touch.pageY;
-
-    e.preventDefault();
-
-    if(eventList[eventList.length-1] !== "touchMove"){
-        eventList.push("touchMove");
-    }
 }
 
 document.body.ontouchend = (e) => {
-    // if(dragging === false) {
-    //     // for(let i = 0; i < window.mouseUpFunctions.length; i++){
-    //     //     window.mouseUpFunctions[i]();
-    //     // }
-    //     return;// ignore >1 touches
-    // }
     window.onmouseup();
     lastTouchY = e.changedTouches[e.changedTouches.length-1].pageY;
-
-    e.stopPropagation();
-    e.preventDefault();
-
-    eventList.push("touchend");
 }
 
 document.body.ontouchcancel = (e) => {
     document.body.ontouchend();
-
-    e.preventDefault();
-
-    eventList.push("touchcancel");
 }
 
 window.oncontextmenu = (e) => { return e.preventDefault(); };
