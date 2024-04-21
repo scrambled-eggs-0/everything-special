@@ -93,8 +93,6 @@ window.onmouseup = () => {
 //     }
 // }
 
-window.hasDragEnded = false;
-
 // mobile
 document.body.ontouchstart = (e) => {
     const touch = (e.changedTouches || e.originalEvent.touches)[0];
@@ -114,7 +112,6 @@ document.body.ontouchmove = (e) => {
 
 document.body.ontouchend = (e) => {
     window.onmouseup();
-    window.hasDragEnded = true;
     return absorbEvent_(e);
 }
 
