@@ -103,7 +103,7 @@ window.eventList = [];
 
 // mobile
 document.body.ontouchstart = (e) => {
-    const touch = (e.touches || e.originalEvent.touches)[0];
+    const touch = (e.changedTouches || e.originalEvent.touches)[0];
     // if(dragging === true) {
     //     // window.mouseX = touch.pageX;
     //     // window.mouseY = touch.pageY;
@@ -122,7 +122,7 @@ document.body.ontouchstart = (e) => {
 
 let lastTouchY = 0;
 document.body.ontouchmove = (e) => {
-    const touch = (e.touches || e.originalEvent.touches)[0];
+    const touch = (e.changedTouches || e.originalEvent.touches)[0];
     window.onmousemove({pageX: touch.pageX, pageY: touch.pageY, movementY: touch.pageY - lastTouchY});
     lastTouchY = touch.pageY;
 
@@ -134,7 +134,6 @@ document.body.ontouchmove = (e) => {
 }
 
 document.body.ontouchend = (e) => {
-    eventList.push("touchend");
     // if(dragging === false) {
     //     // for(let i = 0; i < window.mouseUpFunctions.length; i++){
     //     //     window.mouseUpFunctions[i]();
@@ -142,7 +141,7 @@ document.body.ontouchend = (e) => {
     //     return;// ignore >1 touches
     // }
     window.onmouseup();
-    lastTouchY = (e.touches || e.originalEvent.touches)[0].pageY;
+    // lastTouchY = (e.touches || e.originalEvent.touches)[0].pageY;
 
     e.stopPropagation();
     e.preventDefault();
