@@ -48,10 +48,6 @@ window.render = () => {
     if(window.scrollAnimation < 1){
         ctx.translate(0, (window.scrollAnimation-1) * canvas.height);
     }
-
-    ctx.fillStyle = 'blue';
-    ctx.font = '40px Inter';
-    ctx.fillText(navigator.userActivation.hasBeenActive + " " + window.hasDragEnded, canvas.width / 2, canvas.height / 2);
 }
 
 window.tileSize = 100; // 50
