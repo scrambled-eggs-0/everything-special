@@ -68,7 +68,9 @@ window.playMusicIndefinitely = async (link) => {
 }
 
 window.reloadMusic = () => {
-    alert('reloading music!');
+    let linkToPlay = lastLoadedLink;
+    lastLoadedLink = undefined;
+    window.playMusic(linkToPlay);
 }
 
 // function extractVideoID(url) {  
