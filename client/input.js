@@ -112,6 +112,7 @@ window.ontouchstart = (e) => {
     // }
     window.onmousedown({pageX: touch.pageX, pageY: touch.pageY});
     lastTouchY = touch.pageY;
+    return e.preventDefault();
 }
 
 let lastTouchY = 0;
@@ -119,6 +120,7 @@ window.ontouchmove = (e) => {
     const touch = (e.touches || e.originalEvent.touches)[0];
     window.onmousemove({pageX: touch.pageX, pageY: touch.pageY, movementY: touch.pageY - lastTouchY});
     lastTouchY = touch.pageY;
+    return e.preventDefault();
 }
 
 window.ontouchend = (e) => {
@@ -130,6 +132,7 @@ window.ontouchend = (e) => {
     // }
     window.onmouseup();
     lastTouchY = (e.touches || e.originalEvent.touches)[0].pageY;
+    return e.preventDefault();
 }
 
 window.ontouchcancel = (e) => {
