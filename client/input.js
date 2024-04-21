@@ -19,19 +19,20 @@ window.mouseOut = false;
 window.pageX = -1;
 window.pageY = -1;
 
-window.onmousedown = () => {
+window.onmousedown = (e) => {
     // scrolling
     dragging = true;
     totalDist = 0;
     dragStartTime = Date.now();
+
+    updateMousePos(e);
     
     for(let i = 0; i < window.mouseDownFunctions.length; i++){
         window.mouseDownFunctions[i]();
     }
 }
 
-window.onmousemove = (e) => {
-    // input
+function updateMousePos(e){
     window.mouseX = ((e.pageX - window.canvasDimensions.x) / window.canvasDimensions.width) * canvas.width;//Math.min(1, Math.max(0, ) ;
     window.mouseY = ((e.pageY - window.canvasDimensions.y) / window.canvasDimensions.height) * canvas.height;
 
@@ -55,6 +56,11 @@ window.onmousemove = (e) => {
         window.mouseY = canvas.height;
         window.mouseOut = true;
     }
+}
+
+window.onmousemove = (e) => {
+    // input
+    updateMousePos(e);
 
     for(let i = 0; i < window.mouseMoveFunctions.length; i++){
         window.mouseMoveFunctions[i]();

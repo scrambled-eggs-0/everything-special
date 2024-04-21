@@ -347,7 +347,7 @@ function smoothstep(t){
 
 let settingsDrag = false; // whether the user is in the midst of a settings drag
 let settingsDragMove = false; // whether the gear is being dragged around
-let minDragDistSq = 40 ** 2;
+let minDragDistSq = 100 ** 2;
 
 let lastMouseX, lastMouseY;
 lastMouseX = lastMouseY = 0;
@@ -378,7 +378,7 @@ window.addSideMenuEvtListeners = (nextFileName) => {
     })
     
     window.mouseUpFunctions.push(() => {
-        if(settingsDrag === true && hoveringOverCog === true && settingsDragMove === false) {
+        if(settingsDrag === true /*&& hoveringOverCog === true*/ && settingsDragMove === false) {
             toggleSettingsMenu();
         }
         // resetting to satisfying position if the gear is close
