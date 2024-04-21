@@ -387,7 +387,6 @@ window.addSideMenuEvtListeners = (nextFileName) => {
         }
         settingsDrag = false;
         settingsDragMove = false;
-        if(window.hasDragged === true) hoveringOverCog = false;
     })
 
     const withoutTheJs = nextFileName.slice(0, nextFileName.length-3);
