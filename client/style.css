@@ -7,8 +7,13 @@ canvas{
     cursor: crosshair;
 }
 
+html {
+    overscroll-behavior: none;
+}
+
 body {
     background-color: #121212;
+    overscroll-behavior: none;
 }
 
 .loginWindow {

@@ -102,14 +102,14 @@ window.onmouseup = () => {
 // mobile
 window.ontouchstart = (e) => {
     const touch = (e.touches || e.originalEvent.touches)[0];
-    if(dragging === true) {
-        // window.mouseX = touch.pageX;
-        // window.mouseY = touch.pageY;
-        // for(let i = 0; i < window.mouseDownFunctions.length; i++){
-        //     window.mouseDownFunctions[i]();
-        // }
-        return;// ignore >1 touches
-    }
+    // if(dragging === true) {
+    //     // window.mouseX = touch.pageX;
+    //     // window.mouseY = touch.pageY;
+    //     // for(let i = 0; i < window.mouseDownFunctions.length; i++){
+    //     //     window.mouseDownFunctions[i]();
+    //     // }
+    //     return;// ignore >1 touches
+    // }
     window.onmousedown({pageX: touch.pageX, pageY: touch.pageY});
     lastTouchY = touch.pageY;
 }
@@ -122,13 +122,13 @@ window.ontouchmove = (e) => {
 }
 
 window.ontouchend = (e) => {
-    if(dragging === false) {
-        // for(let i = 0; i < window.mouseUpFunctions.length; i++){
-        //     window.mouseUpFunctions[i]();
-        // }
-        return;// ignore >1 touches
-    }
-    window.onmouseup({pageX: touch.pageX, pageY: touch.pageY});
+    // if(dragging === false) {
+    //     // for(let i = 0; i < window.mouseUpFunctions.length; i++){
+    //     //     window.mouseUpFunctions[i]();
+    //     // }
+    //     return;// ignore >1 touches
+    // }
+    window.onmouseup();
     lastTouchY = (e.touches || e.originalEvent.touches)[0].pageY;
 }
 
