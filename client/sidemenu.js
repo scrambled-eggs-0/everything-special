@@ -352,17 +352,18 @@ let minDragDistSq = 100 ** 2;
 let lastMouseX, lastMouseY;
 lastMouseX = lastMouseY = 0;
 
+// let lockHoveringOverCog = false;
+
 window.addSideMenuEvtListeners = (nextFileName) => {
     window.mouseDownFunctions.push(() => {
-        if(window.hasDragged === true){
-            if(hoverFn !== undefined) {
-                hoverFn(); dragging = false;
-            } else if(hoveringOverCog === true){
-                toggleSettingsMenu();
-                hoveringOverCog = false;
-            }
-            return;
-        }
+        // if(window.hasDragged === true){
+        //     if(hoveringOverCog === true){
+        //         if(lockHoveringOverCog === true) {lockHoveringOverCog = false; return; }
+        //         toggleSettingsMenu();
+        //         lockHoveringOverCog = true;
+        //     }
+        //     return;
+        // }
         if(hoveringOverCog === true) {
             settingsDrag = true;
             dragging = false;
@@ -377,11 +378,11 @@ window.addSideMenuEvtListeners = (nextFileName) => {
     })
 
     window.mouseMoveFunctions.push(() => {
-        if(window.hasDragged === true) {
-            gearX = 850; gearY = 1550;
-            if(hoverFn !== undefined) { hoverFn(); hoverFn = undefined; }
-            return;
-        }
+        // if(window.hasDragged === true) {
+        //     gearX = 850; gearY = 1550;
+        //     if(hoverFn !== undefined) { hoverFn(); hoverFn = undefined; }
+        //     return;
+        // }
         if(settingsDrag === true){
             if(settingsDragMove === true || ((lastMouseX - window.mouseX) ** 2 + (lastMouseY - window.mouseY) ** 2 > minDragDistSq)){
                 settingsDragMove = true;
@@ -392,7 +393,7 @@ window.addSideMenuEvtListeners = (nextFileName) => {
     })
     
     window.mouseUpFunctions.push(() => {
-        if(window.hasDragged === true) return;
+        // if(window.hasDragged === true) return;
         if(settingsDrag === true /*&& hoveringOverCog === true*/ && settingsDragMove === false) {
             toggleSettingsMenu();
         }

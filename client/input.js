@@ -99,12 +99,12 @@ window.onmouseup = () => {
 //     }
 // }
 
-window.hasDragged = false;
+// window.hasDragged = false;
 window.hasDragEnded = false;
 
 // mobile
 document.body.ontouchstart = (e) => {
-    window.hasDragged = true;
+    // window.hasDragged = true;
     const touch = (e.changedTouches || e.originalEvent.touches)[0];
     window.onmousedown({pageX: touch.pageX, pageY: touch.pageY});
     lastTouchY = touch.pageY;
@@ -120,8 +120,10 @@ document.body.ontouchmove = (e) => {
 }
 
 document.body.ontouchend = (e) => {
+    const touch = e.changedTouches[e.changedTouches.length-1];
+    window.onmousemove({pageX: touch.pageX, pageY: touch.pageY, movementY: touch.pageY - lastTouchY});
+    lastTouchY = touch.pageY;
     window.onmouseup();
-    lastTouchY = e.changedTouches[e.changedTouches.length-1].pageY;
     window.hasDragEnded = true;
     return absorbEvent_(e);
 }
