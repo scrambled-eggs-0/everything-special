@@ -141,7 +141,7 @@ document.body.ontouchend = (e) => {
     //     return;// ignore >1 touches
     // }
     window.onmouseup();
-    // lastTouchY = (e.touches || e.originalEvent.touches)[0].pageY;
+    lastTouchY = e.changedTouches[e.changedTouches.length-1].pageY;
 
     e.stopPropagation();
     e.preventDefault();
