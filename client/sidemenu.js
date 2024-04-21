@@ -354,6 +354,14 @@ lastMouseX = lastMouseY = 0;
 
 window.addSideMenuEvtListeners = (nextFileName) => {
     window.mouseDownFunctions.push(() => {
+        if(window.hasDragged === true){
+            if(hoverFn !== undefined) {
+                hoverFn(); dragging = false;
+            } else if(hoveringOverCog === true){
+                toggleSettingsMenu();
+            }
+            return;
+        }
         if(hoveringOverCog === true) {
             settingsDrag = true;
             dragging = false;
@@ -368,6 +376,7 @@ window.addSideMenuEvtListeners = (nextFileName) => {
     })
 
     window.mouseMoveFunctions.push(() => {
+        if(window.hasDragged === true) { gearX = 850; gearY = 1550; return; }
         if(settingsDrag === true){
             if(settingsDragMove === true || ((lastMouseX - window.mouseX) ** 2 + (lastMouseY - window.mouseY) ** 2 > minDragDistSq)){
                 settingsDragMove = true;
@@ -378,6 +387,7 @@ window.addSideMenuEvtListeners = (nextFileName) => {
     })
     
     window.mouseUpFunctions.push(() => {
+        if(window.hasDragged === true) return;
         if(settingsDrag === true /*&& hoveringOverCog === true*/ && settingsDragMove === false) {
             toggleSettingsMenu();
         }

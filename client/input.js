@@ -99,10 +99,12 @@ window.onmouseup = () => {
 //     }
 // }
 
+window.hasDragged = false;
 window.hasDragEnded = false;
 
 // mobile
 document.body.ontouchstart = (e) => {
+    window.hasDragged = true;
     const touch = (e.changedTouches || e.originalEvent.touches)[0];
     window.onmousedown({pageX: touch.pageX, pageY: touch.pageY});
     lastTouchY = touch.pageY;
