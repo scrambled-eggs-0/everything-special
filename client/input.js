@@ -99,6 +99,8 @@ window.onmouseup = () => {
 //     }
 // }
 
+window.eventList = [];
+
 // mobile
 document.body.ontouchstart = (e) => {
     const touch = (e.touches || e.originalEvent.touches)[0];
@@ -116,6 +118,8 @@ document.body.ontouchstart = (e) => {
     e.stopPropagation();
     e.preventDefault();
     document.body.style.userSelect = "none";
+
+    eventList.push("touchStart");
 }
 
 let lastTouchY = 0;
@@ -125,6 +129,10 @@ document.body.ontouchmove = (e) => {
     lastTouchY = touch.pageY;
 
     e.preventDefault();
+
+    if(eventList[eventList.length-1] !== "touchMove"){
+        eventList.push("touchMove");
+    }
 }
 
 document.body.ontouchend = (e) => {
@@ -140,12 +148,16 @@ document.body.ontouchend = (e) => {
     e.stopPropagation();
     e.preventDefault();
     document.body.style.userSelect = "default";
+
+    eventList.push("touchend");
 }
 
 document.body.ontouchcancel = (e) => {
     document.body.ontouchend();
 
     e.preventDefault();
+
+    eventList.push("touchcancel");
 }
 
 window.oncontextmenu = (e) => { return e.preventDefault(); };

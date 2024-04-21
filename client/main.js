@@ -48,6 +48,17 @@ window.render = () => {
     if(window.scrollAnimation < 1){
         ctx.translate(0, (window.scrollAnimation-1) * canvas.height);
     }
+
+    let y = 50;
+    for(let i = 0; i < window.eventList.length; i++){
+        const t = window.eventList[i];
+        ctx.fillStyle = 'white';
+        ctx.font = '30px Inter';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        ctx.fillText(t, 0, y);
+        y += 100;
+    }
 }
 
 window.tileSize = 100; // 50

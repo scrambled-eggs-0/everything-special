@@ -9,6 +9,7 @@ canvas{
 
 html {
     overscroll-behavior: none;
+    user-select: none;
 }
 
 body {
