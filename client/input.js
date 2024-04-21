@@ -106,6 +106,8 @@ document.body.ontouchstart = (e) => {
     const touch = (e.changedTouches || e.originalEvent.touches)[0];
     window.onmousedown({pageX: touch.pageX, pageY: touch.pageY});
     lastTouchY = touch.pageY;
+
+    return absorbEvent_(e);
 }
 
 let lastTouchY = 0;
@@ -113,15 +115,29 @@ document.body.ontouchmove = (e) => {
     const touch = (e.changedTouches || e.originalEvent.touches)[0];
     window.onmousemove({pageX: touch.pageX, pageY: touch.pageY, movementY: touch.pageY - lastTouchY});
     lastTouchY = touch.pageY;
+
+    return absorbEvent_(e);
 }
 
 document.body.ontouchend = (e) => {
     window.onmouseup();
     lastTouchY = e.changedTouches[e.changedTouches.length-1].pageY;
+
+    return absorbEvent_(e);
 }
 
 document.body.ontouchcancel = (e) => {
     document.body.ontouchend();
+
+    return absorbEvent_(e);
 }
 
 window.oncontextmenu = (e) => { return e.preventDefault(); };
+
+function absorbEvent_(e) {
+    e.preventDefault && e.preventDefault();
+    e.stopPropagation && e.stopPropagation();
+    e.cancelBubble = true;
+    e.returnValue = false;
+    return false;
+}
