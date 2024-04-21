@@ -30,7 +30,7 @@ window.onmousedown = (e) => {
     }
 }
 
-window.onmousemove = (e) => {
+window.onmousemove = (e, param2) => {
     // input
     window.mouseX = ((e.pageX - window.canvasDimensions.x) / window.canvasDimensions.width) * canvas.width;//Math.min(1, Math.max(0, ) ;
     window.mouseY = ((e.pageY - window.canvasDimensions.y) / window.canvasDimensions.height) * canvas.height;
@@ -99,7 +99,7 @@ window.hasDragEnded = false;
 document.body.ontouchstart = (e) => {
     const touch = (e.changedTouches || e.originalEvent.touches)[0];
     window.onmousemove({pageX: touch.pageX, pageY: touch.pageY, movementY: touch.pageY - lastTouchY});
-    window.onmousedown({pageX: touch.pageX, pageY: touch.pageY});
+    window.onmousedown();
     lastTouchY = touch.pageY;
     return absorbEvent_(e);
 }

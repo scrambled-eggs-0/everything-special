@@ -248,12 +248,7 @@ async function processLogin(){
 }
 
 export default function drawUi(canvas, ctx, isLast=false){
-    if((window.mouseX - gearX) ** 2 + (window.mouseY - gearY) ** 2 < gearRadius ** 2 / 4){
-        gearImageRotation += 0.012;
-        hoveringOverCog = true;
-    } else {
-        hoveringOverCog = false;
-    }
+    if((window.mouseX - gearX) ** 2 + (window.mouseY - gearY) ** 2 < gearRadius ** 2 / 4) gearImageRotation += 0.012;
     renderGearImageRotation = interpolateDirection(renderGearImageRotation, gearImageRotation, 0.1);
 
     if(gearImgLoaded === true){
@@ -356,14 +351,18 @@ lastMouseX = lastMouseY = 0;
 
 window.addSideMenuEvtListeners = (nextFileName) => {
     window.mouseDownFunctions.push(() => {
-        // if(window.hasDragged === true){
-        //     if(hoveringOverCog === true){
-        //         if(lockHoveringOverCog === true) {lockHoveringOverCog = false; return; }
-        //         toggleSettingsMenu();
-        //         lockHoveringOverCog = true;
-        //     }
-        //     return;
-        // }
+        // update what we're hovering over
+        hoveringOverCog = (window.mouseX - gearX) ** 2 + (window.mouseY - gearY) ** 2 < gearRadius ** 2 / 4;
+        const smoothAnim = smoothstep(settingsMenuAnimation);
+        const translateAmount = (1-smoothAnim) * canvas.width;
+        hoverFn = undefined;
+        for(let i = 0; i < iconData.length; i++){
+            const d = iconData[i];
+            if(window.mouseX > d.x + translateAmount && window.mouseX < d.x + translateAmount + 250 && window.mouseY > d.y && window.mouseY < d.y + 250){
+                hoverFn = d.hoverFn;
+            }
+        }
+
         if(hoveringOverCog === true) {
             settingsDrag = true;
             dragging = false;
@@ -373,16 +372,11 @@ window.addSideMenuEvtListeners = (nextFileName) => {
         } else {
             settingsDrag = false;
 
-            if(hoverFn !== undefined) {hoverFn(); dragging = false; }
+            if(hoverFn !== undefined) {hoverFn(); dragging = false;}
         }
     })
 
     window.mouseMoveFunctions.push(() => {
-        // if(window.hasDragged === true) {
-        //     gearX = 850; gearY = 1550;
-        //     if(hoverFn !== undefined) { hoverFn(); hoverFn = undefined; }
-        //     return;
-        // }
         if(settingsDrag === true){
             if(settingsDragMove === true || ((lastMouseX - window.mouseX) ** 2 + (lastMouseY - window.mouseY) ** 2 > minDragDistSq)){
                 settingsDragMove = true;
@@ -393,8 +387,8 @@ window.addSideMenuEvtListeners = (nextFileName) => {
     })
     
     window.mouseUpFunctions.push(() => {
-        // if(window.hasDragged === true) return;
-        if(settingsDrag === true /*&& hoveringOverCog === true*/ && settingsDragMove === false) {
+        hoveringOverCog = (window.mouseX - gearX) ** 2 + (window.mouseY - gearY) ** 2 < gearRadius ** 2 / 4;
+        if(settingsDrag === true && hoveringOverCog === true && settingsDragMove === false) {
             toggleSettingsMenu();
         }
         // resetting to satisfying position if the gear is close
