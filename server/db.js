@@ -114,7 +114,7 @@ async function uploadFile(buffer, fileContent, textContent, username, hashedPass
     });
 
     // TEMP
-    fileNames.push(fileName);
+    // fileNames.push(fileName);
 }
 
 // async function addTestUserToDb(){

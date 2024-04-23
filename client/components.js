@@ -440,7 +440,7 @@ const simulateMap = [
             
             if((o.xv ** 2 + o.yv ** 2) * (o.timeRemain ** 2) > dist){
                 // we've overshot the next point, just stay on the inital point
-                dist = Math.sqrt((o.pointOn[0] - o.pointTo[0])**2 + (o.pointOn[1] - o.pointTo[1])**2); 
+                dist = Math.sqrt((o.pointOn[0] - o.pointTo[0])**2 + (o.pointOn[1] - o.pointTo[1])**2);
             } else {
                 // correct to next pt (sync)
                 o.pos.x -= o.xv * o.timeRemain;
