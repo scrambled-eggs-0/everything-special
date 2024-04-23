@@ -198,7 +198,7 @@ function isFit(d){
     // if it's scrolled past (less than 1.2s of average playtime), don't serve it
     if(d.views > 50 && d.playTime / d.views < 1.2) return false;
     // if it's a little timmy level (small amount of obstacles), don't serve it as much
-    if(len < 200 && Math.random() < 0.3) return false;
+    if(d.len < 200 && Math.random() < 0.3) return false;
     // if it's fine, it's fine.
     return true;
 }
