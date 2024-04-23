@@ -10,8 +10,11 @@ let username = '';
 let password = '';
 let state = 'username';
 
+const hasNonAscii = (t) => {return !/^[\u0000-\u007f]*$/.test(t)};
+
 nextButton.onclick = () => {
     if(input.value.length === 0) {alert('Please enter the username you wish to create/ login to your account with!'); return;}
+    if(hasNonAscii(input.value) === true) {alert('Username invalid! Only ASCII characters are permitted.'); return;}
     username = input.value;
 
     state = 'password';
@@ -27,6 +30,7 @@ nextButton.onclick = () => {
 createAccountButton.onclick = () => {
     if(state === 'password'){
         if(input.value.length === 0) {alert('Please enter your password!'); return;}
+        if(hasNonAscii(input.value) === true) {alert('Password invalid! Only ASCII characters are permitted.'); return;}
 
         password = input.value;
         input.value = '';
@@ -88,6 +92,7 @@ input.oninput = () => {
 
 loginButton.onclick = () => {
     if(input.value.length === 0) {alert('Please enter your password!'); return;}
+    if(hasNonAscii(input.value) === true) {alert('Username invalid! Only ASCII characters are permitted.'); return;}
 
     const lastUsername = username;
     const lastPassword = input.value;
