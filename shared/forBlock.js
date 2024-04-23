@@ -333,6 +333,8 @@ forBlock['set_parameter'] = function (block, generator) {
     return `e.pos.x += ${value} - generateTopLeftCoordinates(e)[0];\n`;
   } else if(parameter === 'y'){
     return `e.pos.y += ${value} - generateTopLeftCoordinates(e)[1];\n`;
+  } else if(parameter === 'sat.r'){
+    return `e.sat.r = Math.max(${value},0.001);e.dimensions = generateDimensions(e);`;
   }
   
   // we can't directly know what parmaeter corresponds to what. So, let's just look up all the shape, simulates, and effects in their corresponding maps and find out which one holds the constraints

@@ -1040,7 +1040,7 @@ export default {
           this.setNextStatement(true, null);
           this.setPreviousStatement(true, null);
 
-          this.defaults = {'x': 100, 'y': 100};
+          this.defaults = {'x': 100, 'y': 100, 'sat.r': 200};
 
           this.appendValueInput("VALUE")
             .appendField('set obstacle ')
@@ -1289,8 +1289,9 @@ function generateParameterDropdownOptions(childBlock, isPlug=false){
   }
 
   if(block === null) return [['x', 'x'], ['y', 'y']];
-  const shape = block.getFieldValue('SHAPE_DROPDOWN');
+  let shape = block.getFieldValue('SHAPE_DROPDOWN');
   if(shape === null) return [['x', 'x'], ['y', 'y']];// TODO: r for circle type
+  shape = parseInt(shape);
 
   const params = {};
 
@@ -1323,8 +1324,9 @@ function generateParameterDropdownOptions(childBlock, isPlug=false){
   const o = window.obstacles.pop();
 
   const arr = [['x', 'x'], ['y', 'y']];
+  if(shape === 0) arr.push(['radius', 'sat.r']);
 
-  childBlock.defaults = {'x': 100, 'y': 100};
+  childBlock.defaults = {'x': 100, 'y': 100, 'sat.r': 200};
 
   for(let key in o){
     if(excludedKeys[key] === undefined && (!(typeof o[key] === 'object') || Array.isArray(o[key]))){
@@ -1353,7 +1355,10 @@ const excludedKeys = {
   renderEffectTimer: true,
   rotation: true,
   lastBrokeTime: true,
-  timeTrapIntersecting: true
+  timeTrapIntersecting: true,
+  isText: true,
+  isWinpad: true,
+  isCoindoor: true,
 };
 
 // TODO: constraints. SnapDistance shouldn't be negative (could be abs'ed which could be a type of constraint) but some stuff just needs to stay between 0,1, e.g. decay

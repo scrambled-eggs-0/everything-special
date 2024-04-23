@@ -258,6 +258,7 @@ function generateDimensions(o){
         y: bottom - top
     }
 }
+window.generateDimensions = generateDimensions;
 
 function generateTopLeftCoordinates(o){
     let topLeftX = o.pos.x, topLeftY = o.pos.y;
