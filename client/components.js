@@ -406,10 +406,10 @@ const initSimulateMap = [
 
 const simulateMap = [
     /*pathMove*/
-    (o) => {
+    (o, timeStep=1) => {
         // TODO: make it dt consistent
-        o.pos.x += o.xv //* timeStep;
-        o.pos.y += o.yv //* timeStep;
+        o.pos.x += o.xv * timeStep;
+        o.pos.y += o.yv * timeStep;
 
         o.timeRemain--;
         if (o.timeRemain <= 0) {
@@ -435,12 +435,20 @@ const simulateMap = [
             angle = Math.atan2(o.pointTo[1] - o.pointOn[1], o.pointTo[0] - o.pointOn[0]);
             o.xv = Math.cos(angle) * o.speed;
             o.yv = Math.sin(angle) * o.speed;
+            
+            let dist = Math.sqrt((o.pointOn[0]-o.xv*o.timeRemain - o.pointTo[0])**2 + (o.pointOn[1]-o.yv*o.timeRemain - o.pointTo[1])**2);
+            
+            if((o.xv ** 2 + o.yv ** 2) * (o.timeRemain ** 2) > dist){
+                // we've overshot the next point, just stay on the inital point
+                dist = Math.sqrt((o.pointOn[0] - o.pointTo[0])**2 + (o.pointOn[1] - o.pointTo[1])**2); 
+            } else {
+                // correct to next pt (sync)
+                o.pos.x -= o.xv * o.timeRemain;
+                o.pos.y -= o.yv * o.timeRemain;
+            }
 
-            o.pos.x -= o.xv * o.timeRemain;
-            o.pos.y -= o.yv * o.timeRemain;
-
-            // distance / speed
-            o.timeRemain = Math.sqrt((o.pointOn[0] - o.pointTo[0])**2 + (o.pointOn[1] - o.pointTo[1])**2) / o.speed - o.timeRemain;
+            // time = distance / speed
+            o.timeRemain = dist / o.speed;
         }
     },
     /*rotate*/
