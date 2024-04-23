@@ -406,10 +406,10 @@ const initSimulateMap = [
 
 const simulateMap = [
     /*pathMove*/
-    (o, timeStep=1) => {
+    (o) => {
         // TODO: make it dt consistent
-        o.pos.x += o.xv * timeStep;
-        o.pos.y += o.yv * timeStep;
+        o.pos.x += o.xv;
+        o.pos.y += o.yv;
 
         o.timeRemain--;
         if (o.timeRemain <= 0) {
