@@ -87,8 +87,9 @@ const iconData = [
         x: 100, y: 100,
         img: () => {return window.scrollLocked === true ? lockImg : unlockedImg},
         hoverFn: () => {window.scrollLocked = !window.scrollLocked;},
-        text: 'Lock/Unlock Scroll',
-        fontSize: 38
+        textFn: () => {return (window.scrollLocked === true ? 'Unlock Scroll' : 'Lock Scroll')},
+        imgScale: 1,
+        label: 'scrollLock'
     },
     {
         x: 550, y: 100,
@@ -302,6 +303,7 @@ export default function drawUi(canvas, ctx, isLast=false){
             }
             ctx.globalAlpha = 1;
 
+            if(d.label === 'scrollLock') d.fontSize = window.scrollLocked === true ? 44 : 52;
             ctx.font = `${d.fontSize ?? 56}px Inter`;
             ctx.fillStyle = 'white';
             ctx.fillText(d.text, d.x + 125, d.y + 283);
