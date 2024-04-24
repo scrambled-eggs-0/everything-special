@@ -772,7 +772,7 @@ const effectMap = [
             p.pos.x += res.overlapV.x;
             p.pos.y += res.overlapV.y;
             o.strength--;
-            // if(o.strength < 0) o.strength = 0;
+            if(o.strength < 0) o.strength = 0;
         }
 
         // breakable obs shouldn't regenerate on top of you
