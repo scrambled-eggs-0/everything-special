@@ -66,6 +66,20 @@ function create(shape, simulates, effects, params){
     if(params.ef !== undefined) {e.effect.push(params.ef); e.renderEffect.push(renderEffectMap[3]);}
     
     obstacles.push(e);
+
+    // fixing polygon points if they're dynamically generated
+    if(params.fixPoly !== undefined){
+        if(isEditor === true){
+            e.sat.setPoints(window.fixPolygon(params.points).map(pt => new SAT.Vector(pt[0], pt[1])));
+            e.dimensions = generateDimensions(e);
+        } else {
+            (async()=>{
+                await import('../shared/fixPolygon.js');
+                e.sat.setPoints(window.fixPolygon(params.points).map(pt => new SAT.Vector(pt[0], pt[1])));
+                e.dimensions = generateDimensions(e);
+            })();
+        }
+    }
 }
 window.C = create;
 
@@ -209,17 +223,18 @@ const satMap = [
 ];
 
 // font loading fix
-setTimeout(() => {
+function fixFonts() {
     const os = window.obstacles;
     for(let i = 0; i < os.length; i++){
         if(os[i].isText !== true) continue;
-
         const oldDimensions = os[i].dimensions;
         os[i].dimensions = generateDimensions(os[i]);
         os[i].pos.x += (oldDimensions.x - os[i].dimensions.x) / 2;
         os[i].pos.y += (oldDimensions.y - os[i].dimensions.y) / 2;
     }
-}, 1000)
+}
+setTimeout(fixFonts, 1000);
+setTimeout(fixFonts, 3000);
 
 function generateDimensions(o){
     const sat = o.sat;

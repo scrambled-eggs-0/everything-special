@@ -6,6 +6,7 @@ import {blocks} from './blocks/text.js';
 import forBlock from '../shared/forBlock.js';
 import {javascriptGenerator} from 'blockly/javascript';
 import {save, load} from './serialization';
+import '../shared/fixPolygon.js';
 import toolbox from '../shared/toolbox.js';
 import textData from '../shared/textData.js';
 import DarkTheme from '@blockly/theme-dark';

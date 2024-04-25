@@ -551,6 +551,13 @@ app.get("/:filename", (res, req) => {
     }
 });
 
+app.get('/shared/fixPolygon.js', (res, req) => {
+    res.cork(() => {
+        res.writeHeader('Content-Type', 'text/javascript');
+        res.end(fs.readFileSync('shared/fixPolygon.js'));
+    })
+});
+
 app.get("/gfx/:filename", (res, req) => {
     let path = 'client' + req.getUrl();
 
