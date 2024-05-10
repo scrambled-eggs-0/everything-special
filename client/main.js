@@ -39,7 +39,13 @@ window.render = () => {
         if(window.scrollAnimation > 1) window.scrollAnimation = 1;
         ctx.translate(0, -window.scrollAnimation * canvas.height);// not the same as the exit transform because we also want to translate (-canvas.height) in addition to (1 - window.scrollAnimation) * canvas.height
 
+        let resetColorTile = window.colors.tile;
+        let resetColorBackground = window.colors.background; 
+        window.colors.tile = window.lastColors.tile;
+        window.colors.background = window.lastColors.background;
         _render(window.lastObstacles, window.lastColors, window.lastPlayerData);
+        window.colors.tile = resetColorTile;
+        window.colors.background = resetColorBackground; 
         ctx.translate(0, canvas.height);
     }
 

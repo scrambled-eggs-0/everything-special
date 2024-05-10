@@ -137,11 +137,22 @@ window.playMusicIndefinitely('https://www.youtube.com/watch?v=A2AydJcUKR8');
 
 let levelIndex = 0;
 let lastLevelIndex = levelIndex;
+let timesLooped = 0;
 
 // getNextCode injection
 export default () => {
     lastLevelIndex = levelIndex - 1;
-    if(levelIndex >= tutorialMaps.length) levelIndex = 0;
+    if(levelIndex >= tutorialMaps.length) {
+        levelIndex = 0;
+        timesLooped++;
+        if(timesLooped >= 3 && timesLooped % 3 === 0){
+            if(confirm("Do you want to skip the tutorial?") === true){
+                localStorage.setItem('tutorialCompleted', 'true');
+                location.reload();
+                return tutorialMaps[levelIndex++];
+            }
+        }
+    }
     while(window.tutorialMapsBeaten[levelIndex] === true) levelIndex++;
     return tutorialMaps[levelIndex++];
 }

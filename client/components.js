@@ -121,6 +121,7 @@ function simulate(){
     }    
 
     if(player.dead === true){
+        player.renderRadius = player.lastAliveRadius;
         for(let i = 0; i < obstacles.length; i++){
             // obstacle simulation
             for(let j = 0; j < obstacles[i].simulate.length; j++){
@@ -128,6 +129,7 @@ function simulate(){
             }
         }
     } else {
+        player.lastAliveRadius = player.sat.r;
         for(let i = 0; i < obstacles.length; i++){
             // collision (done before simulation because that is what last rendered frame sees)
             // TODO: bounding box check
@@ -1686,7 +1688,7 @@ const player = window.player = obstacles.pop();
 player.axisSpeedMultX = player.axisSpeedMultY = 1;
 player.touchingNormalIndexes = [];
 player.lastTouchingNormalIndexes = [];
-player.renderRadius = player.sat.r;
+player.renderRadius = player.lastAliveRadius = player.sat.r;
 player.xv = player.yv = 0;
 player.speed = player.baseSpeed = 4;
 player.dead = false;
