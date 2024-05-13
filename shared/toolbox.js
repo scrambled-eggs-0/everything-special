@@ -88,7 +88,7 @@ export default /*const toolbox =*/ {
       'contents': [
         {
           "kind": "button",
-          "text": "Click to return to the main page!",
+          "text": "Click to return to the main game!",
           "callbackKey": "returnToMainGame"
         },
         {
