@@ -129,6 +129,11 @@ function simulate(){
             }
         }
     } else {
+        if(player.pos.x - player.sat.r < 0) player.pos.x = player.sat.r;
+        else if(player.pos.x + player.sat.r > canvas.width) player.pos.x = canvas.width - player.sat.r;
+        if(player.pos.y - player.sat.r < 0) player.pos.y = player.sat.r;
+        else if(player.pos.y + player.sat.r > canvas.height) player.pos.y = canvas.height - player.sat.r;
+
         player.lastAliveRadius = player.sat.r;
         for(let i = 0; i < obstacles.length; i++){
             // collision (done before simulation because that is what last rendered frame sees)
