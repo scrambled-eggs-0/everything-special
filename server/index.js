@@ -613,7 +613,7 @@ app.post('/share', (res, req) => {
 })
 
 // we'll have a post request handler here that will take file content and upload it to the db
-//onPost: db.uploadFile(data);
+// onPost: db.uploadFile(data);
 
 // app.get("/:filename", (res, req) => {
 //     const path = 'src/client' + req.getUrl();
