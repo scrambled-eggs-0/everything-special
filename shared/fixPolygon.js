@@ -1,5 +1,5 @@
 // takes in a series of points and computes the minimum convex hull
-// which is what we need for SAT polygons.
+// which is what we need for SAT polygons. 
 window.fixPolygon = (points) => {
     return new GrahamScan(points).hull;
 }
