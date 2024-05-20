@@ -14,7 +14,6 @@
     "blockly": "^10.4.1",
     "gridfs-stream": "^1.1.1",
     "mongoose": "^8.1.1",
-    "node-calls-python": "^1.8.2",
     "parse-multipart": "^1.0.4",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.31.0"
   }
