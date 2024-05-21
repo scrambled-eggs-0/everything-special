@@ -12,13 +12,13 @@ window.levelFileName = '';
 // TEMP vv
 const tutorialMaps = [
     `C(1,[],[12],{h:100,w:100,y:1450,x:50,tpy:800,tpx:200,});C(1,[],[0],{h:500,w:900,y:0,x:0,});C(1,[],[0],{h:500,w:900,y:1100,x:0,});
-    C(3,[],[20],{fontSize:80,text:'Welcome!',y:100,x:450,hex:'#ffffff',});
+    /*C(3,[],[20],{fontSize:80,text:'Welcome!',y:100,x:450,hex:'#ffffff',});
     C(3,[0],[20],{fontSize:62,text:'Hold tap anywhere to',y:340,x:-550,path:[[0,0,23],[1000,0,0]],currentPoint:0,hex:'#ffffff',});
     C(3,[0],[20],{fontSize:62,text:'make your player move there!',y:400,x:-550,path:[[0,0,23],[1000,0,0]],currentPoint:0,hex:'#ffffff',});
-    C(3,[0],[20],{fontSize:80,text:'Good Luck!',y:4500,x:450,path:[[0,0,23],[0,-3000,0]],currentPoint:0,hex:'#ffffff',});
+    C(3,[0],[20],{fontSize:80,text:'Good Luck!',y:4500,x:450,path:[[0,0,23],[0,-3000,0]],currentPoint:0,hex:'#ffffff',});*/
     C(0,[],[6],{r:50,y:800,x:700,});
-    C(3,[0],[20],{fontSize:62,text:'The rainbow object is your',y:1200,x:2450,path:[[0,0,23],[-2000,0,0]],currentPoint:0,hex:'#ffffff',});
-    C(3,[0],[20],{fontSize:62,text:'goal, hold tap on it to reach it.',y:1260,x:2450,path:[[0,0,23],[-2000,0,0]],currentPoint:0,hex:'#ffffff',});
+    /*C(3,[0],[20],{fontSize:62,text:'The rainbow object is your',y:1200,x:2450,path:[[0,0,23],[-2000,0,0]],currentPoint:0,hex:'#ffffff',});
+    C(3,[0],[20],{fontSize:62,text:'goal, hold tap on it to reach it.',y:1260,x:2450,path:[[0,0,23],[-2000,0,0]],currentPoint:0,hex:'#ffffff',});*/
     colors.background=colourRgb(22,22,22);colors.tile=colourRgb(5,5,5);`,
 
     `colors.tile=colourRgb(12,13,16);colors.background=colourRgb(19,21,27);
@@ -230,9 +230,10 @@ async function scroll(){
 window.won = false;
 async function getNextCode(){
     // TEMP vv
-    if(Math.random() < 0.39){
-        return tutorialMaps[Math.floor(Math.random()*tutorialMaps.length)];
-    }
+    return tutorialMaps[0];
+    // if(Math.random() < 0.39){
+    //     return tutorialMaps[Math.floor(Math.random()*tutorialMaps.length)];
+    // }
     const response = await fetch(reqUrl);
     if (!response.ok) throw new Error(`Failed to fetch ${reqUrl}`);
     nextFileName = response.headers.get('Fn');

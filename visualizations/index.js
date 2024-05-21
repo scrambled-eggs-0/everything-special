@@ -172,7 +172,7 @@ async function createTile() {
     // div.appendChild( iframe );
 
     const object = new CSS3DObject( iframe ); // div
-    object.position.set( (Math.random()-0.5) * 2 * 1920, (Math.random()-0.5) * 2 * 1080, -10000 );
+    object.position.set( (Math.random()-0.5) * 2 * 1920, (Math.random()-0.5) * 2 * 1080, -1000/*0*/ );
     object.rotation.z = (Math.random()-0.5) * 2 * Math.PI / 33;
 
     // object.rotation.y = ry;
@@ -241,15 +241,12 @@ function init() {
     renderer.setSize( window.innerWidth, window.innerHeight );
     container.appendChild( renderer.domElement );
 
-    createTile( 0, 0, 240, 0 );
-    createTile( 240, 0, 0, Math.PI / 2 );
-    createTile( 0, 0, - 240, Math.PI );
-    createTile( - 240, 0, 0, - Math.PI / 2 );
-
     controls = new OrbitControls( camera, renderer.domElement );
     // controls.rotateSpeed = 4;
 
     window.addEventListener( 'resize', onWindowResize );
+
+    createTile();
 
     // Block iframe events when dragging camera
 
@@ -291,7 +288,7 @@ function animate() {
 
     requestAnimationFrame( animate );
     controls.update();
-    simulateTiles();
+    // simulateTiles();
     renderer.render( scene, camera );
 
 }
