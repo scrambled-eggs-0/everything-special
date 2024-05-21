@@ -697,7 +697,7 @@ app.get("/visualizations", (res, req) => {
 
 app.get("/visualizations/:filename", (res, req) => {
     let path = req.getUrl().slice(1);
-
+    
     // only js files check for mime type so everything can be text/javascript lol
     // TODO: GET WEBPACK SET UP!!!!!! WITHOUT IT THERE's A PREFLIGHT REQUEST WHICH IS REALLY SLOW
     const extension = path.slice(path.length - 3, path.length);
