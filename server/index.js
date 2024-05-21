@@ -39,6 +39,20 @@ app.get("/", (res, req) => {
     res.end(fs.readFileSync("client/index.html"));
     // })
 });
+app.get("/standalone/gfx/decorations/hats/:filename", (res, req) => {
+    let path = "client/gfx/decorations/" + req.getParameter(0);
+
+    if (fs.existsSync(path)) {
+        // Read and serve the file
+        res.end(fs.readFileSync(path));
+    } else {
+        // File not found
+        res.cork(() => {
+            res.writeStatus("404 Not Found");
+            res.end();
+        });
+    }
+});
 
 app.get("/standalone/gfx/decorations/:filename", (res, req) => {
     let path = "client/gfx/decorations/" + req.getParameter(0);
@@ -648,6 +662,21 @@ app.get("/gfx/:filename", (res, req) => {
 });
 
 app.get("/gfx/decorations/:filename", (res, req) => {
+    let path = "client" + req.getUrl();
+
+    if (fs.existsSync(path)) {
+        // Read and serve the file
+        res.end(fs.readFileSync(path));
+    } else {
+        // File not found
+        res.cork(() => {
+            res.writeStatus("404 Not Found");
+            res.end();
+        });
+    }
+});
+
+app.get("/gfx/decorations/hats/:filename", (res, req) => {
     let path = "client" + req.getUrl();
 
     if (fs.existsSync(path)) {

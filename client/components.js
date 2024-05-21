@@ -4,6 +4,8 @@ const { isEditor, blendColor } = Utils;
 import scroll from './scroll.js';
 let toScroll = false;
 
+
+
 window.respawnPlayer = () => {
     player.pos.x = window.spawnPosition.x;
     player.pos.y = window.spawnPosition.y;
@@ -1690,6 +1692,8 @@ window.spawnPosition = {x: 100, y: 1500};
 // a player is also an ecs
 create(0/*circle*/, [], [], /*no simulate/ effects*/ {x: window.spawnPosition.x, y: window.spawnPosition.y, r: /*24.5*/49.5})
 const player = window.player = obstacles.pop();
+player.hat = typeof Image === 'undefined' ? {} : new Image();
+player.hat.src = '/gfx/decorations/hats/spring-wreath.png';
 player.axisSpeedMultX = player.axisSpeedMultY = 1;
 player.touchingNormalIndexes = [];
 player.lastTouchingNormalIndexes = [];

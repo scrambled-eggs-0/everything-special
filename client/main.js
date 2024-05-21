@@ -1,6 +1,7 @@
 // 1 file project? Why not
 const canvas = window.canvas = document.getElementById('canvas');
 const ctx = window.ctx = canvas.getContext('2d');
+ctx.imageSmoothingQuality = "high"
 
 import './input.js';
 import simulate from './components.js';
@@ -15,8 +16,9 @@ const { isEditor, blendColor } = Utils;
 window.scrollAnimation = 1;
 
 window.defaultColors = {
-    tile: '#1b9456',//'#0d0d0d',// the stroke and outside of arena
-    background: '#1fad64'//blendColor('#1ea761', '#1b9456', -0.34)//'#5260ab'//'#41ba56'//'#383838',// the fillcolor
+    // og eX colors
+    tile: '#1f2229',//'#1b9456',//'#0d0d0d',// the stroke and outside of arena
+    background: '#323645',//'#1fad64'//blendColor('#1ea761', '#1b9456', -0.34)//'#5260ab'//'#41ba56'//'#383838',// the fillcolor
 }
 
 window.colors = {
@@ -59,12 +61,13 @@ window.render = () => {
 window.tileSize = 100; // 50
 let opaqIndex, len, lastPlayerX, lastPlayerY, lastPlayerRadius, lastGA, j = false, lastNLDX = 0, lastNLDY = 0;
 function _render(os, cols, playerData=undefined){
+    document.body.style.backgroundColor = cols.tile
     ctx.fillStyle = cols.background;
     ctx.fillRect(0,0,canvas.width, canvas.height);
 
     // render tiles
     ctx.strokeStyle = cols.tile;
-    ctx.lineWidth = isEditor === true ? 4 : 2;
+    ctx.lineWidth = isEditor === true ? 4 : 4;
 
     for (let x = 0; x < canvas.width + ctx.lineWidth + window.tileSize; x += window.tileSize) {
         ctx.beginPath();
@@ -160,9 +163,19 @@ function _render(os, cols, playerData=undefined){
     
     ctx.beginPath();
     player.renderShape(player);
-    
-    if(player.renderRadius >= 0) ctx.fill();
-    else {
+
+    if(player.renderRadius >= 0) {
+        ctx.fill();
+        if (player.hat.complete) {
+            ctx.drawImage(
+                player.hat,
+                player.pos.x - (80 * (player.renderRadius / 25)) / 2,
+                player.pos.y - (80 * (player.renderRadius / 25)) / 2,
+                80 * (player.renderRadius / 25),
+                80 * (player.renderRadius / 25)
+            );
+        }
+    } else {
         // negative radius
         const diameter = 2 * Math.PI * Math.abs(player.dead === true ? player.sat.r : lastPlayerRadius);
         const timesAround = Math.max(3, Math.floor(diameter / 42));
@@ -191,6 +204,13 @@ function _render(os, cols, playerData=undefined){
     // }
 
     renderUi(canvas, ctx, playerData !== undefined);
+    if (window.showFps) {
+        ctx.fillStyle = 'white';
+        ctx.font = '30px Inter'
+        ctx.textAlign = 'left'
+        ctx.textBaseline = 'top'
+        ctx.fillText(`${fpsCount} fps`, 0, 0)
+    }
 }
 
 function renderTextSpecials(o, cols){
@@ -214,10 +234,12 @@ function renderTextSpecials(o, cols){
 }
 
 // gameloop
-let lastTime, now, firstTime, accum, dt, offtabTime;
+let lastTime, now, firstTime, accum, dt, offtabTime, fps, fpsCount;
 lastTime = now = firstTime = Date.now();
 accum = dt = window.frames = offtabTime = 0;
 window.time = 0;
+fps = 0; 
+fpsCount = 0;
 const FRAME_TIME = 1000 / 60;
 (function run(){
     now = Date.now();
@@ -225,6 +247,7 @@ const FRAME_TIME = 1000 / 60;
     accum += dt;
     window.time += dt;
     lastTime = now;
+    fps++;
 
     if(dt > 2000) offtabTime += dt;
     
@@ -255,13 +278,18 @@ const FRAME_TIME = 1000 / 60;
     window.render();
 })();
 
+setInterval(() => {
+    fpsCount = fps;
+    fps = 0;
+}, 1000);
+
 if(isEditor !== true){
     // resizing canvas
-    function resize(){
-        let scale = window.innerWidth / canvas.width;
-        if(window.innerHeight / canvas.height < window.innerWidth / canvas.width){
-            scale = window.innerHeight / canvas.height;
-        }
+    window.resize = function(){
+        let scale = Math.min(
+            window.innerWidth / canvas.width,
+            window.innerHeight / canvas.height
+        );
 
         canvas.style.transform = `scale(${scale})`;
         canvas.style.left = (window.innerWidth - canvas.width) / 2 + "px";
