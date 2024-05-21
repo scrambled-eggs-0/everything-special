@@ -9,7 +9,6 @@ const client = new MongoClient(
     },
 );
 const isReplit = process.env["isReplit"] === "y";
-console.log({ isReplit });
 
 let db;
 let connected = false;

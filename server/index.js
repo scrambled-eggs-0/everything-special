@@ -383,11 +383,9 @@ app.get("/bundle.js", (res, req) => {
 });
 
 app.get("/game", async (res, req) => {
-    res.onAborted(() => {
-        downloadStream.abort();
-        console.log("aborted!!");
-        closed = true;
-    });
+    let closed = false;
+    let abortFn = () => { closed = true; };
+    res.onAborted(abortFn);
     // res.cork(() => {
     //     res.writeHeader('Access-Control-Allow-Origin', '*'); // Allow requests from any origin
     //     res.writeHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
@@ -401,9 +399,12 @@ app.get("/game", async (res, req) => {
     // temp, just serving a random file. TODO: in prod remove async and cache serving somehow??
     const fileName = await db.getRandomFileName();
 
+    if(closed === true) return;
+
     res.cork(() => {
         res.writeHeader("Fn", fileName);
     });
+
     // console.log(ipStr);
 
     const downloadStream = db.getFile(
@@ -411,7 +412,11 @@ app.get("/game", async (res, req) => {
         Array.from(new Uint8Array(res.getRemoteAddress())).join(""),
     );
 
-    let closed = false;
+    abortFn = () => {
+        downloadStream.abort();
+        console.log("aborted!!");
+        closed = true;
+    }
 
     downloadStream.on("data", (chunk) => {
         if (closed === true) return;
@@ -685,6 +690,46 @@ app.post("/share", (res, req) => {
 
     res.end();
 });
+
+app.get("/visualizations", (res, req) => {
+    res.end(fs.readFileSync("visualizations/index.html"));
+});
+
+app.get("/visualizations/:filename", (res, req) => {
+    let path = req.getUrl().slice(1);
+
+    // only js files check for mime type so everything can be text/javascript lol
+    // TODO: GET WEBPACK SET UP!!!!!! WITHOUT IT THERE's A PREFLIGHT REQUEST WHICH IS REALLY SLOW
+    const extension = path.slice(path.length - 3, path.length);
+
+    res.cork(() => {
+        if (extension === "css") {
+            res.writeHeader("Content-Type", "text/css");
+        } else {
+            res.writeHeader("Content-Type", "text/javascript");
+        }
+    });
+
+    // Check if the file exists
+    if (fs.existsSync(path)) {
+        // Read and serve the file
+        res.end(fs.readFileSync(path));
+    } else {
+        // File not found
+        res.cork(() => {
+            res.writeStatus("404 Not Found");
+            res.end();
+        });
+    }
+});
+
+// ratelimit idea: in each endpoint if(rateLimit(res)) return;
+// function rateLimit(response){
+//     const ip = response.getIp(); // response.getRemoteAddressAsText
+//     rateLimits[ip]++;
+//     setTimeout(() => {rateLimits[ip]--;}, 1000) // or a more sophisticated system that pushes to an array and every 1s (done w/ setinterval) rateLimits[each element in the array]--
+//     return rateLimit[ip] > 10;
+// }
 
 // we'll have a post request handler here that will take file content and upload it to the db
 // onPost: db.uploadFile(data);
