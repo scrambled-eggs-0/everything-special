@@ -29,8 +29,8 @@ function create(shape, simulates, effects, params){
     };
     e.renderEffectTimer = 0;
     e.pos = e.sat.pos;
-    if(shape === 0) e.sat.r = Math.max(e.sat.r, 0.001);// TEMP vv
-    else if(shape === 3) {e.isText = true; e.text = params.text.replaceAll('penis', 'lovely'); e.fontSize = params.fontSize; }
+    if(shape === 0) e.sat.r = Math.max(e.sat.r, 0.001);
+    else if(shape === 3) {e.isText = true; e.text = params.text; e.fontSize = params.fontSize; }
     for(let key in window.satConstraintsMap[shape]){
         // [min, max, mustBeInt, customValidator(e)]
         const c = window.satConstraintsMap[shape][key];
@@ -138,18 +138,17 @@ function simulate(){
         for(let i = 0; i < obstacles.length; i++){
             // collision (done before simulation because that is what last rendered frame sees)
             // TODO: bounding box check
-            // TEMP vv
-            // if(obstacles[i].sat.r !== undefined){
-            //     collided = SAT.testCircleCircle(obstacles[i].sat, player.sat, res);
-            // } else {
-            //     collided = SAT.testPolygonCircle(obstacles[i].sat, player.sat, res);
-            // }
-            // if(collided === true){
-            //     for(let j = 0; j < obstacles[i].effect.length; j++){
-            //         obstacles[i].effect[j](player, res, obstacles[i], i);
-            //     }
-            // }
-            // res.clear();// TODO: test if this is really needed
+            if(obstacles[i].sat.r !== undefined){
+                collided = SAT.testCircleCircle(obstacles[i].sat, player.sat, res);
+            } else {
+                collided = SAT.testPolygonCircle(obstacles[i].sat, player.sat, res);
+            }
+            if(collided === true){
+                for(let j = 0; j < obstacles[i].effect.length; j++){
+                    obstacles[i].effect[j](player, res, obstacles[i], i);
+                }
+            }
+            res.clear();// TODO: test if this is really needed
     
             // obstacle simulation
             for(let j = 0; j < obstacles[i].simulate.length; j++){

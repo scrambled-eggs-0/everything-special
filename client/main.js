@@ -14,11 +14,9 @@ const { isEditor, blendColor } = Utils;
 
 window.scrollAnimation = 1;
 
-const r = () => {return Math.floor(Math.random() * 255)};
 window.defaultColors = {
-    // TEMP vv
-    tile: `hsl(${Math.floor(Math.random()*255)},50%,50%)`,//'#1b9456',//'#0d0d0d',// the stroke and outside of arena
-    background: 'black'//`rgb(${r()},${r()},${r()})`//'#1fad64'//blendColor('#1ea761', '#1b9456', -0.34)//'#5260ab'//'#41ba56'//'#383838',// the fillcolor
+    tile: '#1b9456',//'#0d0d0d',// the stroke and outside of arena
+    background: '#1fad64'//blendColor('#1ea761', '#1b9456', -0.34)//'#5260ab'//'#41ba56'//'#383838',// the fillcolor
 }
 
 window.colors = {
@@ -66,8 +64,7 @@ function _render(os, cols, playerData=undefined){
 
     // render tiles
     ctx.strokeStyle = cols.tile;
-    // TEMP vv
-    ctx.lineWidth = 6//isEditor === true ? 4 : 2;
+    ctx.lineWidth = isEditor === true ? 4 : 2;
 
     for (let x = 0; x < canvas.width + ctx.lineWidth + window.tileSize; x += window.tileSize) {
         ctx.beginPath();
@@ -160,27 +157,25 @@ function _render(os, cols, playerData=undefined){
         player.sat.r = Math.abs(player.renderRadius);
     }
     
+    ctx.beginPath();
+    player.renderShape(player);
     
-    // TEMP vv
-    // ctx.beginPath();
-    // player.renderShape(player);
-    
-    // if(player.renderRadius >= 0) ctx.fill();
-    // else {
-    //     // negative radius
-    //     const diameter = 2 * Math.PI * Math.abs(player.dead === true ? player.sat.r : lastPlayerRadius);
-    //     const timesAround = Math.max(3, Math.floor(diameter / 42));
-    //     lastNLDX = lastNLDX * 0.96 + 2/7*diameter/timesAround * 0.04;
-    //     lastNLDY = lastNLDY * 0.96 + 5/7*diameter/timesAround * 0.04;
-    //     ctx.setLineDash([lastNLDX, lastNLDY]);
-    //     ctx.lineDashOffset = (-window.time / 26) % diameter;
-    //     ctx.strokeStyle = ctx.fillStyle;
-    //     ctx.lineWidth = 8;
-    //     ctx.lineCap = 'round';
-    //     ctx.stroke();
-    //     ctx.setLineDash([]);
-    // }
-    // ctx.closePath();
+    if(player.renderRadius >= 0) ctx.fill();
+    else {
+        // negative radius
+        const diameter = 2 * Math.PI * Math.abs(player.dead === true ? player.sat.r : lastPlayerRadius);
+        const timesAround = Math.max(3, Math.floor(diameter / 42));
+        lastNLDX = lastNLDX * 0.96 + 2/7*diameter/timesAround * 0.04;
+        lastNLDY = lastNLDY * 0.96 + 5/7*diameter/timesAround * 0.04;
+        ctx.setLineDash([lastNLDX, lastNLDY]);
+        ctx.lineDashOffset = (-window.time / 26) % diameter;
+        ctx.strokeStyle = ctx.fillStyle;
+        ctx.lineWidth = 8;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+    ctx.closePath();
 
     if(playerData !== undefined){
         player.pos.x = lastPlayerX;
