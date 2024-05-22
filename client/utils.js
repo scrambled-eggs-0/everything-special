@@ -11,7 +11,7 @@ const until = (condition, checkInterval=400) => {
 
 const SCROLL_PARAMS = Object.freeze({
     sensitivity: 10 * 1300,
-    minAvgSpeed: 0.5 * 1300, //hard for trackpad, added down arrow
+    minAvgSpeed: 0.5 * 1300,
     maxScrollTime: 150,
     edgeMargin: 117 // out of 900
 });

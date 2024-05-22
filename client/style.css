@@ -1,17 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 canvas{
     position:fixed;
     left: 0;
     top: 0;
-    cursor: cell;
-    box-shadow: 0 0 1px 8px black;
+    cursor: crosshair;
 }
 
 html {
@@ -21,11 +14,9 @@ html {
 
 body {
     background-color: #121212;
-    transition: background 0.3s linear;
     overscroll-behavior: none;
     user-select: none;
 }
-
 
 .loginWindow {
     width: 100vw;

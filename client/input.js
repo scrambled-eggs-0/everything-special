@@ -7,9 +7,6 @@ window.dragging = false;
 let totalDist = 0;
 let dragStartTime;
 
-//fps
-window.showFps = false;
-
 // input
 const canvas = document.getElementById('canvas');
 window.mouseX = -1;
@@ -23,7 +20,7 @@ window.pageX = -1;
 window.pageY = -1;
 
 window.onmousedown = (e) => {
-    // scrollin
+    // scrolling
     dragging = true;
     totalDist = 0;
     dragStartTime = Date.now();
@@ -77,21 +74,6 @@ window.onmousemove = (e, param2) => {
         }
     }
 }
-
-window.addEventListener('keydown', e => {
-    if (e.repeat) return
-    if (window.scrollLocked !== true && e.code === "ArrowDown" 
-        && window.scrollAnimation === 1) {
-        scroll()    
-    }
-    if (e.code === "KeyT") {
-        localStorage.removeItem('tutorialCompleted');
-        location.reload()
-    }
-    if (e.code === "KeyF") {
-        window.showFps = !window.showFps
-    }
-})
 
 window.onmouseup = () => {
     // scrolling
