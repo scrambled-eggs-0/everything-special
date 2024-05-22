@@ -129,3 +129,11 @@ function absorbEvent_(e) {
     e.returnValue = false;
     return false;
 }
+
+window.addEventListener('keydown', e => {
+    if (e.repeat === true) return;
+    if (window.scrollLocked !== true && e.code === "ArrowDown" 
+        && window.scrollAnimation === 1) {
+        scroll()    
+    }
+})

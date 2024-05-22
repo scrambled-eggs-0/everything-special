@@ -383,11 +383,9 @@ app.get("/bundle.js", (res, req) => {
 });
 
 app.get("/game", async (res, req) => {
-    res.onAborted(() => {
-        downloadStream.abort();
-        console.log("aborted!!");
-        closed = true;
-    });
+    let closed = false;
+    let abortFn = () => { closed = true; };
+    res.onAborted(abortFn);
     // res.cork(() => {
     //     res.writeHeader('Access-Control-Allow-Origin', '*'); // Allow requests from any origin
     //     res.writeHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
@@ -401,9 +399,12 @@ app.get("/game", async (res, req) => {
     // temp, just serving a random file. TODO: in prod remove async and cache serving somehow??
     const fileName = await db.getRandomFileName();
 
+    if(closed === true) return;
+
     res.cork(() => {
         res.writeHeader("Fn", fileName);
     });
+
     // console.log(ipStr);
 
     const downloadStream = db.getFile(
@@ -411,7 +412,6 @@ app.get("/game", async (res, req) => {
         Array.from(new Uint8Array(res.getRemoteAddress())).join(""),
     );
 
-    let closed = false;
 
     downloadStream.on("data", (chunk) => {
         if (closed === true) return;
