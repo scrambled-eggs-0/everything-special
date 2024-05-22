@@ -160,7 +160,6 @@ function _render(os, cols, playerData=undefined){
         player.sat.r = Math.abs(player.renderRadius);
     }
     
-    
     ctx.beginPath();
     player.renderShape(player);
 
