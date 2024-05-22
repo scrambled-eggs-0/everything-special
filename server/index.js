@@ -412,6 +412,11 @@ app.get("/game", async (res, req) => {
         Array.from(new Uint8Array(res.getRemoteAddress())).join(""),
     );
 
+    abortFn = () => {
+        downloadStream.abort();
+        console.log("aborted!!");
+        closed = true;
+    }
 
     downloadStream.on("data", (chunk) => {
         if (closed === true) return;
