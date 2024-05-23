@@ -93,6 +93,18 @@ export default /*const toolbox =*/ {
         },
         {
           'kind': 'block',
+          'type': 'client_pos'
+        },
+        {
+          'kind': 'block',
+          'type': 'is_dragging'
+        },
+        {
+          'kind': 'block',
+          'type': 'player_spawn'
+        },
+        {
+          'kind': 'block',
           'type': 'set_music',
           'inputs': {
             'URL': {
@@ -108,30 +120,6 @@ export default /*const toolbox =*/ {
         {
           'kind': 'block',
           'type': 'stop_music'
-        },
-        {
-          'kind': 'block',
-          'type': 'is_dragging'
-        },
-        {
-          'kind': 'block',
-          'type': 'mouse_x'
-        },
-        {
-          'kind': 'block',
-          'type': 'mouse_y'
-        },
-        {
-          'kind': 'block',
-          'type': 'player_x'
-        },
-        {
-          'kind': 'block',
-          'type': 'player_y'
-        },
-        {
-          'kind': 'block',
-          'type': 'player_spawn'
         },
         {
           'kind': 'block',

@@ -99,6 +99,14 @@ forBlock['create_obstacle'] = function(block, generator) {
     params += `${key}:${generator.valueToCode(block, this.simulateParamToId[key], Order.NONE)},`;
   }
 
+  if(block.simulateParamToId.id !== undefined){
+    try {
+      block.obstacleId = eval(generator.valueToCode(block, this.simulateParamToId["id"], Order.NONE));
+    } catch(e){delete block.obstacleId;}
+  } else {
+    delete block.obstacleId;
+  }
+
   for(let key in block.effectParamToId){
     params += `${key}:${generator.valueToCode(block, this.effectParamToId[key], Order.NONE)},`;
   }
@@ -234,24 +242,18 @@ forBlock['create_list'] = function(block, generator) {
 //   return `e.emoji="${sn}";e.drawImg=false;`;
 // };
 
-forBlock['mouse_x'] = function (block, generator) {
-  return [`mouseX`, Order.NONE];
-};
-
-forBlock['mouse_y'] = function (block, generator) {
-  return [`mouseY`, Order.NONE];
+forBlock['client_pos'] = function (block, generator) {
+  if(block.getFieldValue('TYPE_DROPDOWN', Order.NONE) === 'player'){
+    if(block.getFieldValue('POS_DROPDOWN', Order.NONE) === 'x') return [`player.pos.x`, Order.NONE];
+    return [`player.pos.y`, Order.NONE];
+  } else {
+    if(block.getFieldValue('POS_DROPDOWN', Order.NONE) === 'x') return [`mouseX`, Order.NONE];
+    return [`mouseY`, Order.NONE];
+  }
 };
 
 forBlock['is_dragging'] = function (block, generator) {
   return [`dragging`, Order.NONE];
-};
-
-forBlock['player_x'] = function (block, generator) {
-  return [`player.pos.x`, Order.NONE];
-};
-
-forBlock['player_y'] = function (block, generator) {
-  return [`player.pos.y`, Order.NONE];
 };
 
 forBlock['player_spawn'] = function (block, generator) {
@@ -323,8 +325,65 @@ forBlock['get_parameter'] = function (block, generator) {
 };
 
 forBlock['set_parameter'] = function (block, generator) {
-  const parentBlock = window.getParentBlockOfType(block);
-  if(parentBlock === null) return '';
+  const id = generator.valueToCode(block, 'ID', Order.NONE);
+  let parentBlock = null;
+  let wrapFunction = (a) => { return a; };
+  let hasId = false;
+  if(id !== null && id !== ''){
+    // NOTE: obstacle ids are static. This means that an id is
+    // defined iff the map contains it at the very beginning.
+    // We still don't know the id, though, since it could be a
+    // variable.
+    const parameter = block.getFieldValue('INPUT', Order.NONE);
+
+    hasId = true;
+    // get the constraints the slow way: by looping over all the names
+    let constraints;
+    for(let i = 0; i < window.satMapI2N.length; i++){
+      if(window.satMapI2N[i] === parameter){
+        constraints = window.satConstraintsMap[i];
+        break;
+      }
+    }
+
+    if(constraints === undefined){
+      for(let i = 0; i < window.simulateMapI2N.length; i++){
+        if(window.simulateMapI2N[i] === parameter){
+          constraints = window.simulateConstraintsMap[i];
+          break;
+        }
+      }
+    }
+
+    if(constraints === undefined){
+      for(let i = 0; i < window.effectMapI2N.length; i++){
+        if(window.effectMapI2N[i] === parameter){
+          constraints = window.effectConstraintsMap[i];
+          break;
+        }
+      }
+    }
+
+    if(constraints === undefined){
+      wrapFunction = (a) => {
+        return `{const e=idToObs[${id}];if(e!==undefined){${a};\n}}`;
+      } 
+    } else {
+      wrapFunction = (a) => {
+        return `{const e=idToObs[${id}];if(e!==undefined){${a};\ncset(e,"${parameter}",${constraints.toString()});}}`;
+      }
+    }
+
+    try {
+      block.obstacleId = eval(id);
+    } catch(e){delete block.obstacleId;}
+  } else {
+    delete block.obstacleId;
+
+    parentBlock = window.getParentBlockOfType(block);
+    if(parentBlock === null) return '';
+  }
+  
   const parameter = block.getFieldValue('INPUT', Order.NONE);
   if(parameter === 'INVALID') return '';
   const value = generator.valueToCode(block, 'VALUE', Order.NONE);
@@ -332,49 +391,52 @@ forBlock['set_parameter'] = function (block, generator) {
   // what?? addition?? i thought this was a setter??
   // all part of the plan :brain:
   if(parameter === 'x'){
-    return `e.pos.x += ${value} - generateTopLeftCoordinates(e)[0];\n`;
+    return wrapFunction(`e.pos.x += ${value} - generateTopLeftCoordinates(e)[0];\n`);
   } else if(parameter === 'y'){
-    return `e.pos.y += ${value} - generateTopLeftCoordinates(e)[1];\n`;
+    return wrapFunction(`e.pos.y += ${value} - generateTopLeftCoordinates(e)[1];\n`);
   } else if(parameter === 'sat.r'){
-    return `e.sat.r = Math.max(${value},0.001);e.dimensions = generateDimensions(e);`;
+    return wrapFunction(`e.sat.r = Math.max(${value},0.001);e.dimensions = generateDimensions(e);\n`);
   }
   
-  // we can't directly know what parmaeter corresponds to what. So, let's just look up all the shape, simulates, and effects in their corresponding maps and find out which one holds the constraints
-  const shape = parentBlock.getFieldValue('SHAPE_DROPDOWN', Order.NONE);
-  let simulatesLen = parentBlock.getFieldValue('NUM_SIMULATES_DROPDOWN', Order.NONE);
-  let effectsLen = parentBlock.getFieldValue('NUM_EFFECTS_DROPDOWN', Order.NONE);
+  if(hasId === true){
+    // we can't directly know what parameter corresponds to what. So, let's just look up all the shape, simulates, and effects in their corresponding maps and find out which one holds the constraints
+    let constraints;
 
-  let constraints;
-  let constraintsMap = window.satConstraintsMap[shape];
-  if(constraintsMap !== undefined)constraints = constraintsMap[parameter];
+    const shape = parentBlock.getFieldValue('SHAPE_DROPDOWN', Order.NONE);
+    let simulatesLen = parentBlock.getFieldValue('NUM_SIMULATES_DROPDOWN', Order.NONE);
+    let effectsLen = parentBlock.getFieldValue('NUM_EFFECTS_DROPDOWN', Order.NONE);
 
-  if(constraints === undefined){
-    for(let i = 0; i < simulatesLen; i++){
-      const simulate = parentBlock.getFieldValue(`SIMULATE_DROPDOWN${i}`, Order.NONE);
-      constraintsMap = window.simulateConstraintsMap[simulate];
-      if(constraintsMap !== undefined && constraintsMap[parameter] !== undefined){
-        constraints = constraintsMap[parameter];
-        break;
+    let constraintsMap = window.satConstraintsMap[shape];
+    if(constraintsMap !== undefined)constraints = constraintsMap[parameter];
+
+    if(constraints === undefined){
+      for(let i = 0; i < simulatesLen; i++){
+        const simulate = parentBlock.getFieldValue(`SIMULATE_DROPDOWN${i}`, Order.NONE);
+        constraintsMap = window.simulateConstraintsMap[simulate];
+        if(constraintsMap !== undefined && constraintsMap[parameter] !== undefined){
+          constraints = constraintsMap[parameter];
+          break;
+        }
       }
     }
-  }
-  
-  if(constraints === undefined){
-    for(let i = 0; i < effectsLen; i++){
-      const effect = parentBlock.getFieldValue(`EFFECT_DROPDOWN${i}`, Order.NONE);
-      constraintsMap = window.effectConstraintsMap[effect];
-      if(constraintsMap !== undefined && constraintsMap[parameter] !== undefined){
-        constraints = constraintsMap[parameter];
-        break;
+    
+    if(constraints === undefined){
+      for(let i = 0; i < effectsLen; i++){
+        const effect = parentBlock.getFieldValue(`EFFECT_DROPDOWN${i}`, Order.NONE);
+        constraintsMap = window.effectConstraintsMap[effect];
+        if(constraintsMap !== undefined && constraintsMap[parameter] !== undefined){
+          constraints = constraintsMap[parameter];
+          break;
+        }
       }
+    }
+
+    if(constraints !== undefined){
+      return wrapFunction(`e.${parameter} = ${value};cset(e,"${parameter}",[${constraints.toString()}])\n`);
     }
   }
 
-  if(constraints === undefined){
-    return `e.${parameter} = ${value};\n`;
-  }
-
-  return `e.${parameter} = ${value};cset(e,"${parameter}",[${constraints.toString()}])\n`;
+  return wrapFunction(`e.${parameter} = ${value};\n`);
 };
 
 // constrain-set

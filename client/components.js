@@ -82,6 +82,7 @@ function create(shape, simulates, effects, params){
     }
 }
 window.C = create;
+window.idToObs = {};
 
 let res = new SAT.Response();
 let angle, collided = false;
@@ -425,6 +426,10 @@ const initSimulateMap = [
     },
     // /*custom*/
     () => {},
+    // /*id*/
+    (o, init) => {
+        window.idToObs[init.id.toString().trim()] = o;
+    }
 ]
 
 const simulateMap = [
@@ -534,6 +539,8 @@ const simulateMap = [
         o.lastGrowth = o.growth;
     },
     /*custom*/
+    () => {},
+    /*id*/
     () => {}
 ]
 
@@ -541,7 +548,8 @@ window.simulateMapI2N = [
     'pathMove',
     'rotate',
     'grow',
-    'custom'
+    'custom',
+    'id'
 ]
 
 window.simulateDefaultMap = [
@@ -568,12 +576,17 @@ window.simulateDefaultMap = [
     },
     // custom
     {},
+    // id
+    {
+        id: 'some unique id'
+    }
 ]
 
 window.simulateConstraintsMap = [
     {currentPoint: [0, true]},
     undefined,
     {growSpeed: [0], shrinkSpeed: [0], minGrowth: [0.001], maxGrowth: [0.001]},
+    undefined,
     undefined,
 ];
 

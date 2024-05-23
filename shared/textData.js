@@ -345,39 +345,47 @@ export default {
       'helpUrl': '',
     },
     {
-      'type': 'mouse_x',
-      'message0': 'mouse x position',
-      'args0': [],
+      'type': 'client_pos',
+      'message0': '%1 %2 position',
+      'args0': [
+        {
+          "type": "field_dropdown",
+          "name": "TYPE_DROPDOWN",
+          "options": [
+            [ "player", "player" ],
+            [ "mouse", "mouse" ]
+          ]
+        },
+        {
+          "type": "field_dropdown",
+          "name": "POS_DROPDOWN",
+          "options": [
+            [ "x", "x" ],
+            [ "y", "y" ]
+          ]
+        },
+      ],
       'output': 'Number',
       'colour': '121',
-      'tooltip': 'the horizontal position of the mouse, ranging from 0 to 900',
+      'tooltip': 'the horizontal/vertical position of the mouse. The horizontal position (x) ranges from 0 to 900 and the vertical position (y) ranges from 0 to 1600.',
       'helpUrl': '',
     },
     {
-      'type': 'mouse_y',
-      'message0': 'mouse y position',
-      'args0': [],
+      'type': 'player_pos',
+      'message0': 'player %1 position',
+      'args0': [
+        {
+          "type": "field_dropdown",
+          "name": "POS_DROPDOWN",
+          "options": [
+            [ "x", "x" ],
+            [ "y", "y" ]
+          ]
+        }
+      ],
       'output': 'Number',
       'colour': '121',
-      'tooltip': 'the vertical position of the mouse, ranging from 0 to 1600',
-      'helpUrl': '',
-    },
-    {
-      'type': 'player_x',
-      'message0': 'player x position',
-      'args0': [],
-      'output': 'Number',
-      'colour': '121',
-      'tooltip': 'the horizontal position of the player, ranging from 0 to 1600',
-      'helpUrl': '',
-    },
-    {
-      'type': 'player_y',
-      'message0': 'player y position',
-      'args0': [],
-      'output': 'Number',
-      'colour': '121',
-      'tooltip': 'the vertical position of the player, ranging from 0 to 1600',
+      'tooltip': 'the horizontal/vertical position of the player. The horizontal position (x) ranges from 0 to 900 and the vertical position (y) ranges from 0 to 1600.',
       'helpUrl': '',
     },
     {
@@ -1043,8 +1051,9 @@ export default {
           this.defaults = {'x': 100, 'y': 100, 'sat.r': 200};
 
           this.appendValueInput("VALUE")
-            .appendField('set obstacle ')
-            .appendField(new Blockly.FieldDropdown(()=>{return generateParameterDropdownOptions(block)}, this.validateParamDropdown), 'INPUT')
+            .appendField('set ', 'PREFIX1')
+            .appendField(new Blockly.FieldDropdown([["this obstacle", "this"],["obstacle with id", "id"]], this.validateIdDropdown), 'ID_DROPDOWN')
+            .appendField(new Blockly.FieldDropdown(()=>{return generateParameterDropdownOptions(block, false, block.obstacleId)}, this.validateParamDropdown), 'INPUT')
             .appendField(' to')
             .setCheck(generateConnectionType(this.defaults['y']))
             .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(this.defaults['y'])));
@@ -1059,6 +1068,35 @@ export default {
             .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(childBlock.defaults[newValue])))
             .setCheck(generateConnectionType(childBlock.defaults[newValue]));
 
+          return newValue;
+        },
+
+        validateIdDropdown: function(newValue) {
+          if(this.selectedOption[1] === newValue) return newValue;
+          const block = this.getSourceBlock();
+          if(newValue === 'this' && window.workspaceLoaded === true){
+            block.setInputsInline(false);
+            block.removeInput("ID", true);
+
+            const valueInput = block.getInput("VALUE");
+            valueInput.appendField('set ', 'PREFIX1');
+            valueInput.appendField(new Blockly.FieldDropdown([["this obstacle", "this"],["obstacle with id", "id"]], block.validateIdDropdown), 'ID_DROPDOWN');
+            valueInput.fieldRow.unshift(valueInput.fieldRow.pop());
+            valueInput.fieldRow.unshift(valueInput.fieldRow.pop());
+          } else /*if(newValue === 'id')*/{
+            // remove the prefixes
+            const valueInput = block.getInput("VALUE");
+            valueInput.removeField("PREFIX1");
+            valueInput.removeField("ID_DROPDOWN");
+
+            // append the input w/ the prefixes
+            block.appendValueInput("ID")
+              .appendField('set ', 'PREFIX1')
+              .appendField(new Blockly.FieldDropdown([["obstacle with id", "id"],["this obstacle", "this"]], block.validateIdDropdown), 'ID_DROPDOWN')
+              .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(Object.keys(window.idToObs)[0] ?? "No obstacles with [id] simulate type found")));
+            block.setInputsInline(true);
+            block.inputList.unshift(block.inputList.pop());
+          }
           return newValue;
         },
       }
@@ -1277,20 +1315,34 @@ function generateConnectionType(val){
   return null;
 }
 
-function generateParameterDropdownOptions(childBlock, isPlug=false){
+function generateParameterDropdownOptions(childBlock, isPlug=false, id="NO_ID"){
   // const parent = this.getSourceBlock();
   // if(parent === null) return [['x', 'INVALID'], ['y', 'INVALID']]
-  let block;
-  if(isPlug === false) block = window.getParentBlockOfType(childBlock);///*.getSourceBlock()*/.getSurroundParent();
-  else {
-    let firstParent = childBlock.getParent();
-    if(firstParent === null) return [['x', 'x'], ['y', 'y']];
-    block = window.getParentBlockOfType(firstParent);
+  let block = null;
+  if(id !== "NO_ID"){
+    // yes, id is dynamic meaning evaluating it at compile time won't always be accurate.
+    // However, blockly and post evades-x has always been about optimizing for the 95%,
+    // even if it makes the 5% harder.
+    const allBlocks = window.ws.getAllBlocks();
+    for(let i = 0; i < allBlocks.length; i++){
+      if(allBlocks[i].obstacleId === id){
+        block = allBlocks[i];
+        break;
+      }
+    }
+  } else {
+    if(isPlug === false) block = window.getParentBlockOfType(childBlock);///*.getSourceBlock()*/.getSurroundParent();
+    else {
+      let firstParent = childBlock.getParent();
+      if(firstParent === null) return [['x', 'x'], ['y', 'y']];
+      block = window.getParentBlockOfType(firstParent);
+    }
   }
+  
 
   if(block === null) return [['x', 'x'], ['y', 'y']];
   let shape = block.getFieldValue('SHAPE_DROPDOWN');
-  if(shape === null) return [['x', 'x'], ['y', 'y']];// TODO: r for circle type
+  if(shape === null) return [['x', 'x'], ['y', 'y']];
   shape = parseInt(shape);
 
   const params = {};
@@ -1359,6 +1411,7 @@ const excludedKeys = {
   isText: true,
   isWinpad: true,
   isCoindoor: true,
+  id: true
 };
 
 // TODO: constraints. SnapDistance shouldn't be negative (could be abs'ed which could be a type of constraint) but some stuff just needs to stay between 0,1, e.g. decay

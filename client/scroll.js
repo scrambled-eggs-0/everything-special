@@ -152,6 +152,7 @@ window.resetGame = () => {
     window.spawnPosition.y = 1500;
     player.sat.r = 49.5;
     player.speed = player.baseSpeed = 4;
+    window.idToObs = {};
 }
 
 export default scroll;
