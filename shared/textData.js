@@ -501,6 +501,7 @@ export default {
   ],
   JSBlockNames: [
     'create_obstacle',
+    'delete_obstacle',
     'get_parameter',
     'set_parameter',
     'create_list',
@@ -1013,6 +1014,61 @@ export default {
       };
     },
 
+    // delete_obstacle
+    function(Blockly) {
+      return {
+        init: function() {
+          const block = this;
+
+          this.setColour(194);
+
+          this.setNextStatement(true, null);
+          this.setPreviousStatement(true, null);
+
+          this.appendDummyInput("VALUE")
+            .appendField('delete ', 'PREFIX1')
+            .appendField(new Blockly.FieldDropdown([["this obstacle", "this"],["obstacle with id", "id"]], this.validateIdDropdown), 'ID_DROPDOWN')
+        },
+
+        validateParamDropdown: function(newValue) {
+          const childBlock = this.getSourceBlock();
+          if(childBlock.defaults !== undefined){
+            childBlock.setOutput(true, generateConnectionType(childBlock.defaults[newValue]));
+          } 
+          return newValue;
+        },
+
+        validateIdDropdown: function(newValue) {
+          if(this.selectedOption[1] === newValue) return newValue;
+          const block = this.getSourceBlock();
+          if(newValue === 'this' && window.workspaceLoaded === true){
+            block.setInputsInline(false);
+            block.removeInput("ID", true);
+
+            const valueInput = block.getInput("VALUE");
+            valueInput.appendField('delete ', 'PREFIX1');
+            valueInput.appendField(new Blockly.FieldDropdown([["this obstacle", "this"],["obstacle with id", "id"]], block.validateIdDropdown), 'ID_DROPDOWN');
+            valueInput.fieldRow.unshift(valueInput.fieldRow.pop());
+            valueInput.fieldRow.unshift(valueInput.fieldRow.pop());
+          } else /*if(newValue === 'id')*/{
+            // remove the prefixes
+            const valueInput = block.getInput("VALUE");
+            valueInput.removeField("PREFIX1");
+            valueInput.removeField("ID_DROPDOWN");
+
+            // append the input w/ the prefixes
+            block.appendValueInput("ID")
+              .appendField('delete ', 'PREFIX1')
+              .appendField(new Blockly.FieldDropdown([["obstacle with id", "id"],["this obstacle", "this"]], block.validateIdDropdown), 'ID_DROPDOWN')
+              .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(Object.keys(window.idToObs)[0] ?? "No obstacles with [id] simulate type found")));
+            block.setInputsInline(true);
+            block.inputList.unshift(block.inputList.pop());
+          }
+          return newValue;
+        },
+      }
+    },
+
     // get_parameter
     function(Blockly) {
       return {
@@ -1022,9 +1078,10 @@ export default {
           this.setColour(194);
           this.setOutput(true);
 
-          this.appendDummyInput()
-            .appendField('get obstacle ')
-            .appendField(new Blockly.FieldDropdown(()=>{return generateParameterDropdownOptions(block, true)}, this.validateParamDropdown), 'INPUT');
+          this.appendDummyInput("VALUE")
+            .appendField('get ', 'PREFIX1')
+            .appendField(new Blockly.FieldDropdown([["this obstacle", "this"],["obstacle with id", "id"]], this.validateIdDropdown), 'ID_DROPDOWN')
+            .appendField(new Blockly.FieldDropdown(()=>{return generateParameterDropdownOptions(block, true, block.obstacleId)}, this.validateParamDropdown), 'INPUT');
         },
 
         validateParamDropdown: function(newValue) {
@@ -1032,6 +1089,35 @@ export default {
           if(childBlock.defaults !== undefined){
             childBlock.setOutput(true, generateConnectionType(childBlock.defaults[newValue]));
           } 
+          return newValue;
+        },
+
+        validateIdDropdown: function(newValue) {
+          if(this.selectedOption[1] === newValue) return newValue;
+          const block = this.getSourceBlock();
+          if(newValue === 'this' && window.workspaceLoaded === true){
+            block.setInputsInline(false);
+            block.removeInput("ID", true);
+
+            const valueInput = block.getInput("VALUE");
+            valueInput.appendField('get ', 'PREFIX1');
+            valueInput.appendField(new Blockly.FieldDropdown([["this obstacle", "this"],["obstacle with id", "id"]], block.validateIdDropdown), 'ID_DROPDOWN');
+            valueInput.fieldRow.unshift(valueInput.fieldRow.pop());
+            valueInput.fieldRow.unshift(valueInput.fieldRow.pop());
+          } else /*if(newValue === 'id')*/{
+            // remove the prefixes
+            const valueInput = block.getInput("VALUE");
+            valueInput.removeField("PREFIX1");
+            valueInput.removeField("ID_DROPDOWN");
+
+            // append the input w/ the prefixes
+            block.appendValueInput("ID")
+              .appendField('get ', 'PREFIX1')
+              .appendField(new Blockly.FieldDropdown([["obstacle with id", "id"],["this obstacle", "this"]], block.validateIdDropdown), 'ID_DROPDOWN')
+              .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(Object.keys(window.idToObs)[0] ?? "No obstacles with [id] simulate type found")));
+            block.setInputsInline(true);
+            block.inputList.unshift(block.inputList.pop());
+          }
           return newValue;
         },
       }

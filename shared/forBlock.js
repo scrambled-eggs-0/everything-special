@@ -307,36 +307,67 @@ forBlock['stop_music'] = function (block, generator) {
   return `stopMusic(true);\n`;
 };
 
+forBlock['delete_obstacle'] = function (block, generator) {
+  const id = generator.valueToCode(block, 'ID', Order.NONE);
+  if(id !== ''){
+    
+    return `window.tickFns.push(() => {
+  const o = idToObs[${id}];
+  delete idToObs[${id}];
+  for(let i = 0; i < obstacles.length; i++){
+    if(obstacles[i] === o) {obstacles.splice(i,1); break;}
+  }
+})\n`;
+  } else {
+    if(window.getParentBlockOfType(block) === null) return '';
+    return `window.tickFns.push(()=>{
+  for(let i = 0; i < obstacles.length; i++){
+    if(obstacles[i] === e) {obstacles.splice(i,1); break;}
+  }
+  for(let key in window.idToObs){
+    if(window.idToObs[key] === e){delete window.idToObs[key]; break;}
+  }
+});\n`;
+  }
+};
+
 forBlock['get_parameter'] = function (block, generator) {
-  // get parent once because it's a plug --
-  // getSurroundParent doesn't account for it 
-  // so just use the thing that it's attached to
-  const parentBlock = block.getParent();
-  if(parentBlock === null) return '';
-  if(window.getParentBlockOfType(parentBlock) === null) return '';
+  const id = generator.valueToCode(block, 'ID', Order.NONE);
+  let wrapFunction = (a) => { return a; };
+  if(id !== ''){
+    wrapFunction = (a) => {
+      return `(()=>{const e=idToObs[${id}];return e!==undefined?(${a}):-1;})()`;
+    }
+  } else {
+    // get parent once because it's a plug --
+    // getSurroundParent doesn't account for it 
+    // so just use the thing that it's attached to
+    let parentBlock = block.getParent();
+    if(parentBlock === null) return '';
+    if(window.getParentBlockOfType(parentBlock) === null) return '';
+  }
+  
   const parameter = block.getFieldValue('INPUT', Order.NONE);
   // if(parameter === 'INVALID') return '';
   if(parameter === 'x'){
-    return [`generateTopLeftCoordinates(e)[0]`, Order.NONE];
+    return [wrapFunction(`generateTopLeftCoordinates(e)[0]`), Order.NONE];
   } else if(parameter === 'y'){
-    return [`generateTopLeftCoordinates(e)[1]`, Order.NONE];
+    return [wrapFunction(`generateTopLeftCoordinates(e)[1]`), Order.NONE];
   }
-  return [`e.${parameter}`, Order.NONE];
+  return [wrapFunction(`e.${parameter}`), Order.NONE];
 };
 
 forBlock['set_parameter'] = function (block, generator) {
   const id = generator.valueToCode(block, 'ID', Order.NONE);
   let parentBlock = null;
   let wrapFunction = (a) => { return a; };
-  let hasId = false;
-  if(id !== null && id !== ''){
+  if(id !== ''){
     // NOTE: obstacle ids are static. This means that an id is
     // defined iff the map contains it at the very beginning.
     // We still don't know the id, though, since it could be a
     // variable.
     const parameter = block.getFieldValue('INPUT', Order.NONE);
 
-    hasId = true;
     // get the constraints the slow way: by looping over all the names
     let constraints;
     for(let i = 0; i < window.satMapI2N.length; i++){
@@ -364,11 +395,12 @@ forBlock['set_parameter'] = function (block, generator) {
       }
     }
 
-    if(constraints === undefined){
+    if(constraints === undefined || constraints[parameter] === undefined){
       wrapFunction = (a) => {
         return `{const e=idToObs[${id}];if(e!==undefined){${a};\n}}`;
-      } 
+      }
     } else {
+      constraints = constraints[parameter];// TODO: fix this (not tested)
       wrapFunction = (a) => {
         return `{const e=idToObs[${id}];if(e!==undefined){${a};\ncset(e,"${parameter}",${constraints.toString()});}}`;
       }
@@ -395,10 +427,10 @@ forBlock['set_parameter'] = function (block, generator) {
   } else if(parameter === 'y'){
     return wrapFunction(`e.pos.y += ${value} - generateTopLeftCoordinates(e)[1];\n`);
   } else if(parameter === 'sat.r'){
-    return wrapFunction(`e.sat.r = Math.max(${value},0.001);e.dimensions = generateDimensions(e);\n`);
+    return wrapFunction(`e.sat.r = Math.max(${value},0.001);\ne.dimensions = generateDimensions(e);\n`);
   }
   
-  if(hasId === true){
+  if(id === ''){
     // we can't directly know what parameter corresponds to what. So, let's just look up all the shape, simulates, and effects in their corresponding maps and find out which one holds the constraints
     let constraints;
 
@@ -432,7 +464,7 @@ forBlock['set_parameter'] = function (block, generator) {
     }
 
     if(constraints !== undefined){
-      return wrapFunction(`e.${parameter} = ${value};cset(e,"${parameter}",[${constraints.toString()}])\n`);
+      return wrapFunction(`e.${parameter} = ${value};\ncset(e,"${parameter}",[${constraints.toString()}])\n`);
     }
   }
 

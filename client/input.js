@@ -65,12 +65,17 @@ window.onmousemove = (e, param2) => {
 
     totalDist -= e.movementY * window.innerHeight;
 
-    if(totalDist > SCROLL_PARAMS.sensitivity && (window.mouseX < SCROLL_PARAMS.edgeMargin || window.mouseX > canvas.width - SCROLL_PARAMS.edgeMargin) && window.scrollLocked !== true){
+    if(Math.abs(totalDist) > SCROLL_PARAMS.sensitivity && (window.mouseX < SCROLL_PARAMS.edgeMargin || window.mouseX > canvas.width - SCROLL_PARAMS.edgeMargin) && window.scrollLocked !== true){
         const scrollTime = (Date.now() - dragStartTime);
         const averageSpeed = totalDist / scrollTime;
-        if(averageSpeed > SCROLL_PARAMS.minAvgSpeed && scrollTime < SCROLL_PARAMS.maxScrollTime){
-            dragging = false;
-            scroll();
+        if(scrollTime < SCROLL_PARAMS.maxScrollTime){
+            if(averageSpeed > SCROLL_PARAMS.minAvgSpeed){
+                dragging = false;
+                scroll(false);
+            } else if(averageSpeed < -SCROLL_PARAMS.minAvgSpeed){
+                dragging = false;
+                scroll(true);
+            }
         }
     }
 }
@@ -132,8 +137,9 @@ function absorbEvent_(e) {
 
 window.addEventListener('keydown', e => {
     if (e.repeat === true) return;
-    if (window.scrollLocked !== true && e.code === "ArrowDown" 
-        && window.scrollAnimation === 1) {
-        scroll()    
+    if (window.scrollLocked !== true &&
+        (e.code === "ArrowDown" || e.code === "ArrowUp") &&
+        window.scrollAnimation === 1) {
+        scroll(e.code === "ArrowUp");
     }
 })

@@ -83,6 +83,7 @@ function create(shape, simulates, effects, params){
 }
 window.C = create;
 window.idToObs = {};
+window.tickFns = [];
 
 let res = new SAT.Response();
 let angle, collided = false;
@@ -184,6 +185,13 @@ function simulate(){
     } else if(player.pos.y + player.sat.r > canvas.height){
         player.pos.y = canvas.height - player.sat.r;
         player.touchingWall = true;
+    }
+
+    if(window.tickFns.length > 0){
+        for(let i = 0; i < window.tickFns.length; i++){
+            window.tickFns[i]();
+        }
+        window.tickFns.length = 0;
     }
 
     // scrolling if specified by a simulate type
@@ -428,7 +436,43 @@ const initSimulateMap = [
     () => {},
     // /*id*/
     (o, init) => {
-        window.idToObs[init.id.toString().trim()] = o;
+        const id = init.id.toString().trim();
+        // make sure ids can't be duplicated
+        if(isEditor === true && window.idToObs[id] !== undefined){
+            const allBlocks = window.ws.getAllBlocks();
+            for(let i = allBlocks.length-1; i >= 0; i--){
+                if(allBlocks[i].obstacleId === id){
+                    const block = allBlocks[i];
+                    for(let j = 0; j < block.childBlocks_.length; j++){
+                        if(block.childBlocks_[j].type === 'text'){
+                            const textBlock = block.childBlocks_[j];
+                            let oldId = textBlock.getFieldValue("TEXT");
+                            let duplicateNum = 2;
+                            // if we already have a (2) at the end,
+                            // make it a (3) instead of a (2) (2).
+                            if(oldId[oldId.length-1] === ')'){
+                                let n, char, isDup = true;
+                                for(n = oldId.length-2; n >= 0; n--){
+                                    char = oldId[n];
+                                    if(char === '(') break;
+                                    if(Number.isFinite(parseInt(char)) === false) {isDup = false; break;}
+                                }
+                                if(isDup === true && n !== oldId.length-2){
+                                    duplicateNum = parseInt(oldId.slice(n+1,oldId.length-1));
+                                    oldId = oldId.slice(0, n-1);
+                                }
+                            }
+                            let newId = oldId + ` (${duplicateNum})`;
+                            while(window.idToObs[newId] !== undefined){newId = oldId + ` (${++duplicateNum})`;}
+                            textBlock.setFieldValue(newId, "TEXT");
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        window.idToObs[id] = o;
     }
 ]
 
@@ -578,7 +622,7 @@ window.simulateDefaultMap = [
     {},
     // id
     {
-        id: 'some unique id'
+        id: 'uniqueId'
     }
 ]
 

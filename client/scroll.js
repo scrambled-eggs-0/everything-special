@@ -7,6 +7,8 @@ const isServer = typeof location === 'undefined';
 let reqUrl = isServer === true ? '' : `${location.origin}/game`;
 let loadingCurrent = false;
 let nextFileName = '';
+let lastFileNameStack = [];
+let forwardFileNameStack = [];
 window.levelFileName = '';
 
 // never get code from server in editor
@@ -55,16 +57,22 @@ getNextCode().then(async (code) => {
 let firstNextCode = getNextCode();
 
 // on scroll
-async function scroll(){
+async function scroll(up=false){
     // don't allow scrolling if we're loading the current code
     // it'll look the same to the user anyways
     if(loadingCurrent === true) return;
-    
-    // get old canvas for use as image
-    window.scrollAnimation = 1;
-    window.render();
-    // window.lastGameImg = new Image();
-    // window.lastGameImg.src = canvas.toDataURL();
+    if(up === true){
+        if(lastFileNameStack.length === 0) return;
+        var lastCode = nextCode;
+        forwardFileNameStack.push(window.levelFileName);
+        nextCode = await getLastCode(lastFileNameStack.pop());
+    } else if(window.levelFileName !== ''){
+        lastFileNameStack.push(window.levelFileName);
+        if(lastFileNameStack.length > 42) lastFileNameStack.shift();
+        if(forwardFileNameStack.length !== 0) nextCode = await getLastCode(forwardFileNameStack.pop());
+    }
+
+    window.scrollingUp = up === true;
     window.lastObstacles = [];
     for(let i = 0; i < obstacles.length; i++){
         window.lastObstacles.push(obstacles[i]);
@@ -84,7 +92,8 @@ async function scroll(){
         window.scrollAnimation = 0;
 
         // fetch new next code
-        nextCode = await getNextCode();
+        if(up === true) nextCode = lastCode;
+        else nextCode = await getNextCode();
     } else {
         // loading current, nextcode
         loadingCurrent = true;
@@ -114,6 +123,14 @@ async function getNextCode(){
     const response = await fetch(reqUrl);
     if (!response.ok) throw new Error(`Failed to fetch ${reqUrl}`);
     nextFileName = response.headers.get('Fn');
+    return response.text();
+}
+
+async function getLastCode(fileName){
+    const fileNameWithoutTheJS = fileName.slice(0, fileName.length-3);
+    const response = await fetch(reqUrl + '/' + fileNameWithoutTheJS);
+    if (!response.ok) throw new Error(`Failed to fetch ${reqUrl}`);
+    nextFileName = fileName;
     return response.text();
 }
 

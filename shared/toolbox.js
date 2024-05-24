@@ -79,6 +79,10 @@ export default /*const toolbox =*/ {
           'kind': 'block',
           'type': 'set_parameter'
         },
+        {
+          'kind': 'block',
+          'type': 'delete_obstacle'
+        }
       ],
     },
     {

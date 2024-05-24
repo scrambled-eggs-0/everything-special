@@ -1,4 +1,3 @@
-// 1 file project? Why not
 const canvas = window.canvas = document.getElementById('canvas');
 const ctx = window.ctx = canvas.getContext('2d');
 
@@ -8,10 +7,7 @@ import simulate from './components.js';
 import Utils from './utils.js';
 const { isEditor, blendColor } = Utils;
 
-// run code
-// import gameData from './code.js';
-// const {tickFunctions, entities} = gameData;
-
+window.scrollingUp = false;
 window.scrollAnimation = 1;
 
 window.defaultColors = {
@@ -31,28 +27,32 @@ window.lastColors = {
 window.lastPlayerData = [0, 0];
 let renderUi = () => {};
 
-// let cachedFontSize = -1;
-// const TAU = Math.PI * 2;
+let translateMult;
 window.render = () => {
     if(window.scrollAnimation < 1){
         window.scrollAnimation += (Date.now() - firstTime - offtabTime) / window.frames * .00384;// at 120fps this is +0.032/s;
         if(window.scrollAnimation > 1) window.scrollAnimation = 1;
-        ctx.translate(0, -window.scrollAnimation * canvas.height);// not the same as the exit transform because we also want to translate (-canvas.height) in addition to (1 - window.scrollAnimation) * canvas.height
+        else {
+            translateMult = window.scrollingUp === true ? 1 : -1;
 
-        let resetColorTile = window.colors.tile;
-        let resetColorBackground = window.colors.background; 
-        window.colors.tile = window.lastColors.tile;
-        window.colors.background = window.lastColors.background;
-        _render(window.lastObstacles, window.lastColors, window.lastPlayerData);
-        window.colors.tile = resetColorTile;
-        window.colors.background = resetColorBackground; 
-        ctx.translate(0, canvas.height);
+            // not the same as the exit transform because we also want to translate (-canvas.height) in addition to (1 - window.scrollAnimation) * canvas.height
+            ctx.translate(0, window.scrollAnimation * canvas.height * translateMult);
+
+            let resetColorTile = window.colors.tile;
+            let resetColorBackground = window.colors.background; 
+            window.colors.tile = window.lastColors.tile;
+            window.colors.background = window.lastColors.background;
+            _render(window.lastObstacles, window.lastColors, window.lastPlayerData);
+            window.colors.tile = resetColorTile;
+            window.colors.background = resetColorBackground; 
+            ctx.translate(0, -canvas.height * translateMult);
+        }
     }
 
     _render(window.obstacles, window.colors, undefined);
 
     if(window.scrollAnimation < 1){
-        ctx.translate(0, (window.scrollAnimation-1) * canvas.height);
+        ctx.translate(0, -(window.scrollAnimation - 1) * canvas.height * translateMult);
     }
 }
 
