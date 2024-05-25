@@ -227,6 +227,7 @@ const satMap = [
     },
     /*text*/
     (p) => {
+        if(window.isServer === true) return new SAT.Box(new SAT.Vector(p.x, p.y), 100, 100).toPolygon();
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.font = `${p.fontSize}px Inter`;

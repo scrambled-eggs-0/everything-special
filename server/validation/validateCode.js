@@ -17,6 +17,7 @@ for(let key in global.window){
     global[key] = global.window[key];
 }
 global.isServer = true;
+global.window.isServer = true;
 global.window.onWorkspaceLoadFunctions=[];
 global.window.workspaceLoaded = false;
 
