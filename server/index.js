@@ -551,7 +551,7 @@ app.post("/upload", (res, req) => {
             // only send message if we're in loginFailed, which is the
             // only state where we're aborted but still on the connection.
             if (uploadState === 2) {
-                res.end();
+                res.end('n');
             }
             return;
         }
@@ -569,7 +569,7 @@ app.post("/upload", (res, req) => {
             const textContent = validateCode(fileContent.toString());
 
             if (textContent === false) {
-                res.end();
+                res.end('n');
                 return;
             }
 

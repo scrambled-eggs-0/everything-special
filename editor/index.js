@@ -202,7 +202,12 @@ window.uploadCode = () => {
       method: 'POST',
       body: formData,
       headers: headers
-  }).then(_ => {
+  }).then(async (d) => {
+        const failed = (await d.text()) === 'n';
+        if(failed === true){
+          alert('Upload failed! If you think this might be a bug, please contact a developer!');
+          return;
+        }
         alert('Congrats! Your code was uploaded to the servers!');
         
         if(!location.origin.startsWith('http://localhost')) {ws.clear(); localStorage.removeItem('ws');}
