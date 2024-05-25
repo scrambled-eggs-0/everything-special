@@ -710,6 +710,8 @@ app.post("/share", (res, req) => {
 // });
 
 // running python!
+// import { createRequire } from "module";
+// const require = createRequire(import.meta.url);
 // const nodecallspython = require("node-calls-python");
 
 // const py = nodecallspython.interpreter;
@@ -717,8 +719,8 @@ app.post("/share", (res, req) => {
 // py.import("./AI/main.py").then(async function(pymodule) {
 //     // we have no idea when the db finishes connecting, let's wait 3s
 //     setTimeout(async () => {
-//         const result = await py.call(pymodule, "magnificent_ai", "65b724abb0dbba1b7b2fc936");
-//         console.log(result);
+//         const result = await py.call(pymodule, "recommend", "chosen");
+//         console.log({'python result': result});
 //     }, 3000)
 // });
 

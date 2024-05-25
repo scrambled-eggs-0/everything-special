@@ -44,9 +44,6 @@ async function connect() {
     }
 }
 
-const isConnected = () => {
-    return connected === true;
-};
 function until(condition, checkInterval = 400) {
     if (!!condition()) return true;
     return new Promise((resolve) => {
