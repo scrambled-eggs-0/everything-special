@@ -97,6 +97,20 @@ export default /*const toolbox =*/ {
         },
         {
           'kind': 'block',
+          'type': 'debug_log',
+          'inputs': {
+            'MSG': {
+              'shadow': {
+                'type': 'text',
+                'fields': {
+                  'TEXT': "your message here...",
+                },
+              },
+            },
+          },
+        },
+        {
+          'kind': 'block',
           'type': 'client_pos'
         },
         {
@@ -291,10 +305,10 @@ export default /*const toolbox =*/ {
           'kind': 'block',
           'type': 'logic_boolean',
         },
-        {
-          'kind': 'block',
-          'type': 'logic_null',
-        },
+        // {
+        //   'kind': 'block',
+        //   'type': 'logic_null',
+        // },
         {
           'kind': 'block',
           'type': 'logic_ternary',
@@ -360,7 +374,7 @@ export default /*const toolbox =*/ {
         },
         {
           'kind': 'block',
-          'type': 'controls_flow_statements',
+          'type': 'break_continue',
         },
       ],
     },

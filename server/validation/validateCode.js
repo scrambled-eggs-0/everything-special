@@ -25,6 +25,8 @@ import forBlock from '../../shared/forBlock.js';
 
 Blockly.common.defineBlocks(libraryBlocks);
 Blockly.common.defineBlocks(blocks);
+forBlock['modify_existing'](javascriptGenerator);
+javascriptGenerator.addReservedWords('code');
 Object.assign(javascriptGenerator.forBlock, forBlock);
 
 const validatorWorkspace = new Blockly.Workspace();

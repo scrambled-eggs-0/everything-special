@@ -4,10 +4,10 @@ const require = createRequire(import.meta.url);
 const Blockly = require('blockly/core');
 
 import textData from '../../shared/textData.js';
-const { blockData, extensionNames, extensionFns } = textData;
+const { blockData, mixinNames, mixins } = textData;
 
-for(let i = 0; i < extensionNames.length; i++){
-  Blockly.Extensions.register(extensionNames[i], extensionFns[i](Blockly));
+for(let i = 0; i < mixinNames.length; i++){
+  Blockly.Extensions.registerMixin(mixinNames[i], mixins[i](Blockly));
 }
 
 export default /*const blocks =*/ Blockly.common.createBlockDefinitionsFromJsonArray(blockData);

@@ -263,8 +263,7 @@ window.render = () => {
 
 // upload mode! Same thing with the canvas
 window.enterClearCheckMode = () => {
-    window.spawnPosition.x = 100
-    window.spawnPosition.y = 1500;
+    window.runCode();
     window.respawnPlayer();
     window.inClearCheckMode = true;
     if(document.activeElement.classList.contains('blocklyHtmlInput') === true){

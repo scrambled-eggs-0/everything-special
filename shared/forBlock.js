@@ -171,6 +171,92 @@ forBlock['create_list'] = function(block, generator) {
   return [arr, Order.NONE];
 }
 
+forBlock['debug_log'] = function (block, generator) {
+  return `if(isEditor === true){alert(${generator.valueToCode(block, 'MSG', Order.NONE)});}\n`;
+};
+
+forBlock['break_continue'] = function(block, generator) {
+  return block.getFieldValue('FLOW') === 'BREAK' ? 'break;\n' : 'continue;\n';
+}
+
+forBlock['modify_existing'] = function(generator) {
+  delete forBlock['modify_existing'];
+  const oldMath = generator.forBlock['math_single'];
+  forBlock['math_single'] = forBlock['math_trig'] = function(block, generator){
+    const oldCode = oldMath.bind(this)(block, generator)[0];
+    return [`makeNumber(${oldCode})`, Order.NONE];
+  }
+
+  const oldMathOnList = generator.forBlock['math_on_list'];
+  forBlock['math_on_list'] = function(block, generator){
+    const oldCode = oldMathOnList.bind(this)(block, generator)[0];
+    return [`makeNotNaN(${oldCode})`, Order.NONE];
+  }
+
+  const oldMathModulo = generator.forBlock['math_modulo'];
+  forBlock['math_modulo'] = function(block, generator){
+    const oldCode = oldMathModulo.bind(this)(block, generator)[0];
+    return [`makeNotNaN(${oldCode})`, Order.NONE];
+  }
+
+  const oldTest = generator.forBlock['logic_ternary'];
+  forBlock['logic_ternary'] = function(block, generator){
+    const oldCode = oldTest.bind(this)(block, generator)[0];
+    return [`makeNotNull(${oldCode})`, Order.NONE];
+  }
+
+  // only blocks with variables in them cause an error -- they exist for both lists and text
+
+  const stringVariableTypes = ['text_indexOf', 'text_charAt', 'text_getSubstring'];
+  const defaultValues = ["0", "''", "''"];
+  const variableNames = ['VALUE', 'VALUE', 'STRING'];
+  for(let i = 0; i < stringVariableTypes.length; i++){
+    const type = stringVariableTypes[i];
+    const oldGenerator = generator.forBlock[type];
+    forBlock[type] = function(block, generator){
+      const oldCode = oldGenerator.bind(this)(block, generator)[0];
+      const variable = generator.valueToCode(block, variableNames[i], Order.NONE);
+      return [`(typeof (${variable}) === "string" ? (${oldCode}) : ${defaultValues[i]})`, Order.NONE];
+    }
+  }
+
+  const listVariableTypes = ['lists_indexOf','lists_getIndex','lists_setIndex','lists_getSublist'];
+  const listVariableNames = ['VALUE','VALUE','LIST','LIST'];
+  const listDefaultValues = ["0","0","",[]];
+  for(let i = 0; i < listVariableTypes.length; i++){
+    const type = listVariableTypes[i];
+    const oldGenerator = generator.forBlock[type];
+    forBlock[type] = function(block, generator){
+      let oldCode = oldGenerator.bind(this)(block, generator);
+      const variable = generator.valueToCode(block, listVariableNames[i], Order.NONE);
+      if(type === 'lists_setIndex') {
+        const setTo = generator.valueToCode(block, "TO", Order.NONE);
+        if(setTo === '') return `if(Array.isArray(${variable})){\n\t${oldCode.slice(0,oldCode.length - 6)+'0;\n'}}\n`;
+        return `if(Array.isArray(${variable}) && (${setTo}) !== null){\n\t${oldCode}}\n`;
+      }
+      oldCode = oldCode[0];
+      return [`(Array.isArray(${variable}) ? (${oldCode}) : ${listDefaultValues[i]})`, Order.NONE];
+    }
+  }
+
+  forBlock["variables_get"] = function(block, generator) {
+    const code = generator.getVariableName(block.getFieldValue('VAR'));
+    return [`md(${code})`, Order.ATOMIC];
+  }
+
+  const oldPCR = generator.forBlock["procedures_callreturn"];
+  forBlock["procedures_callreturn"] = function(block, generator) {
+    const oldCode = oldPCR.bind(this)(block, generator)[0];
+    return [`if(typeof ${oldCode.slice(0,oldCode.length-2)}==='function'){\n\tmakeNotUndefined(${oldCode})\n}`, Order.ATOMIC];
+  }
+}
+
+window.md = (a) => {return (a !== a || a === undefined || a === null) ? 0 : a;}; // make defined
+window.makeNumber = (a) => {return Number.isFinite(a) === true ? a : 0;};
+window.makeNotNaN = (a) => {return (a === a) ? a : 0;};
+window.makeNotNull = (a) => {return a === null ? 0 : a};
+window.makeNotUndefined = (a) => {return a === undefined ? 0 : a};
+
 // export default /*const forBlock =*/ Object.create(null);
 
 // forBlock['add_text'] = function (block, generator) {

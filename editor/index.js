@@ -18,6 +18,8 @@ for(let i = 0; i < JSBlockNames.length; i++){
 
 // Register the blocks and generator with Blockly
 Blockly.common.defineBlocks(blocks);
+forBlock['modify_existing'](javascriptGenerator);
+Blockly.Msg.MATH_ATAN2_TITLE = 'angle from (0,0) to X:%1 Y:%2';
 Object.assign(javascriptGenerator.forBlock, forBlock);
 window.generator = javascriptGenerator;
 
@@ -47,6 +49,9 @@ const theme = Blockly.Theme.defineTheme('defaultTheme', {
     'motion_blocks': {
       'colourPrimary': '#07ced9'
     },
+    'list_blocks': {
+      'colourPrimary': '#4a148c'
+    }
     //  'math_blocks': {...}
   },
   'categoryStyles': {
@@ -70,7 +75,7 @@ function getCode(){
 }
 window.getCode = getCode;
 
-let runCode = () => {
+let runCode = window.runCode = () => {
   window.loopTrap = 1000;
 
   const code = getCode();
@@ -101,17 +106,26 @@ if(location.origin === 'http://localhost:8080'){
   outputPane.insertBefore(generatedCodeContainer, outputPane.firstChild);
 }
 
+const messageText = document.getElementById('messagetext');
+window.alert = (msg, toFade=true) => {
+  messageText.innerText = msg;
+  messageText.style.opacity = "1";
+  if(toFade === true) {
+    window.fadeAlert();
+  }
+}
+
+window.fadeAlert = () => {
+  requestAnimationFrame(() => {
+    messageText.style.animation = "";
+    requestAnimationFrame(() => {
+      messageText.style.opacity = "0"; messageText.style.animation="fadeOut 3s ease-in-out 1";
+    })
+  })
+}
+
 const ws = window.ws = Blockly.inject(blocklyDiv, {toolbox, zoom, theme});
 load(ws);
-
-// TODO: Get blockly div resizing when draggable dragged. Below works but is inefficient
-// let lastW = blocklyDiv.clientHeight;
-// setInterval(() => {
-//   if(lastW !== blocklyDiv.clientHeight){
-//     console.log('xd');
-//     Blockly.svgResize(ws);
-//   }
-// }, 1000)
 
 runCode();
 
@@ -120,8 +134,7 @@ ws.addChangeListener((e) => {
   // Don't run the code when the workspace finishes loading; we're
   // already running it once when the application starts.
   // Don't run the code during drags; we might have invalid state.
-  if (e.isUiEvent || e.type == Blockly.Events.FINISHED_LOADING ||
-    ws.isDragging()) {
+  if (e.isUiEvent || e.type === Blockly.Events.FINISHED_LOADING || ws.isDragging()) {
     return;
   }
   runCode();
@@ -237,32 +250,16 @@ window.requestIdleCallback(() => {
   }
   Blockly.ShortcutRegistry.registry.register(newUndoShortcut, /*allowOverrides:*/ true);
   window.onLoopTrap = () => {
-    if(!!confirm("Infinite loop detected. Would you like to undo?")) newUndoShortcut.callback(window.ws);
+    // if(!!confirm("Infinite loop detected. Would you like to undo?"))
+    alert("Infinite loop detected. Undoing!");
+    newUndoShortcut.callback(window.ws);
   }
-  javascriptGenerator.INFINITE_LOOP_TRAP = 'if(--window.loopTrap == 0){window.onLoopTrap();break;}\n';
+  javascriptGenerator.INFINITE_LOOP_TRAP = 'if(--window.loopTrap == 0){window.onLoopTrap();throw "Infinite loop."}\n';
 
   // removing the duplicate function from the menu
   Blockly.ContextMenuRegistry.registry.unregister('blockDuplicate');
 }, {timeout: 100})
 
-javascriptGenerator.INFINITE_LOOP_TRAP = 'if(--window.loopTrap == 0)break;\n';
+javascriptGenerator.INFINITE_LOOP_TRAP = 'if(--window.loopTrap == 0)throw "Infinite loop.";\n';
 
 ws.registerButtonCallback("returnToMainGame", ()=>{location.replace(location.origin)});
-
-const messageText = document.getElementById('messagetext');
-
-window.alert = (msg, toFade=true) => {
-  messageText.innerText = msg;
-  if(toFade === true) {
-    window.fadeAlert();
-  }
-}
-
-window.fadeAlert = () => {
-  requestAnimationFrame(() => {
-    messageText.style.animation = "";
-    requestAnimationFrame(() => {
-      messageText.style.opacity = "0"; messageText.style.animation="fadeOut 3s ease-in-out 1";
-    })
-  })
-}

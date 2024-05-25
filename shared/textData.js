@@ -279,6 +279,41 @@ export default {
     //   'helpUrl': '',
     // },
     {
+      'type': 'break_continue',
+      'message0': '%1',
+      'args0': [
+        {
+          'type': 'field_dropdown',
+          'name': 'FLOW',
+          'options': [
+            ['%{BKY_CONTROLS_FLOW_STATEMENTS_OPERATOR_BREAK}', 'BREAK'],
+            ['%{BKY_CONTROLS_FLOW_STATEMENTS_OPERATOR_CONTINUE}', 'CONTINUE'],
+          ],
+        },
+      ],
+      'previousStatement': null,
+      'style': 'loop_blocks',
+      'tooltip': "Break immediately breaks out of the loop, skipping all remaining iterations. Continue just skips what's left of the current iteration.",
+      'helpUrl': '%{BKY_CONTROLS_FLOW_STATEMENTS_HELPURL}',
+      'suppressPrefixSuffix': true,
+      'extensions': ['break_continue_in_loop_check'],
+    },
+    {
+      'type': 'debug_log',
+      'message0': 'display debug information %1',
+      'args0': [
+        {
+          'type': 'input_value',
+          'name': 'MSG',
+        },
+      ],
+      'previousStatement': null,
+      'nextStatement': null,
+      'colour': '121',
+      'tooltip': "Displays a message for you in the editor, but won't do anything once published. Useful for testing purposes.",
+      'helpUrl': '',
+    },
+    {
       'type': 'set_music',
       'message0': 'Set music to youtube url %1',
       'args0': [
@@ -444,59 +479,6 @@ export default {
     //   "colour": '#07ced9',
     //   'tooltip': 'sets the sprite image to a url on the internet. A url should look something like: https://example.com',
     //   'helpUrl': '',
-    // },
-  ],
-  // if this gets much bigger then make an addExtension method
-  extensionNames: [
-    // 'dynamic_menu_extension',
-    // 'create_params_extension'
-  ],
-  extensionFns: [
-    // function() { // this refers to the block that the extension is being run on
-    //   const block = this;
-    //   // this.setTooltip(function() {
-    //   //   var parent = thisBlock.getParent();
-    //   //   return (parent && parent.getInputsInline() && parent.tooltip) ||
-    //   //       Blockly.Msg.MATH_NUMBER_TOOLTIP;
-    //   // });
-    // }
-    // function(Blockly) {
-    //   return function() {
-    //     this.getInput('INPUT')
-    //     .appendField(
-    //     new Blockly.FieldDropdown(
-    //       function() {
-    //         const arr = [['mouse-pointer', 'mouse']];
-
-    //         // if we haven't loaded all the entities yet, then just keep the status quo
-    //         if(window.codeLoaded !== true){
-    //           const entityLength = window.initialLocalStorageLen;
-    //           for(let i = 0; i < entityLength; i++){
-    //             arr.push(['[entity]', i.toString()]);
-    //           }
-    //           // TODO: get option loading instead of [entity].
-    //           return arr;
-    //         }
-
-    //         for(let i = 0; i < entities.length; i++){
-    //           // exclude self
-    //           if(window.workspaceId === i) continue;
-
-    //           // will be undefined on the server which is fine
-    //           const wsName = window.workspaceNames[i];
-
-    //           // TODO: "clones of" x instead of just listing out all the current clones bc that can break. 
-    //           arr.push([
-    //             entities[i].drawImg === true ?
-    //               {"src": entities[i].img.src, "width": 25, "height": 25, "alt": wsName } :
-    //               entities[i].emoji + " " + wsName,
-    //             entities[i].id.toString()
-    //           ]);
-    //         }
-    //         return arr;
-    //       }
-    //     ), 'SPRITE_ID');
-    //   };
     // },
   ],
   JSBlockNames: [
@@ -1330,6 +1312,48 @@ export default {
         },
       }
     },
+  ],
+  mixinNames: [
+    'break_continue_in_loop_check'
+  ],
+  mixins: [
+    // 'break_continue_in_loop_check'
+    function(Blockly) {
+      return {
+        getSurroundLoop: function () {
+          let block = this;
+          do {
+            if (new Set([
+              'controls_repeat',
+              'controls_repeat_ext',
+              'controls_forEach',
+              'controls_for',
+              'controls_whileUntil',
+            ]).has(block.type)) {
+              return block;
+            }
+            block = block.getSurroundParent();
+          } while (block);
+          return null;
+        },
+        
+        onchange: function (e) {
+          const enabled = !!this.getSurroundLoop();
+          this.setWarningText(
+            enabled ? null : "Warning: This block may only be used within a loop.",
+          );
+      
+          if (!this.isInFlyout) {
+            const initialGroup = Blockly.Events.getGroup();
+            
+            // Make it so the move and the disable event get undone together.
+            Blockly.Events.setGroup(e.group);
+            this.setEnabled(enabled);
+            Blockly.Events.setGroup(initialGroup);
+          }
+        }
+      };
+    },
   ]
 }
 
@@ -1499,5 +1523,3 @@ const excludedKeys = {
   isCoindoor: true,
   id: true
 };
-
-// TODO: constraints. SnapDistance shouldn't be negative (could be abs'ed which could be a type of constraint) but some stuff just needs to stay between 0,1, e.g. decay
