@@ -1058,7 +1058,9 @@ export default {
           const block = this;
 
           this.setColour(194);
-          this.setOutput(true);
+          this.setOutput(true, "Number");
+
+          this.outputType = "Number";
 
           this.appendDummyInput("VALUE")
             .appendField('get ', 'PREFIX1')
@@ -1069,7 +1071,8 @@ export default {
         validateParamDropdown: function(newValue) {
           const childBlock = this.getSourceBlock();
           if(childBlock.defaults !== undefined){
-            childBlock.setOutput(true, generateConnectionType(childBlock.defaults[newValue]));
+            this.outputType = generateConnectionType(childBlock.defaults[newValue]);
+            childBlock.setOutput(true, this.outputType);
           } 
           return newValue;
         },
@@ -1502,8 +1505,14 @@ function generateParameterDropdownOptions(childBlock, isPlug=false, id="NO_ID"){
 
 window.getParentBlockOfType = (block, type='create_obstacle') => {
   let parent = block.getSurroundParent();
+  let lastParent = block;
   while(parent !== null){
-    if(parent.type === type) return parent;
+    if(parent.type === type) {
+      // last connection has to be a surround.
+      if(lastParent.outputConnection !== null) return null;
+      return parent;
+    }
+    lastParent = parent;
     parent = parent.getSurroundParent();
   }
   return null;

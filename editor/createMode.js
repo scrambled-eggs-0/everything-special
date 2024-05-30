@@ -26,31 +26,12 @@ createModeBtn.onclick = () => {
     const cl = window.ws.addChangeListener((e) => {
         if(e.blockId === undefined) return;
         const block = window.ws.getBlockById(e.blockId);
-        if(block.type !== "create_obstacle") return;
+        if(block === null || block.type !== "create_obstacle") return;
 
         window.fadeAlert();
 
-        const lastPreviousConnection = block.previousConnection.targetConnection;
-        const lastNextConnection = block.nextConnection.targetConnection;
-
-        block.previousConnection.disconnect();
-        block.nextConnection.disconnect();
-
-        createBlock = block;
-        createBlockXML = Blockly.Xml.blockToDom(block);
-
-        if(lastPreviousConnection !== null) block.previousConnection.connect(lastPreviousConnection);
-        if(lastNextConnection !== null) block.nextConnection.connect(lastNextConnection);
-
-        previewShape = parseInt(block.getFieldValue('SHAPE_DROPDOWN'));
-        if(previewShape === 2) previewPolygonPoints.length = 0;
-        else if(previewShape === 3) {
-            if(generatorInit === false) {generatorInit = true; window.generator.init(window.ws);}
-            previewText = window.generator.valueToCode(createBlock, createBlock.shapeParamToId['text'], 0);
-            previewText = previewText.slice(1, previewText.length - 1);
-            previewFontSize = parseFloat(window.generator.valueToCode(createBlock, createBlock.shapeParamToId['fontSize'], 0));
-        }
-
+        window.setCreateBlock(block);
+        
         // const createBlockPos = block.getRelativeToSurfaceXY();
         // createBlockWidth = block.width;
         // newBlockPos.x = createBlockPos.x + createBlockWidth + blockPadding;//+ moveDist;
@@ -73,7 +54,7 @@ createModeBg.onmousedown = () => {
     previewY = window.mouseY;
     isDragging = true;
 
-    if(window.mouseOut === true){
+    if(window.mouseOut === true || createBlock.disposed === true){
         // exit create mode
         createModeBg.classList.add('hidden');
         canvas.remove();
@@ -263,6 +244,8 @@ window.render = () => {
 
 // upload mode! Same thing with the canvas
 window.enterClearCheckMode = () => {
+    const selected = Blockly.getSelected();
+    if(typeof selected === 'object' && selected.unselect !== undefined) selected.unselect();
     window.runCode();
     window.respawnPlayer();
     window.inClearCheckMode = true;
@@ -285,4 +268,27 @@ window.exitClearCheckMode = () => {
     window.mouseOut = true;
     createModeBg.onmousedown();
     window.mouseOut = last;
+}
+
+window.setCreateBlock = (block) => {
+    const lastPreviousConnection = block.previousConnection.targetConnection;
+    const lastNextConnection = block.nextConnection.targetConnection;
+
+    block.previousConnection.disconnect();
+    block.nextConnection.disconnect();
+
+    createBlock = block;
+    createBlockXML = Blockly.Xml.blockToDom(block);
+
+    if(lastPreviousConnection !== null) block.previousConnection.connect(lastPreviousConnection);
+    if(lastNextConnection !== null) block.nextConnection.connect(lastNextConnection);
+
+    previewShape = parseInt(block.getFieldValue('SHAPE_DROPDOWN'));
+    if(previewShape === 2) previewPolygonPoints.length = 0;
+    else if(previewShape === 3) {
+        if(generatorInit === false) {generatorInit = true; window.generator.init(window.ws);}
+        previewText = window.generator.valueToCode(createBlock, createBlock.shapeParamToId['text'], 0);
+        previewText = previewText.slice(1, previewText.length - 1);
+        previewFontSize = parseFloat(window.generator.valueToCode(createBlock, createBlock.shapeParamToId['fontSize'], 0));
+    }
 }

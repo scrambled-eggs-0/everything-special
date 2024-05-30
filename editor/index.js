@@ -70,6 +70,12 @@ const theme = Blockly.Theme.defineTheme('defaultTheme', {
   // 'startHats': true
 });
 
+javascriptGenerator.INFINITE_LOOP_TRAP = 'if(--window.loopTrap == 0){window.onLoopTrap();try{eval("break;")}catch(e){return;}}\n'
+window.onLoopTrap = () => {
+  // if(!!confirm("Infinite loop detected. Would you like to undo?")) // newUndoShortcut.callback(window.ws);
+  window.infiniteLoop = true;
+  alert("Infinite loop detected. Code execution paused.");
+}
 function getCode(){
   return javascriptGenerator.workspaceToCode(ws);//.replaceAll('var ', 'let ');
 }
@@ -136,6 +142,9 @@ ws.addChangeListener((e) => {
   // Don't run the code during drags; we might have invalid state.
   if (e.isUiEvent || e.type === Blockly.Events.FINISHED_LOADING || ws.isDragging()) {
     return;
+  } else if(e.type === Blockly.Events.BLOCK_DELETE){
+    // rip trashcan :( Your functionality will be missed
+    ws.trashcan.emptyContents();
   }
   runCode();
 });
@@ -150,6 +159,7 @@ ws.addChangeListener((e) => {
 
 const publishBtn = document.getElementById('publish');
 publishBtn.onclick = () => {
+  if(window.infiniteLoop === true) {alert('Cannot upload because there is an infinite loop!'); return;}
   let hasWinpad = false;
   for(let i = 0; i < window.obstacles.length; i++){
     if(window.obstacles[i].isWinpad === true) { hasWinpad = true; break; }
@@ -226,6 +236,7 @@ window.requestIdleCallback(() => {
   const newPasteShortcut = {
     ...oldPasteShortcut,
     callback(workspace) {
+      if(window.inClearCheckMode === true) return false;
       window.onWorkspaceLoadFunctions.length = 0;
       window.workspaceLoaded = false;
       window.importNeedsStructuredClone = true;
@@ -243,28 +254,59 @@ window.requestIdleCallback(() => {
   const newUndoShortcut = {
     ...oldUndoShortcut,
     callback(workspace) {
+      if(window.inClearCheckMode === true) return false;
       window.onWorkspaceLoadFunctions.length = 0;
-      window.workspaceLoaded = false;
+      // window.workspaceLoaded = false;
       window.importNeedsStructuredClone = true;
       const returnVal = oldUndoShortcut.callback.call(this, workspace);
-      window.workspaceLoaded = true;
+      // window.workspaceLoaded = true;
       delete window.importNeedsStructuredClone;
       for(let i = 0; i < window.onWorkspaceLoadFunctions.length; i++) window.onWorkspaceLoadFunctions[i]();
       return returnVal;
     }
   }
   Blockly.ShortcutRegistry.registry.register(newUndoShortcut, /*allowOverrides:*/ true);
-  window.onLoopTrap = () => {
-    // if(!!confirm("Infinite loop detected. Would you like to undo?"))
-    alert("Infinite loop detected. Undoing!");
-    newUndoShortcut.callback(window.ws);
-  }
-  javascriptGenerator.INFINITE_LOOP_TRAP = 'if(--window.loopTrap == 0){window.onLoopTrap();throw "Infinite loop."}\n';
+  window.undoShortcut = newUndoShortcut.callback;
 
   // removing the duplicate function from the menu
   Blockly.ContextMenuRegistry.registry.unregister('blockDuplicate');
 }, {timeout: 100})
 
-javascriptGenerator.INFINITE_LOOP_TRAP = 'if(--window.loopTrap == 0)throw "Infinite loop.";\n';
-
 ws.registerButtonCallback("returnToMainGame", ()=>{location.replace(location.origin)});
+
+window.updateBlockId = (id) => {
+  const allBlocks = window.ws.getAllBlocks();
+  for(let i = allBlocks.length-1; i >= 0; i--){
+    if(allBlocks[i].obstacleId === id){
+      const block = allBlocks[i];
+      for(let j = 0; j < block.childBlocks_.length; j++){
+        if(block.childBlocks_[j].type === 'text'){
+          const textBlock = block.childBlocks_[j];
+          let oldId = textBlock.getFieldValue("TEXT");
+          let duplicateNum = 2;
+          // if we already have a (2) at the end,
+          // make it a (3) instead of a (2) (2).
+          if(oldId[oldId.length-1] === ')'){
+            let n, char, isDup = true;
+            for(n = oldId.length-2; n >= 0; n--){
+              char = oldId[n];
+              if(char === '(') break;
+              if(Number.isFinite(parseInt(char)) === false) {isDup = false; break;}
+            }
+            if(isDup === true && n !== oldId.length-2){
+              duplicateNum = parseInt(oldId.slice(n+1,oldId.length-1));
+              oldId = oldId.slice(0, n-1);
+            }
+          }
+          let newId = oldId + ` (${duplicateNum})`;
+          while(window.idToObs[newId] !== undefined){newId = oldId + ` (${++duplicateNum})`;}
+          Blockly.Events.disable();  
+          textBlock.setFieldValue(newId, "TEXT");
+          Blockly.Events.enable();
+          break;
+        }
+      }
+      break;
+    }
+  }
+}

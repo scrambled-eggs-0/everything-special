@@ -387,6 +387,12 @@ const initSimulateMap = [
 		o.currentPoint = Math.floor(init.currentPoint);
         
 		o.path = init.path;// like [[x,y,speed], ...]
+
+        // filtering out consecutive duplicates
+        for(let i = o.path.length-1; i >= 1; i--){
+            if(o.path[i][0] === o.path[i-1][0] && o.path[i][1] === o.path[i-1][1]) o.path.splice(i,1);
+        }
+
         if(o.path.length < 2) o.path = window.simulateDefaultMap[0].path;
 
         o.pointOn = o.path[o.currentPoint];
@@ -439,40 +445,7 @@ const initSimulateMap = [
     (o, init) => {
         const id = init.id.toString().trim();
         // make sure ids can't be duplicated
-        if(isEditor === true && window.idToObs[id] !== undefined){
-            const allBlocks = window.ws.getAllBlocks();
-            for(let i = allBlocks.length-1; i >= 0; i--){
-                if(allBlocks[i].obstacleId === id){
-                    const block = allBlocks[i];
-                    for(let j = 0; j < block.childBlocks_.length; j++){
-                        if(block.childBlocks_[j].type === 'text'){
-                            const textBlock = block.childBlocks_[j];
-                            let oldId = textBlock.getFieldValue("TEXT");
-                            let duplicateNum = 2;
-                            // if we already have a (2) at the end,
-                            // make it a (3) instead of a (2) (2).
-                            if(oldId[oldId.length-1] === ')'){
-                                let n, char, isDup = true;
-                                for(n = oldId.length-2; n >= 0; n--){
-                                    char = oldId[n];
-                                    if(char === '(') break;
-                                    if(Number.isFinite(parseInt(char)) === false) {isDup = false; break;}
-                                }
-                                if(isDup === true && n !== oldId.length-2){
-                                    duplicateNum = parseInt(oldId.slice(n+1,oldId.length-1));
-                                    oldId = oldId.slice(0, n-1);
-                                }
-                            }
-                            let newId = oldId + ` (${duplicateNum})`;
-                            while(window.idToObs[newId] !== undefined){newId = oldId + ` (${++duplicateNum})`;}
-                            textBlock.setFieldValue(newId, "TEXT");
-                            break;
-                        }
-                    }
-                    break;
-                }
-            }
-        }
+        if(isEditor === true && window.idToObs[id] !== undefined) window.updateBlockId(id);
         window.idToObs[id] = o;
     }
 ]

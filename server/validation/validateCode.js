@@ -28,6 +28,7 @@ Blockly.common.defineBlocks(libraryBlocks);
 Blockly.common.defineBlocks(blocks);
 forBlock['modify_existing'](javascriptGenerator);
 javascriptGenerator.addReservedWords('code');
+javascriptGenerator.INFINITE_LOOP_TRAP = 'if(--window.loopTrap == 0){try{eval("break;")}catch(e){return;}}\n';
 Object.assign(javascriptGenerator.forBlock, forBlock);
 
 const validatorWorkspace = new Blockly.Workspace();

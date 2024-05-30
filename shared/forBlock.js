@@ -417,20 +417,28 @@ forBlock['delete_obstacle'] = function (block, generator) {
   }
 };
 
+function getParameterDefaultValue(outputType, isId=false){
+  if(outputType === 'Number') return (isId === true ? '-1' : '0');
+  else if(Array.isArray(outputType) === true) return `""`;
+  else if(outputType === 'Boolean') return 'false';
+  else if(outputType === 'Array') return '[]';
+  return '';
+}
+
 forBlock['get_parameter'] = function (block, generator) {
   const id = generator.valueToCode(block, 'ID', Order.NONE);
   let wrapFunction = (a) => { return a; };
   if(id !== ''){
     wrapFunction = (a) => {
-      return `(()=>{const e=idToObs[${id}];return e!==undefined?(${a}):-1;})()`;
+      return [`(()=>{const e=idToObs[${id}];return e!==undefined?(${a}):${getParameterDefaultValue(block.outputType, true)};})()`, Order.NONE];
     }
   } else {
     // get parent once because it's a plug --
     // getSurroundParent doesn't account for it 
     // so just use the thing that it's attached to
     let parentBlock = block.getParent();
-    if(parentBlock === null) return '';
-    if(window.getParentBlockOfType(parentBlock) === null) return '';
+    if(parentBlock === null) return [getParameterDefaultValue(block.outputType), Order.NONE];
+    if(window.getParentBlockOfType(parentBlock) === null) return [getParameterDefaultValue(block.outputType), Order.NONE];
   }
   
   const parameter = block.getFieldValue('INPUT', Order.NONE);

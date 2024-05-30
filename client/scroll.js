@@ -160,6 +160,7 @@ window.removeScript = function removeScript(){
 window.resetGame = () => {
     window.obstacles.length = window.mouseUpFunctions.length = window.mouseDownFunctions.length = window.mouseMoveFunctions.length = 0;
     if(window.isEditor !== true) {window.respawnPlayer(); /*player.renderRadius = player.sat.r;*/ }
+    else {window.infiniteLoop = false;}
     for(let key in window.defaultColors) { window.colors[key] = window.defaultColors[key]; }
     window.mouseDownFunctions.push(() => {
         if(player.dead === true) window.respawnPlayer();
