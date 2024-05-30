@@ -70,7 +70,7 @@ const theme = Blockly.Theme.defineTheme('defaultTheme', {
   // 'startHats': true
 });
 
-javascriptGenerator.INFINITE_LOOP_TRAP = 'if(--window.loopTrap == 0){window.onLoopTrap();try{eval("break;")}catch(e){return;}}\n'
+javascriptGenerator.INFINITE_LOOP_TRAP = 'if(--window.loopTrap == 0){window.onLoopTrap();throw "Infinite loop!";}\n';
 window.onLoopTrap = () => {
   // if(!!confirm("Infinite loop detected. Would you like to undo?")) // newUndoShortcut.callback(window.ws);
   window.infiniteLoop = true;
@@ -116,18 +116,14 @@ const messageText = document.getElementById('messagetext');
 window.alert = (msg, toFade=true) => {
   messageText.innerText = msg;
   messageText.style.opacity = "1";
-  if(toFade === true) {
-    window.fadeAlert();
-  }
+  if(toFade === true) window.fadeAlert();
 }
 
 window.fadeAlert = () => {
-  requestAnimationFrame(() => {
-    messageText.style.animation = "";
-    requestAnimationFrame(() => {
-      messageText.style.opacity = "0"; messageText.style.animation="fadeOut 3s ease-in-out 1";
-    })
-  })
+  messageText.style.opacity = "0";
+  messageText.style.animation = 'none';
+  messageText.offsetHeight; /* trigger reflow */
+  messageText.style.animation = "fadeOut 3s ease-in-out 1";
 }
 
 const ws = window.ws = Blockly.inject(blocklyDiv, {toolbox, zoom, theme});
@@ -256,10 +252,11 @@ window.requestIdleCallback(() => {
     callback(workspace) {
       if(window.inClearCheckMode === true) return false;
       window.onWorkspaceLoadFunctions.length = 0;
-      // window.workspaceLoaded = false;
+      const toWSUnload = window.ws.undoStack_[window.ws.undoStack_.length-1]?.type === 'delete';
+      if(toWSUnload === true) window.workspaceLoaded = false;
       window.importNeedsStructuredClone = true;
       const returnVal = oldUndoShortcut.callback.call(this, workspace);
-      // window.workspaceLoaded = true;
+      if(toWSUnload === true) window.workspaceLoaded = true;
       delete window.importNeedsStructuredClone;
       for(let i = 0; i < window.onWorkspaceLoadFunctions.length; i++) window.onWorkspaceLoadFunctions[i]();
       return returnVal;

@@ -354,7 +354,7 @@ lastMouseX = lastMouseY = 0;
 window.addSideMenuEvtListeners = (nextFileName) => {
     window.mouseDownFunctions.push(() => {
         // update what we're hovering over
-        hoveringOverCog = (window.mouseX - gearX) ** 2 + (window.mouseY - gearY) ** 2 < gearRadius ** 2 / 4;
+        hoveringOverCog = gearImgLoaded === true && (window.mouseX - gearX) ** 2 + (window.mouseY - gearY) ** 2 < gearRadius ** 2 / 4;
         const smoothAnim = smoothstep(settingsMenuAnimation);
         const translateAmount = (1-smoothAnim) * canvas.width;
         hoverFn = undefined;

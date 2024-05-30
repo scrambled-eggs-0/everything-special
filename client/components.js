@@ -384,8 +384,6 @@ const renderShapeMap = [
 const initSimulateMap = [
     /*pathMove*/
     (o, init) => {
-		o.currentPoint = Math.floor(init.currentPoint);
-        
 		o.path = init.path;// like [[x,y,speed], ...]
 
         // filtering out consecutive duplicates
@@ -395,11 +393,13 @@ const initSimulateMap = [
 
         if(o.path.length < 2) o.path = window.simulateDefaultMap[0].path;
 
+        o.currentPoint = Math.floor(init.currentPoint) % o.path.length;
+
         o.pointOn = o.path[o.currentPoint];
         o.speed = o.pointOn[2];
         
         let nextPointIndex = o.currentPoint + 1;
-        if (nextPointIndex >= o.path.length) nextPointIndex = 0;
+        if (nextPointIndex === o.path.length) nextPointIndex = 0;
         
         o.pointTo = o.path[nextPointIndex];
         angle = Math.atan2(o.pointTo[1] - o.pointOn[1], o.pointTo[0] - o.pointOn[0]);
@@ -408,16 +408,17 @@ const initSimulateMap = [
 
         o.timeRemain = Math.sqrt((o.pointOn[0] - o.pointTo[0])**2 + (o.pointOn[1] - o.pointTo[1])**2) / o.speed;
         
-        // TODO: make this relative and not absolute, so point (0,0) and x:400,y:0 means the o would move starting from 400,0 instead of 0,0
-        // const fractionalPointOffset = init.currentPoint - o.currentPoint;
-        // if(fractionalPointOffset !== 0){
-        //     o.timeRemain *= 1 - fractionalPointOffset;// 0.8 of the way there means timeRemain should be divided by 5
-        //     o.pos.x = o.pointOn[0] * (1 - fractionalPointOffset) + fractionalPointOffset * o.pointTo[0];
-        //     o.pos.y = o.pointOn[1] * (1 - fractionalPointOffset) + fractionalPointOffset * o.pointTo[1];
-        // } else {
-        //     o.pos.x = o.pointOn[0];
-        //     o.pos.y = o.pointOn[1];
-        // }
+        const fractionalPointOffset = init.currentPoint - Math.floor(init.currentPoint);
+        if(fractionalPointOffset !== 0){
+            const newTimeRemain = o.timeRemain * (1 - fractionalPointOffset);
+            const delta = o.timeRemain - newTimeRemain;
+            o.pos.x += delta * o.xv;
+            o.pos.y += delta * o.yv;
+            o.timeRemain = newTimeRemain;
+        }
+
+        o.pos.x += o.pointOn[0] - o.path[0][0];
+        o.pos.y += o.pointOn[1] - o.path[0][1];
     },
     // /*rotate*/
     (o, init) => {
@@ -460,9 +461,7 @@ const simulateMap = [
         o.timeRemain--;
         if (o.timeRemain <= 0) {
             o.currentPoint++;
-            if (o.currentPoint > o.path.length - 1) {
-                o.currentPoint = 0;
-            }
+            if (o.currentPoint === o.path.length) o.currentPoint = 0;
             
             o.pointOn = o.path[o.currentPoint];
             o.speed = o.pointOn[2];
@@ -472,9 +471,7 @@ const simulateMap = [
             o.pos.y += o.yv * o.timeRemain;
     
             let nextPointIndex = o.currentPoint + 1;
-            if (nextPointIndex >= o.path.length) {
-                nextPointIndex = 0;
-            }
+            if (nextPointIndex === o.path.length) nextPointIndex = 0;
             
             o.pointTo = o.path[nextPointIndex];
     
@@ -485,7 +482,7 @@ const simulateMap = [
             let dist = Math.sqrt((o.pointOn[0]-o.xv*o.timeRemain - o.pointTo[0])**2 + (o.pointOn[1]-o.yv*o.timeRemain - o.pointTo[1])**2);
             
             if((o.xv ** 2 + o.yv ** 2) * (o.timeRemain ** 2) > dist){
-                // we've overshot the next point, just stay on the inital point
+                // we've overshot the next point, just stay on the inital point (no sync)
                 dist = Math.sqrt((o.pointOn[0] - o.pointTo[0])**2 + (o.pointOn[1] - o.pointTo[1])**2);
             } else {
                 // correct to next pt (sync)
@@ -601,7 +598,7 @@ window.simulateDefaultMap = [
 ]
 
 window.simulateConstraintsMap = [
-    {currentPoint: [0, true]},
+    {currentPoint: [0]},
     undefined,
     {growSpeed: [0], shrinkSpeed: [0], minGrowth: [0.001], maxGrowth: [0.001]},
     undefined,

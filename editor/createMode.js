@@ -245,7 +245,7 @@ window.render = () => {
 // upload mode! Same thing with the canvas
 window.enterClearCheckMode = () => {
     const selected = Blockly.getSelected();
-    if(typeof selected === 'object' && selected.unselect !== undefined) selected.unselect();
+    if(selected !== null) selected.unselect();
     window.runCode();
     window.respawnPlayer();
     window.inClearCheckMode = true;
