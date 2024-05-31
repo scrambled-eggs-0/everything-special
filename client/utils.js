@@ -88,4 +88,10 @@ window.colourRgb = (r,g,b) => {
 	return '#' + r + g + b;
 }
 
+window.md = (a) => {return (a !== a || a === undefined || a === null) ? 0 : a;}; // make defined
+window.makeNumber = (a) => {return Number.isFinite(a) === true ? a : 0;};
+window.makeNotNaN = (a) => {return (a === a) ? a : 0;};
+window.makeNotNull = (a) => {return a === null ? 0 : a};
+window.makeNotUndefined = (a) => {return a === undefined ? 0 : a};
+
 export default { until, SCROLL_PARAMS, isEditor, blendColor };
