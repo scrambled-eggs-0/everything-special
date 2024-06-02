@@ -1317,7 +1317,7 @@ export default {
     },
   ],
   mixinNames: [
-    'break_continue_in_loop_check'
+    'break_continue_in_loop_check',
   ],
   mixins: [
     // 'break_continue_in_loop_check'

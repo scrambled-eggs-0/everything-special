@@ -26,7 +26,7 @@ import forBlock from '../../shared/forBlock.js';
 
 Blockly.common.defineBlocks(libraryBlocks);
 Blockly.common.defineBlocks(blocks);
-forBlock['modify_existing'](javascriptGenerator);
+forBlock['modify_existing'](javascriptGenerator, Blockly);
 javascriptGenerator.addReservedWords('code');
 javascriptGenerator.INFINITE_LOOP_TRAP = 'if(--window.loopTrap == 0){try{eval("break;")}catch(e){return;}}\n';
 Object.assign(javascriptGenerator.forBlock, forBlock);

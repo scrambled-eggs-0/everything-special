@@ -179,7 +179,7 @@ forBlock['break_continue'] = function(block, generator) {
   return block.getFieldValue('FLOW') === 'BREAK' ? 'break;\n' : 'continue;\n';
 }
 
-forBlock['modify_existing'] = function(generator) {
+forBlock['modify_existing'] = function(generator, Blockly) {
   delete forBlock['modify_existing'];
   const oldMath = generator.forBlock['math_single'];
   forBlock['math_single'] = forBlock['math_trig'] = function(block, generator){
@@ -248,6 +248,33 @@ forBlock['modify_existing'] = function(generator) {
   forBlock["procedures_callreturn"] = function(block, generator) {
     const oldCode = oldPCR.bind(this)(block, generator)[0];
     return [`if(typeof ${oldCode.slice(0,oldCode.length-2)}==='function'){\n\tmakeNotUndefined(${oldCode})\n}`, Order.ATOMIC];
+  }
+
+  Blockly.Blocks["procedures_ifreturn"].getSurroundFunction = function () {
+    let block = this;
+    do {
+      if (block.type === 'procedures_defreturn') {
+        return block;
+      }
+      block = block.getSurroundParent();
+    } while (block);
+    return null;
+  };
+
+  Blockly.Blocks["procedures_ifreturn"].onchange = function (e) {
+    const enabled = !!this.getSurroundFunction();
+    this.setWarningText(
+      enabled ? null : "Warning: This block may only be used within a function with a return value.",
+    );
+
+    if (!this.isInFlyout) {
+      const initialGroup = Blockly.Events.getGroup();
+      
+      // Make it so the move and the disable event get undone together.
+      Blockly.Events.setGroup(e.group);
+      this.setEnabled(enabled);
+      Blockly.Events.setGroup(initialGroup);
+    }
   }
 }
 

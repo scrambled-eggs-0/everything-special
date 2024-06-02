@@ -18,7 +18,7 @@ for(let i = 0; i < JSBlockNames.length; i++){
 
 // Register the blocks and generator with Blockly
 Blockly.common.defineBlocks(blocks);
-forBlock['modify_existing'](javascriptGenerator);
+forBlock['modify_existing'](javascriptGenerator, Blockly);
 Blockly.Msg.MATH_ATAN2_TITLE = 'angle from (0,0) to X:%1 Y:%2';
 Object.assign(javascriptGenerator.forBlock, forBlock);
 window.generator = javascriptGenerator;
