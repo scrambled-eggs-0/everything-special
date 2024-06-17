@@ -3,7 +3,7 @@ const { until } = Utils;
 
 let gearImageRotation = 0, renderGearImageRotation = 0;
 let gearImgLoaded = false;
-let gearRadius = 60, gearX = 850, gearY = 1550;
+let gearRadius = 120, gearX = 850, gearY = 1550;
 let hoveringOverCog = false;
 let settingsMenuActive = false;
 let settingsGradient;
@@ -253,7 +253,7 @@ export default function drawUi(canvas, ctx, isLast=false){
     renderGearImageRotation = interpolateDirection(renderGearImageRotation, gearImageRotation, 0.1);
 
     if(gearImgLoaded === true){
-        ctx.globalAlpha = 0.3;
+        ctx.globalAlpha = 0.75;
         ctx.translate(gearX, gearY);
         if(renderGearImageRotation !== 0)ctx.rotate(renderGearImageRotation);
         ctx.drawImage(gearImg, -gearRadius/2, -gearRadius/2, gearRadius, gearRadius);
