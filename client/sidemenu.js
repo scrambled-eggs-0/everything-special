@@ -3,7 +3,7 @@ const { until } = Utils;
 
 let gearImageRotation = 0, renderGearImageRotation = 0;
 let gearImgLoaded = false;
-let gearRadius = 120, gearX = 850, gearY = 1550;
+let gearRadius = 150, gearX = 850, gearY = 1550;
 let hoveringOverCog = false;
 let settingsMenuActive = false;
 let settingsGradient;
