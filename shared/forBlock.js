@@ -247,7 +247,13 @@ forBlock['modify_existing'] = function(generator, Blockly) {
   const oldPCR = generator.forBlock["procedures_callreturn"];
   forBlock["procedures_callreturn"] = function(block, generator) {
     const oldCode = oldPCR.bind(this)(block, generator)[0];
-    return [`if(typeof ${oldCode.slice(0,oldCode.length-2)}==='function'){\n\tmakeNotUndefined(${oldCode})\n}`, Order.ATOMIC];
+    return [`(typeof ${oldCode.slice(0,oldCode.length-2)}==='function'?rlt(makeNotUndefined(${oldCode})):0)`, Order.ATOMIC];
+  }
+  
+  const oldPCNR = generator.forBlock["procedures_callnoreturn"];
+  forBlock["procedures_callnoreturn"] = function(block, generator) {
+    const oldCode = oldPCNR.bind(this)(block, generator);
+    return `rlt(${oldCode})`;
   }
 
   Blockly.Blocks["procedures_ifreturn"].getSurroundFunction = function () {
@@ -274,6 +280,15 @@ forBlock['modify_existing'] = function(generator, Blockly) {
       Blockly.Events.setGroup(e.group);
       this.setEnabled(enabled);
       Blockly.Events.setGroup(initialGroup);
+    }
+  }
+
+  const loopTypes = ['controls_repeat','controls_repeat_ext','controls_forEach','controls_for','controls_whileUntil'];
+  for(let i = 0; i < loopTypes.length; i++){
+    const oldGenerator = generator.forBlock[loopTypes[i]];
+    forBlock[loopTypes[i]] = function(block, generator) {
+      const oldCode = oldGenerator.bind(this)(block, generator);
+      return `rlt();\n${oldCode}`;
     }
   }
 }
