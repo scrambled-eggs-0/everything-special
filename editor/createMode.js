@@ -54,7 +54,7 @@ createModeBg.onmousedown = () => {
     previewY = window.mouseY;
     isDragging = true;
 
-    if(window.mouseOut === true || createBlock.disposed === true){
+    if(window.mouseOut === true || (createBlock && createBlock.disposed === true)){
         // exit create mode
         createModeBg.classList.add('hidden');
         canvas.remove();
