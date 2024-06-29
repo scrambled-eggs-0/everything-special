@@ -243,8 +243,7 @@ forBlock['modify_existing'] = function(generator, Blockly) {
     const code = generator.getVariableName(block.getFieldValue('VAR'));
     return [`md(${code})`, Order.ATOMIC];
   }
-
-  console.log('xd');
+  
   const oldPCR = generator.forBlock["procedures_callreturn"];
   forBlock["procedures_callreturn"] = function(block, generator) {
     const oldCode = oldPCR.bind(this)(block, generator)[0];
@@ -255,7 +254,6 @@ forBlock['modify_existing'] = function(generator, Blockly) {
         break;
       }
     }
-    console.log(oldCode, oldCode.slice(0,sliceIndex));
     return [`(typeof (${oldCode.slice(0,sliceIndex)})==='function'?rlt(makeNotUndefined(${oldCode})):0)`, Order.ATOMIC];
   }
   
