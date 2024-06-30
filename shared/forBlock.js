@@ -231,11 +231,12 @@ forBlock['modify_existing'] = function(generator, Blockly) {
       const variable = generator.valueToCode(block, listVariableNames[i], Order.NONE);
       if(type === 'lists_setIndex') {
         const setTo = generator.valueToCode(block, "TO", Order.NONE);
-        if(setTo === '') return `if(Array.isArray(${variable})){\n\t${oldCode.slice(0,oldCode.length - 6)+'0;\n'}}\n`;
+        if(setTo === '') return `if(Array.isArray(${variable})){\n\t${oldCode.slice(0,oldCode.length - 6)+'0\n'}}\n`;
         return `if(Array.isArray(${variable}) && (${setTo}) !== null){\n\t${oldCode}}\n`;
       }
       oldCode = oldCode[0];
-      return [`(Array.isArray(${variable}) ? (${oldCode}) : ${listDefaultValues[i]})`, Order.NONE];
+      const extraInsert = block.getParent() === null ? ';' : '';
+      return [`(Array.isArray(${variable}) ? (${oldCode}) : ${listDefaultValues[i]})` + extraInsert, Order.NONE];
     }
   }
 
@@ -243,10 +244,11 @@ forBlock['modify_existing'] = function(generator, Blockly) {
     const code = generator.getVariableName(block.getFieldValue('VAR'));
     return [`md(${code})`, Order.ATOMIC];
   }
-  
+
   const oldPCR = generator.forBlock["procedures_callreturn"];
   forBlock["procedures_callreturn"] = function(block, generator) {
-    const oldCode = oldPCR.bind(this)(block, generator)[0];
+    let oldCode = oldPCR.bind(this)(block, generator)[0].trimEnd();
+    if(oldCode[oldCode.length-1] === ';') oldCode = oldCode.slice(0, oldCode.length-1);
     let sliceIndex = 0;
     for(let i = 0; i < oldCode.length; i++){
       if(oldCode[i] === '('){
@@ -257,11 +259,12 @@ forBlock['modify_existing'] = function(generator, Blockly) {
     return [`(typeof (${oldCode.slice(0,sliceIndex)})==='function'?rlt(makeNotUndefined(${oldCode})):0)`, Order.ATOMIC];
   }
   
-  const oldPCNR = generator.forBlock["procedures_callnoreturn"];
-  forBlock["procedures_callnoreturn"] = function(block, generator) {
-    const oldCode = oldPCNR.bind(this)(block, generator);
-    return `rlt(${oldCode})`;
-  }
+  // const oldPCNR = generator.forBlock["procedures_callnoreturn"];
+  // forBlock["procedures_callnoreturn"] = function(block, generator) {
+  //   let oldCode = oldPCNR.bind(this)(block, generator).trimEnd();
+  //   if(oldCode[oldCode.length-1] === ';') oldCode = oldCode.slice(0, oldCode.length-1);
+  //   return `${oldCode};\n`;
+  // }
 
   Blockly.Blocks["procedures_ifreturn"].getSurroundFunction = function () {
     let block = this;
