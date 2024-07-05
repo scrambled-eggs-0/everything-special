@@ -440,7 +440,7 @@ forBlock['stop_music'] = function (block, generator) {
 };
 
 forBlock['delete_obstacle'] = function (block, generator) {
-  const id = generator.valueToCode(block, 'ID', Order.NONE);
+  const id = generator.valueToCode(block, 'ID', Order.NONE)?.trim();
   if(id !== ''){
     
     return `window.tickFns.push(() => {
@@ -463,6 +463,31 @@ forBlock['delete_obstacle'] = function (block, generator) {
   }
 };
 
+forBlock['collide_obstacles'] = function (block, generator) {// TODO!!!! Weight ratio! 0 should mean block a gets all the push and weight 1 means block b.
+  const firstIsId = block.getFieldValue('ID_DROPDOWN', Order.NONE) === "id";
+  const isPlug = block.getFieldValue('COL_TYPE_DROPDOWN', Order.NONE) === "check";
+  const id2 = generator.valueToCode(block, 'ID2', Order.NONE)?.trim();
+  if(isPlug === true){
+    if(firstIsId === true){
+      const id = generator.valueToCode(block, 'ID', Order.NONE)?.trim();
+      return [`isABColliding(idToObs[${id}],idToObs[${id2}])\n`, Order.NONE];
+    } else {
+      let parentBlock = block.getParent();
+      if(parentBlock === null) return ['', Order.NONE];
+      if(window.getParentBlockOfType(parentBlock) === null) return ['false', Order.NONE];
+      return [`isABColliding(e,idToObs[${id2}])\n`, Order.NONE];
+    }
+  } else {
+    if(firstIsId === true){
+      const id = generator.valueToCode(block, 'ID', Order.NONE)?.trim();
+      return `if(idToObs[${id}]!==undefined&&idToObs[${id2}]!==undefined){boundAB(idToObs[${id}],idToObs[${id2}])}\n`;
+    } else {
+      if(window.getParentBlockOfType(block) === null) return '';
+      return `if(idToObs[${id2}]!==undefined){boundAB(e,idToObs[${id2}])}\n`;
+    }
+  }
+};
+
 function getParameterDefaultValue(outputType, isId=false){
   if(outputType === 'Number') return (isId === true ? '-1' : '0');
   else if(Array.isArray(outputType) === true) return `""`;
@@ -472,7 +497,7 @@ function getParameterDefaultValue(outputType, isId=false){
 }
 
 forBlock['get_parameter'] = function (block, generator) {
-  const id = generator.valueToCode(block, 'ID', Order.NONE);
+  const id = generator.valueToCode(block, 'ID', Order.NONE)?.trim();
   let wrapFunction = (a) => { return a; };
   if(id !== ''){
     wrapFunction = (a) => {
@@ -490,15 +515,15 @@ forBlock['get_parameter'] = function (block, generator) {
   const parameter = block.getFieldValue('INPUT', Order.NONE);
   // if(parameter === 'INVALID') return '';
   if(parameter === 'x'){
-    return [wrapFunction(`generateTopLeftCoordinates(e)[0]`), Order.NONE];
+    return [wrapFunction(`(generateTopLeftCoordinates(e)[0]+e.dimensions.x/2)`), Order.NONE];
   } else if(parameter === 'y'){
-    return [wrapFunction(`generateTopLeftCoordinates(e)[1]`), Order.NONE];
+    return [wrapFunction(`(generateTopLeftCoordinates(e)[1]+e.dimensions.y/2)`), Order.NONE];
   }
   return [wrapFunction(`e.${parameter}`), Order.NONE];
 };
 
 forBlock['set_parameter'] = function (block, generator) {
-  const id = generator.valueToCode(block, 'ID', Order.NONE);
+  const id = generator.valueToCode(block, 'ID', Order.NONE)?.trim();
   let parentBlock = null;
   let wrapFunction = (a) => { return a; };
   if(id !== ''){
@@ -563,9 +588,9 @@ forBlock['set_parameter'] = function (block, generator) {
   // what?? addition?? i thought this was a setter??
   // all part of the plan :brain:
   if(parameter === 'x'){
-    return wrapFunction(`e.pos.x += ${value} - generateTopLeftCoordinates(e)[0];\n`);
+    return wrapFunction(`e.pos.x += ${value} - generateTopLeftCoordinates(e)[0] - e.dimensions.x/2;\n`);
   } else if(parameter === 'y'){
-    return wrapFunction(`e.pos.y += ${value} - generateTopLeftCoordinates(e)[1];\n`);
+    return wrapFunction(`e.pos.y += ${value} - generateTopLeftCoordinates(e)[1] - e.dimensions.y/2;\n`);
   } else if(parameter === 'sat.r'){
     return wrapFunction(`e.sat.r = Math.max(${value},0.001);\ne.dimensions = generateDimensions(e);\n`);
   }

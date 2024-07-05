@@ -82,7 +82,7 @@ export default /*const toolbox =*/ {
         {
           'kind': 'block',
           'type': 'delete_obstacle'
-        }
+        },
       ],
     },
     {
@@ -143,6 +143,10 @@ export default /*const toolbox =*/ {
           'kind': 'block',
           'type': 'bg_color'
         },
+        {
+          'kind': 'block',
+          'type': 'collide_obstacles'
+        }
       ],
     },
     // {

@@ -1,4 +1,3 @@
-import './SAT.js';
 import Utils from './utils.js';
 const { isEditor, blendColor } = Utils;
 import scroll from './scroll.js';
@@ -202,6 +201,31 @@ function simulate(){
     }
 
     // (rendering happens in between)
+}
+
+// 0 - circle, 1 - polygon
+const collisionMatrix = [
+    SAT.testCircleCircle, SAT.testCirclePolygon,
+    SAT.testPolygonCircle, SAT.testPolygonPolygon
+]
+window.collide = (a,b) => {
+    res.hasCollided = collisionMatrix[(a.sat.r === undefined) * 2 + (b.sat.r === undefined)](a.sat, b.sat, res);
+    return res;// make sure to clear after use!
+}
+window.boundAB = (a,b) => {
+    const res = window.collide(a,b);
+    if(res.hasCollided === true) {
+        a.pos.x -= res.overlapV.x;
+        a.pos.y -= res.overlapV.y;
+    }
+    res.clear();
+}
+window.isABColliding = (a,b) => {
+    if(a === undefined || b === undefined) return false;
+    const res = window.collide(a,b);
+    const hasCollided = res.hasCollided;
+    res.clear();
+    return hasCollided;
 }
 
 const satMap = [
@@ -444,9 +468,8 @@ const initSimulateMap = [
     () => {},
     // /*id*/
     (o, init) => {
-        const id = init.id.toString().trim();
-        // make sure ids can't be duplicated
-        if(isEditor === true && window.idToObs[id] !== undefined) window.updateBlockId(id);
+        let id = init.id.toString().trim();
+        if(window.idToObs[id] !== undefined && isEditor === true) alert(`Warning! Duplicate id "${id}" found! Duplicate ids override each other.`);
         window.idToObs[id] = o;
     }
 ]

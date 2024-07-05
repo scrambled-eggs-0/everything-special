@@ -4,6 +4,7 @@ const Blockly = require('blockly');
 const libraryBlocks = require('blockly/blocks');
 const { javascriptGenerator } = require('blockly/javascript');
 
+import './SAT.js';
 import '../../client/components.js';
 import textData from "../../shared/textData.js";
 const { JSBlockData, JSBlockNames } = textData;

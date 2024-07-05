@@ -486,8 +486,9 @@ export default {
     'delete_obstacle',
     'get_parameter',
     'set_parameter',
+    'collide_obstacles',
     'create_list',
-    'bg_color'
+    'bg_color',
   ],
   JSBlockData: [
     // create_obstacle
@@ -1012,14 +1013,6 @@ export default {
             .appendField(new Blockly.FieldDropdown([["this obstacle", "this"],["obstacle with id", "id"]], this.validateIdDropdown), 'ID_DROPDOWN')
         },
 
-        validateParamDropdown: function(newValue) {
-          const childBlock = this.getSourceBlock();
-          if(childBlock.defaults !== undefined){
-            childBlock.setOutput(true, generateConnectionType(childBlock.defaults[newValue]));
-          } 
-          return newValue;
-        },
-
         validateIdDropdown: function(newValue) {
           if(this.selectedOption[1] === newValue) return newValue;
           const block = this.getSourceBlock();
@@ -1168,6 +1161,77 @@ export default {
             block.setInputsInline(true);
             block.inputList.unshift(block.inputList.pop());
           }
+          return newValue;
+        },
+      }
+    },
+
+    // collide_obstacles
+    function(Blockly) {
+      return {
+        init: function() {
+          this.setColour('121');
+
+          this.appendDummyInput("VALUE")
+            .appendField(new Blockly.FieldDropdown([["collide", "bound"],["is touching", "check"]], this.updateColType), 'COL_TYPE_DROPDOWN')
+            .appendField(new Blockly.FieldDropdown([["this obstacle", "this"],["obstacle with id", "id"]], this.regenerateBlock), 'ID_DROPDOWN')
+
+          this.appendValueInput("ID2")
+            .appendField(' with obstacle with id ', 'BETWEEN')
+            .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(Object.keys(window.idToObs)[0] ?? "No obstacles with [id] simulate type found")))
+            .setCheck("String");
+          
+          this.lastColType = 'bound';
+
+          this.setInputsInline(true);
+          if(window.workspaceLoaded === false) {
+            this.setOutput(true);
+          }
+          this.setNextStatement(true, null);
+          this.setPreviousStatement(true, null);
+        },
+
+        updateColType: function(newValue){
+          const block = this.getSourceBlock();
+          if(window.workspaceLoaded === true)block.unplug(true);
+          if(newValue === 'bound'){
+            block.setNextStatement(true, null);
+            block.setPreviousStatement(true, null);
+            block.setOutput(false);
+          } else {
+            block.setNextStatement(false);
+            block.setPreviousStatement(false);
+            block.setOutput(true, 'Boolean');
+          }
+          block.lastColType = newValue;
+          const conjunction = block.lastColType === 'bound' ? 'with' : 'and';
+          block.setFieldValue(`${conjunction} obstacle with id`, 'BETWEEN');
+          return newValue;
+        },
+
+        regenerateBlock: function(newValue) {
+          const block = this.getSourceBlock();
+
+          const conjunction = block.lastColType === 'bound' ? 'with' : 'and';
+          
+          block.removeInput("ID", true);
+          block.removeInput("ID2", true);
+
+          const keys = Object.keys(window.idToObs);
+
+          if(newValue === 'id'){
+            block.appendValueInput("ID")
+              .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(keys[0] ?? "No obstacles with [id] simulate type found")))
+              .setCheck("String")
+          }
+
+          const otherAdd = newValue === 'id' ? 'other ' : '';
+          const keyVal = newValue === 'id' ? keys[1] : keys[0];
+          block.appendValueInput("ID2")
+            .appendField(`${conjunction} obstacle with id`, 'BETWEEN')
+            .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(keyVal ?? `No ${otherAdd}obstacles with [id] simulate type found`)))
+            .setCheck("String");
+          
           return newValue;
         },
       }

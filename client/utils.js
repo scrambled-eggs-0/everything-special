@@ -16,7 +16,7 @@ const SCROLL_PARAMS = Object.freeze({
     edgeMargin: 117 // out of 900
 });
 
-const isEditor = typeof location === 'undefined' ? false : (location.origin.endsWith('8080') || location.href.endsWith('editor'));
+const isEditor = window.isEditor = typeof location === 'undefined' ? false : (location.origin.endsWith('8080') || location.href.endsWith('editor'));
 
 const memoizedColors = {};
 
@@ -95,43 +95,4 @@ window.makeNotNull = (a) => {return a === null ? 0 : a};
 window.makeNotUndefined = (a) => {return a === undefined ? 0 : a};
 window.rlt = (a) => {window.loopTrap = 1000; return a;};// reset loop trap
 
-if(isEditor === true){
-	window.updateBlockId = (id) => {
-		const allBlocks = window.ws.getAllBlocks();
-		for(let i = allBlocks.length-1; i >= 0; i--){
-		  if(allBlocks[i].obstacleId === id){
-			const block = allBlocks[i];
-			for(let j = 0; j < block.childBlocks_.length; j++){
-			  if(block.childBlocks_[j].type === 'text'){
-				const textBlock = block.childBlocks_[j];
-				let oldId = textBlock.getFieldValue("TEXT");
-				let duplicateNum = 2;
-				// if we already have a (2) at the end,
-				// make it a (3) instead of a (2) (2).
-				if(oldId[oldId.length-1] === ')'){
-				  let n, char, isDup = true;
-				  for(n = oldId.length-2; n >= 0; n--){
-					char = oldId[n];
-					if(char === '(') break;
-					if(Number.isFinite(parseInt(char)) === false) {isDup = false; break;}
-				  }
-				  if(isDup === true && n !== oldId.length-2){
-					duplicateNum = parseInt(oldId.slice(n+1,oldId.length-1));
-					oldId = oldId.slice(0, n-1);
-				  }
-				}
-				let newId = oldId + ` (${duplicateNum})`;
-				while(window.idToObs[newId] !== undefined){newId = oldId + ` (${++duplicateNum})`;}
-				Blockly.Events.disable();  
-				textBlock.setFieldValue(newId, "TEXT");
-				Blockly.Events.enable();
-				break;
-			  }
-			}
-			break;
-		  }
-		}
-	}
-}
-
-export default { until, SCROLL_PARAMS, isEditor, blendColor };
+export default { until, SCROLL_PARAMS, blendColor, isEditor };

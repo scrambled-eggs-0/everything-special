@@ -2,6 +2,7 @@ import * as Blockly from 'blockly';
 
 let createBlock = null;
 let createBlockXML = null;
+let inCreateMode = false;
 
 let previewX = 0;
 let previewY = 0;
@@ -60,108 +61,106 @@ createModeBg.onmousedown = () => {
         canvas.remove();
         outputPane.insertBefore(canvas, publishBtn);
         isDragging = false;
+        inCreateMode = false;
         window.inClearCheckMode = false;
     }
 }
 let fixedPts;
-createModeBg.onclick = () => {
+window.onclick = () => {
+    if(inCreateMode === false) return;
+
     // if we click the canvas, create a block
-    if(window.mouseOut === false && window.inClearCheckMode === false) {
-        if(previewShape === 0){
-            if(snapGrid(window.mouseX) === snapGrid(previewX) && snapGrid(window.mouseY) === snapGrid(previewY)) {
-                isDragging = false;
-                return;
-            }
-        } else if(previewShape === 1){
-            if(snapGrid(window.mouseX) === snapGrid(previewX) || snapGrid(window.mouseY) === snapGrid(previewY)) {
-                isDragging = false;
-                return;
-            }
-        } else if(previewShape === 2){
-            const nextPt = [snapGrid(window.mouseX), snapGrid(window.mouseY)];
-            previewPolygonPoints.push(nextPt);
-
-            // if we're not at the start
-            if(previewPolygonPoints.length === 1 || previewPolygonPoints[0][0] !== nextPt[0] || previewPolygonPoints[0][1] !== nextPt[1]){
-                return;
-            }
-
-            fixedPts = fixPolygon(previewPolygonPoints);
-            if(fixedPts.length <= 2){
-                isDragging = false;
-                return;
-            }
+    if(previewShape === 0){
+        if(snapGrid(window.mouseX) === snapGrid(previewX) && snapGrid(window.mouseY) === snapGrid(previewY)) {
+            isDragging = false;
+            return;
         }
-        
-        const newBlock = Blockly.Xml.domToBlock(createBlockXML, window.ws);
-
-        // get last child and connect
-        let lastBlock = createBlock;
-        let nextBlock;
-        while((nextBlock = lastBlock.getNextBlock()) !== null){
-            lastBlock = nextBlock;
+    } else if(previewShape === 1){
+        if(snapGrid(window.mouseX) === snapGrid(previewX) || snapGrid(window.mouseY) === snapGrid(previewY)) {
+            isDragging = false;
+            return;
         }
-        lastBlock.nextConnection.connect(newBlock.previousConnection);
+    } else if(previewShape === 2){
+        const nextPt = [snapGrid(window.mouseX), snapGrid(window.mouseY)];
+        previewPolygonPoints.push(nextPt);
 
-        // change x and y to reflect mouse pos
-        // newBlock.getInput(newBlock.shapeParamToId['x'])
-        // newBlock.setFieldValue(window.mouseX, newBlock.shapeParamToId['x'] + 'F');
-
-        if(previewShape === 0){
-            // circle
-            newBlock.getInput(newBlock.shapeParamToId['x']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(previewX))));
-            newBlock.getInput(newBlock.shapeParamToId['y']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(previewY))));
-
-            const dist = Math.sqrt((snapGrid(previewX) - snapGrid(window.mouseX)) ** 2 + (snapGrid(previewY) - snapGrid(window.mouseY)) ** 2);
-            newBlock.getInput(newBlock.shapeParamToId['r']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(Math.floor(dist * 1000) / 1000)));
-        } else if(previewShape === 1){
-            // rect
-            const minX = Math.min(previewX, window.mouseX);
-            const maxX = Math.max(previewX, window.mouseX);
-
-            const minY = Math.min(previewY, window.mouseY);
-            const maxY = Math.max(previewY, window.mouseY);
-
-            newBlock.getInput(newBlock.shapeParamToId['x']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(minX))));
-            newBlock.getInput(newBlock.shapeParamToId['y']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(minY))));
-
-            newBlock.getInput(newBlock.shapeParamToId['w']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(maxX) - snapGrid(minX))));
-            newBlock.getInput(newBlock.shapeParamToId['h']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(maxY) - snapGrid(minY))));
-        } else if(previewShape === 2){
-            // polygon
-            // points: [[300,700],[600,700],[450,900]]
-            newBlock.getInput(newBlock.shapeParamToId['points']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(fixedPts)));
-            previewPolygonPoints.length = 0;
-        } else if(previewShape === 3){
-            newBlock.getInput(newBlock.shapeParamToId['x']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(window.mouseX))));
-            newBlock.getInput(newBlock.shapeParamToId['y']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(window.mouseY))));
-            newBlock.getInput(newBlock.shapeParamToId['text']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(previewText)));
-            newBlock.getInput(newBlock.shapeParamToId['fontSize']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(previewFontSize)));
-        } else {
-            console.error('previewShapeToObs not defined | createMode.js');
+        // if we're not at the start
+        if(previewPolygonPoints.length === 1 || previewPolygonPoints[0][0] !== nextPt[0] || previewPolygonPoints[0][1] !== nextPt[1]){
+            return;
         }
 
-        if(generatorInit === false) {generatorInit = true; window.generator.init(window.ws);}
-
-        for(let key in lastBlock.simulateParamToId){
-            const shadow = lastBlock.getInput(lastBlock.simulateParamToId[key]).connection.getShadowDom(true).cloneNode(true);
-            newBlock.getInput(newBlock.simulateParamToId[key]).setShadowDom(shadow);
+        fixedPts = fixPolygon(previewPolygonPoints);
+        if(fixedPts.length <= 2){
+            isDragging = false;
+            return;
         }
-
-        for(let key in lastBlock.effectParamToId){
-            const shadow = lastBlock.getInput(lastBlock.effectParamToId[key]).connection.getShadowDom(true).cloneNode(true);
-            newBlock.getInput(newBlock.effectParamToId[key]).setShadowDom(shadow);
-        }
-        
-
-        isDragging = false;
-        // console.log(newBlock.shapeParamToId['x'])
-
-        // newBlock.moveBy(newBlockPos.x, newBlockPos.y);
-        // newBlockPos.x += createBlockWidth + blockPadding//moveDist;
-        // // newBlockPos.y += moveDist;
-        return;
     }
+    
+    const newBlock = Blockly.Xml.domToBlock(createBlockXML, window.ws);
+
+    // get last child and connect
+    let lastBlock = createBlock;
+    let nextBlock;
+    while((nextBlock = lastBlock.getNextBlock()) !== null){
+        lastBlock = nextBlock;
+    }
+    lastBlock.nextConnection.connect(newBlock.previousConnection);
+
+    // change x and y to reflect mouse pos
+    // newBlock.getInput(newBlock.shapeParamToId['x'])
+    // newBlock.setFieldValue(window.mouseX, newBlock.shapeParamToId['x'] + 'F');
+
+    if(previewShape === 0){
+        // circle
+        newBlock.getInput(newBlock.shapeParamToId['x']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(previewX))));
+        newBlock.getInput(newBlock.shapeParamToId['y']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(previewY))));
+
+        const dist = Math.sqrt((snapGrid(previewX) - snapGrid(window.mouseX)) ** 2 + (snapGrid(previewY) - snapGrid(window.mouseY)) ** 2);
+        newBlock.getInput(newBlock.shapeParamToId['r']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(Math.floor(dist * 1000) / 1000)));
+    } else if(previewShape === 1){
+        // rect
+        const minX = Math.min(previewX, window.mouseX);
+        const maxX = Math.max(previewX, window.mouseX);
+
+        const minY = Math.min(previewY, window.mouseY);
+        const maxY = Math.max(previewY, window.mouseY);
+
+        newBlock.getInput(newBlock.shapeParamToId['x']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(minX))));
+        newBlock.getInput(newBlock.shapeParamToId['y']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(minY))));
+
+        newBlock.getInput(newBlock.shapeParamToId['w']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(maxX) - snapGrid(minX))));
+        newBlock.getInput(newBlock.shapeParamToId['h']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(maxY) - snapGrid(minY))));
+    } else if(previewShape === 2){
+        // polygon
+        // points: [[300,700],[600,700],[450,900]]
+        newBlock.getInput(newBlock.shapeParamToId['points']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(fixedPts)));
+        previewPolygonPoints.length = 0;
+    } else if(previewShape === 3){
+        newBlock.getInput(newBlock.shapeParamToId['x']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(window.mouseX))));
+        newBlock.getInput(newBlock.shapeParamToId['y']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(window.mouseY))));
+        newBlock.getInput(newBlock.shapeParamToId['text']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(previewText)));
+        newBlock.getInput(newBlock.shapeParamToId['fontSize']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(previewFontSize)));
+    } else {
+        console.error('previewShapeToObs not defined | createMode.js');
+    }
+
+    if(generatorInit === false) {generatorInit = true; window.generator.init(window.ws);}
+
+    for(let key in lastBlock.simulateParamToId){
+        const shadow = lastBlock.getInput(lastBlock.simulateParamToId[key]).connection.getShadowDom(true).cloneNode(true);
+        newBlock.getInput(newBlock.simulateParamToId[key]).setShadowDom(shadow);
+    }
+
+    for(let key in lastBlock.effectParamToId){
+        const shadow = lastBlock.getInput(lastBlock.effectParamToId[key]).connection.getShadowDom(true).cloneNode(true);
+        newBlock.getInput(newBlock.effectParamToId[key]).setShadowDom(shadow);
+    }
+    
+
+    isDragging = false;
+    // newBlock.moveBy(newBlockPos.x, newBlockPos.y);
+    // newBlockPos.x += createBlockWidth + blockPadding//moveDist;
+    // // newBlockPos.y += moveDist;
 }
 
 createModeBg.oncontextmenu = (e) => {
@@ -291,4 +290,6 @@ window.setCreateBlock = (block) => {
         previewText = previewText.slice(1, previewText.length - 1);
         previewFontSize = parseFloat(window.generator.valueToCode(createBlock, createBlock.shapeParamToId['fontSize'], 0));
     }
+
+    inCreateMode = true;
 }
