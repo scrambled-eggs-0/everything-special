@@ -256,7 +256,15 @@ forBlock['modify_existing'] = function(generator, Blockly) {
         break;
       }
     }
-    return [`(typeof (${oldCode.slice(0,sliceIndex)})==='function'?rlt(makeNotUndefined(${oldCode})):0)`, Order.ATOMIC];
+    let outputCon = block.outputConnection.targetConnection;
+    let innerCode = `rlt(makeNotUndefined(${oldCode}))`;
+    if(outputCon !== null){
+      let check = outputCon.check;
+      if(!Array.isArray(check)) check = [check];
+      // Stringified array of strings is the same as normal js code
+      innerCode = `makeType(${innerCode},${JSON.stringify(check)})`;
+    }
+    return [`(typeof (${oldCode.slice(0,sliceIndex)})==='function'?${innerCode}:0)`, Order.ATOMIC];
   }
   
   // const oldPCNR = generator.forBlock["procedures_callnoreturn"];

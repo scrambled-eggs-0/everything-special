@@ -94,5 +94,21 @@ window.makeNotNaN = (a) => {return (a === a) ? a : 0;};
 window.makeNotNull = (a) => {return a === null ? 0 : a};
 window.makeNotUndefined = (a) => {return a === undefined ? 0 : a};
 window.rlt = (a) => {window.loopTrap = 1000; return a;};// reset loop trap
+window.makeType = (a,typeArr) => {
+	if(typeArr.includes(generateConnectionType(a)) === true)return a;
+	return defaultTypeMap[typeof a];
+}
+window.generateConnectionType = (val) => {
+	const type = typeof val;
+	if(type === 'number') return 'Number';
+	if(type === 'string') {
+	  // if(val[0] === '#') return 'Colour';
+	  return ['String', 'Colour'];
+	}
+	if(type === 'boolean') return 'Boolean';
+	if(Array.isArray(val) === true) return 'Array';
+	return null;
+}
+const defaultTypeMap = {undefined: 0, string: '', boolean: true/*glass is half full*/, number: 0, object: []/*exclusively used for blockly, where arrays are the only object*/};
 
 export default { until, SCROLL_PARAMS, blendColor, isEditor };

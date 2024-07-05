@@ -1480,18 +1480,6 @@ window.generateShadowBlock = (value) => {
   // }
 }
 
-function generateConnectionType(val){
-  const type = typeof val;
-  if(type === 'number') return 'Number';
-  if(type === 'string') {
-    // if(val[0] === '#') return 'Colour';
-    return ['String', 'Colour'];
-  }
-  if(type === 'boolean') return 'Boolean';
-  if(Array.isArray(val) === true) return 'Array';
-  return null;
-}
-
 function generateParameterDropdownOptions(childBlock, isPlug=false, id="NO_ID"){
   // const parent = this.getSourceBlock();
   // if(parent === null) return [['x', 'INVALID'], ['y', 'INVALID']]
