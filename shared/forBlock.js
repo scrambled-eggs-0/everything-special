@@ -256,9 +256,9 @@ forBlock['modify_existing'] = function(generator, Blockly) {
         break;
       }
     }
-    let outputCon = block.outputConnection.targetConnection;
+    let outputCon = block?.outputConnection?.targetConnection;
     let innerCode = `rlt(makeNotUndefined(${oldCode}))`;
-    if(outputCon !== null){
+    if(outputCon !== null && outputCon !== undefined){
       let check = outputCon.check;
       if(!Array.isArray(check)) check = [check];
       // Stringified array of strings is the same as normal js code
