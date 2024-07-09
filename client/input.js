@@ -30,7 +30,7 @@ window.onmousedown = (e) => {
     }
 }
 
-window.onmousemove = (e, param2) => {
+window.onmousemove = (e) => {
     // input
     window.mouseX = ((e.pageX - window.canvasDimensions.x) / window.canvasDimensions.width) * canvas.width;//Math.min(1, Math.max(0, ) ;
     window.mouseY = ((e.pageY - window.canvasDimensions.y) / window.canvasDimensions.height) * canvas.height;
