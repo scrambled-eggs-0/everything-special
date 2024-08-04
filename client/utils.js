@@ -16,7 +16,7 @@ const SCROLL_PARAMS = Object.freeze({
     edgeMargin: 117 // out of 900
 });
 
-const isEditor = window.isEditor = typeof location === 'undefined' ? false : (location.origin.endsWith('8080') || location.href.endsWith('editor'));
+const environment = window.environment = typeof location === 'undefined' ? 'server' : ((location.origin.endsWith('8080') || location.href.endsWith('editor')) ? 'editor' : 'client');
 
 const memoizedColors = {};
 
@@ -61,7 +61,7 @@ window.decorationImgs = {};
 if(typeof Image !== 'undefined'){
 	window.arrowImg = new Image();
 	window.starImg = new Image();
-	if(isEditor === true){
+	if(environment === 'editor'){
 		// editor
 		(async() => {
 			const exps = await import('./assets.js');
@@ -88,6 +88,8 @@ window.colourRgb = (r,g,b) => {
 	return '#' + r + g + b;
 }
 
+if(environment === 'server') global.colourRgb = window.colourRgb;
+
 window.md = (a) => {return (a !== a || a === undefined || a === null) ? 0 : a;}; // make defined
 window.makeNumber = (a) => {return Number.isFinite(a) === true ? a : 0;};
 window.makeNotNaN = (a) => {return (a === a) ? a : 0;};
@@ -111,4 +113,12 @@ window.generateConnectionType = (val) => {
 }
 const defaultTypeMap = {undefined: 0, string: '', boolean: true/*glass is half full*/, number: 0, object: []/*exclusively used for blockly, where arrays are the only object*/};
 
-export default { until, SCROLL_PARAMS, blendColor, isEditor };
+const encoder = new TextEncoder();
+function encodeAtPosition(string, u8array, position) {
+	return encoder.encodeInto(
+		string,
+		position ? u8array.subarray(position | 0) : u8array,
+	);
+}
+
+export default { until, SCROLL_PARAMS, blendColor, environment, encodeAtPosition };

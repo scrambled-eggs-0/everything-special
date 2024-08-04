@@ -1,0 +1,72 @@
+/* <div class="menu">
+    <div class="titleIsland">
+        <div class="title">
+            Unnamed Dodging Game
+        </div>
+    <input type="text" class="nameInput" autocomplete="off" maxlength="16" placeholder="" autofocus></input>
+    </div>
+</div> */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: rgb(5,5,5);
+    font-size: 16px;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+}
+
+.menu {
+    position: fixed;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.nameInput {
+    outline: none;
+    margin: 5px;
+    height: 20px;
+    width: 200px;
+
+    box-shadow: 0px 0px 10px 2px white;
+    outline: none;
+    border: none;
+    color: white;
+    background: rgba(0,0,0,1);
+    padding: 5px;
+    font-size: 1.25rem;
+    position: relative;
+    width: 250px;
+    height: 30px;
+    top: 75px;
+}
+
+.title {
+    position: relative;
+    top: -50px;
+    font-size: 3.5rem;
+    text-shadow: 0px 0px 15px white;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/*for comparing to eX and gamefeel. Not permanent*/
+canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+    /* filter: saturate(75%);  */
+}

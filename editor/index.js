@@ -29,7 +29,6 @@ window.snapGrid = (val) => {
 }
 
 window.workspaceLoaded = false;
-window.isEditor = true;
 
 const zoom = {
   controls: true,

@@ -1,9 +1,11 @@
 import Utils from './utils.js';
-const { isEditor, blendColor } = Utils;
+const { environment, blendColor } = Utils;
 import scroll from './scroll.js';
 let toScroll = false;
 
 window.respawnPlayer = () => {
+    const player = window.players[window.selfId];
+    if(player === undefined) return;
     player.pos.x = window.spawnPosition.x;
     player.pos.y = window.spawnPosition.y;
     player.renderRadius = 0;
@@ -68,7 +70,7 @@ function create(shape, simulates, effects, params){
 
     // fixing polygon points if they're dynamically generated
     if(params.fixPoly !== undefined){
-        if(isEditor === true){
+        if(environment === 'editor'){
             e.sat.setPoints(window.fixPolygon(params.points).map(pt => new SAT.Vector(pt[0], pt[1])));
             e.dimensions = generateDimensions(e);
         } else {
@@ -88,8 +90,26 @@ let res = new SAT.Response();
 let angle, collided = false;
 function simulate(){
     // player simulation
+    const player = window.players[window.selfId];
     player.renderRadius = player.renderRadius * 0.83 + player.sat.r * 0.17;
-    if(window.dragging === true && player.dead === false){
+
+    if(window.isExClient === true && player.dead === false) {
+        player.xv = (input.right - input.left) * player.speed * player.axisSpeedMultX;
+        player.yv = (input.down - input.up) * player.speed * player.axisSpeedMultY;
+
+        if(input.shift === true) {
+            if(player.god === true){
+                player.xv *= 3
+                player.yv *= 3
+            } else {
+                player.xv = player.xv >> 1;
+                player.yv = player.yv >> 1;
+            }
+        }
+
+        player.pos.x += player.xv;
+        player.pos.y += player.yv;
+    } else if(window.dragging === true && player.dead === false){
         if(player.axisSpeedMultX === 0 || player.axisSpeedMultY === 0) angle = Math.atan2((window.mouseY - player.pos.y), (window.mouseX - player.pos.x));
         else angle = Math.atan2((window.mouseY - player.pos.y) * player.axisSpeedMultX, (window.mouseX - player.pos.x) * player.axisSpeedMultY);
         player.xv = Math.cos(angle) * player.speed * player.axisSpeedMultX;
@@ -130,30 +150,39 @@ function simulate(){
             }
         }
     } else {
-        if(player.pos.x - player.sat.r < 0) player.pos.x = player.sat.r;
-        else if(player.pos.x + player.sat.r > canvas.width) player.pos.x = canvas.width - player.sat.r;
-        if(player.pos.y - player.sat.r < 0) player.pos.y = player.sat.r;
-        else if(player.pos.y + player.sat.r > canvas.height) player.pos.y = canvas.height - player.sat.r;
-
         player.lastAliveRadius = player.sat.r;
-        for(let i = 0; i < obstacles.length; i++){
-            // collision (done before simulation because that is what last rendered frame sees)
-            // TODO: bounding box check
-            if(obstacles[i].sat.r !== undefined){
-                collided = SAT.testCircleCircle(obstacles[i].sat, player.sat, res);
-            } else {
-                collided = SAT.testPolygonCircle(obstacles[i].sat, player.sat, res);
-            }
-            if(collided === true){
-                for(let j = 0; j < obstacles[i].effect.length; j++){
-                    obstacles[i].effect[j](player, res, obstacles[i], i);
+        if(player.god !== true){
+            if(player.pos.x - player.sat.r < 0) player.pos.x = player.sat.r;
+            else if(player.pos.x + player.sat.r > window.mapDimensions.x) player.pos.x = window.mapDimensions.x - player.sat.r;
+            if(player.pos.y - player.sat.r < 0) player.pos.y = player.sat.r;
+            else if(player.pos.y + player.sat.r > window.mapDimensions.y) player.pos.y = window.mapDimensions.y - player.sat.r;
+        
+            for(let i = 0; i < obstacles.length; i++){
+                // collision (done before simulation because that is what last rendered frame sees)
+                // TODO: bounding box check
+                if(obstacles[i].sat.r !== undefined){
+                    collided = SAT.testCircleCircle(obstacles[i].sat, player.sat, res);
+                } else {
+                    collided = SAT.testPolygonCircle(obstacles[i].sat, player.sat, res);
+                }
+                if(collided === true){
+                    for(let j = 0; j < obstacles[i].effect.length; j++){
+                        obstacles[i].effect[j](player, res, obstacles[i], i);
+                    }
+                }
+                res.clear();// TODO: test if this is really needed
+        
+                // obstacle simulation
+                for(let j = 0; j < obstacles[i].simulate.length; j++){
+                    obstacles[i].simulate[j](obstacles[i]);
                 }
             }
-            res.clear();// TODO: test if this is really needed
-    
-            // obstacle simulation
-            for(let j = 0; j < obstacles[i].simulate.length; j++){
-                obstacles[i].simulate[j](obstacles[i]);
+        } else {
+            // just do simulation if in godmode
+            for(let i = 0; i < obstacles.length; i++){
+                for(let j = 0; j < obstacles[i].simulate.length; j++){
+                    obstacles[i].simulate[j](obstacles[i]);
+                }
             }
         }
     }
@@ -171,20 +200,24 @@ function simulate(){
     // bounding the player by the walls
     player.touchingWall = false;
     if(player.sat.r > 900) player.sat.r = 900;
-    if(player.pos.x - player.sat.r < 0){
-        player.pos.x = player.sat.r;
-        player.touchingWall = true;
-    } else if(player.pos.x + player.sat.r > canvas.width){
-        player.pos.x = canvas.width - player.sat.r;
-        player.touchingWall = true;
+
+    if(player.god !== true){
+        if(player.pos.x - player.sat.r < 0){
+            player.pos.x = player.sat.r;
+            player.touchingWall = true;
+        } else if(player.pos.x + player.sat.r > mapDimensions.x){
+            player.pos.x = mapDimensions.x - player.sat.r;
+            player.touchingWall = true;
+        }
+        if(player.pos.y - player.sat.r < 0){
+            player.pos.y = player.sat.r;
+            player.touchingWall = true;
+        } else if(player.pos.y + player.sat.r > mapDimensions.y){
+            player.pos.y = mapDimensions.y - player.sat.r;
+            player.touchingWall = true;
+        }
     }
-    if(player.pos.y - player.sat.r < 0){
-        player.pos.y = player.sat.r;
-        player.touchingWall = true;
-    } else if(player.pos.y + player.sat.r > canvas.height){
-        player.pos.y = canvas.height - player.sat.r;
-        player.touchingWall = true;
-    }
+    
 
     if(window.tickFns.length > 0){
         for(let i = 0; i < window.tickFns.length; i++){
@@ -469,7 +502,7 @@ const initSimulateMap = [
     // /*id*/
     (o, init) => {
         let id = init.id.toString().trim();
-        if(window.idToObs[id] !== undefined && isEditor === true) alert(`Warning! Duplicate id "${id}" found! Duplicate ids override each other.`);
+        if(window.idToObs[id] !== undefined && environment === 'editor') alert(`Warning! Duplicate id "${id}" found! Duplicate ids override each other.`);
         window.idToObs[id] = o;
     }
 ]
@@ -651,8 +684,9 @@ const initEffectMap = [
     /*stopForces*/
     () => {},
     /*winpad*/
-    (o) => {
+    (o, params) => {
         o.isWinpad = true;
+        o.map = params.map;
     },
     /*coin*/
     (o, params) => {
@@ -789,11 +823,8 @@ const effectMap = [
         p.stopForces = true;
     },
     /*winpad*/
-    (p) => {
-        // TODO: make winpad have a param that, if true, sends
-        // players that beat this level to another level of the
-        // level maker's choosing
-        if(isEditor === true || window.standalone === true){
+    (p, res, o) => {
+        if(environment === 'editor' || window.standalone === true){
             // respawn
             window.respawnPlayer();
             if(window.inClearCheckMode === true){
@@ -801,12 +832,18 @@ const effectMap = [
                 uploadCode();
             }
         } else {
-            // scroll
-            toScroll = true;
             window.won = true;
+            if(window.isExClient === true){
+                const buf = new ArrayBuffer(1);
+                buf[0] = 1; // type 1 - won map
+                send(buf);
+            } else {
+                // scroll
+                toScroll = true;
 
-            if(window.tutorial === true){
-                window.beatCurrentTutorialMap();
+                if(window.tutorial === true){
+                    window.beatCurrentTutorialMap();
+                }
             }
         }
     },
@@ -858,8 +895,8 @@ const effectMap = [
     /*tp*/
     (p, res, o) => {
         // whoosh sound effect?
-        player.pos.x = o.tpx;
-        player.pos.y = o.tpy;
+        p.pos.x = o.tpx;
+        p.pos.y = o.tpy;
     },
     /*conveyor*/
     (p, res, o) => {
@@ -1283,7 +1320,7 @@ const renderEffectMap = [
         ctx.fillStyle = '#c70000';
         ctx.strokeStyle = 'black';
         ctx.toStroke = true;
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 4;
     },
     /*bounce*/
     (o) => {
@@ -1680,6 +1717,9 @@ const renderEffectMap = [
             ctx.toFill = false;
         } else {
             ctx.fillStyle = '#eba500';
+            ctx.toStroke = true;
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = ctx.fillStyle;
         }
         ctx.globalAlpha = 0.25;
 
@@ -1704,7 +1744,7 @@ const renderEffectMap = [
                     decorationImgs[o.decoFilePath] = img;
                 }
             } else {
-                if(isEditor === true){
+                if(environment === 'editor'){
                     import(`./gfx/decorations/${o.decoFilePath}`).then(data => {
                         img.src = data.default;
                         decorationImgs[o.decoFilePath] = img;
@@ -1739,18 +1779,28 @@ const obstacles = window.obstacles = [];
 
 window.spawnPosition = {x: 100, y: 1500};
 // a player is also an ecs
-create(0/*circle*/, [], [], /*no simulate/ effects*/ {x: window.spawnPosition.x, y: window.spawnPosition.y, r: /*24.5*/49.5})
-const player = window.player = obstacles.pop();
-player.axisSpeedMultX = player.axisSpeedMultY = 1;
-player.touchingNormalIndexes = [];
-player.lastTouchingNormalIndexes = [];
-player.renderRadius = player.lastAliveRadius = player.sat.r;
-player.xv = player.yv = 0;
-player.speed = player.baseSpeed = 4;
-player.dead = false;
-player.onSafe = false;
-player.touchingWall = false;
-player.stopForces = false;
-player.forces = [];
+window.createPlayer = () => {
+    create(0/*circle*/, [], [], /*no simulate/ effects*/ {x: window.spawnPosition.x, y: window.spawnPosition.y, r: /*24.5*/49.5})
+    const player = obstacles.pop();
+    player.axisSpeedMultX = player.axisSpeedMultY = 1;
+    player.touchingNormalIndexes = [];
+    player.lastTouchingNormalIndexes = [];
+    player.renderRadius = player.lastAliveRadius = player.sat.r;
+    player.xv = player.yv = 0;
+    player.speed = player.baseSpeed = 9;
+    player.dead = false;
+    player.onSafe = false;
+    player.touchingWall = false;
+    player.stopForces = false;
+    player.forces = [];
+    player.id = undefined;
+    player.dev = false; player.god = false;
+    return player;
+}
+
+window.players = [];
+
+if(window.isExClient !== true) {window.players.push(window.createPlayer()); window.selfId = 0; window.mapDimensions = environment === 'server' ? {x:2000,y:2000} : {x:900,y:1600}}
+if(window.isExClient === true || environment === 'server') window.mapDimensions = {x: 2000, y: 2000};
 
 export default simulate;

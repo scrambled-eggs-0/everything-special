@@ -172,7 +172,7 @@ forBlock['create_list'] = function(block, generator) {
 }
 
 forBlock['debug_log'] = function (block, generator) {
-  return `if(isEditor === true){alert(${generator.valueToCode(block, 'MSG', Order.NONE)});}\n`;
+  return `if(environment === 'editor'){alert(${generator.valueToCode(block, 'MSG', Order.NONE)});}\n`;
 };
 
 forBlock['break_continue'] = function(block, generator) {

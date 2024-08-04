@@ -5,7 +5,7 @@ import './input.js';
 import simulate from './components.js';
 
 import Utils from './utils.js';
-const { isEditor, blendColor } = Utils;
+const { environment, blendColor } = Utils;
 
 window.scrollingUp = false;
 window.scrollAnimation = 1;
@@ -24,6 +24,7 @@ window.lastColors = {
     tile: window.defaultColors.tile,
     background: window.defaultColors.background,
 }
+
 window.lastPlayerData = [0, 0];
 let renderUi = () => {};
 
@@ -64,7 +65,7 @@ function _render(os, cols, playerData=undefined){
 
     // render tiles
     ctx.strokeStyle = cols.tile;
-    ctx.lineWidth = isEditor === true ? 4 : 2;
+    ctx.lineWidth = environment === 'editor' ? 4 : 2;
 
     for (let x = 0; x < canvas.width + ctx.lineWidth + window.tileSize; x += window.tileSize) {
         ctx.beginPath();
@@ -255,7 +256,7 @@ const FRAME_TIME = 1000 / 60;
     window.render();
 })();
 
-if(isEditor !== true){
+if(environment !== 'editor'){
     // resizing canvas
     function resize(){
         let scale = window.innerWidth / canvas.width;
@@ -275,7 +276,7 @@ if(isEditor !== true){
     window.addEventListener("resize", resize);
     resize();
 
-    if(window.tutorial !== true && window.standalone !== true){
+    if(window.tutorial !== true && window.standalone !== true && window.isExClient !== true){
         (async () => {
             renderUi = await import('./sidemenu.js');
             renderUi = renderUi.default;

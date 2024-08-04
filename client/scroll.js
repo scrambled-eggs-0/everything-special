@@ -1,5 +1,5 @@
 import Utils from './utils.js';
-const { until, isEditor } = Utils;
+const { until, environment } = Utils;
 
 let nextCode;
 const nextCodeLoaded = () => { return nextCode !== undefined; };
@@ -11,8 +11,10 @@ let lastFileNameStack = [];
 let forwardFileNameStack = [];
 window.levelFileName = '';
 
+window.isExClient = true;// TEMP
+
 // never get code from server in editor
-if(isEditor === true || isServer === true){
+if(environment === 'editor' || environment === 'server' || window.isExClient === true){
     getNextCode = async () => {
         await until(() => { return false; })
     };
@@ -159,17 +161,21 @@ window.removeScript = function removeScript(){
 
 window.resetGame = () => {
     window.obstacles.length = window.mouseUpFunctions.length = window.mouseDownFunctions.length = window.mouseMoveFunctions.length = 0;
-    if(window.isEditor !== true) {window.respawnPlayer(); /*player.renderRadius = player.sat.r;*/ }
+    if(window.environment !== 'editor') {window.respawnPlayer(); /*player.renderRadius = player.sat.r;*/ }
     else {window.infiniteLoop = false;}
     for(let key in window.defaultColors) { window.colors[key] = window.defaultColors[key]; }
+    if(window.colors.vignette !== undefined) window.colors.vignette = structuredClone(window.defaultColors.vignette);
     window.mouseDownFunctions.push(() => {
         if(player.dead === true) window.respawnPlayer();
     })
     if(window.addSideMenuEvtListeners !== undefined) window.addSideMenuEvtListeners(nextFileName);
     window.spawnPosition.x = 100;
     window.spawnPosition.y = 1500;
-    player.sat.r = 49.5;
-    player.speed = player.baseSpeed = 4;
+    const player = window.players[window.selfId];
+    if(player !== undefined){
+        player.sat.r = 49.5;
+        player.speed = player.baseSpeed = 9;
+    }
     window.idToObs = {};
 }
 
