@@ -13,7 +13,7 @@ import uWS from 'uWebSockets.js';
 
 // map data
 import MapFunctions from './maps.js';
-const {defaultMapName} = MapFunctions;
+const {defaultMapName, addToMap, removeFromMap, mapExists} = MapFunctions;
 
 // player class
 import Player from './player.js';
@@ -45,6 +45,8 @@ global.app = uWS.App().ws('/*', {
         const ind = reusableClientIndexes.length === 0 ? clients.length : reusableClientIndexes.pop();
         clients[ind] = ws;
         ws.clientArrayIndex = ind;
+
+        ws.subscribe('global');
     },
     message: (ws, data) => {
         const decoded = new Uint8Array(data);
@@ -151,48 +153,46 @@ const decoder = new TextDecoder();
 const messageMap = [
     // 0 - set username and join game
     (data, me) => {
-        if(data.byteLength > 33) return;
+        if(data.byteLength > 33 || me.player.mapName !== '') return;
         // this should never fail
         me.player.name = decoder.decode(data).slice(1);
-
-        global.maps[defaultMapName].addPlayer(me.player);
-        me.mapName = defaultMapName;
-
-        // send init data
-        const buf = new Uint8Array(2);
-        buf[0] = 3;// message type 3 - flag next message as message type
-        buf[1] = 2;// byte[1] = 2 - flag next as init data
-        send(me, buf)// first a flag telling the client that the next message won't have a prefix
-        send(me, pack(global.maps[defaultMapName].getInitDataForPlayer(me.player)));
-
-        // for all other players send them the news that there's a new player
-        buf[1] = 5// reusing the buffer from earlier. byte[1] = 5 - flag next as new player msg
-        global.maps[defaultMapName].broadcast(buf);
-        global.maps[defaultMapName].broadcast(pack(me.player));
-
-        // subscribe after the broadcasts so that we don't send the newplayer stuff
-        global.maps[defaultMapName].addClient(me);
+        changeMap(me, defaultMapName);
     },
     // 1 (ONE = WON same thing !! it pronounces the same!) - won map
     (data, me) => {
-        console.log('win map!!', me.mapName);// TODO!
         if(me.mapName === 'winroom') changeMap(me, defaultMapName);
         else changeMap(me, 'winroom');
     },
-    // 2 - unused
-    () => {},
+    // 2 - change to specified map
+    (data, me) => {
+        const mapName = decoder.decode(data).slice(1);
+        if(mapExists(mapName) === true){
+            changeMap(me, mapName);
+        }
+    },
     // 3 - unused
     () => {},
     // 4 - x and y
     (data, me) => {
-        if(me.mapName === undefined) return;
-        if(data.byteLength !== 12) return;
-
+        if(me.mapName === undefined || data.byteLength !== 12) return;
         // format (in bytes): [type]1 [blank]1 [u16 id]2 [float position x]4 [float position y]4
         const u16view = new Uint16Array(data.buffer);
         u16view[1] = me.player.id;
         global.maps[defaultMapName].broadcast(data);
-    }
+    },
+    // 5 - unused
+    () => {},
+    // 6 - unused
+    () => {},
+    // 7 - chat message
+    (data, me) => {
+        if(data.byteLength > 1000 || me.mapName === undefined) return;
+        // const msg = decoder.decode(data).slice(1);
+        // TODO: server side verification on chat msgs to make sure that data[1] is what it should be (we don't want random people sending "dev" and displaying that way)
+        broadcastEveryone(data);
+    },
+    //69 - unused
+    // nah bro i use that a lot
 ]
 
 global.send = (client, msg) => {
@@ -204,36 +204,15 @@ global.broadcastRoom = (roomId, msg) => {
     app.publish(roomId, msg, true, false);
 }
 
+global.broadcastEveryone = (msg) => {
+    app.publish('global', msg, true, false);
+}
+
 function changeMap(me, newMapName='winroom'){
     // 1. remove from old map .1
-    global.maps[me.mapName].removePlayer(me.player);
-    global.maps[ws.me.mapName].removeClient(me);
-
-    // send to all other clients removePlayer
-    const buf = new ArrayBuffer(4);
-    const u8 = new Uint8Array(buf);
-    const u16 = new Uint16Array(buf);
-
-    u8[0] = 6;// message type 6 - remove player
-    u16[1] = ws.me.player.id;
+    if(me.player.mapName !== '') removeFromMap(me);
 
     // 2. add to new map (winroom) .2
-    global.maps[newMapName].addClient(me);
-    global.maps[newMapName].addPlayer(me.player);
-    me.mapName = newMapName;
-
-    // send init data
-    const buf2 = new Uint8Array(2);
-    buf2[0] = 3;// message type 3 - flag next message as message type
-    buf2[1] = 2;// byte[1] = 2 - flag next as init data
-    send(me, buf2)// first a flag telling the client that the next message won't have a prefix
-    send(me, pack(global.maps[newMapName].getInitDataForPlayer(me.player)));
-
-    // for all other players send them the news that there's a new player
-    buf2[1] = 5// reusing the buffer from earlier. byte[1] = 5 - flag next as new player msg
-    global.maps[newMapName].broadcast(buf2);
-    global.maps[newMapName].broadcast(pack(me.player));
-
-    // subscribe after the broadcasts so that we don't send the newplayer stuff
-    global.maps[newMapName].addClient(me);
+    me.player.mapName = newMapName;
+    addToMap(me, newMapName);
 }

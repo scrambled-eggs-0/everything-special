@@ -21,6 +21,7 @@ const {encodeAtPosition} = Utils;
 const menu = document.querySelector('.menu');
 const form = document.querySelector('.playForm');
 const usernameInput = document.querySelector('.nameInput');
+const gui = window.gui = document.querySelector('.gui');
 window.state = 'menu';
 form.onsubmit = (e) => {
     window.username = usernameInput.value;
@@ -35,51 +36,61 @@ form.onsubmit = (e) => {
 window.startGame = () => {
     window.state = 'game';
     usernameInput.value = '';
-    menu.classList.add('hidden');
-    lastTime = now = Date.now();
+    menu.classList.add('fade-out');
+    gui.classList.remove('hidden');
+    menu.onanimationend = () => {
+        usernameInput.blur();
+        menu.classList.remove('fade-out');
+        menu.classList.add('hidden');
+    }
+    lastTime = now = performance.now();
     window.respawnPlayer();
     run();
 }
 
 // gameloop
-let lastTime, now, accum, dt, offtabTime;
-accum = dt = window.frames = offtabTime = 0;
-window.time = 0;
-const FRAME_TIME = 1000 / 60;
+let lastTime, accum, offtabTime;
+accum = window.frames = offtabTime = 0;
+window.time = window.dt = window.now = 0;
+// const FRAME_TIME = 1000 / 60;
 function run(){
-    now = Date.now();
+    requestAnimationFrame(run);
+
+    now = performance.now();
     dt = now - lastTime;
     accum += dt;
     window.time += dt;
     lastTime = now;
 
-    if(dt > 2000) offtabTime += dt;
+    simulate();
+
+    // if(dt > 2000) offtabTime += dt;
     
-    // if we're not ahead
-    if(accum > 0){
-        // simulate the frame as usual
-        window.frames++;
-        accum -= FRAME_TIME;
-        simulate();
-    } else {
-        // we don't want to re-render, we have no interpolation! So just wait until next frame ig
-        requestAnimationFrame(run);
-        return;
-    }
+    // // if we're not ahead
+    // if(accum > 0){
+    //     // simulate the frame as usual
+    //     window.frames++;
+    //     accum -= FRAME_TIME;
+    //     simulate();
+    // } else {
+    //     // we don't want to re-render, we have no interpolation! So just wait until next frame ig
+    //     requestAnimationFrame(run);
+    //     return;
+    // }
 
-    requestAnimationFrame(run);
+    // requestAnimationFrame(run);
 
-    // if we're behind
-    if(accum > FRAME_TIME){
-        // if we're too far behind then give up
-        if(accum > 2000) accum = 0;
+    // // if we're behind
+    // if(accum > FRAME_TIME){
+    //     // if we're too far behind then give up
+    //     if(accum > 2000) accum = 0;
 
-        // otherwise simulate an extra catch-up tick
-        accum -= FRAME_TIME;
-        simulate();
-    }
+    //     // otherwise simulate an extra catch-up tick
+    //     accum -= FRAME_TIME;
+    //     simulate();
+    // }
 
-    sendUpdatePack();
+    // sendUpdatePack();
 
     window.render();
 }

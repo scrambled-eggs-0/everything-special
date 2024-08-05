@@ -29,10 +29,12 @@ window.colors = {
 
 window.selfId = undefined;
 window.tileSize = 100;
-const fullscreen = {
-    ratio: 9 / 16,
-    zoom: 1800,
-}
+// const fullscreen = {
+//     ratio: 9 / 16,
+//     zoom: 1800,
+// }
+const width = 1600;
+const height = 900;
 
 // window.tileImage = undefined;
 // window.tileImageColors = {
@@ -112,6 +114,8 @@ let opaqIndex, len, lastPlayerX, lastPlayerY, lastPlayerRadius, lastGA, j = fals
 window.render = (os=window.obstacles, cols=window.colors, players=window.players) => {
     // TODO: obstacle interpolation
 
+    document.body.style.backgroundColor = cols.tile;
+
     if(window.selfId !== undefined){
         const me = players[window.selfId];
         camera.x = me.pos.x;
@@ -136,7 +140,7 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
     //ctx.translate(pos.x , pos.y + (gridOffset.y % 50));
     // ctx.drawImage(img, (canvas.w/2-camera.x)%tileSize, (canvas.h/2-camera.y)%tileSize);
     ctx.globalAlpha = 0.75;
-    ctx.lineWidth = 5.2;
+    ctx.lineWidth = 4.8;
     ctx.strokeStyle = cols.tile;
     for (let x = (canvas.w/2-camera.x)%tileSize; x < canvas.w + ctx.lineWidth + window.tileSize; x += window.tileSize) {
         ctx.beginPath();
@@ -327,20 +331,42 @@ function renderTextSpecials(o, cols){
 
 // canvas resizing
 function resize(){
-    const dpi = window.devicePixelRatio;
-    canvas.style.width = Math.ceil(window.innerWidth) + 'px';
-    canvas.style.height = Math.ceil(window.innerHeight) + 'px';
-    canvas.width = Math.ceil(window.innerWidth) * dpi;
-    canvas.height = Math.ceil(window.innerHeight) * dpi;
-    canvas.zoom = Math.max(0.1, Math.round((Math.max(canvas.height, canvas.width * fullscreen.ratio) / fullscreen.zoom * camera.scale) * 100) / 100);
-    // w and h are calced with zoom
-    canvas.w = canvas.width / canvas.zoom;
-    canvas.h = canvas.height / canvas.zoom;
-    ctx.scale(canvas.zoom, canvas.zoom);
-    ctx.lineJoin = 'round';
-    ctx.lineCap = 'round';
+    // const dpi = window.devicePixelRatio;
+    // canvas.style.width = Math.ceil(window.innerWidth) + 'px';
+    // canvas.style.height = Math.ceil(window.innerHeight) + 'px';
+    // canvas.width = Math.ceil(window.innerWidth) * dpi;
+    // canvas.height = Math.ceil(window.innerHeight) * dpi;
+    // canvas.zoom = Math.max(0.1, Math.round((Math.max(canvas.height, canvas.width * fullscreen.ratio) / fullscreen.zoom * camera.scale) * 100) / 100);
+    // // w and h are calced with zoom
+    // canvas.w = canvas.width / canvas.zoom;
+    // canvas.h = canvas.height / canvas.zoom;
+    // ctx.scale(canvas.zoom, canvas.zoom);
+    // ctx.lineJoin = 'round';
+    // ctx.lineCap = 'round';
 
-    ctx.imageSmoothingEnabled = false;
+    // ctx.imageSmoothingEnabled = false;
+    // canvas._scaleMult = 0.5;
+    canvas.zoom = 1;window.resize([canvas, document.querySelector('.gui')]);
+    canvas.w = canvas.width / canvas.zoom / window.camera.scale;
+    canvas.h = canvas.height / canvas.zoom / window.camera.scale;
+}
+
+window.changeCameraScale = (scale) => {
+    ctx.translate(-(1-1/window.camera.scale)*canvas.w/2, -(1-1/window.camera.scale)*canvas.h/2);
+
+    ctx.translate(canvas.w/2, canvas.h/2);
+    ctx.scale(1/window.camera.scale, 1/window.camera.scale);
+    ctx.translate(-canvas.w/2, -canvas.h/2);
+
+    window.camera.scale = scale;
+    canvas.w = canvas.width / canvas.zoom / window.camera.scale;
+    canvas.h = canvas.height / canvas.zoom / window.camera.scale;
+
+    ctx.translate(canvas.w/2, canvas.h/2);
+    ctx.scale(window.camera.scale, window.camera.scale);
+    ctx.translate(-canvas.w/2, -canvas.h/2);
+    
+    ctx.translate((1-1/window.camera.scale)*canvas.w/2, (1-1/window.camera.scale)*canvas.h/2);
 }
 
 window.resize = function (elements) {
@@ -368,5 +394,6 @@ window.addEventListener('resize', function () {
     resize();
 });
 resize();
+changeCameraScale(0.5);
 
 export default render;

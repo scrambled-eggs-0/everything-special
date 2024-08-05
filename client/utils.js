@@ -120,5 +120,9 @@ function encodeAtPosition(string, u8array, position) {
 		position ? u8array.subarray(position | 0) : u8array,
 	);
 }
+const decoder = new TextDecoder();
+function decodeText(u8array, startPos=0){
+	return decoder.decode(u8array).slice(startPos);
+}
 
-export default { until, SCROLL_PARAMS, blendColor, environment, encodeAtPosition };
+export default { until, SCROLL_PARAMS, blendColor, environment, encodeAtPosition, decodeText };

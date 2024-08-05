@@ -1,5 +1,9 @@
 import './msgpackr.js';
 
+// used for decoding chat messages
+import Utils from '../client/utils.js';
+const {decodeText} = Utils;
+
 const HOST = location.origin.replace(/^http/, 'ws');
 let ws, nextMsgFlag;
 
@@ -61,10 +65,11 @@ const messageMap = [
         fetch(location.origin + `/maps/${mapName}.js`, {method: 'GET'}).then(async (d) => {
             const levelData = await d.text();
 
-            resetGame();
-
             const prevScript = document.getElementById('gameScript');
             if(prevScript) prevScript.remove();
+
+            resetGame();
+            window.players.length = window.obstacles.length = 0;
             const s = document.createElement('script');
             s.id = "gameScript";
             s.text = levelData;
@@ -77,7 +82,7 @@ const messageMap = [
     
                 window.players.push(p);// pushing p!!
             }
-    
+
             for(let i = 0; i < obstacleData.length; i++){
                 const o = window.obstacles[i];
                 for(let key in obstacleData[i]){
@@ -117,6 +122,31 @@ const messageMap = [
     (data) => {
         let id = new Uint16Array(data.buffer)[1];
         window.players[id] = undefined;// make america undefined again
+    },
+    // 7 - chat message
+    (data) => {
+        const chatMsg = decodeText(data, 2);
+        const type = ['normal', 'system', 'dev', 'guest'][data[1]];
+
+        const div = document.createElement('div');
+        if (type !== 'system') {
+            div.classList.add('chat-message');
+        } else {
+            div.classList.add('system-message');
+            // if (data.difficulty != undefined) {
+            //     div.classList.add(data.difficulty.toLowerCase());
+            // }
+        }
+        div.innerHTML = `${type === 'system'
+            ? '<span class="rainbow">[SERVER]</span>'
+            : type === 'dev'
+            ? '<span class="rainbow">[DEV]</span> '
+            : ''}${type === 'guest' ? '<span class="guest">' : ''}${
+                chatMsg
+            }${type === 'guest' ? '</span>' : ''}`;
+        const chatMessageDiv = document.querySelector('.chat-div');
+        chatMessageDiv.appendChild(div);
+        chatMessageDiv.scrollTop = chatMessageDiv.scrollHeight;
     }
 ]
 

@@ -1,5 +1,5 @@
 import Utils from './utils.js';
-const { environment, blendColor } = Utils;
+const { environment, blendColor, encodeAtPosition } = Utils;
 import scroll from './scroll.js';
 let toScroll = false;
 
@@ -86,29 +86,44 @@ window.C = create;
 window.idToObs = {};
 window.tickFns = [];
 
+function interpolate(start, end, t){
+    return (1-t) * start + t * end;
+}
+
 let res = new SAT.Response();
 let angle, collided = false;
 function simulate(){
     // player simulation
     const player = window.players[window.selfId];
-    player.renderRadius = player.renderRadius * 0.83 + player.sat.r * 0.17;
+
+    if(window.isExClient === true){
+        player.renderRadius = interpolate(player.renderRadius, player.sat.r, dt * 1 / 90);
+    } else {
+        player.renderRadius = player.renderRadius * 0.83 + player.sat.r * 0.17;
+    }
 
     if(window.isExClient === true && player.dead === false) {
-        player.xv = (input.right - input.left) * player.speed * player.axisSpeedMultX;
-        player.yv = (input.down - input.up) * player.speed * player.axisSpeedMultY;
+        player.xa = (input.right - input.left) * player.speed * player.axisSpeedMultX * dt / 16.66;
+        player.ya = (input.down - input.up) * player.speed * player.axisSpeedMultY * dt / 16.66;
 
         if(input.shift === true) {
             if(player.god === true){
-                player.xv *= 3
-                player.yv *= 3
+                player.xa *= 3;
+                player.ya *= 3;
             } else {
-                player.xv = player.xv >> 1;
-                player.yv = player.yv >> 1;
+                player.xa *= 0.5;
+                player.ya *= 0.5;
             }
         }
 
-        player.pos.x += player.xv;
-        player.pos.y += player.yv;
+        player.xv += player.xa;
+        player.yv += player.ya;
+
+        player.pos.x += player.xv * dt;
+        player.pos.y += player.yv * dt;
+
+        player.xv *= Math.pow(0.4, dt / 16.66)//interpolate(player.xv, 0, 1 - Math.exp(player.friction * dt / 16.66));
+        player.yv *= Math.pow(0.4, dt / 16.66)//1 - Math.exp(player.friction * dt / 16.66);
     } else if(window.dragging === true && player.dead === false){
         if(player.axisSpeedMultX === 0 || player.axisSpeedMultY === 0) angle = Math.atan2((window.mouseY - player.pos.y), (window.mouseX - player.pos.x));
         else angle = Math.atan2((window.mouseY - player.pos.y) * player.axisSpeedMultX, (window.mouseX - player.pos.x) * player.axisSpeedMultY);
@@ -131,8 +146,8 @@ function simulate(){
             // [x, y, decay]
             player.pos.x += player.forces[i][0];
             player.pos.y += player.forces[i][1];
-            player.forces[i][0] *= player.forces[i][2];
-            player.forces[i][1] *= player.forces[i][2];
+            player.forces[i][0] *= Math.pow(player.forces[i][2], dt / 16.66);
+            player.forces[i][1] *= Math.pow(player.forces[i][2], dt / 16.66);
             if(Math.abs(player.forces[i][0]) < 0.01 && Math.abs(player.forces[i][1]) < 0.01){
                 player.forces.splice(i,1);
                 i--;
@@ -174,14 +189,14 @@ function simulate(){
         
                 // obstacle simulation
                 for(let j = 0; j < obstacles[i].simulate.length; j++){
-                    obstacles[i].simulate[j](obstacles[i]);
+                    obstacles[i].simulate[j](obstacles[i], player);
                 }
             }
         } else {
             // just do simulation if in godmode
             for(let i = 0; i < obstacles.length; i++){
                 for(let j = 0; j < obstacles[i].simulate.length; j++){
-                    obstacles[i].simulate[j](obstacles[i]);
+                    obstacles[i].simulate[j](obstacles[i], player);
                 }
             }
         }
@@ -216,8 +231,9 @@ function simulate(){
             player.pos.y = mapDimensions.y - player.sat.r;
             player.touchingWall = true;
         }
+    } else {
+        player.dead = false;
     }
-    
 
     if(window.tickFns.length > 0){
         for(let i = 0; i < window.tickFns.length; i++){
@@ -483,8 +499,11 @@ const initSimulateMap = [
         o.pivotY = init.pivotY;
         o.rotation = 0;
         if(init.initialRotation !== 0 && init.initialRotation !== undefined){
+            let lastDt = window.dt;
+            window.dt = 1000 / 60;
             o.rotateSpeed = init.initialRotation * Math.PI / 180;
             simulateMap[1](o);
+            window.dt = lastDt;
         }
         o.rotateSpeed = init.rotateSpeed;
     },
@@ -510,11 +529,10 @@ const initSimulateMap = [
 const simulateMap = [
     /*pathMove*/
     (o) => {
-        // TODO: make it dt consistent
-        o.pos.x += o.xv;
-        o.pos.y += o.yv;
+        o.pos.x += o.xv * dt;
+        o.pos.y += o.yv * dt;
 
-        o.timeRemain--;
+        o.timeRemain -= dt;
         if (o.timeRemain <= 0) {
             o.currentPoint++;
             if (o.currentPoint === o.path.length) o.currentPoint = 0;
@@ -555,29 +573,29 @@ const simulateMap = [
         if(o.sat.r !== undefined){
             o.pos.x -= o.pivotX;
             o.pos.y -= o.pivotY;
-            o.sat.rotate(o.rotateSpeed);
+            o.sat.rotate(o.rotateSpeed * dt);
             o.pos.x += o.pivotX;
             o.pos.y += o.pivotY;
         } else {
             o.sat.translate(o.pos.x-o.pivotX, o.pos.y-o.pivotY);
-            o.sat.rotate(o.rotateSpeed);
+            o.sat.rotate(o.rotateSpeed * dt);
             o.sat.translate(o.pivotX-o.pos.x, o.pivotY-o.pos.y);
         }
         
-        o.rotation += o.rotateSpeed;
+        o.rotation += o.rotateSpeed * dt;
         o.dimensions = generateDimensions(o);
     },
     /*grow*/
     (o) => {
         if(o.growing === true) {
-            o.growth += o.growSpeed;
+            o.growth += o.growSpeed * dt;
             if(o.growth >= o.maxGrowth){
                 o.growing = false;
                 o.growth = o.maxGrowth;
             }
         }
         else {
-            o.growth -= o.shrinkSpeed;
+            o.growth -= o.shrinkSpeed * dt;
             if(o.growth <= o.minGrowth){
                 o.growing = true;
                 o.growth = o.minGrowth;
@@ -665,7 +683,9 @@ const initEffectMap = [
     /*bound*/
     () => {},
     /*kill*/
-    () => {},
+    (o, params) => {
+        o.collidable = params.collidable ?? true;
+    },
     /*bounce*/
     (o, params) => {
         // bounciness, decay
@@ -686,7 +706,6 @@ const initEffectMap = [
     /*winpad*/
     (o, params) => {
         o.isWinpad = true;
-        o.map = params.map;
     },
     /*coin*/
     (o, params) => {
@@ -791,7 +810,16 @@ const initEffectMap = [
     /*decoration*/
     (o, params) => {
         o.decoFilePath = params.decoFilePath;
-    }
+    },
+    /*changeMap*/
+    (o, params) => {
+        o.mapName = params.mapName;
+        // difficulty?
+    },
+    /*tornado*/
+    (o, params) => {
+        o.tornadoStrength = params.tornadoStrength;
+    },
 ]
 
 const effectMap = [
@@ -802,8 +830,12 @@ const effectMap = [
         p.touchingNormalIndexes.push(id);
     },
     /*kill*/
-    (p) => {
-        p.dead = true;
+    (p, res, o) => {
+        if(res.overlap > 1) p.dead = true;
+        if(o.collidable === true){
+            p.pos.x += res.overlapV.x;
+            p.pos.y += res.overlapV.y;
+        }
     },
     /*bounce*/
     (p, res, o) => {
@@ -831,10 +863,10 @@ const effectMap = [
                 window.exitClearCheckMode();
                 uploadCode();
             }
-        } else {
+        } else if(window.won !== true){
             window.won = true;
             if(window.isExClient === true){
-                const buf = new ArrayBuffer(1);
+                const buf = new Uint8Array(1);
                 buf[0] = 1; // type 1 - won map
                 send(buf);
             } else {
@@ -881,12 +913,12 @@ const effectMap = [
         if(o.strength > 0){
             p.pos.x += res.overlapV.x;
             p.pos.y += res.overlapV.y;
-            o.strength--;
+            o.strength -= dt;
             if(o.strength < 0) o.strength = 0;
         }
 
         // breakable obs shouldn't regenerate on top of you
-        o.lastBrokeTime = window.frames;
+        o.lastBrokeTime = window.now;
     },
     /*safe*/
     (p, res, o) => {
@@ -897,6 +929,7 @@ const effectMap = [
         // whoosh sound effect?
         p.pos.x = o.tpx;
         p.pos.y = o.tpy;
+        p.renderRadius = Math.min(p.renderRadius, p.sat.r / 2);
     },
     /*conveyor*/
     (p, res, o) => {
@@ -940,11 +973,11 @@ const effectMap = [
     /*snapGrid*/
     (p, res, o) => {
         // for those who haven't seen it, this is kind of my magnum opus of simulation functions.
-        // Developed back in 8th grade and later presented for my math final. Ask me (serum) about it!
+        // Developed a few years back later presented at a conference. Ask me (serum) about it!
         // the basic idea of how it works is we have to snap to a rotated snap grid in space, so we
         // translate the player to the snapGrid until its like the snap grid is unrotated. Then we snap
         // by moduloing the x to the grid and then rotate back to get the final position.
-        o.snapCooldown--; 
+        o.snapCooldown -= dt;
 
         if(o.snapCooldown <= 0 && (Math.abs(p.xv) > 0.01 || Math.abs(p.yv) > 0.01)){
             o.snapCooldown = o.maxSnapCooldown;
@@ -1002,7 +1035,7 @@ const effectMap = [
     /*timeTrap*/
     (p, res, o) => {
         o.timeTrapIntersecting = true;
-        o.timeTrapTime--;
+        o.timeTrapTime -= dt;
         if(o.timeTrapTime < 0){
             if(o.timeTrapToKill === true) p.dead = true;
             o.timeTrapTime = 0;
@@ -1052,6 +1085,25 @@ const effectMap = [
     (p, res, o) => {},
     /*decoration*/
     (p, res, o) => {},
+    /*changeMap*/
+    (p, res, o) => {
+        if(window.won === true) return;
+        window.won = true;
+        if(window.isExClient === true){
+            const mapName = o.mapName;
+            const buf = new Uint8Array(1 + mapName.length);
+            buf[0] = 2; // type 2 - change map
+            encodeAtPosition(mapName, buf, 1);
+            send(buf);
+        } else {
+            // TODO: send user to the specified omni
+        }
+    },
+    /*tornado*/
+    (p, res, o) => {
+        p.pos.x += Math.cos(Math.random() * 360) * o.tornadoStrength;
+        p.pos.y += Math.sin(Math.random() * 360) * o.tornadoStrength;
+    }
 ]
 
 const idleEffectMap = [
@@ -1077,10 +1129,10 @@ const idleEffectMap = [
     undefined,
     // 'breakable',
     (o) => {
-        if (o.strength < o.maxStrength && window.frames-o.lastBrokeTime > o.regenTime) {
-            o.strength += o.healSpeed;
+        if (o.strength < o.maxStrength && window.now-o.lastBrokeTime > o.regenTime) {
+            o.strength += o.healSpeed * dt;
             if(o.strength >= o.maxStrength){
-                o.lastBrokeTime = window.frames;
+                o.lastBrokeTime = window.now;
                 o.strength = o.maxStrength;
             }
         }
@@ -1091,34 +1143,34 @@ const idleEffectMap = [
     undefined,
     // 'conveyor',
     (o) => {
-        o.conveyorAngle += o.conveyorAngleRotateSpeed;
+        o.conveyorAngle += o.conveyorAngleRotateSpeed * dt;
     },
     // 'platformer',
     (o) => {
-        o.platformerAngle += o.platformerAngleRotateSpeed;
+        o.platformerAngle += o.platformerAngleRotateSpeed * dt;
     },
     // 'restrictAxis',
     undefined,
     // 'snapGrid',
     (o) => {
-        o.snapAngle += o.snapAngleRotateSpeed;
+        o.snapAngle += o.snapAngleRotateSpeed * dt;
     },
     // 'timeTrap'
     (o) => {
-        if(o.timeTrapIntersecting !== true) o.timeTrapTime += o.timeTrapRecoverySpeed;
+        if(o.timeTrapIntersecting !== true) o.timeTrapTime += o.timeTrapRecoverySpeed * dt;
         if(o.timeTrapTime > o.timeTrapMaxTime) o.timeTrapTime = o.timeTrapMaxTime;
         o.timeTrapIntersecting = false;
     },
     // 'changeSize'
-    (o) => {
+    (o, p) => {
         if(o.sizeChangePermanent === true) return;
 
         if(o.lastChangeSizeColliding === true && o.changeSizeColliding === false){
             // exit
-            player.sat.r /= o.sizeMult;
+            p.sat.r /= o.sizeMult;
         } else if(o.lastChangeSizeColliding === false && o.changeSizeColliding === true){
             // enter
-            player.sat.r *= o.sizeMult;
+            p.sat.r *= o.sizeMult;
         }
 
         o.lastChangeSizeColliding = o.changeSizeColliding;
@@ -1129,6 +1181,10 @@ const idleEffectMap = [
     // 'solidColor'
     undefined,
     // 'decoration'
+    undefined,
+    // 'changeMap'
+    undefined,
+    // 'tornado'
     undefined
 ]
 
@@ -1177,6 +1233,10 @@ window.effectConstraintsMap = [
     undefined,
     /*decoration*/
     undefined,
+    /*changeMap*/
+    undefined,
+    /*tornado*/
+    undefined
 ]
 
 window.effectMapI2N = [
@@ -1201,14 +1261,18 @@ window.effectMapI2N = [
     'changeSize',
     'changeSpeed',
     'solidColor',
-    'decoration'
+    'decoration',
+    'changeMap',
+    'tornado'
 ]
 
 window.effectDefaultMap = [
     // bound
     {},
     // kill
-    {},
+    {
+        collidable: true
+    },
     // bounce
     {
         bounciness: 1,
@@ -1308,6 +1372,10 @@ window.effectDefaultMap = [
     },
     // decoration
     {},
+    // changeMap
+    {mapName: 'hub'},
+    // tornado
+    {tornadoStrength: 1}
 ]
 
 const renderEffectMap = [
@@ -1317,7 +1385,7 @@ const renderEffectMap = [
     },
     /*kill*/
     (o) => {
-        ctx.fillStyle = '#c70000';
+        ctx.fillStyle = o.collidable === true ? '#c70000' : '#9e0000';
         ctx.strokeStyle = 'black';
         ctx.toStroke = true;
         ctx.lineWidth = 4;
@@ -1456,7 +1524,7 @@ const renderEffectMap = [
     },
     /*tp*/
     (o) => {
-        ctx.fillStyle = 'green';
+        ctx.fillStyle = '#38ab30';
     },
     /*conveyor*/
     (o) => {
@@ -1618,6 +1686,7 @@ const renderEffectMap = [
             ctx.closePath();
             
             // drawing snapMagnitude indicator
+            const player = window.players[window.selfId];
             if(player.pos.x + o.snapMagnitude < middleX - o.dimensions.x/2 || player.pos.x - o.snapMagnitude > middleX + o.dimensions.x/2 || player.pos.y + o.snapMagnitude < middleY - o.dimensions.y/2 || player.pos.y - o.snapMagnitude > middleY + o.dimensions.y/2){
                 ctx.restore();
                 return;
@@ -1665,7 +1734,7 @@ const renderEffectMap = [
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
-            ctx.fillText(o.timeTrapToShowTenth === true ? Math.round(o.timeTrapTime / 60 * 10) / 10 : Math.round(o.timeTrapTime / 60), middleX, middleY);
+            ctx.fillText(o.timeTrapToShowTenth === true ? Math.round(o.timeTrapTime/1000 * 10) / 10 : Math.round(o.timeTrapTime/1000), middleX, middleY);
         }
     },
     /*changeSize*/
@@ -1771,6 +1840,33 @@ const renderEffectMap = [
         ctx.drawImage(decoImg, -maxDimension / 2, -maxDimension / 2, maxDimension, maxDimension);
         if(o.rotation !== undefined) ctx.rotate(-o.rotation);
         ctx.translate(-middleX, -middleY);
+    },
+    /*changeMap*/
+    (o) => {
+        // difficulty images?
+        let [middleX, topY] = generateTopLeftCoordinates(o);
+        middleX += o.dimensions.x / 2;
+        ctx.font = `${o.dimensions.x / 3.5}px Inter`;
+        ctx.fillStyle = 'white';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(
+            o.mapName,
+            middleX,
+            topY - o.dimensions.y / 4
+        );
+
+        ctx.fillStyle = `hsl(${window.time/12},50%,50%)`;
+        ctx.shadowColor = ctx.fillStyle;
+        ctx.shadowBlur = 15;
+        ctx.cleanUpFunction = () => {
+            ctx.shadowBlur = 0;
+        }
+    },
+    /*tornado*/
+    (o) => {
+        ctx.fillStyle = '#c0bbc9';
+        ctx.globalAlpha = 0.25;
     }
 ]
 
@@ -1786,15 +1882,16 @@ window.createPlayer = () => {
     player.touchingNormalIndexes = [];
     player.lastTouchingNormalIndexes = [];
     player.renderRadius = player.lastAliveRadius = player.sat.r;
-    player.xv = player.yv = 0;
-    player.speed = player.baseSpeed = 9;
+    player.xv = player.yv = player.xa = player.ya = 0;
+    player.speed = player.baseSpeed = 0.43;
     player.dead = false;
     player.onSafe = false;
     player.touchingWall = false;
     player.stopForces = false;
     player.forces = [];
     player.id = undefined;
-    player.dev = false; player.god = false;
+    player.dev = true; player.god = false;
+    player.friction = 0.4;
     return player;
 }
 

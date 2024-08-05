@@ -174,7 +174,7 @@ window.resetGame = () => {
     const player = window.players[window.selfId];
     if(player !== undefined){
         player.sat.r = 49.5;
-        player.speed = player.baseSpeed = 9;
+        player.speed = player.baseSpeed = 0.43;
     }
     window.idToObs = {};
 }

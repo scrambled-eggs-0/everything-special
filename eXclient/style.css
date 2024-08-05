@@ -23,6 +23,7 @@ body {
 }
 
 .menu {
+    background-color: rgb(5,5,5);
     position: fixed;
     text-align: center;
     width: 100%;
@@ -64,9 +65,235 @@ body {
 }
 
 /*for comparing to eX and gamefeel. Not permanent*/
-canvas {
+canvas, .gui {
     position: absolute;
     left: 0;
     top: 0;
     /* filter: saturate(75%);  */
+}
+
+.text-layer {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 1600px;
+	height: 900px;
+	filter: none !important;
+	background: transparent;
+	overflow: hidden;
+}
+
+.chatDiv {
+    z-index: 100;
+}
+
+.chat {
+    position: absolute;
+    left: 0px;
+    top: 250px;
+    width: 374px;
+    height: 30px;
+    transform-origin: center center;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 1rem;
+    padding: 5px;
+    caret-color: white;
+    /*background: rgba(129, 129, 129, 0.082);*/
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0));
+    font-family: 'Inter-Thick', Inter;
+}
+
+.chat-message {
+    color: white;
+    font-size: 1.05rem;
+    background: transparent;
+    padding: 1px;
+
+    overflow-wrap: break-word;
+    width: 100%;
+}
+.system-message {
+    color: #c4c4c4;
+    font-size: 1rem;
+    background: transparent;
+    padding: 1px;
+    overflow-wrap: break-word; /*this doesnt work somehow*/
+    width: 100%;
+}
+
+.fade-out {
+    animation: fade-out 0.3s linear;
+}
+
+.fade-in {
+    animation: fade-in 0.3s linear;
+}
+
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.peaceful {
+    color: #6cd95b;
+}
+.moderate {
+    color: #58ccb3;
+}
+.difficult {
+    color: #0a77bf;
+}
+.hardcore {
+    color: #3528e0;
+}
+.exhausting {
+    color: #8248d4;
+}
+.relentless {
+    color: #e32d8b;
+}
+@keyframes agonizingColor {
+    0% {
+        background-color: #ff0000;
+    }
+}
+.agonizing {
+    color: #ff5736;
+    animation-name: agonizingColor;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+}
+@keyframes terrorizingColor {
+    0% {
+        background-color: #ff0000;
+    }
+}
+.terrorizing {
+    color: #fc3a3a;
+    animation-name: terrorizingColor;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+}
+@keyframes cataclysmicColor {
+    0% {
+        background-color: #ff0000;
+    }
+}
+.cataclysmic {
+    color: #c95d5d;
+    animation-name: cataclysmicColor;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
+
+.mention {
+    /*color: #a84040;*/
+    background-image: linear-gradient(
+        90deg,
+        rgba(255, 0, 0, 0.3),
+        rgba(255, 0, 0, 0)
+    );
+    animation-name: terrorizingColor;
+    animation-duration: 0.4s;
+    animation-iteration-count: 1;
+}
+
+.chat::placeholder {
+    color: white;
+    opacity: 1;
+}
+
+.leaderboard-div {
+    position: absolute;
+    left: calc(1600px - 299px);
+    transition: left 0.2s linear, opacity 0.2s linear;
+    opacity: 1;
+    top: -1px;
+    width: 300px;
+    height: 900px;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4));
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    padding: 0px;
+    color: white;
+    overflow-y: auto;
+    overflow-x: hidden;
+    user-select: none;
+    font-family: 'Inter-Thicke', Inter;
+}
+
+.hide {
+    left: 1600px !important;
+    opacity: 0;
+}
+
+.leaderboard-div::-webkit-scrollbar {
+    width: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+}
+
+.leaderboard-div::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+}
+
+.rainbow {
+    animation: colorRotate 4s linear 0s infinite;
+}
+
+@keyframes colorRotate {
+    0% {
+        color: hsl(180, 100%, 50%);
+    }
+    50% {
+        color: hsl(216, 100%, 50%);
+    }
+    100% {
+        color: hsl(180, 100%, 50%);
+    }
+}
+
+.guest {
+    opacity: 0.8;
+}
+
+.chat-div::-webkit-scrollbar {
+    width: 10px;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.chat-div::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.chat-div {
+    position: absolute;
+    left: -1px;
+    top: -1px;
+    width: 375px;
+    height: 251px;
+    filter: none !important;
+    background: rgba(141, 141, 141, 0.205);
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0));
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 2px;
+    overflow-x: hidden;
+    /* 	word-break: break-all; */
+    font-family: Inter-Thick, Inter;
+    /*
+    /*background-image: url(https://i1.sndcdn.com/artworks-Uii8SMJvNPxy8ePA-romBoQ-t500x500.jpg);*/
+    /*    opacity: 0.7; */
 }
