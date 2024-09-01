@@ -221,7 +221,6 @@ accum = dt = window.frames = offtabTime = 0;
 window.time = 0;
 const FRAME_TIME = 1000 / 60;
 (function run(){
-    console.log('run');
     now = Date.now();
     dt = now - lastTime;
     accum += dt;

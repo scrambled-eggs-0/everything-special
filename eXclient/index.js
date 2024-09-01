@@ -46,7 +46,6 @@ window.startGame = () => {
     lastTime = now = performance.now();
     window.respawnPlayer();
     run();
-    console.log('game starting');
 }
 
 // gameloop
