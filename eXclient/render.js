@@ -9,10 +9,10 @@ window.defaultColors = {
     tile: '#1f2229',// the stroke and outside of arena
     background: '#323645',// the fillcolor
     vignette: {
-        inner: {size:0.1,r:0,g:0,b:0},
-        outer: {size:0.6,r:0,g:0,b:0},
-        innerInterp: {size:0.1,r:0,g:0,b:0},
-        outerInterp: {size:0.6,r:0,g:0,b:0}
+        inner: {size:0.1,r:0,g:0,b:0,opacity:0},
+        outer: {size:0.6,r:0,g:0,b:0,opacity:1},
+        innerInterp: {size:0.1,r:0,g:0,b:0,opacity:0},
+        outerInterp: {size:0.6,r:0,g:0,b:0,opacity:1}
     }
 }
 
@@ -20,10 +20,10 @@ window.colors = {
     tile: window.defaultColors.tile,
     background: window.defaultColors.background,
     vignette: {
-        inner: {size:0.1,r:0,g:0,b:0},
-        outer: {size:0.6,r:0,g:0,b:0},
-        innerInterp: {size:0.1,r:0,g:0,b:0},
-        outerInterp: {size:0.6,r:0,g:0,b:0}
+        inner: {size:0.1,r:0,g:0,b:0,opacity:0},
+        outer: {size:0.6,r:0,g:0,b:0,opacity:1},
+        innerInterp: {size:0.1,r:0,g:0,b:0,opacity:0},
+        outerInterp: {size:0.6,r:0,g:0,b:0,opacity:1}
     }
 }
 
@@ -126,7 +126,8 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
     ctx.fillRect(0,0,canvas.w, canvas.h);
 
     ctx.fillStyle = cols.background;
-    ctx.fillRect(-(camera.x-canvas.w/2), -(camera.y-canvas.h/2), window.mapDimensions.x, window.mapDimensions.y);
+    // add 1 to all dimensions so that we don't get gap artifacts on the edge of the arena
+    ctx.fillRect(-(camera.x-canvas.w/2)+1, -(camera.y-canvas.h/2)+1, window.mapDimensions.x-2, window.mapDimensions.y-2);
 
     // tile background
     // ctx.strokeStyle = cols.tile;
@@ -293,16 +294,29 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
 
     grd.addColorStop(
         0,
-        `rgba(${v.inner.r},${v.inner.g},${v.inner.b},0)`
+        `rgba(${v.innerInterp.r},${v.innerInterp.g},${v.innerInterp.b},${v.innerInterp.opacity})`
     );
     grd.addColorStop(
         1,
-        `rgba(${v.outer.r},${v.outer.g},${v.outer.b},1)`
+        `rgba(${v.outerInterp.r},${v.outerInterp.g},${v.outerInterp.b},${v.outerInterp.opacity})`
     );
     ctx.fillStyle = grd;
     ctx.fillRect(0,0,canvas.w,canvas.h);
     ctx.fill();
     ctx.closePath();
+
+    window.colors.vignette.inner = {size:0.1,r:0,g:0,b:0,opacity:0};
+    window.colors.vignette.outer = {size:0.6,r:0,g:0,b:0,opacity:1};
+    // window.colors = {
+    //     tile: window.defaultColors.tile,
+    //     background: window.defaultColors.background,
+    //     vignette: {
+    //         inner: {size:0.1,r:0,g:0,b:0,opacity:0},
+    //         outer: {size:0.6,r:0,g:0,b:0,opacity:1},
+    //         innerInterp: {size:0.1,r:0,g:0,b:0,opacity:0},
+    //         outerInterp: {size:0.6,r:0,g:0,b:0,opacity:1}
+    //     }
+    // }
 }
 
 function interpolate(start, end, t){
