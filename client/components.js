@@ -108,8 +108,8 @@ function simulate(){
 
         if(input.shift === true) {
             if(player.god === true){
-                player.xa *= 3;
-                player.ya *= 3;
+                player.xa *= 5;
+                player.ya *= 5;
             } else {
                 player.xa *= 0.5;
                 player.ya *= 0.5;
@@ -122,8 +122,8 @@ function simulate(){
         player.pos.x += player.xv * dt;
         player.pos.y += player.yv * dt;
 
-        player.xv *= Math.pow(0.4, dt / 16.66)//interpolate(player.xv, 0, 1 - Math.exp(player.friction * dt / 16.66));
-        player.yv *= Math.pow(0.4, dt / 16.66)//1 - Math.exp(player.friction * dt / 16.66);
+        player.xv *= Math.pow(player.friction, dt / 16.66)//interpolate(player.xv, 0, 1 - Math.exp(player.friction * dt / 16.66));
+        player.yv *= Math.pow(player.friction, dt / 16.66)//1 - Math.exp(player.friction * dt / 16.66);
     } else if(window.dragging === true && player.dead === false){
         if(player.axisSpeedMultX === 0 || player.axisSpeedMultY === 0) angle = Math.atan2((window.mouseY - player.pos.y), (window.mouseX - player.pos.x));
         else angle = Math.atan2((window.mouseY - player.pos.y) * player.axisSpeedMultX, (window.mouseX - player.pos.x) * player.axisSpeedMultY);
@@ -144,8 +144,8 @@ function simulate(){
     } else {
         for(let i = 0; i < player.forces.length; i++){
             // [x, y, decay]
-            player.pos.x += player.forces[i][0];
-            player.pos.y += player.forces[i][1];
+            player.pos.x += player.forces[i][0] * dt/16.66;
+            player.pos.y += player.forces[i][1] * dt/16.66;
             player.forces[i][0] *= Math.pow(player.forces[i][2], dt / 16.66);
             player.forces[i][1] *= Math.pow(player.forces[i][2], dt / 16.66);
             if(Math.abs(player.forces[i][0]) < 0.01 && Math.abs(player.forces[i][1]) < 0.01){
@@ -161,7 +161,7 @@ function simulate(){
         for(let i = 0; i < obstacles.length; i++){
             // obstacle simulation
             for(let j = 0; j < obstacles[i].simulate.length; j++){
-                obstacles[i].simulate[j](obstacles[i]);
+                obstacles[i].simulate[j](obstacles[i], player);
             }
         }
     } else {
@@ -683,9 +683,7 @@ const initEffectMap = [
     /*bound*/
     () => {},
     /*kill*/
-    (o, params) => {
-        o.collidable = params.collidable ?? true;
-    },
+    () => {},
     /*bounce*/
     (o, params) => {
         // bounciness, decay
@@ -820,8 +818,34 @@ const initEffectMap = [
     (o, params) => {
         o.tornadoStrength = params.tornadoStrength;
     },
+    /*changeVignette*/
+    (o, params) => {
+        o.innerR = params.innerR;
+        o.innerG = params.innerG;
+        o.innerB = params.innerB;
+        o.innerSize = params.innerSize;
+        o.innerOpacity = params.innerOpacity;
+
+        o.outerR = params.outerR;
+        o.outerG = params.outerG;
+        o.outerB = params.outerB;
+        o.outerSize = params.outerSize;
+        o.outerOpacity = params.outerOpacity;
+    },
+    /*pushable*/
+    (o, params) => {
+        o.lastPushAngle = o.pushAngle = params.pushAngle * Math.PI / 180;
+        o.maxPushDistance = params.maxPushDistance;
+        o.idlePushBackSpeed = params.idlePushBackSpeed;
+        o.pushConversionRatio = params.pushConversionRatio;
+        o.positiveDirectionOnly = params.positiveDirectionOnly;
+        o.pushAngleVecX = Math.cos(o.pushAngle);
+        o.pushAngleVecY = Math.sin(o.pushAngle);
+        o.pushPercent = 0;
+    }
 ]
 
+let freeVariable = -1;
 const effectMap = [
     /*bound*/
     (p, res, o, id) => {
@@ -832,10 +856,6 @@ const effectMap = [
     /*kill*/
     (p, res, o) => {
         if(res.overlap > 1) p.dead = true;
-        if(o.collidable === true){
-            p.pos.x += res.overlapV.x;
-            p.pos.y += res.overlapV.y;
-        }
     },
     /*bounce*/
     (p, res, o) => {
@@ -909,12 +929,13 @@ const effectMap = [
         window.spawnPosition.y = topLeftY + o.dimensions.y / 2;
     },
     /*breakable*/
-    (p, res, o) => {
+    (p, res, o, id) => {
         if(o.strength > 0){
             p.pos.x += res.overlapV.x;
             p.pos.y += res.overlapV.y;
             o.strength -= dt;
             if(o.strength < 0) o.strength = 0;
+            p.touchingNormalIndexes.push(id);
         }
 
         // breakable obs shouldn't regenerate on top of you
@@ -943,12 +964,15 @@ const effectMap = [
         // add conveyor force
         p.forces.push([Math.cos(o.platformerAngle) * o.platformerForce, Math.sin(o.platformerAngle) * o.platformerForce, o.platformerFriction]);
 
+        const velocityMovedX = window.isExClient === true ? p.xv / Math.pow(p.friction, dt / 16.66) * dt : p.xv;
+        const velocityMovedY = window.isExClient === true ? p.yv / Math.pow(p.friction, dt / 16.66) * dt : p.yv;
+
         // idea: find the amount of x/y the player moves in the platformer and move the opposite to effectively lock the player's motion perpendicular to the platformer's direction
-        const playerVelAngle = Math.atan2(p.yv, p.xv);
+        const playerVelAngle = Math.atan2(velocityMovedY, velocityMovedX);
 
         const angleBetween = o.platformerAngle - playerVelAngle;
 
-        const distMovedOnPlatAngle = Math.cos(angleBetween) * Math.sqrt(p.yv ** 2 + p.xv ** 2);
+        const distMovedOnPlatAngle = Math.cos(angleBetween) * Math.sqrt(velocityMovedY ** 2 + velocityMovedX ** 2);
 
         p.pos.x -= Math.cos(o.platformerAngle) * distMovedOnPlatAngle;
         p.pos.y -= Math.sin(o.platformerAngle) * distMovedOnPlatAngle;
@@ -957,7 +981,7 @@ const effectMap = [
         if(o.jumpCooldown <= 0 && (p.touchingNormalIndexes.length !== 0 || p.lastTouchingNormalIndexes[p.lastTouchingNormalIndexes.length-1] >= id || p.touchingWall === true)){
             o.canJump = true;
             // OLD: if we're within 30 degrees, jump; NEW: if the mouse is above the thumbs up in the rendering
-            if(/*Math.abs(shortAngleDist(o.platformerAngle + Math.PI, playerVelAngle)) < Math.PI / 6*/window.dragging === true && player.pos.y - window.mouseY > player.sat.r + 50){
+            if(/*Math.abs(shortAngleDist(o.platformerAngle + Math.PI, playerVelAngle)) < Math.PI / 6*/(window.dragging === true || (window.isExClient === true && p.ya < -0.01)) && p.pos.y - window.mouseY > p.sat.r + 50){
                 p.forces.push([-Math.cos(o.platformerAngle) * o.jumpForce, -Math.sin(o.platformerAngle) * o.jumpForce, o.jumpFriction]);
                 o.jumpCooldown = o.maxJumpCooldown;
             }
@@ -1103,6 +1127,61 @@ const effectMap = [
     (p, res, o) => {
         p.pos.x += Math.cos(Math.random() * 360) * o.tornadoStrength;
         p.pos.y += Math.sin(Math.random() * 360) * o.tornadoStrength;
+    },
+    /*changeVignette*/
+    (p, res, o) => {
+        const v = window.colors.vignette;
+        v.inner.r = o.innerR;
+        v.inner.g = o.innerG;
+        v.inner.b = o.innerB;
+        v.inner.size = o.innerSize;
+        v.inner.opacity = o.innerOpacity;
+
+        v.outer.r = o.outerR;
+        v.outer.g = o.outerG;
+        v.outer.b = o.outerB;
+        v.outer.size = o.outerSize;
+        v.outer.opacity = o.outerOpacity;
+    },
+    /*pushable*/
+    (p, res, o) => {
+        if(o.pushAngle !== o.lastPushAngle){
+            o.lastPushAngle = o.pushAngle;
+            o.pushAngleVecX = Math.cos(o.pushAngle);
+            o.pushAngleVecY = Math.sin(o.pushAngle);
+        }
+
+        // dot product of the two vectors = amount they are pointing together
+        // freeVariable = pushDelta
+        freeVariable = -(o.pushAngleVecX * res.overlapV.x + o.pushAngleVecY * res.overlapV.y) * o.pushConversionRatio;
+
+        if(o.positiveDirectionOnly === false || freeVariable > 0){
+            o.pushPercent += freeVariable / o.maxPushDistance;
+
+            if(o.pushPercent > 1){
+                freeVariable -= (o.pushPercent-1) * o.maxPushDistance;
+                o.pushPercent = 1;
+            } else if(o.pushPercent < 0){
+                freeVariable -= o.pushPercent * o.maxPushDistance;
+                o.pushPercent = 0;
+            }
+
+            o.pos.x += o.pushAngleVecX * freeVariable;
+            o.pos.y += o.pushAngleVecY * freeVariable;
+        }
+
+        // test collision again to bound the player
+        res.clear();
+        if(o.sat.r !== undefined){
+            collided = SAT.testCircleCircle(o.sat, p.sat, res);
+        } else {
+            collided = SAT.testPolygonCircle(o.sat, p.sat, res);
+        }
+
+        if(collided === true){
+            p.pos.x += res.overlapV.x;
+            p.pos.y += res.overlapV.y;
+        }
     }
 ]
 
@@ -1185,7 +1264,26 @@ const idleEffectMap = [
     // 'changeMap'
     undefined,
     // 'tornado'
-    undefined
+    undefined,
+    // 'changeVignette'
+    undefined,
+    // 'pushable'
+    (o, p) => {
+        // freeVariable = pushDelta
+        freeVariable = -o.idlePushBackSpeed * dt;
+        o.pushPercent += freeVariable / o.maxPushDistance;
+
+        if(o.pushPercent > 1){
+            freeVariable -= (o.pushPercent-1) * o.maxPushDistance;
+            o.pushPercent = 1;
+        } else if(o.pushPercent < 0){
+            freeVariable -= o.pushPercent * o.maxPushDistance;
+            o.pushPercent = 0;
+        }
+
+        o.pos.x += freeVariable * Math.cos(o.pushAngle);
+        o.pos.y += freeVariable * Math.sin(o.pushAngle);
+    }
 ]
 
 window.effectConstraintsMap = [
@@ -1236,7 +1334,11 @@ window.effectConstraintsMap = [
     /*changeMap*/
     undefined,
     /*tornado*/
-    undefined
+    undefined,
+    /*changeVignette*/
+    undefined,
+    /*pushable*/
+    {maxPushDistance: [0]},
 ]
 
 window.effectMapI2N = [
@@ -1263,16 +1365,16 @@ window.effectMapI2N = [
     'solidColor',
     'decoration',
     'changeMap',
-    'tornado'
+    'tornado',
+    'changeVignette',
+    'pushable'
 ]
 
 window.effectDefaultMap = [
     // bound
     {},
     // kill
-    {
-        collidable: true
-    },
+    {},
     // bounce
     {
         bounciness: 1,
@@ -1375,7 +1477,20 @@ window.effectDefaultMap = [
     // changeMap
     {mapName: 'hub'},
     // tornado
-    {tornadoStrength: 1}
+    {tornadoStrength: 1},
+    // changeVignette
+    {
+        innerR: 0, innerG: 0, innerB: 0, innerSize: 0.1, innerOpacity: 1,
+        outerR: 0, outerG: 0, outerB: 0, outerSize: 0.5, outerOpacity: 1
+    },
+    // pushable
+    {
+        pushAngle: 180,
+        maxPushDistance: 100,
+        idlePushBackSpeed: 0.25,
+        positiveDirectionOnly: false,
+        pushConversionRatio: 0.8
+    }
 ]
 
 const renderEffectMap = [
@@ -1385,7 +1500,7 @@ const renderEffectMap = [
     },
     /*kill*/
     (o) => {
-        ctx.fillStyle = o.collidable === true ? '#c70000' : '#9e0000';
+        ctx.fillStyle = '#c70000' //'#9e0000';
         ctx.strokeStyle = 'black';
         ctx.toStroke = true;
         ctx.lineWidth = 4;
@@ -1582,12 +1697,15 @@ const renderEffectMap = [
             // rendering 👍 if player can jump
             // if there ever is to be more emojis like this, then make an array of emojis that i can push to that render on top of each other every frame (w/ priority? sorted?)
             if(o.canJump === true && o.touchingPlatformer === true){
-                ctx.globalAlpha = 1;
-                ctx.fillStyle = 'white';
-                ctx.font = `56px Inter`;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('👍', player.pos.x, player.pos.y - player.sat.r - 50);
+                const player = window.players[window.selfId];
+                if(player !== undefined){
+                    ctx.globalAlpha = 1;
+                    ctx.fillStyle = 'white';
+                    ctx.font = `56px Inter`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('👍', player.pos.x, player.pos.y - player.sat.r - 50);
+                }
             }
             o.touchingPlatformer = false;
         }
@@ -1867,6 +1985,38 @@ const renderEffectMap = [
     (o) => {
         ctx.fillStyle = '#c0bbc9';
         ctx.globalAlpha = 0.25;
+    },
+    /*changeVignette*/
+    (o) => {
+        ctx.toFill = false;
+    },
+    /*pushable*/
+    (o) => {
+        ctx.fillStyle = window.colors.tile;
+        ctx.cleanUpFunction = () => {
+            ctx.save();
+            ctx.clip();
+
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 3;
+            ctx.globalAlpha = 0.25;
+            let [topX, topY] = generateTopLeftCoordinates(o);
+            ctx.beginPath();
+            ctx.lineTo(topX, topY);
+            ctx.lineTo(topX + o.dimensions.x, topY + o.dimensions.y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.lineTo(topX + o.dimensions.x, topY);
+            ctx.lineTo(topX, topY + o.dimensions.y);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+            ctx.lineWidth = 3;
+
+            ctx.restore();
+
+            // TODO: white lines where the angles are? oneDirectional parameter?
+            // also TODO: 
+        }
     }
 ]
 

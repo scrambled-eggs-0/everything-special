@@ -5,7 +5,7 @@ import Utils from '../client/utils.js';
 const {decodeText} = Utils;
 
 const HOST = location.origin.replace(/^http/, 'ws');
-let ws, nextMsgFlag;
+let ws, nextMsgFlag, gameStarted = false;
 
 const messageQueue = [];
 window.send = (data) => {
@@ -59,8 +59,6 @@ const messageMap = [
     (data) => {
         // unpack it
         data = msgpackr.unpack(data);
-
-        window.won = false;
         const [players, obstacleData, mapName, dimensions, selfId] = data;
         fetch(location.origin + `/maps/${mapName}.js`, {method: 'GET'}).then(async (d) => {
             const levelData = await d.text();
@@ -94,7 +92,13 @@ const messageMap = [
     
             window.selfId = selfId;
     
-            window.startGame();
+            window.won = false;
+            if(!gameStarted) {
+                window.startGame();
+                gameStarted = true;
+            } else {
+                window.respawnPlayer();
+            }
         })
     },
     // 3 - flag next message as type and don't decode it

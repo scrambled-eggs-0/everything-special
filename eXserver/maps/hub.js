@@ -116,4 +116,10 @@ C(1,[1],[1],{h:20,w:800,y:10030,x:3600,pivotY:10040,pivotX:4000,rotateSpeed:120*
 C(1,[1],[1],{h:20,w:800,y:10030,x:3600,pivotY:10040,pivotX:4000,rotateSpeed:120*fac,initialRotation:120,});
 C(1,[1],[1],{h:20,w:800,y:10030,x:3600,pivotY:10040,pivotX:4000,rotateSpeed:120*fac,initialRotation:60,});
 
-C(1,[],[22],{h:200,w:200,y:4400,x:5000,mapName:'pols'});
+C(1,[],[22],{h:200,w:200,y:3400,x:6900,mapName:'pols'});
+
+C(1,[],[22],{h:200,w:200,y:4200,x:2500,mapName:'posc'});
+
+C(1,[],[22],{h:200,w:200,y:6300,x:6600,mapName:'popb'});
+
+C(1,[],[22],{h:200,w:200,y:6900,x:6100,mapName:'poca'});
