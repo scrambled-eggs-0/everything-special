@@ -99,6 +99,10 @@ function handleKey(e){
         if(e.type === 'keydown'){
             if(e.code === 'KeyO' && window.players[window.selfId].dev === true){
                 window.players[window.selfId].god = !window.players[window.selfId].god;
+                const buf = new Uint8Array(2);
+                buf[0] = 8;
+                buf[1] = window.players[window.selfId].god;
+                send(buf);
                 return e.preventDefault();
             } else if(e.code === 'KeyR' && window.players[window.selfId].dead === true){
                 window.respawnPlayer();
@@ -125,6 +129,8 @@ function handleKey(e){
                     // }
                 }
                 zenMode = !zenMode;
+            } else if (e.code === 'KeyU'){
+                window.renderDebug = !window.renderDebug;
             }
         }
 

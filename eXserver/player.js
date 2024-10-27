@@ -6,7 +6,11 @@ class Player {
         this.pos = {x: 0, y: 0};
 
         this.name = '';
-        this.mapName = '';
+
+        this.god = false;
+
+        this.ship = false;
+        this.shipAngle = 0;
     }
 }
 

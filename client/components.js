@@ -32,6 +32,14 @@ function create(shape, simulates, effects, params){
     e.pos = e.sat.pos;
     if(shape === 0) e.sat.r = Math.max(e.sat.r, 0.001);
     else if(shape === 3) {e.isText = true; e.text = params.text; e.fontSize = params.fontSize; }
+    else if(shape === 4){
+        e.sat.r = Math.max(e.sat.r, 0.001); e.innerRadius = Math.max(params.innerRadius, 0);
+        e.startSlice = params.startSlice; e.startSliceAngle = params.startSliceAngle;
+        e.endSlice = params.endSlice; e.endSliceAngle = params.endSliceAngle;
+        e.startSliceAngleRotateSpeed = params.startSliceAngleRotateSpeed;
+        e.endSliceAngleRotateSpeed = params.endSliceAngleRotateSpeed;
+        if(params.circleSliceRotate !== undefined) e.simulate.push(params.circleSliceRotate);
+    }
     for(let key in window.satConstraintsMap[shape]){
         // [min, max, mustBeInt, customValidator(e)]
         const c = window.satConstraintsMap[shape][key];
@@ -65,6 +73,7 @@ function create(shape, simulates, effects, params){
     }
     if(params.sf !== undefined) e.simulate.push(params.sf);
     if(params.ef !== undefined) {e.effect.push(params.ef); e.renderEffect.push(renderEffectMap[3]);}
+    if(params.cr !== undefined) e.cr = params.cr;
     
     obstacles.push(e);
 
@@ -103,21 +112,28 @@ function simulate(){
     }
 
     if(window.isExClient === true && player.dead === false) {
-        player.xa = (input.right - input.left) * player.speed * player.axisSpeedMultX * dt / 16.66;
-        player.ya = (input.down - input.up) * player.speed * player.axisSpeedMultY * dt / 16.66;
+        player.xa = (input.right - input.left) * player.speed * dt / 16.66;
+        player.ya = (input.down - input.up) * player.speed * dt / 16.66;
 
-        if(input.shift === true) {
-            if(player.god === true){
-                player.xa *= 5;
-                player.ya *= 5;
-            } else {
-                player.xa *= 0.5;
-                player.ya *= 0.5;
+        if(player.ship === false){
+            if(input.shift === true) {
+                if(player.god === true){
+                    player.xa *= 5;
+                    player.ya *= 5;
+                } else {
+                    player.xa *= 0.5;
+                    player.ya *= 0.5;
+                }
             }
-        }
+    
+            player.xv += player.xa * player.axisSpeedMultX;
+            player.yv += player.ya * player.axisSpeedMultY;
+        } else {
+            player.shipAngle += player.xa * player.shipTurnSpeed;
 
-        player.xv += player.xa;
-        player.yv += player.ya;
+            player.xv -= Math.cos(player.shipAngle) * player.ya * player.axisSpeedMultX;
+            player.yv -= Math.sin(player.shipAngle) * player.ya * player.axisSpeedMultY;
+        }
 
         player.pos.x += player.xv * dt;
         player.pos.y += player.yv * dt;
@@ -176,7 +192,11 @@ function simulate(){
                 // collision (done before simulation because that is what last rendered frame sees)
                 // TODO: bounding box check
                 if(obstacles[i].sat.r !== undefined){
-                    collided = SAT.testCircleCircle(obstacles[i].sat, player.sat, res);
+                    if(obstacles[i].startSlice !== undefined){
+                        collided = testCircleSliceCircle(obstacles[i], player, res);
+                    } else {
+                        collided = SAT.testCircleCircle(obstacles[i].sat, player.sat, res);
+                    }
                 } else {
                     collided = SAT.testPolygonCircle(obstacles[i].sat, player.sat, res);
                 }
@@ -252,6 +272,78 @@ function simulate(){
     // (rendering happens in between)
 }
 
+let runningOverlapN = new SAT.Vector(), runningOverlapV = new SAT.Vector();
+function testCircleSliceCircle(circleSlice, circle, res){
+    let collisionAngle, collisionDistSq, gts, lte, angleOverflow, collided = false;
+
+    // do circle first, then slices. If we collide with the circle then we don't want to collide w/ slices
+    collisionAngle = Math.atan2(circle.pos.y - circleSlice.pos.y, circle.pos.x - circleSlice.pos.x);
+    if(collisionAngle < 0) collisionAngle += Math.PI * 2;
+
+    gts = circleSlice.startSliceAngle < collisionAngle;
+    lte = collisionAngle < circleSlice.endSliceAngle;
+    
+    angleOverflow = circleSlice.startSliceAngle > circleSlice.endSliceAngle;
+
+    if(angleOverflow === true ? (gts === true || lte === true) : (gts === true && lte === true)){
+        collided = SAT.testCircleCircle(circleSlice.sat, circle.sat, res);
+
+        if(collided === true){
+            collisionDistSq = (circle.pos.y - circleSlice.pos.y) ** 2 + (circle.pos.x - circleSlice.pos.x) ** 2;
+
+            if(collisionDistSq > ((circleSlice.innerRadius + circleSlice.sat.r + circle.sat.r) / 2) ** 2){
+                // normal circle collision
+                return true;
+            } else {
+                if(collisionDistSq <= (circleSlice.innerRadius - circle.sat.r) ** 2){
+                    // we're too far inside, no collision
+                    res.clear();
+                    res.overlapN.x = res.overlapN.y = 0;
+                    res.overlapV.x = res.overlapV.y = 0;
+                } else {
+                    // we're inside the circle - bound the opp way
+                    res.overlapN = res.overlapN.scale(-1,-1);
+                    res.overlap = (circleSlice.sat.r - circleSlice.innerRadius + circle.sat.r * 2) - res.overlap;
+                    res.overlapV = new SAT.Vector(res.overlapN.x * res.overlap, res.overlapN.y * res.overlap);
+                    return true;
+                }
+            }
+        }
+    }
+
+    if(Math.abs((circleSlice.startSliceAngle - circleSlice.endSliceAngle) % (Math.PI * 2)) < 0.001){
+        // circle slices are on top of each other. We missed collision with the circle, so we're done
+        return false;
+    }
+
+    runningOverlapN.x = runningOverlapN.y = 0;
+    runningOverlapV.x = runningOverlapV.y = 0;
+
+    // collision with startSlice
+    if(SAT.testPolygonCircle(circleSlice.startSlice, circle.sat, res) === true){
+        collided = true;
+        runningOverlapN.x += res.overlapN.x;
+        runningOverlapN.y += res.overlapN.y;
+        runningOverlapV.x += res.overlapV.x;
+        runningOverlapV.y += res.overlapV.y;
+        res.clear();
+        res.overlapN.x = res.overlapN.y = 0;
+        res.overlapV.x = res.overlapV.y = 0;
+    }
+    
+    // collision with endSlice
+    collided ||= SAT.testPolygonCircle(circleSlice.endSlice, circle.sat, res);
+
+    res.overlapN.x += runningOverlapN.x;
+    res.overlapN.y += runningOverlapN.y;
+    res.overlapN = res.overlapN.normalize();
+    res.overlapV.x += runningOverlapV.x;
+    res.overlapV.y += runningOverlapV.y;
+    res.overlap = res.overlapV.x / res.overlapN.x;
+
+    return collided;
+}
+
 // 0 - circle, 1 - polygon
 const collisionMatrix = [
     SAT.testCircleCircle, SAT.testCirclePolygon,
@@ -309,6 +401,40 @@ const satMap = [
         const h = dimensions.actualBoundingBoxDescent + dimensions.actualBoundingBoxAscent;
         const s = new SAT.Box(new SAT.Vector(p.x - w / 2, p.y - h / 2), w, h).toPolygon();
         return s;
+    },
+    /*circleSlice*/
+    (p) => {
+        const sat = new SAT.Circle(new SAT.Vector(p.x, p.y), p.r);
+        const o = p;
+        o.startSlice = new SAT.Polygon(new SAT.Vector(), [
+            new SAT.Vector(Math.cos(o.startSliceAngle) * o.r, Math.sin(o.startSliceAngle) * o.r),
+            new SAT.Vector(Math.cos(o.startSliceAngle) * o.innerRadius, Math.sin(o.startSliceAngle) * o.innerRadius),
+        ]);
+        o.endSlice = new SAT.Polygon(new SAT.Vector(), [
+            new SAT.Vector(Math.cos(o.endSliceAngle) * o.r, Math.sin(o.endSliceAngle) * o.r),
+            new SAT.Vector(Math.cos(o.endSliceAngle) * o.innerRadius, Math.sin(o.endSliceAngle) * o.innerRadius),
+        ]);
+        o.startSlice.pos = o.endSlice.pos = sat.pos;
+        if(p.startSliceAngleRotateSpeed !== 0 || p.endSliceAngleRotateSpeed !== 0){
+            p.circleSliceRotate = (o) => {
+                o.startSliceAngle += o.startSliceAngleRotateSpeed * dt * (window.scaleMult===undefined?1:window.scaleMult);
+                o.endSliceAngle += o.endSliceAngleRotateSpeed * dt * (window.scaleMult===undefined?1:window.scaleMult);
+                o.startSliceAngle %= Math.PI * 2;
+                o.endSliceAngle %= Math.PI * 2;
+                if(o.startSliceAngle < 0) o.startSliceAngle += Math.PI * 2;
+                if(o.endSliceAngle < 0) o.endSliceAngle += Math.PI * 2;
+                o.startSlice.setPoints([
+                    new SAT.Vector(Math.cos(o.startSliceAngle) * o.sat.r, Math.sin(o.startSliceAngle) * o.sat.r),
+                    new SAT.Vector(Math.cos(o.startSliceAngle) * o.innerRadius, Math.sin(o.startSliceAngle) * o.innerRadius),
+                ]);
+                o.endSlice.setPoints([
+                    new SAT.Vector(Math.cos(o.endSliceAngle) * o.sat.r, Math.sin(o.endSliceAngle) * o.sat.r),
+                    new SAT.Vector(Math.cos(o.endSliceAngle) * o.innerRadius, Math.sin(o.endSliceAngle) * o.innerRadius),
+                ])
+                o.startSlice.pos = o.endSlice.pos = o.sat.pos;
+            }
+        }
+        return sat;
     }
 ];
 
@@ -388,7 +514,8 @@ window.satMapI2N = [
     'circle',
     'rectangle',
     'polygon',
-    'text'
+    'text',
+    'circleSlice'
 ];
 
 window.satConstraintsMap = [
@@ -422,6 +549,17 @@ window.satDefaultMap = [
         y: 800,
         text: ['Why hello there', 'I am a text :D', 'Evades X', 'Taste the Edge.'][Math.floor(Math.random() * 4)],
         fontSize: 80,
+    },
+    // circleSlice
+    {
+        x: 450,
+        y: 800,
+        r: 120,
+        innerRadius: 80,
+        startSliceAngle: 0,
+        endSliceAngle: 0,
+        startSliceAngleRotateSpeed: 0,
+        endSliceAngleRotateSpeed: 0
     }
 ]
 
@@ -451,6 +589,14 @@ const renderShapeMap = [
     (o) => {
         // draw rectangle for clipping purposes
         renderShapeMap[1](o);
+    },
+    /*circleSlice*/
+    (o) => {
+        ctx.moveTo(o.pos.x + Math.cos(o.startSliceAngle) * o.innerRadius, o.pos.y + Math.sin(o.startSliceAngle) * o.innerRadius);
+        ctx.lineTo(o.pos.x + Math.cos(o.startSliceAngle) * o.sat.r, o.pos.y + Math.sin(o.startSliceAngle) * o.sat.r);
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, o.startSliceAngle, o.endSliceAngle);
+        ctx.lineTo(o.pos.x + Math.cos(o.endSliceAngle) * o.innerRadius, o.pos.y + Math.sin(o.endSliceAngle) * o.innerRadius);
+        if(o.innerRadius !== 0)ctx.arc(o.pos.x, o.pos.y, o.innerRadius, o.endSliceAngle, o.startSliceAngle, true);
     }
 ]
 
@@ -500,7 +646,7 @@ const initSimulateMap = [
         o.rotation = 0;
         if(init.initialRotation !== 0 && init.initialRotation !== undefined){
             let lastDt = window.dt;
-            window.dt = 1000 / 60;
+            window.dt = 1;//60 / 1000;
             o.rotateSpeed = init.initialRotation * Math.PI / 180;
             simulateMap[1](o);
             window.dt = lastDt;
@@ -683,7 +829,9 @@ const initEffectMap = [
     /*bound*/
     () => {},
     /*kill*/
-    () => {},
+    (o, params) => {
+        o.boundPlayer = params.boundPlayer ?? false;
+    },
     /*bounce*/
     (o, params) => {
         // bounciness, decay
@@ -804,6 +952,7 @@ const initEffectMap = [
     /*solidColor*/
     (o, params) => {
         o.hex = params.hex;
+        o.alpha = params.alpha;
     },
     /*decoration*/
     (o, params) => {
@@ -842,6 +991,18 @@ const initEffectMap = [
         o.pushAngleVecX = Math.cos(o.pushAngle);
         o.pushAngleVecY = Math.sin(o.pushAngle);
         o.pushPercent = 0;
+    },
+    /*changeMusic*/
+    (o, params) => {
+        // either a youtube url (https://youtube.com/watch/...) or a local filepath
+        // that the client can access via a fetch req, e.g. sounds/... .mp3
+        o.path = params.path;
+    },
+    /*changeShip*/
+    (o, params) => {
+        o.changeShipStateTo = params.changeShipStateTo;
+        o.initialShipAngle = params.initialShipAngle;
+        o.shipTurnSpeed = params.shipTurnSpeed;
     }
 ]
 
@@ -855,7 +1016,13 @@ const effectMap = [
     },
     /*kill*/
     (p, res, o) => {
-        if(res.overlap > 1) p.dead = true;
+        if(res.overlap > 1) {
+            p.dead = true;
+            if(o.boundPlayer === true){
+                p.pos.x += res.overlapV.x;
+                p.pos.y += res.overlapV.y;
+            }
+        }
     },
     /*bounce*/
     (p, res, o) => {
@@ -1182,6 +1349,28 @@ const effectMap = [
             p.pos.x += res.overlapV.x;
             p.pos.y += res.overlapV.y;
         }
+    },
+    /*changeMusic*/
+    (p, res, o) => {
+        window.playMusic(o.path);
+    },
+    /*changeShip*/
+    (p, res, o) => {
+        if(p.ship !== o.changeShipStateTo){
+            if(window.isExClient === true) {
+                // send changed ship
+                const buf = new ArrayBuffer(8);
+                const u8 = new Uint8Array(buf);
+                const f32 = new Float32Array(buf);
+                u8[0] = 9;
+                u8[1] = o.changeShipStateTo;
+                f32[1] = o.initialShipAngle;
+                send(buf);
+            }
+            if(p.ship === false && o.changeShipStateTo === true) {p.shipAngle = o.initialShipAngle; p.shipTurnSpeed = o.shipTurnSpeed; }
+        }
+        
+        p.ship = o.changeShipStateTo;
     }
 ]
 
@@ -1283,7 +1472,9 @@ const idleEffectMap = [
 
         o.pos.x += freeVariable * Math.cos(o.pushAngle);
         o.pos.y += freeVariable * Math.sin(o.pushAngle);
-    }
+    },
+    // changeMusic
+    undefined
 ]
 
 window.effectConstraintsMap = [
@@ -1339,6 +1530,10 @@ window.effectConstraintsMap = [
     undefined,
     /*pushable*/
     {maxPushDistance: [0]},
+    /*changeMusic*/
+    undefined,
+    /*changeShip*/
+    undefined,
 ]
 
 window.effectMapI2N = [
@@ -1367,14 +1562,18 @@ window.effectMapI2N = [
     'changeMap',
     'tornado',
     'changeVignette',
-    'pushable'
+    'pushable',
+    'changeMusic',
+    'changeShip'
 ]
 
 window.effectDefaultMap = [
     // bound
     {},
     // kill
-    {},
+    {
+        boundPlayer: false,
+    },
     // bounce
     {
         bounciness: 1,
@@ -1470,7 +1669,8 @@ window.effectDefaultMap = [
     },
     // solidColor
     {
-        hex: '#FFFFFF'
+        hex: '#FFFFFF',
+        alpha: 1
     },
     // decoration
     {},
@@ -1490,7 +1690,11 @@ window.effectDefaultMap = [
         idlePushBackSpeed: 0.25,
         positiveDirectionOnly: false,
         pushConversionRatio: 0.8
-    }
+    },
+    // changeMusic
+    {path: 'https://www.youtube.com/watch?v=OidXKRVVV70'},
+    // changeShip
+    {changeShipStateTo: true, initialShipAngle: 0, shipTurnSpeed: Math.PI * 3},
 ]
 
 const renderEffectMap = [
@@ -1500,7 +1704,7 @@ const renderEffectMap = [
     },
     /*kill*/
     (o) => {
-        ctx.fillStyle = '#c70000' //'#9e0000';
+        ctx.fillStyle = o.boundPlayer === true ? '#c70000' : '#9e0000';
         ctx.strokeStyle = 'black';
         ctx.toStroke = true;
         ctx.lineWidth = 4;
@@ -1634,8 +1838,21 @@ const renderEffectMap = [
     },
     /*safe*/
     (o) => {
-        ctx.fillStyle = '#8c8c8c';
-        ctx.globalAlpha = 0.25;
+        // #8c8c8c hex, .25 globalAlpha
+        ctx.fillStyle = 'rgba(140,140,140,.25)';
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.toStroke = true;
+
+        // ctx.fillStyle = window.safeColor || "#8c8c8c",
+        // ctx.globalAlpha = .25,
+        // ctx.beginPath(),
+        // ctx.arc(pos.x, pos.y, obstacle.r, 0, 2 * Math.PI),
+        // ctx.fill(),
+        // ctx.strokeStyle = "black",
+        // ctx.lineWidth = lineWidth,
+        // ctx.globalAlpha = 1,
+        // ctx.stroke();
     },
     /*tp*/
     (o) => {
@@ -1916,6 +2133,7 @@ const renderEffectMap = [
     (o) => {
         ctx.fillStyle = o.hex;
         if(o.isText === true)ctx.globalAlpha = 0;
+        else ctx.globalAlpha = o.alpha;
     },
     /*decoration*/
     (o) => {
@@ -2017,6 +2235,23 @@ const renderEffectMap = [
             // TODO: white lines where the angles are? oneDirectional parameter?
             // also TODO: 
         }
+    },
+    /*changeMusic*/
+    (o) => {
+        ctx.toFill = false;
+    },
+    /*changeShip*/
+    (o) => {
+        ctx.fillStyle = o.changeShipStateTo === true ? 'rgba(0,0,255,0.3)' : 'rgba(255,255,0,0.3)';
+        ctx.strokeStyle = o.changeShipStateTo === true ? 'blue' : 'yellow';
+        ctx.lineDashOffset = -window.time * 150 / 1000;
+        ctx.lineWidth = 4;
+        ctx.setLineDash([30, 30]);
+        ctx.toStroke = true;
+
+        ctx.cleanUpFunction = () => {
+            ctx.setLineDash([]);
+        }
     }
 ]
 
@@ -2040,8 +2275,9 @@ window.createPlayer = () => {
     player.stopForces = false;
     player.forces = [];
     player.id = undefined;
-    player.dev = true; player.god = false;
+    player.dev = true; /*dev only for players[selfId]*/ player.god = false;
     player.friction = 0.4;
+    player.ship = false; player.shipAngle = 0; player.shipTurnSpeed = Math.PI * 3;
     return player;
 }
 

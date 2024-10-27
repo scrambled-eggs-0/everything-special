@@ -29,6 +29,7 @@ window.colors = {
 
 window.selfId = undefined;
 window.tileSize = 100;
+window.renderDebug = false;
 // const fullscreen = {
 //     ratio: 9 / 16,
 //     zoom: 1800,
@@ -110,16 +111,24 @@ const height = 900;
 //     return canv;
 // }
 
-let opaqIndex, len, lastPlayerX, lastPlayerY, lastPlayerRadius, lastGA, j = false, lastNLDX = 0, lastNLDY = 0;
+let opaqIndex, len, lastPlayerX, lastPlayerY, lastPlayerRadius, diagonalStartOffset, diagonalDist, overRenderTiles = false, lastGA, j = false, lastNLDX = 0, lastNLDY = 0;
 window.render = (os=window.obstacles, cols=window.colors, players=window.players) => {
     // TODO: obstacle interpolation
 
     document.body.style.backgroundColor = cols.tile;
 
+    overRenderTiles = false;
     if(window.selfId !== undefined){
         const me = players[window.selfId];
         camera.x = me.pos.x;
         camera.y = me.pos.y;
+
+        if(me.ship === true){
+            ctx.translate(canvas.w/2, canvas.h/2);
+            ctx.rotate(-Math.PI/2-me.shipAngle);
+            ctx.translate(-canvas.w/2, -canvas.h/2);
+            overRenderTiles = true;
+        }
     }
     
     ctx.fillStyle = cols.tile;
@@ -143,20 +152,42 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
     ctx.globalAlpha = 0.75;
     ctx.lineWidth = 4.8;
     ctx.strokeStyle = cols.tile;
-    for (let x = (canvas.w/2-camera.x)%tileSize; x < canvas.w + ctx.lineWidth + window.tileSize; x += window.tileSize) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.h);
-        ctx.stroke();
-        ctx.closePath();
-    }
 
-    for (let y = (canvas.h/2-camera.y)%tileSize; y < canvas.h + ctx.lineWidth + window.tileSize; y += window.tileSize) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(canvas.w, y);
-        ctx.stroke();
-        ctx.closePath();
+    if(overRenderTiles === true){
+        // accounting for rotation and such
+        diagonalDist = Math.sqrt(canvas.w ** 2 + canvas.h ** 2);
+        diagonalStartOffset = (diagonalDist/2) % tileSize - tileSize - diagonalDist / 2;
+        for (let x = (canvas.w/2-camera.x)%tileSize + diagonalStartOffset; x < diagonalDist + ctx.lineWidth + window.tileSize; x += window.tileSize) {
+            ctx.beginPath();
+            ctx.moveTo(x, diagonalStartOffset);
+            ctx.lineTo(x, canvas.h - diagonalStartOffset);
+            ctx.stroke();
+            ctx.closePath();
+        }
+    
+        for (let y = (canvas.h/2-camera.y)%tileSize + diagonalStartOffset; y < diagonalDist + ctx.lineWidth + window.tileSize; y += window.tileSize) {
+            ctx.beginPath();
+            ctx.moveTo(diagonalStartOffset, y);
+            ctx.lineTo(canvas.w - diagonalStartOffset, y);
+            ctx.stroke();
+            ctx.closePath();
+        }
+    } else {
+        for (let x = (canvas.w/2-camera.x)%tileSize; x < canvas.w + ctx.lineWidth + window.tileSize; x += window.tileSize) {
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, canvas.h);
+            ctx.stroke();
+            ctx.closePath();
+        }
+    
+        for (let y = (canvas.h/2-camera.y)%tileSize; y < canvas.h + ctx.lineWidth + window.tileSize; y += window.tileSize) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(canvas.w, y);
+            ctx.stroke();
+            ctx.closePath();
+        }
     }
 
     ctx.globalAlpha = 1;
@@ -172,6 +203,7 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
 
     // render obstacles
     for(let i = 0; i < os.length; i++){
+        if(os[i].cr !== undefined) { os[i].cr(os[i]); continue; }
         len = os[i].effect.length;
         if(len === 1){
             j = 0;
@@ -257,6 +289,14 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
             ctx.setLineDash([]);
         }
         if(player.god === true) {ctx.strokeStyle = 'purple'; ctx.lineWidth = 10; ctx.stroke(); }
+        if (player.ship === true) {
+            ctx.strokeStyle = '#0033ed';
+            ctx.lineWidth = 10;
+            ctx.lineCap = 'round';
+            ctx.moveTo(player.pos.x,player.pos.y);
+            ctx.lineTo(player.pos.x + Math.cos(player.shipAngle) * player.sat.r, player.pos.y + Math.sin(player.shipAngle) * player.sat.r);
+            ctx.stroke();
+        }
         ctx.closePath();
 
         ctx.fillStyle = 'white';
@@ -272,7 +312,32 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
         player.sat.r = lastRadius;
     }
 
+    // debug
+    if(window.renderDebug === true){
+        ctx.fillStyle = 'red';
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 2;
+        for(let i = 0; i < obstacles.length; i++){
+            ctx.beginPath();
+            ctx.arc(os[i].pos.x, os[i].pos.y, 10, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.closePath();
+
+            const [topX, topY] = generateTopLeftCoordinates(os[i]);
+            ctx.strokeRect(topX, topY, os[i].dimensions.x, os[i].dimensions.y);
+        }
+    }
+
     ctx.translate(camera.x-canvas.w/2, camera.y-canvas.h/2);
+
+    if(window.selfId !== undefined){
+        const me = players[window.selfId];
+        if(me.ship === true){
+            ctx.translate(canvas.w/2, canvas.h/2);
+            ctx.rotate(me.shipAngle+Math.PI/2);
+            ctx.translate(-canvas.w/2, -canvas.h/2);
+        }
+    }
 
     // vignette
     const v = window.colors.vignette;

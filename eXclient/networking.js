@@ -151,6 +151,31 @@ const messageMap = [
         const chatMessageDiv = document.querySelector('.chat-div');
         chatMessageDiv.appendChild(div);
         chatMessageDiv.scrollTop = chatMessageDiv.scrollHeight;
+    },
+    // 8 - toggle godmode
+    (data) => {
+        const u16 = new Uint16Array(data.buffer);
+        const id = u16[1];
+
+        if(id === window.selfId) return;
+
+        window.players[id].god = data[1] === 1;
+    },
+    // 9 - change ship
+    (data) => {
+        const f32 = new Float32Array(data.buffer);
+        const u16 = new Uint16Array(data.buffer);
+        const id = u16[1];
+        if(id === window.selfId) return;
+        window.players[id].ship = data[1] === 1;
+        window.players[id].shipAngle = f32[1];
+    },
+    // 10 - change ship angle
+    (data) => {
+        const f32 = new Float32Array(data.buffer);
+        const u16 = new Uint16Array(data.buffer);
+        const id = u16[1];
+        window.players[id].shipAngle = f32[1];
     }
 ]
 
@@ -161,6 +186,9 @@ function createPlayerFromData(data){
     p.pos.y = data.pos.y;
     p.name = data.name;
     p.id = data.id;
+    p.god = data.god;
+    p.ship = data.ship;
+    p.shipAngle = data.shipAngle;
 
     return p;
 }

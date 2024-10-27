@@ -11,6 +11,9 @@ import { createCanvas, loadImage } from 'canvas';
 global.canvas = createCanvas(1,1);
 global.ctx = canvas.getContext('2d');
 
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+
 global.defaultMapName = 'hub';
 
 global.maps = {};
@@ -47,7 +50,7 @@ async function createMap(name){
     if(validPaths[path] === undefined) return console.error('Trying to load undefined map name!', name);
     // basically just add obstacles. We have the same blockly editor as omni so we can just run the code
     const map = new Map();
-    await import(path);
+    require(path);
     map.obstacles = window.obstacles;
     map.name = name;
     map.dimensions = {x: window.mapDimensions.x, y: window.mapDimensions.y};

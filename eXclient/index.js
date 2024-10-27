@@ -13,6 +13,9 @@ import simulate from '../client/components.js';
 // keyboard input
 import './input.js';
 
+// background music
+import '../client/sound.js';
+
 // used for encoding messages sent to the server
 import Utils from '../client/utils.js';
 const {encodeAtPosition} = Utils;
@@ -91,7 +94,7 @@ function run(){
     //     simulate();
     // }
 
-    // sendUpdatePack();
+    sendUpdatePack();
 
     window.render();
 }
@@ -100,10 +103,20 @@ const buf = new ArrayBuffer(12);// 12 bytes = 3 floats. First pos occupied by ui
 const uview = new Uint8Array(buf);
 uview[0] = 4;// type 4 - player x and y
 const fview = new Float32Array(buf); 
+let lastShipAngle = Infinity;
 function sendUpdatePack(){
     const player = window.players[window.selfId];
     fview[1] = player.pos.x;
     fview[2] = player.pos.y;
 
     send(buf);
+
+    if(player.ship === true && lastShipAngle !== player.shipAngle){
+        lastShipAngle = player.shipAngle;
+        uview[0] = 10;
+        fview[1] = player.shipAngle;
+        fview[2] = 0;
+        send(buf);
+        uview[0] = 4;
+    }
 }

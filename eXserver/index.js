@@ -38,8 +38,9 @@ global.app = uWS.App().ws('/*', {
         // create client and add to default map. 
         ws.me = {
             ws,
-            mapName: undefined,
-            player: new Player()
+            mapName: '',
+            player: new Player(),
+            dev: true
         }
         
         const ind = reusableClientIndexes.length === 0 ? clients.length : reusableClientIndexes.pop();
@@ -54,7 +55,7 @@ global.app = uWS.App().ws('/*', {
     },
     close: (ws, code, message) => {
         ws.closed = true;
-        if(ws.me.mapName !== undefined) {
+        if(ws.me.mapName !== '') {
             global.maps[ws.me.mapName].removePlayer(ws.me.player);
             // global.maps[ws.me.mapName].removeClient(ws.me); // we don't have to unsub, ws already closed
 
@@ -153,7 +154,7 @@ const decoder = new TextDecoder();
 const messageMap = [
     // 0 - set username and join game
     (data, me) => {
-        if(data.byteLength > 33 || me.player.mapName !== '') return;
+        if(data.byteLength > 33 || me.mapName !== '') return;
         // this should never fail
         me.player.name = decoder.decode(data).slice(1);
         changeMap(me, defaultMapName);
@@ -174,11 +175,11 @@ const messageMap = [
     () => {},
     // 4 - x and y
     (data, me) => {
-        if(me.mapName === undefined || data.byteLength !== 12) return;
+        if(me.mapName === '' || data.byteLength !== 12) return;
         // format (in bytes): [type]1 [blank]1 [u16 id]2 [float position x]4 [float position y]4
         const u16view = new Uint16Array(data.buffer);
         u16view[1] = me.player.id;
-        global.maps[defaultMapName].broadcast(data);
+        global.maps[me.mapName].broadcast(data);
     },
     // 5 - unused
     () => {},
@@ -186,13 +187,44 @@ const messageMap = [
     () => {},
     // 7 - chat message
     (data, me) => {
-        if(data.byteLength > 1000 || me.mapName === undefined) return;
+        if(data.byteLength > 1000 || me.mapName === '') return;
         // const msg = decoder.decode(data).slice(1);
         // TODO: server side verification on chat msgs to make sure that data[1] is what it should be (we don't want random people sending "dev" and displaying that way)
         broadcastEveryone(data);
     },
-    //69 - unused
-    // nah bro i use that a lot
+    // 8 - toggle godmode
+    (data, me) => {
+        if(me.mapName === '' || me.dev !== true) return;
+        const buf = new ArrayBuffer(4);
+        const u8 = new Uint8Array(buf);
+        const u16 = new Uint16Array(buf);
+
+        u8[0] = data[0];
+        me.player.god = data[1] === 1;
+        u8[1] = data[1];
+
+        u16[1] = me.player.id;
+        global.maps[me.mapName].broadcast(buf);
+    },
+    // 9 - change ship
+    (data, me) => {
+        if(me.mapName === '' || data.byteLength !== 8) return;
+        const f32 = new Float32Array(data.buffer);
+        me.player.ship = data[1] === 1;
+        me.player.shipAngle = f32[1];
+        const u16 = new Uint16Array(data.buffer);
+        u16[1] = me.player.id;
+        global.maps[me.mapName].broadcast(data);
+    },
+    // 10 - change ship angle
+    (data, me) => {
+        if(me.mapName === '' || data.byteLength !== 12) return;
+        const f32 = new Float32Array(data.buffer);
+        me.player.shipAngle = f32[1];
+        const u16 = new Uint16Array(data.buffer);
+        u16[1] = me.player.id;
+        global.maps[me.mapName].broadcast(data);
+    }
 ]
 
 global.send = (client, msg) => {
@@ -210,9 +242,9 @@ global.broadcastEveryone = (msg) => {
 
 function changeMap(me, newMapName='winroom'){
     // 1. remove from old map .1
-    if(me.player.mapName !== '') removeFromMap(me);
+    if(me.mapName !== '') removeFromMap(me);
 
     // 2. add to new map (winroom) .2
-    me.player.mapName = newMapName;
+    me.mapName = newMapName;
     addToMap(me, newMapName);
 }

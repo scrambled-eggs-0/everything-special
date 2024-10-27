@@ -123,3 +123,10 @@ C(1,[],[22],{h:200,w:200,y:4200,x:2500,mapName:'posc'});
 C(1,[],[22],{h:200,w:200,y:6300,x:6600,mapName:'popb'});
 
 C(1,[],[22],{h:200,w:200,y:6900,x:6100,mapName:'poca'});
+
+C(1,[],[22],{h:200,w:200,y:4200,x:2800,mapName:'pos'});
+
+C(1,[],[22],{h:100*2,w:100*2,y:2100*2+200,x:4650*2,mapName:'pospd'});
+
+C(1,[],[27],{x:5000,y:4000,w:100,h:100,changeShipStateTo: true, initialShipAngle: -Math.PI / 2, shipTurnSpeed: 0.033});
+C(1,[],[27],{x:5200,y:4000,w:100,h:100,changeShipStateTo: false, initialShipAngle: -Math.PI / 2, shipTurnSpeed: 0.033});

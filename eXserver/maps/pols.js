@@ -25487,14 +25487,14 @@ var typeMap = {
     },
     'trans': {
         type: [1,[],[20]],
-        customMap: () => {
-            return {hex: '#000000'}
+        customMap: (params) => {
+            return {hex: '#000000', alpha: params.opaq};
         }
     },
     'block': {
         type: [1,[],[20]],
         customMap: (params) => {
-            return {hex: params.color};
+            return {hex: params.color, alpha: 1};
         }
     },
     'circle-normal': {
