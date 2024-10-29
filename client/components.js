@@ -99,8 +99,16 @@ function interpolate(start, end, t){
     return (1-t) * start + t * end;
 }
 
+// Most of the times in eX you're at terminal velocity so it's a good approximation
+// to the unsolvable integral (no closed form) of acceleration + drag equation.
+// we solve for terminal speed with (xv + xa*dt)e^(fric*dt)=xv, solving for xv
+// gives this function. To correct speeds at different dts, xv *= term(dt2)/term(dt1).
+function term(d,f){
+    return d === 0 ? 0 : -(Math.exp(f*d) - 1) / (Math.exp(f*d) * d);
+}
+
 let res = new SAT.Response();
-let angle, collided = false;
+let angle, collided = false, fac;
 function simulate(){
     // player simulation
     const player = window.players[window.selfId];
@@ -112,8 +120,9 @@ function simulate(){
     }
 
     if(window.isExClient === true && player.dead === false) {
-        player.xa = (input.right - input.left) * player.speed * dt / 16.66;
-        player.ya = (input.down - input.up) * player.speed * dt / 16.66;
+        fac = term(dt, player.friction);
+        player.xa = (input.right - input.left) * player.speed;
+        player.ya = (input.down - input.up) * player.speed;
 
         if(player.ship === false){
             if(input.shift === true) {
@@ -126,8 +135,8 @@ function simulate(){
                 }
             }
     
-            player.xv += player.xa * player.axisSpeedMultX;
-            player.yv += player.ya * player.axisSpeedMultY;
+            player.xv += player.xa * player.axisSpeedMultX * dt;
+            player.yv += player.ya * player.axisSpeedMultY * dt;
         } else {
             player.shipAngle += player.xa * player.shipTurnSpeed;
 
@@ -135,11 +144,11 @@ function simulate(){
             player.yv -= Math.sin(player.shipAngle) * player.ya * player.axisSpeedMultY;
         }
 
-        player.pos.x += player.xv * dt;
-        player.pos.y += player.yv * dt;
+        player.xv *= Math.exp(player.friction * dt);
+        player.yv *= Math.exp(player.friction * dt);
 
-        player.xv *= Math.pow(player.friction, dt / 16.66)//interpolate(player.xv, 0, 1 - Math.exp(player.friction * dt / 16.66));
-        player.yv *= Math.pow(player.friction, dt / 16.66)//1 - Math.exp(player.friction * dt / 16.66);
+        player.pos.x += player.xv * dt * fac;
+        player.pos.y += player.yv * dt * fac;
     } else if(window.dragging === true && player.dead === false){
         if(player.axisSpeedMultX === 0 || player.axisSpeedMultY === 0) angle = Math.atan2((window.mouseY - player.pos.y), (window.mouseX - player.pos.x));
         else angle = Math.atan2((window.mouseY - player.pos.y) * player.axisSpeedMultX, (window.mouseX - player.pos.x) * player.axisSpeedMultY);
@@ -229,7 +238,11 @@ function simulate(){
 
     if(player.onSafe === true){
         player.onSafe = false;
-        player.dead = false;
+        if(player.timeTrapOverrideSafe === true){
+            player.timeTrapOverrideSafe = false;
+        } else {
+            player.dead = false;
+        }
     }
 
     // bounding the player by the walls
@@ -961,7 +974,7 @@ const initEffectMap = [
     /*changeMap*/
     (o, params) => {
         o.mapName = params.mapName;
-        // difficulty?
+        o.difficulty = window.mapDifficulties[params.mapName] ?? 0;
     },
     /*tornado*/
     (o, params) => {
@@ -1228,7 +1241,7 @@ const effectMap = [
         o.timeTrapIntersecting = true;
         o.timeTrapTime -= dt;
         if(o.timeTrapTime < 0){
-            if(o.timeTrapToKill === true) p.dead = true;
+            if(o.timeTrapToKill === true) p.dead = p.timeTrapOverrideSafe = true;
             o.timeTrapTime = 0;
         }
     },
@@ -2179,24 +2192,59 @@ const renderEffectMap = [
     },
     /*changeMap*/
     (o) => {
-        // difficulty images?
-        let [middleX, topY] = generateTopLeftCoordinates(o);
-        middleX += o.dimensions.x / 2;
-        ctx.font = `${o.dimensions.x / 3.5}px Inter`;
-        ctx.fillStyle = 'white';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(
-            o.mapName,
-            middleX,
-            topY - o.dimensions.y / 4
-        );
+        // ctx.fillStyle = `hsl(${window.time/12},50%,50%)`;
+        // ctx.shadowColor = ctx.fillStyle;
+        // ctx.shadowBlur = 15;
+        // ctx.cleanUpFunction = () => {
+        //     ctx.shadowBlur = 0;
+        // }
 
-        ctx.fillStyle = `hsl(${window.time/12},50%,50%)`;
-        ctx.shadowColor = ctx.fillStyle;
-        ctx.shadowBlur = 15;
+        let t = (1+Math.sin(window.time / 600))/2 * (o.difficulty % 1);
+
+        ctx.fillStyle = blendColor(difficultyImageColors[Math.floor(o.difficulty)],difficultyImageColors[Math.min(8,Math.ceil(o.difficulty))],t);
+
         ctx.cleanUpFunction = () => {
-            ctx.shadowBlur = 0;
+            let [topX, topY] = generateTopLeftCoordinates(o);
+
+            if(o.dimensions.x > o.dimensions.y){
+                ctx.translate(o.dimensions.x - o.dimensions.y + topX, topY);
+            } else {
+                ctx.translate(topX, o.dimensions.y - o.dimensions.x + topY);
+            }
+
+            ctx.lineCap = 'round';
+            ctx.globalAlpha = t;
+            difficultyImageMap[Math.min(8,Math.ceil(o.difficulty))](Math.min(o.dimensions.x, o.dimensions.y));
+
+            ctx.globalAlpha = 1 - t;
+            difficultyImageMap[Math.floor(o.difficulty)](Math.min(o.dimensions.x, o.dimensions.y));
+            ctx.lineCap = 'square';
+            ctx.globalAlpha = 1;
+
+            if(o.dimensions.x > o.dimensions.y){
+                ctx.translate(-(o.dimensions.x - o.dimensions.y + topX), -topY);
+            } else {
+                ctx.translate(-topX, -(o.dimensions.y - o.dimensions.x + topY));
+            }
+
+            ctx.font = `${o.dimensions.x / 3.5}px Inter`;
+            ctx.fillStyle = 'white';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(
+                o.mapName.toUpperCase().replace('O','o'),
+                topX + o.dimensions.x / 2,
+                topY - o.dimensions.y / 4
+            );
+
+            // // line marking - scrapped
+            // ctx.fillStyle = 'black';
+            // ctx.fillRect(
+            //     topX,
+            //     topY + (1 - o.difficulty%1) * (o.dimensions.y*0.95),
+            //     o.dimensions.x / 5,
+            //     o.dimensions.y * .05
+            // )
         }
     },
     /*tornado*/
@@ -2255,6 +2303,236 @@ const renderEffectMap = [
     }
 ]
 
+const difficultyImageColors = window.difficultyImageColors = [
+    /*0 - Peaceful*/
+    "#6cd95b",
+    /*1 - Moderate*/
+    "#58ccb3",
+    /*2 - Difficult*/
+    "#0a77bf",
+    /*3 - Hardcore*/
+    "#3528e0",
+    /*4 - Exhausting*/
+    "#a142c9",
+    /*5 - Relentless*/
+    "#e32d8b",
+    /*6 - Agonizing*/
+    "#fc5434",
+    /*7 - Terrorizing*/
+    "#fc3a3a",
+    /*8 - Cataclysmic*/
+    "#c95d5d"
+]
+
+const difficultyImageMap = window.difficultyImageMap = [
+    /*0 - Peaceful*/
+    (size) => {
+        ctx.globalAlpha *= 0.3;
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = size * 3 / 40;
+
+        ctx.beginPath();
+        ctx.arc(size/2, size/2, size / 4, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.closePath();
+    },
+    /*1 - Moderate*/
+    (size) => {
+        ctx.strokeStyle = "#288a75";
+        ctx.lineWidth = size * 3 / 40;
+
+        ctx.beginPath();
+        ctx.arc(size * 5/12, size * 5/12, size / 4, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.arc(size * 7/12, size * 7/12, size / 4, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.closePath();
+    },
+    /*2 - Difficult*/
+    (size) => {
+        ctx.globalAlpha *= 0.3;
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = size * 3 / 40;
+        ctx.strokeRect(size / 4, size / 4, size / 2, size / 2);
+    },
+    /*3 - Hardcore*/
+    (size) => {
+        ctx.globalAlpha *= 0.3;
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = size * 3 / 40;
+        ctx.strokeRect(size / 6, size / 6, size * 5 / 12, size * 5 / 12);
+        ctx.strokeRect(size * 5 / 12, size * 5 / 12, size * 5 / 12, size * 5 / 12);
+    },
+    /*4 - Exhausting*/
+    (size) => {
+        ctx.globalAlpha *= 0.3;
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = size * 3 / 40;
+
+        ctx.beginPath();
+        ctx.lineTo(size * 5 / 24, size * 12 / 24);
+        ctx.lineTo(size * 12 / 24, size * 19 / 24);
+        ctx.lineTo(size * 19 / 24, size * 12 / 24);
+        ctx.lineTo(size * 12 / 24, size * 5 / 24);
+        ctx.lineTo(size * 5 / 24, size * 12 / 24);
+        ctx.stroke();
+        ctx.closePath();
+    },
+    /*5 - Relentless*/
+    (size) => {
+        ctx.strokeStyle = "#991d5d";
+        ctx.lineWidth = size * 3 / 40;
+        ctx.beginPath();
+        ctx.lineTo(size * 1 / 6, size * 3 / 6);
+        ctx.lineTo(size * 3 / 6, size * 5 / 6);
+        ctx.lineTo(size * 5 / 6, size * 3 / 6);
+        ctx.lineTo(size * 3 / 6, size * 1 / 6);
+        ctx.lineTo(size * 1 / 6, size * 3 / 6);
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.strokeRect(size * 5 / 24, size * 5 / 24, size * 14 / 24, size * 14 / 24);
+    },
+    /*6 - Agonizing*/
+    (size) => {
+        ctx.fillStyle = "#d94a2e";
+        ctx.fillRect(0, size * 80 / 120, size * 120 / 120, size * 40 / 120);
+        ctx.fillRect(size * 40 / 120, size * 60 / 120, size * 40 / 120, size * 20 / 120);
+        ctx.beginPath();
+        ctx.lineTo(0, size * 80 / 120);
+        ctx.lineTo(size * 20 / 120, size * 40 / 120);
+        ctx.lineTo(size * 40 / 120, size * 80 / 120);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.lineTo(size * 40 / 120, size * 60 / 120);
+        ctx.lineTo(size * 60 / 120, size * 20 / 120);
+        ctx.lineTo(size * 80 / 120, size * 60 / 120);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.lineTo(size * 80 / 120, size * 80 / 120);
+        ctx.lineTo(size * 100 / 120, size * 40 / 120);
+        ctx.lineTo(size * 120 / 120, size * 80 / 120);
+        ctx.fill();
+        ctx.closePath();
+    },
+    /*7 - Terrorizing*/
+    (size) => {
+        ctx.fillStyle = "#d63131";
+
+        ctx.fillRect(size * 40 / 120, 0, size * 40 / 120, size * 20 / 120);
+        ctx.fillRect(size * 40 / 120, size * 100 / 120, size * 40 / 120, size * 20 / 120);
+
+        ctx.beginPath();
+        ctx.lineTo(0, size * 120 / 120);
+        ctx.lineTo(size * 20 / 120, size * 80 / 120);
+        ctx.lineTo(size * 40 / 120, size * 120 / 120);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.lineTo(size * 40 / 120, size * 100 / 120);
+        ctx.lineTo(size * 60 / 120, size * 60 / 120);
+        ctx.lineTo(size * 80 / 120, size * 100 / 120);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.lineTo(size * 80 / 120, size * 120 / 120);
+        ctx.lineTo(size * 100 / 120, size * 80 / 120);
+        ctx.lineTo(size * 120 / 120, size * 120 / 120);
+        ctx.fill();
+        ctx.closePath();
+    
+        ctx.beginPath();
+        ctx.lineTo(0, 0);
+        ctx.lineTo(size * 20 / 120, size * 40 / 120);
+        ctx.lineTo(size * 40 / 120, 0);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.lineTo(size * 40 / 120, size * 20 / 120);
+        ctx.lineTo(size * 60 / 120, size * 60 / 120);
+        ctx.lineTo(size * 80 / 120, size * 20 / 120);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.lineTo(size * 80 / 120, 0);
+        ctx.lineTo(size * 100 / 120, size * 40 / 120);
+        ctx.lineTo(size * 120 / 120, 0);
+        ctx.fill();
+        ctx.closePath();
+    },
+    /*8 - Cataclysmic*/
+    (size) => {
+        ctx.fillStyle = "#8c4141";
+
+        ctx.beginPath();
+        ctx.lineTo(0, 0);
+        ctx.lineTo(size * 40 / 120, 0);
+        ctx.lineTo(0, size * 40 / 120);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.lineTo(size * 40 / 120, 0);
+        ctx.lineTo(size * 60 / 120, size * 20 / 120);
+        ctx.lineTo(size * 80 / 120, 0);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.lineTo(size * 120 / 120, 0);
+        ctx.lineTo(size * 80 / 120, 0);
+        ctx.lineTo(size * 120 / 120, size * 40 / 120);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.lineTo(size * 120 / 120, size * 40 / 120);
+        ctx.lineTo(size * 100 / 120, size * 60 / 120);
+        ctx.lineTo(size * 120 / 120, size * 80 / 120);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.lineTo(size * 120 / 120, size * 120 / 120);
+        ctx.lineTo(size * 80 / 120, size * 120 / 120);
+        ctx.lineTo(size * 120 / 120, size * 80 / 120);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.lineTo(size * 40 / 120, size * 120 / 120);
+        ctx.lineTo(size * 60 / 120, size * 100 / 120);
+        ctx.lineTo(size * 80 / 120, size * 120 / 120);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.lineTo(0, size * 120 / 120);
+        ctx.lineTo(size * 40 / 120, size * 120 / 120);
+        ctx.lineTo(0, size * 80 / 120);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.lineTo(0, size * 80 / 120);
+        ctx.lineTo(size * 20 / 120, size * 60 / 120);
+        ctx.lineTo(0, size * 40 / 120);
+        ctx.fill();
+        ctx.closePath();
+    },
+];
+
 // an obstacle is an ECS
 const obstacles = window.obstacles = [];
 
@@ -2268,7 +2546,7 @@ window.createPlayer = () => {
     player.lastTouchingNormalIndexes = [];
     player.renderRadius = player.lastAliveRadius = player.sat.r;
     player.xv = player.yv = player.xa = player.ya = 0;
-    player.speed = player.baseSpeed = 0.43;
+    player.speed = player.baseSpeed = 0.717; // old phys: 0.43
     player.dead = false;
     player.onSafe = false;
     player.touchingWall = false;
@@ -2276,8 +2554,9 @@ window.createPlayer = () => {
     player.forces = [];
     player.id = undefined;
     player.dev = true; /*dev only for players[selfId]*/ player.god = false;
-    player.friction = 0.4;
+    player.friction = -0.91629073187 / 16.66//old phys: 0.4 formula: fric = ln(oldphys)/16.66
     player.ship = false; player.shipAngle = 0; player.shipTurnSpeed = Math.PI * 3;
+    player.timeTrapOverrideSafe = false;
     return player;
 }
 

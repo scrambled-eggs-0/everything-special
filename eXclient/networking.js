@@ -175,6 +175,7 @@ const messageMap = [
         const f32 = new Float32Array(data.buffer);
         const u16 = new Uint16Array(data.buffer);
         const id = u16[1];
+        if(id === window.selfId) return;
         window.players[id].shipAngle = f32[1];
     }
 ]

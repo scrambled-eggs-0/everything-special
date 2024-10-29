@@ -2,6 +2,7 @@
 
 import './utils.js';
 import '../client/components.js';
+import './maps/_difficulty.js';
 global.C = window.C;
 
 // serializing messages
@@ -43,6 +44,7 @@ const __dirname = path.dirname(__filename); // get the name of the directory
 const directory = fs.opendirSync(path.join(__dirname, "maps"));
 let file;
 while((file=directory.readSync()) !== null){validPaths[`./maps/${file.name}`] = true;}
+delete validPaths[`./maps/_difficulty.js`];
 directory.closeSync();
 
 async function createMap(name){

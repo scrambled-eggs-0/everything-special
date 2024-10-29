@@ -24,6 +24,9 @@ import '../webpack/webpack.js';
 // serializing messages
 import { unpack, pack } from 'msgpackr';
 
+// connect to database and useful fns 
+import db from './db.js';
+
 const PORT = 3000;
 
 const clients = global.clients = [];

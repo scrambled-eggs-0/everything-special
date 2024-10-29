@@ -15119,6 +15119,23 @@ for(let i = 0; i < obs.length; i++){
             }
         },});\n`;
         counter++;
+    } else if(o.type === 'block' || o.type === 'trans'){
+        o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
+        str += `C(1,[],[20],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},
+            cr:(e)=>{
+                ctx.beginPath();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = ctx.fillStyle = ${o.type === 'trans' ? "colors.tile" : '"' + (o.hex ?? o.color) + '"'};
+                ctx.globalAlpha = ${o.type === 'trans' ? o.opaq ?? 1 : (o.color === "#ffffff" ? 0.5 : 1)};
+                ctx.rect(e.pos.x, e.pos.y, e.dimensions.x, e.dimensions.y);
+                ctx.fill();
+                ctx.stroke();
+                ctx.closePath();
+                ctx.globalAlpha = 1;
+            }
+        });\n`;
+        counter++;
+        continue;
     }
 
     if(typeDef === undefined) {

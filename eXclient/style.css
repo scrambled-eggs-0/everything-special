@@ -1,12 +1,3 @@
-/* <div class="menu">
-    <div class="titleIsland">
-        <div class="title">
-            Unnamed Dodging Game
-        </div>
-    <input type="text" class="nameInput" autocomplete="off" maxlength="16" placeholder="" autofocus></input>
-    </div>
-</div> */
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
 * {
@@ -53,11 +44,17 @@ body {
     top: 75px;
 }
 
+.playForm {
+    display: flex;
+    flex-direction: column;
+}
+
 .title {
     position: relative;
     top: -50px;
     font-size: 3.5rem;
     text-shadow: 0px 0px 15px white;
+    user-select: none;
 }
 
 .hidden {

@@ -1,0 +1,39 @@
+make the menu screen have 3 (5) animations. Those being:
+
+starfield
+perlin noise
+particles
+
+all from nova, just copypaste.
+
+fixed seed rng for speedruns (/setseed)
+
+discord bot announcing wins
+
+leaderboard
+
+timer
+
+ok so this is what i'll do in order:
+- fix obstacles on non-60 fps
+- fix some obstacle bugs in current maps
+    - circleSlice
+- accounts and logging in
+    - create account screen w/ flowr animation in, eX style
+    - star field animation (probably sep page or make it not load on a normal gp because three.js is expensive)
+- get all maps in the game
+- music system + get all the specific musics in for all the maps
+- gameloop (spawn in the tutorial, end of tutorial you create an account, menu screen is never seen again)
+- make accounts save progress, stats
+    - format: {mapName: [total attempts, total wins, total solo wins, fastest win, total time spent]}
+- powerups death timer, invincibility, dash, grapple and grapple point obstacle 
+- sync map system. When you enter a map that another player is in, they send the state 
+- fix all bugs with current maps
+- map editor w/ custom code (resizable bar like leetcode)
+    - hook up with omni?
+- level sharing system (planet in game where you can browse levels)
+- new tutorial map w/ cone mapping
+    - should be simple but also fun but also suprising like a yt intro
+- trailer (should be working on continuously for like an hour a day)
+- anticheat, load testing, security
+    - players should simulate other players, get some bonus if they catch hackers (to incentivise)

@@ -13863,7 +13863,7 @@ var typeMap = {
                 outerSize: params.or,
                 innerOpacity: 0,
                 outerOpacity: params.o,
-                r: params.r ?? params.radius
+                r: (params.r ?? params.radius) * 2
             }
         }
     },
@@ -16008,7 +16008,7 @@ for(let i = 0; i < len; i++){
 //     "inView": false
 // },
 
-var alreadyLogged = {};
+var alreadyLogged = {switchLava: true, color: true};
 
 var str = '';
 
@@ -16148,7 +16148,7 @@ for(let i = 0; i < obs.length; i++){
             cr:(e)=>{
                 ctx.beginPath();
                 ctx.lineWidth = 2;
-                ctx.strokeStyle = ctx.fillStyle = ${o.type === 'trans' ? "colors.background" : (o.hex ?? o.color)};
+                ctx.strokeStyle = ctx.fillStyle = ${o.type === 'trans' ? "colors.tile" : (o.hex ?? o.color)};
                 ctx.globalAlpha = ${o.opaq ?? 1};
                 ctx.rect(e.pos.x, e.pos.y, e.dimensions.x, e.dimensions.y);
                 ctx.fill();
@@ -16158,6 +16158,107 @@ for(let i = 0; i < obs.length; i++){
             }
         });\n`;
         counter++;
+        continue;
+    } else if(o.type === 'morphnormal'){
+        o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
+        str += `var morphTriggered${o.morphId} = false;
+        C(1,[],[0],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},
+            cr:(e)=>{
+                if(morphTriggered${o.morphId}){
+                    e.pos.x = -1E9;
+                    return;
+                }
+                ctx.beginPath();
+                let [middleX, middleY] = generateTopLeftCoordinates(e);
+                middleX += e.dimensions.x / 2;
+                middleY += e.dimensions.y / 2;
+                ctx.translate(middleX, middleY);
+                ctx.fillStyle = colors.tile;
+                for(let i = 0; i < 100; i++){
+                    const t = Math.PI * 2 * i / 100;
+                    const a = Math.sin(window.time / 1000) * 8;
+
+                    const p = Math.max(Math.abs(Math.cos(t)),Math.abs(Math.sin(t)));
+                    let x = e.dimensions.x/2 *Math.cos(t) / p * (Math.cos(8*t + a) / 8 + 0.9);
+                    let y = e.dimensions.y/2 * Math.sin(t) / p * (Math.sin(8*t + a) / 8 + 0.9);
+
+                    if(i === 0){
+                        ctx.moveTo(x,y);
+                    } else {
+                        ctx.lineTo(x,y);
+                    }
+                }
+                ctx.fill();
+                ctx.closePath();
+                ctx.translate(-middleX, -middleY);
+            }
+        });\n`;
+        // {
+        //     "x": 2900,
+        //     "y": 3400,
+        //     "w": 50,
+        //     "h": 50,
+        //     "type": "morphnormal",
+        //     "active": true,
+        //     "morphId": 1,
+        //     "inView": false
+        // },
+        continue;
+    } else if(o.type === 'morphbutton'){
+        // {
+        //     "x": 550,
+        //     "y": 1000,
+        //     "w": 50,
+        //     "h": 50,
+        //     "morphId": 3,
+        //     "type": "morphbutton",
+        //     "active": true,
+        //     "maxTimedObstacles": 0,
+        //     "timedObstacles": 0,
+        //     "inView": false
+        // },
+        o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
+        str += `var morphTriggered${o.morphId} = false;
+        C(1,[],[5],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},
+            cr:(e)=>{
+                ctx.globalAlpha = 0.8;
+                if (morphTriggered${o.morphId} === true) {
+                    ctx.globalAlpha = 0.3;
+                }
+
+                ctx.strokeStyle = ctx.fillStyle = 'white';
+
+                let [topX, topY] = generateTopLeftCoordinates(e);
+
+                ctx.fillRect(topX, topY, e.dimensions.x, e.dimensions.y);
+                ctx.globalAlpha *= 1 / 0.8;
+                ctx.strokeRect(topX, topY, e.dimensions.x, e.dimensions.y);
+
+
+                ctx.fillStyle = colors.tile; //'rgb(12, 12, 12)'//"#c4c4c4"//'#0652cc';
+                ctx.fillRect(
+                    topX + 15,
+                    topY + 15,
+                    e.dimensions.x - 30,
+                    e.dimensions.y - 30
+                );
+
+                ctx.globalAlpha = 1;
+            },
+            ef:(e) => {
+                morphTriggered${o.morphId} = true;    
+            }
+        });\n`;
+        // {
+        //     "x": 2900,
+        //     "y": 3400,
+        //     "w": 50,
+        //     "h": 50,
+        //     "type": "morphnormal",
+        //     "active": true,
+        //     "morphId": 1,
+        //     "inView": false
+        // },
         continue;
     }
 
@@ -16207,6 +16308,7 @@ for(let i = 0; i < obs.length; i++){
     str += `C(${typeString},${paramString})\n`;
 }
 
+C(1,[],[0],{h:100,w:100,y:11900,x:3900});
 eval(str);
 
 mapDimensions.x=8000;

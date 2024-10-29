@@ -20,6 +20,7 @@ const environment = window.environment = typeof location === 'undefined' ? 'serv
 
 const memoizedColors = {};
 
+window.blendColor = blendColor;
 function blendColor(color1, color2, t) {
 	const memoizedIndex = color1 + '_' + color2 + '_' + t;
 	if (memoizedColors[memoizedIndex] !== undefined) {

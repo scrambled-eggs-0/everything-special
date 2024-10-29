@@ -1,5 +1,5 @@
 const title = document.querySelector('.title');
-const input = document.querySelector('.usernameInput');
+const input = document.querySelector('.nameInput');
 
 const nextButton = document.querySelector('.nextButton');
 const createAccountButton = document.querySelector('.createButton');

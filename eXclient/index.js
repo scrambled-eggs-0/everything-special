@@ -20,14 +20,17 @@ import '../client/sound.js';
 import Utils from '../client/utils.js';
 const {encodeAtPosition} = Utils;
 
+// mapName to difficulty dict
+import '../eXserver/maps/_difficulty.js';
+
 // joining game
 const menu = document.querySelector('.menu');
 const form = document.querySelector('.playForm');
-const usernameInput = document.querySelector('.nameInput');
+const nameInput = document.querySelector('.nameInput');
 const gui = window.gui = document.querySelector('.gui');
 window.state = 'menu';
 form.onsubmit = (e) => {
-    window.username = usernameInput.value;
+    window.username = nameInput.value;
 
     const buf = new Uint8Array(window.username.length + 1);
     buf[0] = 0;// type 0 - set username and join game
@@ -38,11 +41,11 @@ form.onsubmit = (e) => {
 
 window.startGame = () => {
     window.state = 'game';
-    usernameInput.value = '';
+    nameInput.value = '';
     menu.classList.add('fade-out');
     gui.classList.remove('hidden');
     menu.onanimationend = () => {
-        usernameInput.blur();
+        nameInput.blur();
         menu.classList.remove('fade-out');
         menu.classList.add('hidden');
     }

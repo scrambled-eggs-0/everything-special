@@ -85,10 +85,6 @@ body {
     margin: 0; */
 }/*padding: 2px top and bottom, 4px right and left (addition)*/
 
-/* .passwordInput {
-    margin-top: 2.72vh;
-} */
-
 .buttonDiv {
     position: relative;
     top: 2.86vh;
@@ -119,7 +115,7 @@ button {
     display: none;
 }
 
-.usernameInput {
+.nameInput {
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */

@@ -128,5 +128,54 @@ C(1,[],[22],{h:200,w:200,y:4200,x:2800,mapName:'pos'});
 
 C(1,[],[22],{h:100*2,w:100*2,y:2100*2+200,x:4650*2,mapName:'pospd'});
 
-C(1,[],[27],{x:5000,y:4000,w:100,h:100,changeShipStateTo: true, initialShipAngle: -Math.PI / 2, shipTurnSpeed: 0.033});
-C(1,[],[27],{x:5200,y:4000,w:100,h:100,changeShipStateTo: false, initialShipAngle: -Math.PI / 2, shipTurnSpeed: 0.033});
+var difficultyChangeTime, maxDifficultyChangeTime;
+difficultyChangeTime = maxDifficultyChangeTime = 1000;
+C(1,[],[22],{h:700,w:700,y:3300,x:4600,mapName:'podc',sf:(o) => {
+        o.difficulty += window.dt / 1000;
+        while(o.difficulty >= 9) o.difficulty -= 9;
+    },
+    cr:(o)=>{
+        let t = (o.difficulty % 1);
+
+        ctx.beginPath();
+        ctx.fillStyle = window.blendColor(difficultyImageColors[Math.floor(o.difficulty)],difficultyImageColors[Math.ceil(o.difficulty)%9],t);
+        o.renderShape(o);
+        ctx.fill();
+        ctx.closePath();
+
+        let [topX, topY] = generateTopLeftCoordinates(o);
+
+        if(o.dimensions.x > o.dimensions.y){
+            ctx.translate(o.dimensions.x - o.dimensions.y + topX, topY);
+        } else {
+            ctx.translate(topX, o.dimensions.y - o.dimensions.x + topY);
+        }
+
+        ctx.lineCap = 'round';
+        ctx.globalAlpha = t;
+        difficultyImageMap[Math.ceil(o.difficulty)%9](Math.min(o.dimensions.x, o.dimensions.y));
+
+        ctx.globalAlpha = 1 - t;
+        difficultyImageMap[Math.floor(o.difficulty)](Math.min(o.dimensions.x, o.dimensions.y));
+        ctx.lineCap = 'square';
+        ctx.globalAlpha = 1;
+
+        if(o.dimensions.x > o.dimensions.y){
+            ctx.translate(-(o.dimensions.x - o.dimensions.y + topX), -topY);
+        } else {
+            ctx.translate(-topX, -(o.dimensions.y - o.dimensions.x + topY));
+        }
+
+        ctx.font = `${o.dimensions.x / 3.5}px Inter`;
+        ctx.fillStyle = 'white';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(
+            o.mapName.toUpperCase().replace('O','o'),
+            topX + o.dimensions.x / 2,
+            topY - o.dimensions.y / 4
+        );
+    }
+});
+
+C(1,[],[0],{h:3000,w:1500,y:0,x:4200});

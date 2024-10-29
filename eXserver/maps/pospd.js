@@ -41516,7 +41516,7 @@ var typeMap = {
         type: [1,[],[17]],
         customMap: (params) => {
             //C(1,[],[17],{h:200,w:300,y:700,x:300,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:1.5,timeTrapMaxTime:300,});
-            const p = {timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:params.cdmult};
+            const p = {timeTrapToShowTenth:false,timeTrapToKill:true,timeTrapRecoverySpeed:params.cdmult};
 
             p.timeTrapMaxTime = params.maxTime * 1000;
             return p;
@@ -41973,6 +41973,87 @@ var typeMap = {
     //     "regenTime": 3,
     //     "inView": false
     // },
+    
+
+    // {
+    //     "x": 8550,
+    //     "y": 9500,
+    //     "radius": 300,
+    //     "type": "circle-hollow-slice",
+    //     "startAngle": 1.5707963267948966,
+    //     "endAngle": -1.5707963267948966,
+    //     "startPolygon": {
+    //         "points": [
+    //             [
+    //                 8550,
+    //                 9650
+    //             ],
+    //             [
+    //                 8550,
+    //                 9800
+    //             ]
+    //         ],
+    //         "type": "poly",
+    //         "props": {}
+    //     },
+    //     "endPolygon": {
+    //         "points": [
+    //             [
+    //                 8550,
+    //                 9350
+    //             ],
+    //             [
+    //                 8550,
+    //                 9200
+    //             ]
+    //         ],
+    //         "type": "poly",
+    //         "props": {}
+    //     },
+    //     "innerRadius": 150,
+    //     "toRotate": false,
+    //     "rotateSpeed": 0,
+    //     "renderType": "circle",
+    //     "inView": false
+    // },
+    'circle-hollow-slice': {
+        type: [4,[],[0]],
+        customMap: (params) => {
+            return {
+                r: params.radius * 2,
+                innerRadius: params.innerRadius * 2,
+                startSliceAngle: params.startAngle,
+                endSliceAngle: params.endAngle,
+                startSliceAngleRotateSpeed: params.rotateSpeed,
+                endSliceAngleRotateSpeed: params.rotateSpeed
+            }
+        }
+    },
+
+    'circle-slice': {
+        type: [4,[],[0]],
+        customMap: (params) => {
+            return {
+                r: params.radius * 2,
+                innerRadius: 0,
+                startSliceAngle: params.startAngle,
+                endSliceAngle: params.endAngle,
+                startSliceAngleRotateSpeed: 0,
+                endSliceAngleRotateSpeed: 0
+            }
+        }
+    },
+
+    'ship': {
+        type: [1,[],[27]],
+        customMap: (params) => {
+            return {
+                changeShipStateTo: params.state,
+                initialShipAngle: -Math.PI / 2,
+                shipTurnSpeed: Math.PI / 20
+            }
+        }
+    }
 }
 
 var enemyTypeMap = {
