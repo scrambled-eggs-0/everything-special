@@ -179,3 +179,15 @@ C(1,[],[22],{h:700,w:700,y:3300,x:4600,mapName:'podc',sf:(o) => {
 });
 
 C(1,[],[0],{h:3000,w:1500,y:0,x:4200});
+
+// circle-slice
+C(4,[],[0],{
+        x: 4700,
+        y: 5300,
+        r: 150,
+        innerRadius: 50,
+        startSliceAngle: 0,
+        endSliceAngle: Math.PI * 2,
+        startSliceAngleRotateSpeed: 0,//Math.random() / 100,
+        endSliceAngleRotateSpeed: 0,//Math.random() / 100
+    });

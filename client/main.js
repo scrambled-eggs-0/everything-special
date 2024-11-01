@@ -217,11 +217,10 @@ function renderTextSpecials(o, cols){
 // gameloop
 let lastTime, now, firstTime, accum, dt, offtabTime;
 lastTime = now = firstTime = Date.now();
-accum = dt = window.frames = offtabTime = 0;
-window.time = 0;
+accum = window.time = window.frames = offtabTime = 0;
+dt = 1;
 const FRAME_TIME = 1000 / 60;
 (function run(){
-    console.log('run');
     now = Date.now();
     dt = now - lastTime;
     accum += dt;

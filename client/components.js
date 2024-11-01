@@ -104,11 +104,11 @@ function interpolate(start, end, t){
 // we solve for terminal speed with (xv + xa*dt)e^(fric*dt)=xv, solving for xv
 // gives this function. To correct speeds at different dts, xv *= term(dt2)/term(dt1).
 function term(d,f){
-    return d === 0 ? 0 : -(Math.exp(f*d) - 1) / (Math.exp(f*d) * d);
+    return (1 - Math.exp(f*d)) / (Math.exp(f*d) * d);
 }
 
 let res = new SAT.Response();
-let angle, collided = false, fac;
+let angle, collided = false, fac=1;
 function simulate(){
     // player simulation
     const player = window.players[window.selfId];
@@ -124,24 +124,24 @@ function simulate(){
         player.xa = (input.right - input.left) * player.speed;
         player.ya = (input.down - input.up) * player.speed;
 
-        if(player.ship === false){
-            if(input.shift === true) {
-                if(player.god === true){
-                    player.xa *= 5;
-                    player.ya *= 5;
-                } else {
-                    player.xa *= 0.5;
-                    player.ya *= 0.5;
-                }
+        if(input.shift === true) {
+            if(player.god === true){
+                player.xa *= 5;
+                player.ya *= 5;
+            } else {
+                player.xa *= 0.5;
+                player.ya *= 0.5;
             }
-    
+        }
+
+        if(player.ship === false){
             player.xv += player.xa * player.axisSpeedMultX * dt;
             player.yv += player.ya * player.axisSpeedMultY * dt;
         } else {
-            player.shipAngle += player.xa * player.shipTurnSpeed;
+            player.shipAngle += player.xa * player.shipTurnSpeed * dt;
 
-            player.xv -= Math.cos(player.shipAngle) * player.ya * player.axisSpeedMultX;
-            player.yv -= Math.sin(player.shipAngle) * player.ya * player.axisSpeedMultY;
+            player.xv -= Math.cos(player.shipAngle) * player.ya * player.axisSpeedMultX * dt;
+            player.yv -= Math.sin(player.shipAngle) * player.ya * player.axisSpeedMultY * dt;
         }
 
         player.xv *= Math.exp(player.friction * dt);
@@ -149,6 +149,32 @@ function simulate(){
 
         player.pos.x += player.xv * dt * fac;
         player.pos.y += player.yv * dt * fac;
+
+        if(player.stopForces === true){
+            player.stopForces = false;
+            player.forces.length = 0;
+        } else {
+            for(let i = 0; i < player.forces.length; i++){
+                // each force uses the same differentials as the movement
+                // so that we dont get that jittering effect that comes
+                // from the variation of dt with diff approximations
+                // force format: [xv,yv,xa,ya,fric]
+                fac = term(dt, player.forces[i][4]); // ln(oldDecay) / 16.66 = newDecay
+        
+                // xv += xa * dt
+                player.forces[i][2] += player.forces[i][0] * dt;
+                player.forces[i][3] += player.forces[i][1] * dt;
+        
+                // xv *= e^(fric*dt)
+                player.forces[i][2] *= Math.exp(player.forces[i][4] * dt);
+                player.forces[i][3] *= Math.exp(player.forces[i][4] * dt);
+        
+                // x += xv * dt * fac
+                player.pos.x += player.forces[i][2] * dt * fac;
+                player.pos.y += player.forces[i][3] * dt * fac;
+                // console.log(player.forces[i][3] * fac * dt);
+            }
+        }
     } else if(window.dragging === true && player.dead === false){
         if(player.axisSpeedMultX === 0 || player.axisSpeedMultY === 0) angle = Math.atan2((window.mouseY - player.pos.y), (window.mouseX - player.pos.x));
         else angle = Math.atan2((window.mouseY - player.pos.y) * player.axisSpeedMultX, (window.mouseX - player.pos.x) * player.axisSpeedMultY);
@@ -158,28 +184,28 @@ function simulate(){
         if(Math.abs(player.yv) > Math.abs(player.pos.y - window.mouseY)) player.yv = window.mouseY - player.pos.y;
         player.pos.x += player.xv;
         player.pos.y += player.yv;
+
+        if(player.stopForces === true){
+            player.stopForces = false;
+            player.forces.length = 0;
+        } else {
+            for(let i = 0; i < player.forces.length; i++){
+                // [x, y, decay]
+                player.pos.x += player.forces[i][0] * dt/16.66;
+                player.pos.y += player.forces[i][1] * dt/16.66;
+                player.forces[i][0] *= Math.pow(player.forces[i][2], dt / 16.66);
+                player.forces[i][1] *= Math.pow(player.forces[i][2], dt / 16.66);
+                if(Math.abs(player.forces[i][0]) < 0.01 && Math.abs(player.forces[i][1]) < 0.01){
+                    player.forces.splice(i,1);
+                    i--;
+                    continue;
+                }
+            }
+        }    
     } else {
         player.xv = player.yv = 0;
     }
     player.axisSpeedMultX = player.axisSpeedMultY = 1;
-
-    if(player.stopForces === true){
-        player.stopForces = false;
-        player.forces.length = 0;
-    } else {
-        for(let i = 0; i < player.forces.length; i++){
-            // [x, y, decay]
-            player.pos.x += player.forces[i][0] * dt/16.66;
-            player.pos.y += player.forces[i][1] * dt/16.66;
-            player.forces[i][0] *= Math.pow(player.forces[i][2], dt / 16.66);
-            player.forces[i][1] *= Math.pow(player.forces[i][2], dt / 16.66);
-            if(Math.abs(player.forces[i][0]) < 0.01 && Math.abs(player.forces[i][1]) < 0.01){
-                player.forces.splice(i,1);
-                i--;
-                continue;
-            }
-        }
-    }    
 
     if(player.dead === true){
         player.renderRadius = player.lastAliveRadius;
@@ -381,6 +407,22 @@ window.isABColliding = (a,b) => {
     res.clear();
     return hasCollided;
 }
+function setForce(p, o, xv, yv, xa, ya, fric){
+    if(o.playerForceId === undefined/* || o.playerForceId !== p.id*/) /*{*/ o.playerForceId = p.forces.length;/* o.playerForcePlayerId = p.id; }*/
+    p.forces[o.playerForceId] = [xv, yv, xa, ya, fric];
+}
+
+function addForce(p, o, xv, yv, xa, ya, fric){
+    if(o.playerForceId === undefined) {
+        o.playerForceId = p.forces.length;
+        p.forces[o.playerForceId] = [xv, yv, xa, ya, fric];
+    } else {
+        p.forces[o.playerForceId][0] += xv;
+        p.forces[o.playerForceId][1] += yv;
+        p.forces[o.playerForceId][2] += xa;
+        p.forces[o.playerForceId][3] += ya;
+    }
+}
 
 const satMap = [
     /*circle*/
@@ -419,6 +461,10 @@ const satMap = [
     (p) => {
         const sat = new SAT.Circle(new SAT.Vector(p.x, p.y), p.r);
         const o = p;
+        o.startSliceAngle %= Math.PI * 2;
+        o.endSliceAngle %= Math.PI * 2;
+        if(o.startSliceAngle < 0) o.startSliceAngle += Math.PI * 2;
+        if(o.endSliceAngle < 0) o.endSliceAngle += Math.PI * 2;
         o.startSlice = new SAT.Polygon(new SAT.Vector(), [
             new SAT.Vector(Math.cos(o.startSliceAngle) * o.r, Math.sin(o.startSliceAngle) * o.r),
             new SAT.Vector(Math.cos(o.startSliceAngle) * o.innerRadius, Math.sin(o.startSliceAngle) * o.innerRadius),
@@ -1009,14 +1055,14 @@ const initEffectMap = [
     (o, params) => {
         // either a youtube url (https://youtube.com/watch/...) or a local filepath
         // that the client can access via a fetch req, e.g. sounds/... .mp3
-        o.path = params.path;
+        o.musicPath = params.musicPath;
     },
     /*changeShip*/
     (o, params) => {
         o.changeShipStateTo = params.changeShipStateTo;
         o.initialShipAngle = params.initialShipAngle;
         o.shipTurnSpeed = params.shipTurnSpeed;
-    }
+    },
 ]
 
 let freeVariable = -1;
@@ -1044,6 +1090,7 @@ const effectMap = [
 
         angle = Math.atan2(res.overlapV.y, res.overlapV.x);
 
+        // TODO FORCE
         p.forces.push([Math.cos(angle) * o.bounciness, Math.sin(angle) * o.bounciness, o.decay]);
     },
     /*custom*/
@@ -1134,7 +1181,8 @@ const effectMap = [
     },
     /*conveyor*/
     (p, res, o) => {
-        p.forces.push([Math.cos(o.conveyorAngle) * o.conveyorForce, Math.sin(o.conveyorAngle) * o.conveyorForce, o.conveyorFriction]);
+        addForce(p, o, 0, 0, Math.cos(o.conveyorAngle) * o.conveyorForce * 5 * dt/16.66, Math.sin(o.conveyorAngle) * o.conveyorForce * 5 * dt/16.66, Math.log(o.conveyorFriction) / 16.66);
+        // p.forces.push([Math.cos(o.conveyorAngle) * o.conveyorForce, Math.sin(o.conveyorAngle) * o.conveyorForce, o.conveyorFriction, 0, 0]);
     },
     /*platformer*/
     (p, res, o, id) => {
@@ -1142,7 +1190,8 @@ const effectMap = [
         o.jumpCooldown--;
 
         // add conveyor force
-        p.forces.push([Math.cos(o.platformerAngle) * o.platformerForce, Math.sin(o.platformerAngle) * o.platformerForce, o.platformerFriction]);
+        addForce(p, o, 0, 0, Math.cos(o.platformerAngle) * o.platformerForce, Math.sin(o.platformerAngle) * o.platformerForce, Math.log(o.platformerFriction) / 16.66);
+        // p.forces.push([Math.cos(o.platformerAngle) * o.platformerForce, Math.sin(o.platformerAngle) * o.platformerForce, o.platformerFriction, 0, 0]);
 
         const velocityMovedX = window.isExClient === true ? p.xv / Math.pow(p.friction, dt / 16.66) * dt : p.xv;
         const velocityMovedY = window.isExClient === true ? p.yv / Math.pow(p.friction, dt / 16.66) * dt : p.yv;
@@ -1162,7 +1211,7 @@ const effectMap = [
             o.canJump = true;
             // OLD: if we're within 30 degrees, jump; NEW: if the mouse is above the thumbs up in the rendering
             if(/*Math.abs(shortAngleDist(o.platformerAngle + Math.PI, playerVelAngle)) < Math.PI / 6*/(window.dragging === true || (window.isExClient === true && p.ya < -0.01)) && p.pos.y - window.mouseY > p.sat.r + 50){
-                p.forces.push([-Math.cos(o.platformerAngle) * o.jumpForce, -Math.sin(o.platformerAngle) * o.jumpForce, o.jumpFriction]);
+                // p.forces.push([-Math.cos(o.platformerAngle) * o.jumpForce, -Math.sin(o.platformerAngle) * o.jumpForce, o.jumpFriction, 0, 0]); // TODO FORCE
                 o.jumpCooldown = o.maxJumpCooldown;
             }
         } else {
@@ -1365,7 +1414,7 @@ const effectMap = [
     },
     /*changeMusic*/
     (p, res, o) => {
-        window.playMusic(o.path);
+        window.playMusic(o.musicPath);
     },
     /*changeShip*/
     (p, res, o) => {
@@ -1384,7 +1433,7 @@ const effectMap = [
         }
         
         p.ship = o.changeShipStateTo;
-    }
+    },
 ]
 
 const idleEffectMap = [
@@ -1705,7 +1754,7 @@ window.effectDefaultMap = [
         pushConversionRatio: 0.8
     },
     // changeMusic
-    {path: 'https://www.youtube.com/watch?v=OidXKRVVV70'},
+    {musicPath: 'https://www.youtube.com/watch?v=OidXKRVVV70'},
     // changeShip
     {changeShipStateTo: true, initialShipAngle: 0, shipTurnSpeed: Math.PI * 3},
 ]
@@ -2546,16 +2595,19 @@ window.createPlayer = () => {
     player.lastTouchingNormalIndexes = [];
     player.renderRadius = player.lastAliveRadius = player.sat.r;
     player.xv = player.yv = player.xa = player.ya = 0;
+    player.xf = player.yf = 0;
     player.speed = player.baseSpeed = 0.717; // old phys: 0.43
     player.dead = false;
     player.onSafe = false;
     player.touchingWall = false;
     player.stopForces = false;
+    player.requestForceId=()=>{return player.nextForceId++;}
+    player.nextForceId = 0;
     player.forces = [];
     player.id = undefined;
     player.dev = true; /*dev only for players[selfId]*/ player.god = false;
     player.friction = -0.91629073187 / 16.66//old phys: 0.4 formula: fric = ln(oldphys)/16.66
-    player.ship = false; player.shipAngle = 0; player.shipTurnSpeed = Math.PI * 3;
+    player.ship = false; player.shipAngle = 0; player.shipTurnSpeed = Math.PI * 3 / 16.66;
     player.timeTrapOverrideSafe = false;
     return player;
 }

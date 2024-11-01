@@ -227,7 +227,12 @@ const messageMap = [
         const u16 = new Uint16Array(data.buffer);
         u16[1] = me.player.id;
         global.maps[me.mapName].broadcast(data);
-    }
+    },
+    // 11 - join tutorial. Only used first time, joining tutorial from hub is handed with joinMap
+    (data, me) => {
+        if(me.mapName !== '') return;
+        changeMap(me, tutorialMapName);
+    },
 ]
 
 global.send = (client, msg) => {

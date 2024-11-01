@@ -1,8 +1,13 @@
 const canvas = window.canvas = document.getElementById('canvas');
-const ctx = window.ctx = canvas.getContext('2d');
+let ctx = window.ctx = canvas.getContext('2d');
 
 const camera = window.camera = {
-    x: 0, y: 0, scale: 1
+    x: 0, y: 0, scale: 1,
+    /*3d*/
+    z: 1,
+    basis1: [1, 0, 0],
+    basis2: [0, 1, 0],
+    normal: [0, 0, 1]
 }
 
 window.defaultColors = {
@@ -30,6 +35,7 @@ window.colors = {
 window.selfId = undefined;
 window.tileSize = 100;
 window.renderDebug = false;
+window.distortionsActive = false;
 // const fullscreen = {
 //     ratio: 9 / 16,
 //     zoom: 1800,
@@ -268,7 +274,7 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
         ctx.fillStyle = player.dead === true ? 'red' : 'black';
 
         const lastRadius = player.sat.r;
-        player.sat.r = player.renderRadius;
+        player.sat.r = Math.abs(player.renderRadius);
         
         ctx.beginPath();
         player.renderShape(player);
@@ -382,6 +388,8 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
     //         outerInterp: {size:0.6,r:0,g:0,b:0,opacity:1}
     //     }
     // }
+
+    if(window.distortionsActive === true) window.drawGtx();
 }
 
 function interpolate(start, end, t){
@@ -425,9 +433,12 @@ function resize(){
 
     // ctx.imageSmoothingEnabled = false;
     // canvas._scaleMult = 0.5;
-    canvas.zoom = 1;window.resize([canvas, document.querySelector('.gui')]);
+    canvas.zoom = 1;window.resizeElements([canvas, document.querySelector('.gui')]);
     canvas.w = canvas.width / canvas.zoom / window.camera.scale;
     canvas.h = canvas.height / canvas.zoom / window.camera.scale;
+
+    // if we ever have to add another resize fn to this, make a window.resizeFns array.
+    if(window.distortionsActive === true) window.resizeGtx();
 }
 
 window.changeCameraScale = (scale) => {
@@ -448,7 +459,11 @@ window.changeCameraScale = (scale) => {
     ctx.translate((1-1/window.camera.scale)*canvas.w/2, (1-1/window.camera.scale)*canvas.h/2);
 }
 
-window.resize = function (elements) {
+window.setCanvasFrequentlyRead = () => {
+    ctx = canvas.getContext('2d', {willReadFrequently: true});
+}
+
+window.resizeElements = function (elements) {
     for (const element of elements) {
         if (element.width !== width) {
             element.width = width;
@@ -474,5 +489,10 @@ window.addEventListener('resize', function () {
 });
 resize();
 changeCameraScale(0.5);
+
+window.initDistortions = async (vs, fs) => {
+    await import('./distort.js');
+    window._initDistortions(vs, fs);
+}
 
 export default render;

@@ -11515,7 +11515,7 @@ var polsObs = [
         "w": 150,
         "h": 150,
         "type": "musicchange",
-        "musicPath": "/sounds/supernova.mp3",
+        "musicPath": "https://www.youtube.com/watch?v=5WXyCJ1w3Ks",
         "volume": 1,
         "startTime": 0,
         "inView": false
@@ -11526,7 +11526,7 @@ var polsObs = [
         "w": 150,
         "h": 150,
         "type": "musicchange",
-        "musicPath": "/sounds/ichor.mp3",
+        "musicPath": "https://www.youtube.com/watch?v=DBu1__I_2pY",
         "volume": 1,
         "startTime": 0,
         "inView": false
@@ -11537,7 +11537,7 @@ var polsObs = [
         "w": 50,
         "h": 50,
         "type": "musicchange",
-        "musicPath": "/sounds/corrosive.mp3",
+        "musicPath": "https://www.youtube.com/watch?v=M8QzvaDqZgA",
         "volume": 1,
         "startTime": 0,
         "inView": false
@@ -14684,7 +14684,7 @@ var polsObs = [
         "w": 150,
         "h": 150,
         "type": "musicchange",
-        "musicPath": "/sounds/the descent.mp3",
+        "musicPath": "https://www.youtube.com/watch?v=oTqqymOURAE&t=1s",
         "volume": 1,
         "startTime": 0,
         "inView": false
@@ -25852,6 +25852,19 @@ var typeMap = {
                 positiveDirectionOnly: true,
                 pushConversionRatio: 0.86
             }
+        }
+    },
+    'musicchange': {
+        type: [1,[],[26]],
+        customMap: (params) => {
+            console.log(params);
+            return {
+                x: params.x * 2,
+                y: params.y * 2,
+                w: params.w * 2,
+                h: params.h * 2,
+                musicPath: params.musicPath
+            };
         }
     }
 }

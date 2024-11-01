@@ -8212,7 +8212,7 @@ var obs = [
         "w": 200,
         "h": 200,
         "type": "musicchange",
-        "musicPath": "/sounds/highland hymn.mp3",
+        "musicPath": "https://www.youtube.com/watch?v=DmGUZgnT1q4",
         "volume": 1,
         "startTime": 0,
         "inView": false
@@ -12232,6 +12232,19 @@ var typeMap = {
             }
         }
     },
+    'musicchange': {
+        type: [1,[],[26]],
+        customMap: (params) => {
+            console.log(params);
+            return {
+                x: params.x * 2,
+                y: params.y * 2,
+                w: params.w * 2,
+                h: params.h * 2,
+                musicPath: params.musicPath
+            };
+        }
+    }
     // C(1,[],[10],{h:200,w:300,y:700,x:300,healSpeed:1,regenTime:100,maxStrength:60,});
     // {
     //     "x": 2950,

@@ -16,6 +16,7 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
 global.defaultMapName = 'hub';
+global.tutorialMapName = 'potb';
 
 global.maps = {};
 
@@ -28,6 +29,7 @@ global.window.mouseUpFunctions = [];
 global.window.mouseDownFunctions = [];
 global.window.mouseMoveFunctions = [];
 
+window.setCanvasFrequentlyRead=()=>{return undefined;};
 window.defaultColors = {tile: '#1b9456',background: '#1fad64'};
 window.colors = {tile: window.defaultColors.tile,background: window.defaultColors.background};
 window.lastColors = {tile: window.defaultColors.tile,background: window.defaultColors.background};
@@ -158,4 +160,4 @@ class Map {
     }
 }
 
-export default {createMap, defaultMapName, addToMap, removeFromMap, mapExists}
+export default {createMap, defaultMapName, tutorialMapName, addToMap, removeFromMap, mapExists}

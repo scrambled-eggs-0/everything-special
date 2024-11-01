@@ -3901,7 +3901,7 @@ var obs = [
         "w": 325,
         "h": 350,
         "type": "musicchange",
-        "musicPath": "/sounds/sonic wave.mp3",
+        "musicPath": "https://www.youtube.com/watch?v=IvYD-HLAl8E",
         "volume": 1,
         "startTime": 0,
         "inView": false
@@ -41217,7 +41217,7 @@ var obs = [
         "w": 350,
         "h": 350,
         "type": "musicchange",
-        "musicPath": "/sounds/drop it like its hot.mp3",
+        "musicPath": "https://www.youtube.com/watch?v=R-xDEG8dpZg",
         "volume": 1,
         "startTime": 0,
         "inView": false
@@ -42052,6 +42052,20 @@ var typeMap = {
                 initialShipAngle: -Math.PI / 2,
                 shipTurnSpeed: Math.PI / 20
             }
+        }
+    },
+
+    'musicchange': {
+        type: [1,[],[26]],
+        customMap: (params) => {
+            console.log(params);
+            return {
+                x: params.x * 2,
+                y: params.y * 2,
+                w: params.w * 2,
+                h: params.h * 2,
+                musicPath: params.musicPath
+            };
         }
     }
 }

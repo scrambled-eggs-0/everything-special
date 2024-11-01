@@ -14,21 +14,36 @@ leaderboard
 
 timer
 
+Cool animations:
+https://www.sololearn.com/en/compiler-playground/Wx4yblest1ed/?ref=app
+https://www.sololearn.com/en/compiler-playground/W3e4O44DgY0Y/?ref=app
+
+fix conveyor with perfect speed against you being dt dependent
+
+posc energy drink should be toec. Either find the song or modify
+
 ok so this is what i'll do in order:
-- fix obstacles on non-60 fps
+- fix obstacles on non-60 fps ✅
 - fix some obstacle bugs in current maps
-    - circleSlice
-- accounts and logging in
-    - create account screen w/ flowr animation in, eX style
-    - star field animation (probably sep page or make it not load on a normal gp because three.js is expensive)
+    - circleSlice ✅
+    - new movement sys bug ✅
+- finalize tutorial design
+    - update to dynamic resolution if need be
+- fix platformer
+// - accounts and logging in
+//     - create account screen w/ flowr animation in, eX style
+//     - star field animation (probably sep page or make it not load on a normal gp because three.js is expensive)
 - get all maps in the game
-- music system + get all the specific musics in for all the maps
+- music system ✅ + get all the specific musics in for all the maps
 - gameloop (spawn in the tutorial, end of tutorial you create an account, menu screen is never seen again)
 - make accounts save progress, stats
     - format: {mapName: [total attempts, total wins, total solo wins, fastest win, total time spent]}
 - powerups death timer, invincibility, dash, grapple and grapple point obstacle 
 - sync map system. When you enter a map that another player is in, they send the state 
+    - also when dt > 1000 refetch map
 - fix all bugs with current maps
+    - remove eval(str), make all maps just a series of C() calls
+- get omni back up and running
 - map editor w/ custom code (resizable bar like leetcode)
     - hook up with omni?
 - level sharing system (planet in game where you can browse levels)
@@ -37,3 +52,7 @@ ok so this is what i'll do in order:
 - trailer (should be working on continuously for like an hour a day)
 - anticheat, load testing, security
     - players should simulate other players, get some bonus if they catch hackers (to incentivise)
+
+// 3d system design. Had to design it now because im designing the tutorial and we shouldnt make 2 diff systems
+
+Basically there will be a webgl canvas behind the normal canvas that can be activated/ deactivated when you step on an obstacle called changeDimensions. It has parameters enable2d and enable3d (separate booleans) so you can have both active at the same time. Obstacles stay in their respective dimension but there will be methods in future for converting. 3d obstacles are just like regular obstacles except they have a extra parameters like z and d (stands for depth, like w/h stand for width/height). Also, 3d obstacles have an extra extrusion shape type which defines how their 2d form will be projected to 3d. For now, the only extrusion type will be just a straight vertical line (e.g. circles becoming cylinders, rects becoming rectangular prisms) because that's the only one i need for now and we can always implement more later. Obstacles in 3d will be rendered by drawing an image of them on a 2d canvas (auxillary canvas, not the main one that could be occupied by 2d) and then getting the canvas image data of their dimensions.x,y. The images will be mapped onto the top and bottom faces of the 3d obs and i might manually define the middle or set it to the average pixel color or something. There will be another simulate/effect map for obstacles whose behavior can extend to 3d, e.g. like snapgrid will also have to snap z.

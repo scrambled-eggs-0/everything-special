@@ -32,10 +32,21 @@ window.state = 'menu';
 form.onsubmit = (e) => {
     window.username = nameInput.value;
 
-    const buf = new Uint8Array(window.username.length + 1);
-    buf[0] = 0;// type 0 - set username and join game
-    encodeAtPosition(window.username, buf, 1);
-    window.send(buf);
+    // temp, eventually we'll get rid of the form
+    if(localStorage.getItem('tutorialCompleted') !== 't'){
+        // localStorage.setItem('tutorialCompleted', 't');
+        const buf = new Uint8Array(1);
+        buf[0] = 11;
+        window.send(buf);
+        window.state = 'game';
+        window.onkeydown({code: 'KeyZ', repeat: false, type: 'keydown'});
+        window.state = 'menu';
+    } else {
+        const buf = new Uint8Array(window.username.length + 1);
+        buf[0] = 0;// type 0 - set username and join game
+        encodeAtPosition(window.username, buf, 1);
+        window.send(buf);
+    }
     return e.preventDefault();
 }
 
@@ -58,13 +69,18 @@ window.startGame = () => {
 // gameloop
 let lastTime, accum, offtabTime;
 accum = window.frames = offtabTime = 0;
-window.time = window.dt = window.now = 0;
+window.time = window.now = 0;
+window.dt = 1;
+window.runRAF = -1;
 // const FRAME_TIME = 1000 / 60;
-function run(){
-    requestAnimationFrame(run);
+let run;
+window.runFn = run = function(){
+    window.runRAF = requestAnimationFrame(run);
 
     now = performance.now();
     dt = now - lastTime;
+    if(dt === 0) dt = 0.1;
+    else if(dt > 2000) dt = 1;// TODO: get map from other players if other players are in the map
     accum += dt;
     window.time += dt;
     lastTime = now;

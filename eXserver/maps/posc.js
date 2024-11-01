@@ -88,7 +88,7 @@ var obs = [
         "w": 100,
         "h": 100,
         "type": "musicchange",
-        "musicPath": "/sounds/toec.mp3",
+        "musicPath": 'https://www.youtube.com/watch?v=5IOVkstxkdE',// DIFFERENT MUSIC!! Should be "/sounds/toec.mp3" but i can't find the song. Maybe come back later
         "volume": 1,
         "startTime": 0,
         "inView": false
@@ -916,7 +916,7 @@ var obs = [
         "w": 100,
         "h": 100,
         "type": "musicchange",
-        "musicPath": "/sounds/Warm Nights.mp3",
+        "musicPath": "https://www.youtube.com/watch?v=n3EIyZ8my8o",
         "volume": 1,
         "startTime": 0,
         "inView": true
@@ -4096,6 +4096,19 @@ var typeMap = {
         //     "inView": false
         // },
     },
+    'musicchange': {
+        type: [1,[],[26]],
+        customMap: (params) => {
+            console.log(params);
+            return {
+                x: params.x * 2,
+                y: params.y * 2,
+                w: params.w * 2,
+                h: params.h * 2,
+                musicPath: params.musicPath
+            };
+        }
+    }
 }
 
 var enemyTypeMap = {

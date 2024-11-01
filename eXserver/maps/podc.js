@@ -44,7 +44,7 @@ var obs = [
         "w": 250,
         "h": 250,
         "type": "musicchange",
-        "musicPath": "/sounds/The Prototype.mp3",
+        "musicPath": "https://www.youtube.com/watch?v=2ACyqve0L78",
         "volume": 1,
         "startTime": 0,
         "inView": true
@@ -65,7 +65,7 @@ var obs = [
         "w": 50,
         "h": 2150,
         "type": "musicchange",
-        "musicPath": "/sounds/The Prototype.mp3",
+        "musicPath": "https://www.youtube.com/watch?v=2ACyqve0L78",
         "volume": 1,
         "startTime": 0,
         "inView": true
@@ -76,7 +76,7 @@ var obs = [
         "w": 50,
         "h": 1925,
         "type": "musicchange",
-        "musicPath": "/sounds/Red 13.mp3",
+        "musicPath": "https://www.youtube.com/watch?v=yJPewKpHDsQ",
         "volume": 1,
         "startTime": 0,
         "inView": true
@@ -6492,7 +6492,7 @@ var obs = [
         "w": 150,
         "h": 50,
         "type": "musicchange",
-        "musicPath": "/sounds/Return of the Snow Queen.mp3",
+        "musicPath": "https://www.youtube.com/watch?v=OHG77tPsw6M",
         "volume": 1,
         "startTime": 0,
         "inView": true
@@ -6503,7 +6503,7 @@ var obs = [
         "w": 150,
         "h": 50,
         "type": "musicchange",
-        "musicPath": "/sounds/Red 13.mp3",
+        "musicPath": "https://www.youtube.com/watch?v=yJPewKpHDsQ",
         "volume": 1,
         "startTime": 0,
         "inView": true
@@ -11159,7 +11159,7 @@ var obs = [
         "w": 50,
         "h": 50,
         "type": "musicchange",
-        "musicPath": "/sounds/shatter.mp3",
+        "musicPath": "https://www.youtube.com/watch?v=f55-fXTHQyQ",
         "volume": 1,
         "startTime": 0,
         "inView": true
@@ -12003,7 +12003,7 @@ var obs = [
         "w": 200,
         "h": 200,
         "type": "musicchange",
-        "musicPath": "/sounds/drip.mp3",
+        "musicPath": "https://www.youtube.com/watch?v=grd-K33tOSM",
         "volume": 1,
         "startTime": 0,
         "inView": true
@@ -16044,7 +16044,7 @@ var typeMap = {
                 shipTurnSpeed: Math.PI / 80
             }
         }
-    }
+    },
     // C(1,[],[10],{h:200,w:300,y:700,x:300,healSpeed:1,regenTime:100,maxStrength:60,});
     // {
     //     "x": 2950,
@@ -16059,6 +16059,19 @@ var typeMap = {
     //     "regenTime": 3,
     //     "inView": false
     // },
+    'musicchange': {
+        type: [1,[],[26]],
+        customMap: (params) => {
+            console.log(params);
+            return {
+                x: params.x * 2,
+                y: params.y * 2,
+                w: params.w * 2,
+                h: params.h * 2,
+                musicPath: params.musicPath
+            };
+        }
+    }
 }
 
 var enemyTypeMap = {
