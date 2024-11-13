@@ -81,6 +81,9 @@ function handleKey(e){
                 const num = parseFloat(msg.slice(7));
                 changeCameraScale(num);
             }
+            else if(msg.slice(0,4) === '/map'){
+                window.initImportMap(msg.slice(5));
+            }
             else if(msg.length !== 0){
                 msg = window.username + ': ' + msg;
                 const buf = new Uint8Array(msg.length + 2);
@@ -143,4 +146,10 @@ function handleKey(e){
             e.preventDefault();
         }
     }
+}
+
+let importMapFn;
+window.initImportMap = async (str) => {
+    if(importMapFn === undefined) importMapFn = (await import('./extras/importMap.js')).default;
+    importMapFn(str);
 }
