@@ -233,6 +233,45 @@ const messageMap = [
         if(me.mapName !== '') return;
         changeMap(me, tutorialMapName);
     },
+    // 12 - change grapple
+    (data, me) => {
+        if(me.mapName === '' || data.byteLength !== 12) return;
+        const f32 = new Float32Array(data.buffer);
+        if(f32[1] === Infinity){// Inf = enable
+            me.player.grapple = true;
+            me.player.grappleX = me.player.grappleY = Infinity;
+        } else if(f32[1] === -Infinity){// -Inf = disable
+            me.player.grapple = false;
+            me.player.grappleX = me.player.grappleY = Infinity;
+        } else {// normal 2 numbers - set pos
+            me.player.grapple = true;
+            me.player.grappleX = f32[1];
+            me.player.grappleY = f32[2];
+        }
+        const u16 = new Uint16Array(data.buffer);
+        u16[1] = me.player.id;
+        global.maps[me.mapName].broadcast(data);
+    },
+    // 13 - change death timer 
+    (data, me) => {
+        if(me.mapName === '' || data.byteLength < 8/*can be 8 or 12*/) return;
+        const f32 = new Float32Array(data.buffer);
+        if(f32[1] === -Infinity) {me.player.deathTimer = false; me.player.deathTime = Infinity;} // -Inf = disable
+        else {me.player.deathTimer = true; me.player.deathTime = f32[1];}
+        const u16 = new Uint16Array(data.buffer);
+        u16[1] = me.player.id;
+        global.maps[me.mapName].broadcast(data);
+    },
+    // 14 - change dead
+    (data, me) => {
+        if(me.mapName === '' || data.byteLength < 2) return;
+        const f32 = new Float32Array(data.buffer);
+        const u16 = new Uint16Array(data.buffer);
+        me.player.dead = f32[1] === 1;
+
+        u16[1] = me.player.id;
+        global.maps[me.mapName].broadcast(data);
+    },
 ]
 
 global.send = (client, msg) => {

@@ -30,7 +30,7 @@ C(1,[],[19],{h:200*2,w:200*2,y:2400*2,x:2400*2,speedChangePermanent:false,speedM
 // obstacles.push(new TransObstacle(2800, 3150, 200, 1850, false, 1));
 // obstacles.push(new TransObstacle(3000, 3200, 50, 50, false, 1));
 
-C(1,[],[13],{h:100*2,w:100*2,y:2100*2,x:4650*2,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorAngle:90,conveyorForce:0.6,});
+C(1,[],[13],{h:100*2,w:100*2,y:2100*2,x:4650*2,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorAngle:90,conveyorForce:0.6*5/16.66,});
 
 C(1,[],[10],{h:100*2,w:150*2,y:3300*2,x:3050*2,healSpeed:1,regenTime:600,maxStrength:620,});
 
@@ -85,7 +85,9 @@ C(1,[],[0],{h:100,w:400,y:4200,x:8300,});
 C(1,[],[0],{h:50,w:400,y:4500,x:8300,});
 C(1,[],[0],{h:50,w:400,y:4550,x:8300,});
 
-C(1,[],[12],{h:200,w:300,y:700,x:300,tpy:100,tpx:100,});
+C(1,[],[0],{h:3700,w:500,y:6300,x:5600,});
+
+// C(1,[],[12],{h:200,w:300,y:700,x:300,tpy:100,tpx:100,});
 
 // C(1,[],[12],{h:0,w:0,y:1915,x:15,tpy:5000,tpx:0,});
 C(1,[],[12],{h:35*2,w:50*2,y:2255*2,x:3100*2,tpy:2500*2,tpx:2500*2,});
@@ -180,14 +182,4 @@ C(1,[],[22],{h:700,w:700,y:3300,x:4600,mapName:'podc',sf:(o) => {
 
 C(1,[],[0],{h:3000,w:1500,y:0,x:4200});
 
-// circle-slice
-C(4,[],[0],{
-        x: 4700,
-        y: 5300,
-        r: 150,
-        innerRadius: 50,
-        startSliceAngle: 0,
-        endSliceAngle: Math.PI * 2,
-        startSliceAngleRotateSpeed: 0,//Math.random() / 100,
-        endSliceAngleRotateSpeed: 0,//Math.random() / 100
-    });
+C(1,[],[26],{musicPath:'https://www.youtube.com/watch?v=9EHXqi0ez54',x:4800,y:4800,w:400,h:400});

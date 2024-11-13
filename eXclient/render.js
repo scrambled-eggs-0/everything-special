@@ -3,6 +3,7 @@ let ctx = window.ctx = canvas.getContext('2d');
 
 const camera = window.camera = {
     x: 0, y: 0, scale: 1,
+    numControlledBy: 0,
     /*3d*/
     z: 1,
     basis1: [1, 0, 0],
@@ -36,6 +37,8 @@ window.selfId = undefined;
 window.tileSize = 100;
 window.renderDebug = false;
 window.distortionsActive = false;
+window.skullImgLoaded = false;
+window.skullImg = undefined;
 // const fullscreen = {
 //     ratio: 9 / 16,
 //     zoom: 1800,
@@ -119,15 +122,16 @@ const height = 900;
 
 let opaqIndex, len, lastPlayerX, lastPlayerY, lastPlayerRadius, diagonalStartOffset, diagonalDist, overRenderTiles = false, lastGA, j = false, lastNLDX = 0, lastNLDY = 0;
 window.render = (os=window.obstacles, cols=window.colors, players=window.players) => {
-    // TODO: obstacle interpolation
-
     document.body.style.backgroundColor = cols.tile;
 
     overRenderTiles = false;
     if(window.selfId !== undefined){
         const me = players[window.selfId];
-        camera.x = me.pos.x;
-        camera.y = me.pos.y;
+
+        if(camera.numControlledBy === 0){
+            camera.x = me.pos.x;
+            camera.y = me.pos.y;
+        }
 
         if(me.ship === true){
             ctx.translate(canvas.w/2, canvas.h/2);
@@ -303,6 +307,58 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
             ctx.lineTo(player.pos.x + Math.cos(player.shipAngle) * player.sat.r, player.pos.y + Math.sin(player.shipAngle) * player.sat.r);
             ctx.stroke();
         }
+        if(player.grapple === true){
+            ctx.beginPath();
+            ctx.strokeStyle = '#969696';
+            ctx.globalAlpha = 0.75;
+            ctx.lineWidth = 12;
+            ctx.arc(player.pos.x, player.pos.y, Math.abs(player.renderRadius) / 2, 0, Math.PI * 2);
+
+            if(player.grappleX === Infinity && player.id === window.selfId && input.action1 === true){
+                ctx.strokeStyle = 'white';
+                ctx.stroke();
+                ctx.closePath();
+
+                // failed grapple - big circle
+                ctx.beginPath();
+                ctx.globalAlpha = 0.2;
+                ctx.arc(player.pos.x, player.pos.y, player.grappleRange, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.closePath();
+            } else if(player.grappleX !== Infinity){
+                ctx.strokeStyle = 'white';
+                ctx.stroke();
+                ctx.closePath();
+
+                // successful grapple - line to grap pt
+                ctx.beginPath();
+                ctx.moveTo(player.pos.x, player.pos.y);
+                ctx.lineTo(player.grappleX, player.grappleY);
+                ctx.stroke();
+                ctx.closePath();
+
+                // and circle at the point
+                ctx.lineWidth = 10;
+                ctx.beginPath();
+                ctx.arc(player.grappleX, player.grappleY, 10, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.closePath();
+            } else {
+                ctx.stroke();
+                ctx.closePath();
+            }
+            ctx.globalAlpha = 1;
+        }
+        if(player.deathTimer === true){
+            ctx.fillStyle = 'red';
+            ctx.font = '60px Inter';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.shadowBlur = 2;
+            ctx.shadowColor = 'red';
+            ctx.fillText(~~(player.deathTime), player.pos.x, player.pos.y);
+            ctx.shadowBlur = 0;
+        }
         ctx.closePath();
 
         ctx.fillStyle = 'white';
@@ -331,6 +387,21 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
 
             const [topX, topY] = generateTopLeftCoordinates(os[i]);
             ctx.strokeRect(topX, topY, os[i].dimensions.x, os[i].dimensions.y);
+        }
+
+        ctx.fillStyle = 'white';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        for(let i = 0; i < players.length; i++){
+            const player = players[i];
+            if(player === undefined) continue;
+            ctx.font = `${1.2 * 15 * ((Math.abs(player.renderRadius) + 0.5) / 25)}px Inter`;
+            ctx.fillText(
+                `(${Math.round(player.pos.x/50)*50},${Math.round(player.pos.y/50)*50})`,
+                player.pos.x,
+                player.pos.y - player.renderRadius * 4/3 - 3 * 1.5
+            );
         }
     }
 
@@ -389,7 +460,7 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
     //     }
     // }
 
-    if(window.distortionsActive === true) window.drawGtx();
+    if(window.distortionsActive === true) window.renderGl();
 }
 
 function interpolate(start, end, t){
@@ -417,6 +488,7 @@ function renderTextSpecials(o, cols){
 }
 
 // canvas resizing
+window.resizeFns = [];
 function resize(){
     // const dpi = window.devicePixelRatio;
     // canvas.style.width = Math.ceil(window.innerWidth) + 'px';
@@ -437,8 +509,9 @@ function resize(){
     canvas.w = canvas.width / canvas.zoom / window.camera.scale;
     canvas.h = canvas.height / canvas.zoom / window.camera.scale;
 
-    // if we ever have to add another resize fn to this, make a window.resizeFns array.
-    if(window.distortionsActive === true) window.resizeGtx();
+    for(let i = 0; i < window.resizeFns.length; i++){
+        window.resizeFns[i]();
+    }
 }
 
 window.changeCameraScale = (scale) => {
@@ -457,10 +530,6 @@ window.changeCameraScale = (scale) => {
     ctx.translate(-canvas.w/2, -canvas.h/2);
     
     ctx.translate((1-1/window.camera.scale)*canvas.w/2, (1-1/window.camera.scale)*canvas.h/2);
-}
-
-window.setCanvasFrequentlyRead = () => {
-    ctx = canvas.getContext('2d', {willReadFrequently: true});
 }
 
 window.resizeElements = function (elements) {
@@ -490,9 +559,23 @@ window.addEventListener('resize', function () {
 resize();
 changeCameraScale(0.5);
 
-window.initDistortions = async (vs, fs) => {
-    await import('./distort.js');
-    window._initDistortions(vs, fs);
+// if there's ever more extras, make an array system
+let nonLinearFns;
+window.initDistortion = async (vs, fs) => {
+    if(nonLinearFns === undefined) nonLinearFns = (await import('./extras/distort.js')).default;
+    nonLinearFns.initNonlinearTransform(vs, fs);
+}
+
+window.unInitDistortion = (vs, fs) => {
+    // can't be active if not loaded
+    if(nonLinearFns === undefined) return;
+    nonLinearFns.unInitNonlinearTransform();
+}
+
+let noiseFns;
+window.importNoise = async() => {
+    if(noiseFns !== undefined) return noiseFns;
+    return noiseFns = (await import('./extras/noise.js')).default;
 }
 
 export default render;

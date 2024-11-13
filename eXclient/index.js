@@ -121,8 +121,14 @@ window.runFn = run = function(){
 const buf = new ArrayBuffer(12);// 12 bytes = 3 floats. First pos occupied by uint type, second two are position floats
 const uview = new Uint8Array(buf);
 uview[0] = 4;// type 4 - player x and y
-const fview = new Float32Array(buf); 
+const fview = new Float32Array(buf);
+
+const buf2 = new ArrayBuffer(8);
+const u2 = new Uint8Array(buf);
+const f2 = new Float32Array(buf);
+
 let lastShipAngle = Infinity;
+let lastDead = false;
 function sendUpdatePack(){
     const player = window.players[window.selfId];
     fview[1] = player.pos.x;
@@ -137,5 +143,27 @@ function sendUpdatePack(){
         fview[2] = 0;
         send(buf);
         uview[0] = 4;
+    }
+
+    if(player.grapple === true){
+        uview[0] = 12;
+        fview[1] = player.grappleX;
+        fview[2] = player.grappleY;
+        send(buf);
+        uview[0] = 4;
+    }
+
+    if(player.deathTimer === true){
+        u2[0] = 13;
+        f2[1] = player.deathTime;
+        send(buf);
+    }
+
+    if(player.dead !== lastDead){
+        lastDead = player.dead;
+        u2[0] = 14;
+        // float is wasteful but we want to give server space to put id
+        f2[1] = player.dead === true ? 1 : 0;
+        send(buf);
     }
 }

@@ -13584,7 +13584,7 @@ var typeMap = {
             }
             p.conveyorFriction = 0.8;
             p.conveyorAngleRotateSpeed = 0;
-            p.conveyorForce = params.force / 10000 * 8;
+            p.conveyorForce = params.force / 10000 * 8 * 5 / 16.66;
             return p;
         }
     },
@@ -13855,7 +13855,7 @@ var typeMap = {
     'bounce': {
         type: [1,[],[2]],
         customMap: (params) => {
-            return {bounciness: params.effect/1.5, decay: 0.5};
+            return {bounciness: params.effect/1.5/10, decay: 0.5};
         }
     },
     'rotate-normal': {
@@ -15193,4 +15193,11 @@ mapDimensions.y=10000;
 spawnPosition.x=600;
 spawnPosition.y=600;
 window.respawnPlayer();
-colors.background='#517647'; colors.tile='#163721'
+colors.background='#517647'; colors.tile='#163721';
+
+C(0,[],[26],{
+    x: spawnPosition.x,
+    y: spawnPosition.y,
+    r: 50,
+    musicPath: 'https://www.youtube.com/watch?v=u9xSFk1ZDgw'
+});

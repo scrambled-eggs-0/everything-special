@@ -3579,7 +3579,7 @@ var typeMap = {
             }
             p.conveyorFriction = 0.8;
             p.conveyorAngleRotateSpeed = 0;
-            p.conveyorForce = params.force / 10000 * 1.5;
+            p.conveyorForce = params.force / 10000 * 1.5 * 5 / 16.66;
             return p;
         }
     },
@@ -3860,7 +3860,7 @@ var typeMap = {
     'bounce': {
         type: [1,[],[2]],
         customMap: (params) => {
-            return {bounciness: params.effect/3, decay: 0.5};
+            return {bounciness: params.effect/3/10, decay: 0.5};
         }
     },
     'rotate-normal': {
@@ -4071,10 +4071,10 @@ var typeMap = {
             }
             p.platformerFriction = 0.98;
             p.platformerAngleRotateSpeed = 0;
-            p.platformerForce = params.force / 10000 * 1.5 * 1.8 * 1.6;
+            p.platformerForce = params.force / 10000 * 1.5 * 1.8 * 1.6 * 5 / 16.66;
             p.jumpForce = params.jumpHeight / 8.2 * 2.32;
             p.jumpDecay = 0.98;
-            p.maxJumpCooldown = 32;
+            p.maxJumpCooldown = 32 * 16.6;
             return p;
         }
         // {
@@ -4099,7 +4099,6 @@ var typeMap = {
     'musicchange': {
         type: [1,[],[26]],
         customMap: (params) => {
-            console.log(params);
             return {
                 x: params.x * 2,
                 y: params.y * 2,
@@ -4121,9 +4120,9 @@ var enemyTypeMap = {
         };
         counter++;
         return `
-        var xv${counter} = ${params.xv/42};
-        var yv${counter} = ${params.yv/42};
-        C(0,[3],[1],{r:${params.radius},y:${params.y*2},x:${params.x*2},sf:(e)=>{
+        var xv${counter} = ${params.xv/42*1.5};
+        var yv${counter} = ${params.yv/42*1.5};
+        C(0,[3],[1],{r:${params.radius*2},y:${params.y*2},x:${params.x*2},sf:(e)=>{
         e.pos.y += yv${counter};
         e.pos.x += xv${counter};
         if ((e.pos.x - e.sat.r) < ${bounds.x} || e.pos.x + e.sat.r > ${bounds.x + bounds.w}) {
@@ -6371,39 +6370,15 @@ for(let i = 0; i < obs.length; i++){
         },});\n`;
     } else if(o.type === 'tptrap'){
         o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
-        const minX = o.x - 100;
-        const minY = o.y - 100;
-        const maxX = o.x + o.w + 100;
-        const maxY = o.y + o.h + 100;
-        // {
-        //     "x": 6400,
-        //     "y": 2150,
-        //     "w": 600,
-        //     "h": 600,
-        //     "type": "tptrap",
-        //     "time": 0,
-        //     "maxTime": 10,
-        //     "cdmult": 3,
-        //     "trapType": "death",
-        //     "tpx": 7000,
-        //     "tpy": 3625,
-        //     "inView": false
-        // },
         counter++;
-        str += `var minX${counter}, minY${counter}, maxX${counter}, maxY${counter};
-        minX${counter} = ${minX};minY${counter} = ${minY};maxX${counter} = ${maxX};maxY${counter} = ${maxY};
-        var time${counter} = ${o.maxTime*1000/15}; 
-        C(1,[3],[0],{h:1,w:1,y:0,x:-10000,sf:(e)=>{
-            const player = window.players[window.selfId];
-            if ((player.pos.x) > md(minX${counter}) && (player.pos.x) < md(maxX${counter}) && (player.pos.y) > md(minY${counter}) && (player.pos.y) < md(maxY${counter})) {
-                time${counter}--;
-                if(time${counter} < 0){
-                    time${counter} = ${o.maxTime};
-                    player.pos.x = ${o.tpx*2};
-                    player.pos.y = ${o.tpy*2};
-                }
+
+        str += `C(1,[],[17],{x:${o.x},y:${o.y},w:${o.w},h:${o.h},timeTrapToShowTenth:false,timeTrapToKill:false,timeTrapRecoverySpeed:3,timeTrapMaxTime:${o.maxTime*1000},sf:(e)=>{
+            if(e.timeTrapTime <= 0){
+                players[selfId].pos.x = ${o.tpx*2};
+                players[selfId].pos.y = ${o.tpy*2};
             }
-        },});\n`;
+        },});`;
+        continue;
     }
 
     if(typeDef === undefined) {

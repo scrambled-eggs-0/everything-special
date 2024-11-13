@@ -14,6 +14,22 @@ leaderboard
 
 timer
 
+networked mapmaker
+
+culling
+
+tp immersive option? Or make it a custom obstacle because "if everyone's super then no one is" -> obs arent cool if everyone has them 
+
+interesting idea: you are in a square box and shapes come at you. You have to draw the shapes by pressing shift (speedmult = 2 on shift so it doesnt slow you down) to clear them before they reach you (they're all lava and go to the center of the box). Fixed cam.
+
+grapple can be done by testing a sat.circle as big as the max radius and seeing what has the highest res.overlap (grapple pts have priority ofc)
+
+button press animation (less alpha) when standing on powerup blocks (namely grap, death)
+
+optimize death message to [type, isDead, ...id bytes for server]
+
+Divide dt by 1000. Much better for numerical stability
+
 Cool animations:
 https://www.sololearn.com/en/compiler-playground/Wx4yblest1ed/?ref=app
 https://www.sololearn.com/en/compiler-playground/W3e4O44DgY0Y/?ref=app
@@ -30,6 +46,11 @@ ok so this is what i'll do in order:
 - finalize tutorial design
     - update to dynamic resolution if need be
 - fix platformer
+- "R to Respawn" on the tutorial
+- divide dt by 1000 because that will make numbers more stable
+- fix grapple bugs (can't grapple to normal obs even if outside the range of grap points and they exist and intersecting normal obs)
+    - fix stopForces cancelling grap force permanently even when you step off (maybe should just set xv and accels to 0)
+- fix breakable bugs (after letting it regen and messing around a bit in tutorial)
 // - accounts and logging in
 //     - create account screen w/ flowr animation in, eX style
 //     - star field animation (probably sep page or make it not load on a normal gp because three.js is expensive)
@@ -43,6 +64,7 @@ ok so this is what i'll do in order:
     - also when dt > 1000 refetch map
 - fix all bugs with current maps
     - remove eval(str), make all maps just a series of C() calls
+    - grapple and deathtimer and other powerups should be removed when transitioning between maps (on client and server) and weird bug w/ deathTimer = 5000 when entering and exiting maps with deathtimer in hub
 - get omni back up and running
 - map editor w/ custom code (resizable bar like leetcode)
     - hook up with omni?
@@ -50,9 +72,29 @@ ok so this is what i'll do in order:
 - new tutorial map w/ cone mapping
     - should be simple but also fun but also suprising like a yt intro
 - trailer (should be working on continuously for like an hour a day)
+- make server not load maps
 - anticheat, load testing, security
+    - also clean up code, idk if there will be any other examples but window.resizeElements taking an array should b changed
     - players should simulate other players, get some bonus if they catch hackers (to incentivise)
 
 // 3d system design. Had to design it now because im designing the tutorial and we shouldnt make 2 diff systems
 
 Basically there will be a webgl canvas behind the normal canvas that can be activated/ deactivated when you step on an obstacle called changeDimensions. It has parameters enable2d and enable3d (separate booleans) so you can have both active at the same time. Obstacles stay in their respective dimension but there will be methods in future for converting. 3d obstacles are just like regular obstacles except they have a extra parameters like z and d (stands for depth, like w/h stand for width/height). Also, 3d obstacles have an extra extrusion shape type which defines how their 2d form will be projected to 3d. For now, the only extrusion type will be just a straight vertical line (e.g. circles becoming cylinders, rects becoming rectangular prisms) because that's the only one i need for now and we can always implement more later. Obstacles in 3d will be rendered by drawing an image of them on a 2d canvas (auxillary canvas, not the main one that could be occupied by 2d) and then getting the canvas image data of their dimensions.x,y. The images will be mapped onto the top and bottom faces of the 3d obs and i might manually define the middle or set it to the average pixel color or something. There will be another simulate/effect map for obstacles whose behavior can extend to 3d, e.g. like snapgrid will also have to snap z.
+
+tutorial
+1. Star field render fades in + the texts "Welcome, Traveler." followed by "Welcome to Evades X" appear. ✅
+2. Obstacle explanation with the animation i made.
+    - "You are a circle, moving on an infinite grid."
+    - [cam zooms out, obs come in] "Now, the whole game is made out of obstacles." 
+    - "Obstacles can have a shape," 
+        - "simulate," 
+        - "and effect." 
+    - [fade to real game, not animation] "Your objective is to dodge them to reach the goal [rainbow text] as fast as possible."
+        - "Good luck, and don't die!"
+3. Obstacle section w/ the 4 buttons.
+    - After you finish, "Good job!" 
+    - "Now, you're almost ready to be released into the wide world of Evades X."
+    - "But before I let you in, I want to warn you."
+    - "Evades X is a game where anything is possible."
+    - "So the only thing you should expect..."
+        - "is the unexpected." [shader morphs from normal to flag warp to oval to lens distort - winpad at the top and you have to reach it and then page refreshes and you get put in the hub]

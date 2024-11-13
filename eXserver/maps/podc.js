@@ -15339,7 +15339,7 @@ var typeMap = {
             }
             p.conveyorFriction = 0.8;
             p.conveyorAngleRotateSpeed = 0;
-            p.conveyorForce = params.force / 10000 * 7.08;
+            p.conveyorForce = params.force / 10000 * 7.08 * 5 / 16.66;
             return p;
         }
     },
@@ -15648,7 +15648,7 @@ var typeMap = {
     'bounce': {
         type: [1,[],[2]],
         customMap: (params) => {
-            return {bounciness: params.effect/3, decay: 0.5};
+            return {bounciness: params.effect/3/10, decay: 0.5};
         }
     },
     'rotate-normal': {
@@ -16000,10 +16000,10 @@ var typeMap = {
             }
             p.platformerFriction = 0.9;
             p.platformerAngleRotateSpeed = 0;
-            p.platformerForce = params.force / 10000 * 1.5 * 1.8 * 1.6;
+            p.platformerForce = params.force / 10000 * 1.5 * 1.8 * 1.6 * 5 / 16.66;
             p.jumpForce = params.jumpHeight / 8.2 * 2.32 / 1.2;
             p.jumpDecay = 0.9525;
-            p.maxJumpCooldown = 20;
+            p.maxJumpCooldown = 20 * 16.6;
             return p;
         }
         // {
@@ -16041,7 +16041,7 @@ var typeMap = {
             return {
                 changeShipStateTo: params.state,
                 initialShipAngle: -Math.PI / 2,
-                shipTurnSpeed: Math.PI / 80
+                shipTurnSpeed: Math.PI / 800
             }
         }
     },
@@ -16062,7 +16062,6 @@ var typeMap = {
     'musicchange': {
         type: [1,[],[26]],
         customMap: (params) => {
-            console.log(params);
             return {
                 x: params.x * 2,
                 y: params.y * 2,
@@ -17224,3 +17223,10 @@ spawnPosition.x=150;
 spawnPosition.y=150;
 window.respawnPlayer();
 colors.background='#55894d'; colors.tile='#8bc482';
+
+C(0,[],[26],{
+    x: spawnPosition.x,
+    y: spawnPosition.y,
+    r: 50,
+    musicPath: 'https://www.youtube.com/watch?v=asTqGTrsB8M'
+});

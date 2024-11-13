@@ -66,7 +66,7 @@ const messageMap = [
             const prevScript = document.getElementById('gameScript');
             if(prevScript) prevScript.remove();
 
-            resetGame();
+            window.resetGame();
             window.players.length = window.obstacles.length = 0;
             const s = document.createElement('script');
             s.id = "gameScript";
@@ -177,19 +177,64 @@ const messageMap = [
         const id = u16[1];
         if(id === window.selfId) return;
         window.players[id].shipAngle = f32[1];
+    },
+    // 11 - unused
+    () => {},
+    // 12 - change grapple
+    (data) => {
+        const u16 = new Uint16Array(data.buffer);
+        const f32 = new Float32Array(data.buffer);
+        const id = u16[1];
+        if(id === window.selfId) return;
+        if(f32[1] === Infinity){
+            window.players[id].grapple = true;
+            window.players[id].grappleX = window.players[id].grappleY = Infinity;
+        } else if(f32[1] === -Infinity){
+            window.players[id].grapple = false;
+            window.players[id].grappleX = window.players[id].grappleY = Infinity;
+        } else {
+            window.players[id].grapple = true;
+            window.players[id].grappleX = f32[1];
+            window.players[id].grappleY = f32[2];
+        }
+    },
+    // 13 - change death timer 
+    (data) => {
+        const u16 = new Uint16Array(data.buffer);
+        const id = u16[1];
+        if(id === window.selfId) return;
+        const f32 = new Float32Array(data.buffer);
+        if(f32[1] === -Infinity) {window.players[id].deathTimer = false; window.players[id].deathTime = Infinity;}
+        else {window.players[id].deathTimer = true; window.players[id].deathTime = f32[1]};
+    },
+    // 14 - change dead
+    (data, me) => {
+        const f32 = new Float32Array(data.buffer);
+        const u16 = new Uint16Array(data.buffer);
+        const id = u16[1];
+        if(id === window.selfId) return;
+        window.players[id].dead = f32[1] === 1;
     }
 ]
 
 function createPlayerFromData(data){
     const p = window.createPlayer();
 
+    // if this gets bigger we may want to
+    // for(let key in data)
     p.pos.x = data.pos.x;
     p.pos.y = data.pos.y;
     p.name = data.name;
+    p.dead = data.dead;
     p.id = data.id;
     p.god = data.god;
     p.ship = data.ship;
     p.shipAngle = data.shipAngle;
+    p.grapple = data.grapple;
+    p.grappleX = data.grappleX;
+    p.grappleY = data.grappleY;
+    p.deathTimer = data.deathTimer;
+    p.deathTime = data.deathTime;
 
     return p;
 }

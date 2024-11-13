@@ -17,7 +17,7 @@ var obs = [
     },
     {
         "x": 800,
-        "y": 5677.5,
+        "y": 5730,
         "w": 400,
         "h": 200,
         "type": "move",
@@ -48,7 +48,7 @@ var obs = [
     },
     {
         "x": 800,
-        "y": 5427.5,
+        "y": 5480,
         "w": 400,
         "h": 200,
         "type": "move",
@@ -321,42 +321,12 @@ var obs = [
         "canCollide": false,
         "renderType": "rotating",
         "cullingRadius": 500.15622559356393,
-        "unSim": 0,
-        "inView": true
-    },
-    {
-        "x": 1811.6587419707762,
-        "y": 8561.658741970838,
-        "w": 75,
-        "h": 75,
-        "type": "movingsafe",
-        "points": [
-            [
-                1425,
-                8175
-            ],
-            [
-                2050,
-                8800
-            ]
-        ],
-        "speed": 150,
-        "currentPoint": 1,
-        "pointOn": {
-            "x": 2050,
-            "y": 8800
-        },
-        "pointTo": {
-            "x": 1425,
-            "y": 8175
-        },
-        "xv": -106.06601717798212,
-        "yv": -106.06601717798213,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
-        "x": 1663.3412580292259,
-        "y": 8413.341258029164,
+        "x": 1686.6295090389995,
+        "y": 8436.629509038932,
         "w": 75,
         "h": 75,
         "type": "movingsafe",
@@ -382,6 +352,36 @@ var obs = [
         },
         "xv": 106.06601717798213,
         "yv": 106.06601717798212,
+        "inView": false
+    },
+    {
+        "x": 1788.370490961,
+        "y": 8538.370490961068,
+        "w": 75,
+        "h": 75,
+        "type": "movingsafe",
+        "points": [
+            [
+                1425,
+                8175
+            ],
+            [
+                2050,
+                8800
+            ]
+        ],
+        "speed": 150,
+        "currentPoint": 1,
+        "pointOn": {
+            "x": 2050,
+            "y": 8800
+        },
+        "pointTo": {
+            "x": 1425,
+            "y": 8175
+        },
+        "xv": -106.06601717798212,
+        "yv": -106.06601717798213,
         "inView": false
     },
     {
@@ -510,7 +510,7 @@ var obs = [
     },
     {
         "x": 100,
-        "y": 233.75,
+        "y": 55,
         "w": 100,
         "h": 50,
         "type": "lavamove",
@@ -572,7 +572,7 @@ var obs = [
         "w": 225,
         "h": 30,
         "type": "rotatingsafe",
-        "angle": 88658,
+        "angle": 296,
         "rotateSpeed": 120,
         "pivotX": -50,
         "pivotY": 300,
@@ -589,10 +589,93 @@ var obs = [
         "h": 700,
         "type": "normal",
         "canJump": true,
-        "inView": true
+        "sat": {
+            "pos": {
+                "x": 1.3777276490407726e-14,
+                "y": 450
+            },
+            "angle": 0,
+            "offset": {
+                "x": 0,
+                "y": 0
+            },
+            "calcPoints": [
+                {
+                    "x": 0,
+                    "y": 0
+                },
+                {
+                    "x": 100,
+                    "y": 0
+                },
+                {
+                    "x": 100,
+                    "y": 700
+                },
+                {
+                    "x": 0,
+                    "y": 700
+                }
+            ],
+            "edges": [
+                {
+                    "x": 100,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": 700
+                },
+                {
+                    "x": -100,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -700
+                }
+            ],
+            "normals": [
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                }
+            ],
+            "points": [
+                {
+                    "x": 0,
+                    "y": 0
+                },
+                {
+                    "x": 100,
+                    "y": 0
+                },
+                {
+                    "x": 100,
+                    "y": 700
+                },
+                {
+                    "x": 0,
+                    "y": 700
+                }
+            ]
+        },
+        "inView": false
     },
     {
-        "x": 122.5,
+        "x": 130,
         "y": 400,
         "w": 50,
         "h": 50,
@@ -608,22 +691,22 @@ var obs = [
             ]
         ],
         "speed": 150,
-        "currentPoint": 0,
+        "currentPoint": 1,
         "collidable": true,
         "pointOn": {
-            "x": 100,
-            "y": 400
-        },
-        "pointTo": {
             "x": 300,
             "y": 400
         },
-        "xv": 150,
-        "yv": 0,
+        "pointTo": {
+            "x": 100,
+            "y": 400
+        },
+        "xv": -150,
+        "yv": 1.8369701987210297e-14,
         "inView": true
     },
     {
-        "x": 122.5,
+        "x": 130,
         "y": 500,
         "w": 50,
         "h": 50,
@@ -639,18 +722,18 @@ var obs = [
             ]
         ],
         "speed": 150,
-        "currentPoint": 0,
+        "currentPoint": 1,
         "collidable": true,
         "pointOn": {
-            "x": 100,
-            "y": 500
-        },
-        "pointTo": {
             "x": 300,
             "y": 500
         },
-        "xv": 150,
-        "yv": 0,
+        "pointTo": {
+            "x": 100,
+            "y": 500
+        },
+        "xv": -150,
+        "yv": 1.8369701987210297e-14,
         "inView": false
     },
     {
@@ -660,7 +743,7 @@ var obs = [
         "type": "circle-safe",
         "renderType": "circleR",
         "radius": 15,
-        "inView": true
+        "inView": false
     },
     {
         "x": 100,
@@ -669,6 +752,89 @@ var obs = [
         "h": 50,
         "type": "normal",
         "canJump": true,
+        "sat": {
+            "pos": {
+                "x": 100,
+                "y": 550
+            },
+            "angle": 0,
+            "offset": {
+                "x": 0,
+                "y": 0
+            },
+            "calcPoints": [
+                {
+                    "x": 0,
+                    "y": 0
+                },
+                {
+                    "x": 300,
+                    "y": 0
+                },
+                {
+                    "x": 300,
+                    "y": 50
+                },
+                {
+                    "x": 0,
+                    "y": 50
+                }
+            ],
+            "edges": [
+                {
+                    "x": 300,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": 50
+                },
+                {
+                    "x": -300,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": -50
+                }
+            ],
+            "normals": [
+                {
+                    "x": 0,
+                    "y": -1
+                },
+                {
+                    "x": 1,
+                    "y": 0
+                },
+                {
+                    "x": 0,
+                    "y": 1
+                },
+                {
+                    "x": -1,
+                    "y": 0
+                }
+            ],
+            "points": [
+                {
+                    "x": 0,
+                    "y": 0
+                },
+                {
+                    "x": 300,
+                    "y": 0
+                },
+                {
+                    "x": 300,
+                    "y": 50
+                },
+                {
+                    "x": 0,
+                    "y": 50
+                }
+            ]
+        },
         "inView": false
     },
     {
@@ -738,7 +904,7 @@ var obs = [
         "w": 150,
         "h": 25,
         "type": "rotate-lava",
-        "angle": 110822.5,
+        "angle": 370,
         "rotateSpeed": 150,
         "pivotX": 450,
         "pivotY": 350,
@@ -828,7 +994,7 @@ var obs = [
     },
     {
         "x": 550,
-        "y": 13.333333333347337,
+        "y": 43.33333333333338,
         "w": 100,
         "h": 100,
         "type": "lavamove",
@@ -859,7 +1025,7 @@ var obs = [
     },
     {
         "x": 700,
-        "y": 13.333333333347337,
+        "y": 43.33333333333338,
         "w": 100,
         "h": 100,
         "type": "lavamove",
@@ -971,7 +1137,7 @@ var obs = [
     },
     {
         "x": 900,
-        "y": 502.5,
+        "y": 395,
         "w": 50,
         "h": 50,
         "type": "movingsafe",
@@ -986,22 +1152,22 @@ var obs = [
             ]
         ],
         "speed": 150,
-        "currentPoint": 1,
+        "currentPoint": 0,
         "pointOn": {
-            "x": 900,
-            "y": 550
-        },
-        "pointTo": {
             "x": 900,
             "y": 375
         },
+        "pointTo": {
+            "x": 900,
+            "y": 550
+        },
         "xv": 9.184850993605149e-15,
-        "yv": -150,
+        "yv": 150,
         "inView": false
     },
     {
         "x": 950,
-        "y": 597.5,
+        "y": 705,
         "w": 50,
         "h": 50,
         "type": "movingsafe",
@@ -1016,17 +1182,17 @@ var obs = [
             ]
         ],
         "speed": 150,
-        "currentPoint": 0,
+        "currentPoint": 1,
         "pointOn": {
-            "x": 950,
-            "y": 550
-        },
-        "pointTo": {
             "x": 950,
             "y": 725
         },
+        "pointTo": {
+            "x": 950,
+            "y": 550
+        },
         "xv": 9.184850993605149e-15,
-        "yv": 150,
+        "yv": -150,
         "inView": false
     },
     {
@@ -1036,7 +1202,7 @@ var obs = [
         "h": 150,
         "type": "normal",
         "canJump": true,
-        "inView": true
+        "inView": false
     },
     {
         "x": 1000,
@@ -1122,7 +1288,7 @@ var obs = [
     },
     {
         "x": 650,
-        "y": 822.5,
+        "y": 870,
         "w": 100,
         "h": 75,
         "type": "lavamove",
@@ -1153,7 +1319,7 @@ var obs = [
     },
     {
         "x": 550,
-        "y": 802.5,
+        "y": 755,
         "w": 100,
         "h": 75,
         "type": "lavamove",
@@ -1252,7 +1418,7 @@ var obs = [
     },
     {
         "x": 400,
-        "y": 795.8333333299736,
+        "y": 866.6666666666779,
         "w": 100,
         "h": 25,
         "type": "lavamove",
@@ -1267,18 +1433,18 @@ var obs = [
             ]
         ],
         "speed": 250,
-        "currentPoint": 1,
+        "currentPoint": 0,
         "collidable": true,
         "pointOn": {
             "x": 400,
-            "y": 875
+            "y": 750
         },
         "pointTo": {
             "x": 400,
-            "y": 750
+            "y": 875
         },
         "xv": 1.5308084989341916e-14,
-        "yv": -250,
+        "yv": 250,
         "inView": false
     },
     {
@@ -1358,7 +1524,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 22.5,
+        "x": 30,
         "y": 1150,
         "w": 50,
         "h": 50,
@@ -1374,17 +1540,17 @@ var obs = [
             ]
         ],
         "speed": 150,
-        "currentPoint": 0,
+        "currentPoint": 1,
         "pointOn": {
-            "x": 0,
-            "y": 1150
-        },
-        "pointTo": {
             "x": 200,
             "y": 1150
         },
-        "xv": 150,
-        "yv": 0,
+        "pointTo": {
+            "x": 0,
+            "y": 1150
+        },
+        "xv": -150,
+        "yv": 1.8369701987210297e-14,
         "inView": false
     },
     {
@@ -1402,7 +1568,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 177.5,
+        "x": 170,
         "y": 1150,
         "w": 50,
         "h": 50,
@@ -1418,17 +1584,17 @@ var obs = [
             ]
         ],
         "speed": 150,
-        "currentPoint": 0,
+        "currentPoint": 1,
         "pointOn": {
-            "x": 200,
-            "y": 1150
-        },
-        "pointTo": {
             "x": 0,
             "y": 1150
         },
-        "xv": -150,
-        "yv": 1.8369701987210297e-14,
+        "pointTo": {
+            "x": 200,
+            "y": 1150
+        },
+        "xv": 150,
+        "yv": 0,
         "inView": false
     },
     {
@@ -1471,7 +1637,7 @@ var obs = [
         "w": 200,
         "h": 50,
         "type": "rotate-lava",
-        "angle": -132987,
+        "angle": -3,
         "rotateSpeed": -180,
         "pivotX": 250,
         "pivotY": 1350,
@@ -1479,8 +1645,8 @@ var obs = [
         "canCollide": true,
         "renderType": "rotating",
         "cullingRadius": 103.07764064044152,
-        "unSim": 0,
-        "inView": true
+        "unSim": 2.449999999999994,
+        "inView": false
     },
     {
         "points": [
@@ -1525,8 +1691,8 @@ var obs = [
         "onTime": 0.9,
         "offTime": 0.9,
         "state": true,
-        "timer": 0.08333333333388027,
-        "collidable": false,
+        "timer": 0.23333333333333534,
+        "collidable": true,
         "inView": false
     },
     {
@@ -1539,7 +1705,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 459.1666666649868,
+        "x": 476.66666666666106,
         "y": 1175,
         "w": 50,
         "h": 50,
@@ -1583,7 +1749,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 622.5,
+        "x": 630,
         "y": 1100,
         "w": 50,
         "h": 100,
@@ -1599,22 +1765,22 @@ var obs = [
             ]
         ],
         "speed": 150,
-        "currentPoint": 0,
+        "currentPoint": 1,
         "collidable": false,
         "pointOn": {
-            "x": 600,
-            "y": 1100
-        },
-        "pointTo": {
             "x": 800,
             "y": 1100
         },
-        "xv": 150,
-        "yv": 0,
+        "pointTo": {
+            "x": 600,
+            "y": 1100
+        },
+        "xv": -150,
+        "yv": 1.8369701987210297e-14,
         "inView": false
     },
     {
-        "x": 777.5,
+        "x": 770,
         "y": 1200,
         "w": 50,
         "h": 100,
@@ -1630,22 +1796,22 @@ var obs = [
             ]
         ],
         "speed": 150,
-        "currentPoint": 1,
+        "currentPoint": 0,
         "collidable": false,
         "pointOn": {
-            "x": 800,
-            "y": 1200
-        },
-        "pointTo": {
             "x": 600,
             "y": 1200
         },
-        "xv": -150,
-        "yv": 1.8369701987210297e-14,
+        "pointTo": {
+            "x": 800,
+            "y": 1200
+        },
+        "xv": 150,
+        "yv": 0,
         "inView": false
     },
     {
-        "x": 622.5,
+        "x": 630,
         "y": 1300,
         "w": 50,
         "h": 100,
@@ -1661,18 +1827,18 @@ var obs = [
             ]
         ],
         "speed": 150,
-        "currentPoint": 0,
+        "currentPoint": 1,
         "collidable": false,
         "pointOn": {
-            "x": 600,
-            "y": 1300
-        },
-        "pointTo": {
             "x": 800,
             "y": 1300
         },
-        "xv": 150,
-        "yv": 0,
+        "pointTo": {
+            "x": 600,
+            "y": 1300
+        },
+        "xv": -150,
+        "yv": 1.8369701987210297e-14,
         "inView": false
     },
     {
@@ -1726,7 +1892,7 @@ var obs = [
         "w": 350,
         "h": 50,
         "type": "rotate-lava",
-        "angle": 33246.75,
+        "angle": 0.75,
         "rotateSpeed": 45,
         "pivotX": 925,
         "pivotY": 1625,
@@ -1734,8 +1900,8 @@ var obs = [
         "canCollide": false,
         "renderType": "rotating",
         "cullingRadius": 176.7766952966369,
-        "unSim": 0,
-        "inView": true
+        "unSim": 2.449999999999994,
+        "inView": false
     },
     {
         "x": 925,
@@ -1783,35 +1949,35 @@ var obs = [
         "inView": false
     },
     {
-        "x": 896.5984655296048,
-        "y": 1720.8819734868184,
+        "x": 1024.9657324975558,
+        "y": 1622.3823051692127,
         "w": 25,
         "h": 25,
         "type": "rotatingsafe",
-        "angle": -66493.5,
+        "angle": -1.5,
         "rotateSpeed": -90,
         "pivotX": 925,
         "pivotY": 1625,
         "distToPivot": 100,
         "canCollide": true,
         "cullingRadius": 117.67766952966369,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
-        "x": 953.4015344704051,
-        "y": 1529.1180265131845,
+        "x": 825.0342675024443,
+        "y": 1627.6176948307873,
         "w": 25,
         "h": 25,
         "type": "rotatingsafe",
-        "angle": -66313.5,
+        "angle": 178.5,
         "rotateSpeed": -90,
         "pivotX": 925,
         "pivotY": 1625,
         "distToPivot": 100,
         "canCollide": true,
         "cullingRadius": 117.67766952966369,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
@@ -1851,7 +2017,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1087.5,
+        "x": 1320,
         "y": 1380,
         "w": 70,
         "h": 40,
@@ -1881,7 +2047,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1058.75,
+        "x": 1215,
         "y": 1330,
         "w": 70,
         "h": 40,
@@ -1897,21 +2063,21 @@ var obs = [
             ]
         ],
         "speed": 75,
-        "currentPoint": 1,
+        "currentPoint": 0,
         "pointOn": {
-            "x": 1360,
-            "y": 1330
-        },
-        "pointTo": {
             "x": 1030,
             "y": 1330
         },
-        "xv": -75,
-        "yv": 9.184850993605149e-15,
+        "pointTo": {
+            "x": 1360,
+            "y": 1330
+        },
+        "xv": 75,
+        "yv": 0,
         "inView": false
     },
     {
-        "x": 1116.25,
+        "x": 1135,
         "y": 1280,
         "w": 70,
         "h": 40,
@@ -1941,7 +2107,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1087.5,
+        "x": 1320,
         "y": 1230,
         "w": 70,
         "h": 40,
@@ -1971,7 +2137,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1302.5,
+        "x": 1070,
         "y": 1180,
         "w": 70,
         "h": 40,
@@ -2001,7 +2167,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1068.3333333400528,
+        "x": 1276.6666666666442,
         "y": 1130,
         "w": 70,
         "h": 40,
@@ -2017,21 +2183,21 @@ var obs = [
             ]
         ],
         "speed": 100,
-        "currentPoint": 1,
+        "currentPoint": 0,
         "pointOn": {
-            "x": 1360,
-            "y": 1130
-        },
-        "pointTo": {
             "x": 1030,
             "y": 1130
         },
-        "xv": -100,
-        "yv": 1.2246467991473532e-14,
+        "pointTo": {
+            "x": 1360,
+            "y": 1130
+        },
+        "xv": 100,
+        "yv": 0,
         "inView": false
     },
     {
-        "x": 1106.6666666599472,
+        "x": 1196.6666666666442,
         "y": 1080,
         "w": 70,
         "h": 40,
@@ -2061,7 +2227,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1321.6666666599472,
+        "x": 1113.3333333333558,
         "y": 1030,
         "w": 70,
         "h": 40,
@@ -2077,17 +2243,17 @@ var obs = [
             ]
         ],
         "speed": 100,
-        "currentPoint": 0,
+        "currentPoint": 1,
         "pointOn": {
-            "x": 1030,
-            "y": 1030
-        },
-        "pointTo": {
             "x": 1360,
             "y": 1030
         },
-        "xv": 100,
-        "yv": 0,
+        "pointTo": {
+            "x": 1030,
+            "y": 1030
+        },
+        "xv": -100,
+        "yv": 1.2246467991473532e-14,
         "inView": false
     },
     {
@@ -2191,8 +2357,8 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1344.4312365878336,
-        "y": 794.4312365878336,
+        "x": 1186.0491817317106,
+        "y": 636.0491817317106,
         "w": 100,
         "h": 100,
         "type": "lavamove",
@@ -2207,18 +2373,18 @@ var obs = [
             ]
         ],
         "speed": 250,
-        "currentPoint": 1,
+        "currentPoint": 0,
         "collidable": false,
         "pointOn": {
-            "x": 1350,
-            "y": 800
-        },
-        "pointTo": {
             "x": 1150,
             "y": 600
         },
-        "xv": -176.77669529663686,
-        "yv": -176.7766952966369,
+        "pointTo": {
+            "x": 1350,
+            "y": 800
+        },
+        "xv": 176.7766952966369,
+        "yv": 176.77669529663686,
         "inView": false
     },
     {
@@ -2283,7 +2449,7 @@ var obs = [
         "w": 250,
         "h": 25,
         "type": "rotate-lava",
-        "angle": -66493.5,
+        "angle": -1.5,
         "rotateSpeed": -90,
         "pivotX": 1375,
         "pivotY": 300,
@@ -2291,8 +2457,8 @@ var obs = [
         "canCollide": true,
         "renderType": "rotating",
         "cullingRadius": 125.62344526401112,
-        "unSim": 0,
-        "inView": true
+        "unSim": 2.449999999999994,
+        "inView": false
     },
     {
         "x": 1150,
@@ -2381,7 +2547,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1627.5,
+        "x": 1520,
         "y": 525,
         "w": 25,
         "h": 50,
@@ -2397,18 +2563,18 @@ var obs = [
             ]
         ],
         "speed": 150,
-        "currentPoint": 1,
+        "currentPoint": 0,
         "collidable": true,
         "pointOn": {
-            "x": 1675,
-            "y": 525
-        },
-        "pointTo": {
             "x": 1500,
             "y": 525
         },
-        "xv": -150,
-        "yv": 1.8369701987210297e-14,
+        "pointTo": {
+            "x": 1675,
+            "y": 525
+        },
+        "xv": 150,
+        "yv": 0,
         "inView": false
     },
     {
@@ -2420,8 +2586,8 @@ var obs = [
         "onTime": 0.7,
         "offTime": 0.7,
         "state": false,
-        "timer": 0.38333333333333364,
-        "collidable": false,
+        "timer": 0.3333333333333335,
+        "collidable": true,
         "inView": false
     },
     {
@@ -2551,7 +2717,7 @@ var obs = [
     },
     {
         "x": 1750,
-        "y": 1080.8333333341866,
+        "y": 1046.6666666666624,
         "w": 50,
         "h": 50,
         "type": "lavamove",
@@ -2566,18 +2732,18 @@ var obs = [
             ]
         ],
         "speed": 650,
-        "currentPoint": 0,
+        "currentPoint": 1,
         "collidable": true,
         "pointOn": {
             "x": 1750,
-            "y": 850
+            "y": 1150
         },
         "pointTo": {
             "x": 1750,
-            "y": 1150
+            "y": 850
         },
         "xv": 3.980102097228898e-14,
-        "yv": 650,
+        "yv": -650,
         "inView": false
     },
     {
@@ -2599,7 +2765,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1532.0833333400528,
+        "x": 1593.3333333333558,
         "y": 800,
         "w": 25,
         "h": 250,
@@ -2674,7 +2840,7 @@ var obs = [
     },
     {
         "x": 1650,
-        "y": 1223.3333333400528,
+        "y": 1336.6666666666442,
         "w": 50,
         "h": 50,
         "type": "lavamove",
@@ -2689,18 +2855,18 @@ var obs = [
             ]
         ],
         "speed": 400,
-        "currentPoint": 1,
+        "currentPoint": 0,
         "collidable": true,
         "pointOn": {
             "x": 1650,
-            "y": 1350
+            "y": 1150
         },
         "pointTo": {
             "x": 1650,
-            "y": 1150
+            "y": 1350
         },
         "xv": 2.4492935982947064e-14,
-        "yv": -400,
+        "yv": 400,
         "inView": false
     },
     {
@@ -2759,7 +2925,7 @@ var obs = [
     },
     {
         "x": 1750,
-        "y": 1373.3333333400528,
+        "y": 1486.6666666666442,
         "w": 50,
         "h": 50,
         "type": "lavamove",
@@ -2774,18 +2940,18 @@ var obs = [
             ]
         ],
         "speed": 400,
-        "currentPoint": 1,
+        "currentPoint": 0,
         "collidable": true,
         "pointOn": {
             "x": 1750,
-            "y": 1500
+            "y": 1300
         },
         "pointTo": {
             "x": 1750,
-            "y": 1300
+            "y": 1500
         },
         "xv": 2.4492935982947064e-14,
-        "yv": -400,
+        "yv": 400,
         "inView": false
     },
     {
@@ -2853,7 +3019,7 @@ var obs = [
         "pushBack": 20,
         "startX": 1850,
         "startY": 1300,
-        "pusherId": 0.11302054786367344,
+        "pusherId": 0.720266595942173,
         "xv": 0,
         "yv": 0,
         "pushing": false,
@@ -2905,7 +3071,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1922.5,
+        "x": 1970,
         "y": 1050,
         "w": 25,
         "h": 50,
@@ -2935,7 +3101,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1902.5,
+        "x": 1855,
         "y": 1225,
         "w": 25,
         "h": 50,
@@ -3023,14 +3189,14 @@ var obs = [
         "w": 150,
         "h": 25,
         "type": "rotatingsafe",
-        "angle": 66493.5,
+        "angle": 1.5,
         "rotateSpeed": 90,
         "pivotX": 2125,
         "pivotY": 1200,
         "distToPivot": 0,
         "canCollide": true,
         "cullingRadius": 76.03453162872775,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
@@ -3097,7 +3263,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1835.8333333400528,
+        "x": 1713.3333333333558,
         "y": 1600,
         "w": 50,
         "h": 50,
@@ -3128,7 +3294,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1835.8333333400528,
+        "x": 1713.3333333333558,
         "y": 1700,
         "w": 50,
         "h": 50,
@@ -3220,9 +3386,9 @@ var obs = [
         "type": "switchlava",
         "onTime": 0.5,
         "offTime": 0.5,
-        "state": false,
-        "timer": 0.18333333333226673,
-        "collidable": false,
+        "state": true,
+        "timer": 0.033333333333329745,
+        "collidable": true,
         "inView": false
     },
     {
@@ -3231,7 +3397,7 @@ var obs = [
         "w": 100,
         "h": 25,
         "type": "rotate-lava",
-        "angle": 132987,
+        "angle": 3,
         "rotateSpeed": 180,
         "pivotX": 1325,
         "pivotY": 1625,
@@ -3239,12 +3405,12 @@ var obs = [
         "canCollide": true,
         "renderType": "rotating",
         "cullingRadius": 51.53882032022076,
-        "unSim": 0,
-        "inView": true
+        "unSim": 2.449999999999994,
+        "inView": false
     },
     {
         "x": 1150,
-        "y": 1572.5,
+        "y": 1580,
         "w": 50,
         "h": 50,
         "type": "lavamove",
@@ -3259,18 +3425,18 @@ var obs = [
             ]
         ],
         "speed": 150,
-        "currentPoint": 0,
+        "currentPoint": 1,
         "collidable": true,
         "pointOn": {
             "x": 1150,
-            "y": 1550
+            "y": 1650
         },
         "pointTo": {
             "x": 1150,
-            "y": 1650
+            "y": 1550
         },
         "xv": 9.184850993605149e-15,
-        "yv": 150,
+        "yv": -150,
         "inView": false
     },
     {
@@ -3570,14 +3736,14 @@ var obs = [
         "w": 350,
         "h": 75,
         "type": "rotatingsafe",
-        "angle": 88658,
+        "angle": 2,
         "rotateSpeed": 120,
         "pivotX": 2250,
         "pivotY": 2050,
         "distToPivot": 0,
         "canCollide": true,
         "cullingRadius": 178.97276329095442,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
@@ -3586,14 +3752,14 @@ var obs = [
         "w": 350,
         "h": 75,
         "type": "rotatingsafe",
-        "angle": 88748,
+        "angle": 92,
         "rotateSpeed": 120,
         "pivotX": 2250,
         "pivotY": 2050,
         "distToPivot": 0,
         "canCollide": true,
         "cullingRadius": 178.97276329095442,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
@@ -3636,7 +3802,7 @@ var obs = [
     },
     {
         "x": 2325,
-        "y": 2447.5,
+        "y": 2395,
         "w": 400,
         "h": 50,
         "type": "movingsafe",
@@ -3697,7 +3863,7 @@ var obs = [
         "w": 400,
         "h": 50,
         "type": "rotate-lava",
-        "angle": 132987,
+        "angle": 3,
         "rotateSpeed": 180,
         "pivotX": 2350,
         "pivotY": 2950,
@@ -3705,8 +3871,8 @@ var obs = [
         "canCollide": false,
         "renderType": "rotating",
         "cullingRadius": 201.55644370746373,
-        "unSim": 0,
-        "inView": true
+        "unSim": 2.449999999999994,
+        "inView": false
     },
     {
         "points": [
@@ -3867,38 +4033,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 2677.5,
-        "y": 3350,
-        "w": 50,
-        "h": 50,
-        "type": "lavamove",
-        "points": [
-            [
-                2500,
-                3350
-            ],
-            [
-                2700,
-                3350
-            ]
-        ],
-        "speed": 150,
-        "currentPoint": 1,
-        "collidable": true,
-        "pointOn": {
-            "x": 2700,
-            "y": 3350
-        },
-        "pointTo": {
-            "x": 2500,
-            "y": 3350
-        },
-        "xv": -150,
-        "yv": 1.8369701987210297e-14,
-        "inView": false
-    },
-    {
-        "x": 2522.5,
+        "x": 2670,
         "y": 3350,
         "w": 50,
         "h": 50,
@@ -3929,6 +4064,37 @@ var obs = [
         "inView": false
     },
     {
+        "x": 2530,
+        "y": 3350,
+        "w": 50,
+        "h": 50,
+        "type": "lavamove",
+        "points": [
+            [
+                2500,
+                3350
+            ],
+            [
+                2700,
+                3350
+            ]
+        ],
+        "speed": 150,
+        "currentPoint": 1,
+        "collidable": true,
+        "pointOn": {
+            "x": 2700,
+            "y": 3350
+        },
+        "pointTo": {
+            "x": 2500,
+            "y": 3350
+        },
+        "xv": -150,
+        "yv": 1.8369701987210297e-14,
+        "inView": false
+    },
+    {
         "x": 1200,
         "y": 1900,
         "r": 5,
@@ -3956,7 +4122,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 2422.5,
+        "x": 2370,
         "y": 3300,
         "w": 50,
         "h": 50,
@@ -3991,7 +4157,7 @@ var obs = [
         "w": 200,
         "h": 35,
         "type": "rotate-lava",
-        "angle": 132987,
+        "angle": 3,
         "rotateSpeed": 180,
         "pivotX": 2400,
         "pivotY": 3475,
@@ -3999,8 +4165,8 @@ var obs = [
         "canCollide": true,
         "renderType": "rotating",
         "cullingRadius": 101.51970252123476,
-        "unSim": 0,
-        "inView": true
+        "unSim": 2.449999999999994,
+        "inView": false
     },
     {
         "x": 2100,
@@ -4056,7 +4222,7 @@ var obs = [
     },
     {
         "x": 2200,
-        "y": 3365.4166666801057,
+        "y": 3451.6666666667115,
         "w": 50,
         "h": 50,
         "type": "lavamove",
@@ -4174,7 +4340,7 @@ var obs = [
     },
     {
         "x": 1825,
-        "y": 3352.5,
+        "y": 3330,
         "w": 100,
         "h": 37.5,
         "type": "movingsafe",
@@ -4204,7 +4370,7 @@ var obs = [
     },
     {
         "x": 1575,
-        "y": 3260,
+        "y": 3282.5,
         "w": 100,
         "h": 37.5,
         "type": "movingsafe",
@@ -4319,7 +4485,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1579.1666666599472,
+        "x": 1491.6666666666442,
         "y": 3475,
         "w": 75,
         "h": 50,
@@ -4349,7 +4515,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1895.8333333400528,
+        "x": 1983.3333333333558,
         "y": 3575,
         "w": 75,
         "h": 50,
@@ -4379,7 +4545,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1579.1666666599472,
+        "x": 1491.6666666666442,
         "y": 3575,
         "w": 75,
         "h": 50,
@@ -4409,7 +4575,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1895.8333333400528,
+        "x": 1983.3333333333558,
         "y": 3475,
         "w": 75,
         "h": 50,
@@ -4444,7 +4610,7 @@ var obs = [
         "w": 250,
         "h": 50,
         "type": "rotate-lava",
-        "angle": -118210.66666652271,
+        "angle": -2.6666666666666665,
         "rotateSpeed": -160,
         "pivotX": 2175,
         "pivotY": 3775,
@@ -4452,8 +4618,8 @@ var obs = [
         "canCollide": true,
         "renderType": "rotating",
         "cullingRadius": 127.47548783981962,
-        "unSim": 0,
-        "inView": true
+        "unSim": 2.449999999999994,
+        "inView": false
     },
     {
         "x": 2150,
@@ -4524,14 +4690,14 @@ var obs = [
         "w": 250,
         "h": 50,
         "type": "rotatingsafe",
-        "angle": 118300.66666652239,
+        "angle": 92.66666666666666,
         "rotateSpeed": 160,
         "pivotX": 2375,
         "pivotY": 3775,
         "distToPivot": 0,
         "canCollide": true,
         "cullingRadius": 127.47548783981962,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
@@ -4553,7 +4719,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 2117.5,
+        "x": 2140,
         "y": 4000,
         "w": 100,
         "h": 100,
@@ -4569,18 +4735,18 @@ var obs = [
             ]
         ],
         "speed": 450,
-        "currentPoint": 0,
+        "currentPoint": 1,
         "collidable": true,
         "pointOn": {
-            "x": 2050,
-            "y": 4000
-        },
-        "pointTo": {
             "x": 2650,
             "y": 4000
         },
-        "xv": 450,
-        "yv": 0,
+        "pointTo": {
+            "x": 2050,
+            "y": 4000
+        },
+        "xv": -450,
+        "yv": 5.510910596163089e-14,
         "inView": false
     },
     {
@@ -4701,147 +4867,147 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1790.5863898002738,
-        "y": 4830.438834441875,
+        "x": 2349.9700146509026,
+        "y": 4554.58135844997,
         "w": 100,
         "h": 100,
         "type": "rotatingsafe",
-        "angle": 33246.75,
+        "angle": 0.75,
         "rotateSpeed": 45,
         "pivotX": 2000,
         "pivotY": 4550,
         "distToPivot": 350,
         "canCollide": true,
         "cullingRadius": 420.71067811865476,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
-        "x": 1719.5611655581124,
-        "y": 4340.586389800291,
+        "x": 1995.4186415500294,
+        "y": 4899.970014650902,
         "w": 100,
         "h": 100,
         "type": "rotatingsafe",
-        "angle": 33336.75,
+        "angle": 90.75,
         "rotateSpeed": 45,
         "pivotX": 2000,
         "pivotY": 4550,
         "distToPivot": 350,
         "canCollide": true,
         "cullingRadius": 420.71067811865476,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
-        "x": 2209.4136101997233,
-        "y": 4269.561165558123,
+        "x": 1650.0299853490976,
+        "y": 4545.41864155003,
         "w": 100,
         "h": 100,
         "type": "rotatingsafe",
-        "angle": 33426.75,
+        "angle": 180.75,
         "rotateSpeed": 45,
         "pivotX": 2000,
         "pivotY": 4550,
         "distToPivot": 350,
         "canCollide": true,
         "cullingRadius": 420.71067811865476,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
-        "x": 2280.4388344418658,
-        "y": 4759.413610199737,
+        "x": 2004.5813584499706,
+        "y": 4200.029985349098,
         "w": 100,
         "h": 100,
         "type": "rotatingsafe",
-        "angle": 33516.75,
+        "angle": 270.75,
         "rotateSpeed": 45,
         "pivotX": 2000,
         "pivotY": 4550,
         "distToPivot": 350,
         "canCollide": true,
         "cullingRadius": 420.71067811865476,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
-        "x": 1850.4188498573383,
-        "y": 4349.686546827233,
+        "x": 2249.9785818935015,
+        "y": 4546.7276011071635,
         "w": 100,
         "h": 75,
         "type": "rotatingsafe",
-        "angle": -33246.75,
+        "angle": -0.75,
         "rotateSpeed": -45,
         "pivotX": 2000,
         "pivotY": 4550,
         "distToPivot": 250,
         "canCollide": true,
         "cullingRadius": 312.5,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
-        "x": 2248.267114238734,
-        "y": 4520.615650635562,
+        "x": 1877.8446896257612,
+        "y": 4768.124001768199,
         "w": 100,
         "h": 75,
         "type": "rotatingsafe",
-        "angle": -33126.75,
+        "angle": 119.25,
         "rotateSpeed": -45,
         "pivotX": 2000,
         "pivotY": 4550,
         "distToPivot": 250,
         "canCollide": true,
         "cullingRadius": 312.5,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
-        "x": 1901.3140359039242,
-        "y": 4779.697802537221,
+        "x": 1872.176728480737,
+        "y": 4335.148397124637,
         "w": 100,
         "h": 75,
         "type": "rotatingsafe",
-        "angle": -33006.75,
+        "angle": 239.25,
         "rotateSpeed": -45,
         "pivotX": 2000,
         "pivotY": 4550,
         "distToPivot": 250,
         "canCollide": true,
         "cullingRadius": 312.5,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
-        "x": 1957.397698294407,
-        "y": 4406.177039769773,
+        "x": 2149.9485987463336,
+        "y": 4553.926542246181,
         "w": 100,
         "h": 50,
         "type": "rotatingsafe",
-        "angle": 66493.5,
+        "angle": 1.5,
         "rotateSpeed": 90,
         "pivotX": 2000,
         "pivotY": 4550,
         "distToPivot": 150,
         "canCollide": true,
         "cullingRadius": 205.90169943749476,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
-        "x": 2042.6023017056107,
-        "y": 4693.822960230223,
+        "x": 1850.0514012536664,
+        "y": 4546.073457753819,
         "w": 100,
         "h": 50,
         "type": "rotatingsafe",
-        "angle": 66673.5,
+        "angle": 181.5,
         "rotateSpeed": 90,
         "pivotX": 2000,
         "pivotY": 4550,
         "distToPivot": 150,
         "canCollide": true,
         "cullingRadius": 205.90169943749476,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
@@ -4850,14 +5016,14 @@ var obs = [
         "w": 150,
         "h": 50,
         "type": "rotatingsafe",
-        "angle": -88478,
+        "angle": 178,
         "rotateSpeed": -120,
         "pivotX": 2000,
         "pivotY": 4550,
         "distToPivot": 0,
         "canCollide": true,
         "cullingRadius": 79.05694150420949,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
@@ -4981,14 +5147,14 @@ var obs = [
         "w": 300,
         "h": 60,
         "type": "rotatingsafe",
-        "angle": -66493.5,
+        "angle": -1.5,
         "rotateSpeed": -90,
         "pivotX": 925,
         "pivotY": 4175,
         "distToPivot": 0,
         "canCollide": true,
         "cullingRadius": 152.97058540778355,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
@@ -5000,8 +5166,8 @@ var obs = [
         "onTime": 0.3,
         "offTime": 1.25,
         "state": false,
-        "timer": 0.5333333333341814,
-        "collidable": false,
+        "timer": 0.6333333333333373,
+        "collidable": true,
         "inView": false
     },
     {
@@ -5064,14 +5230,14 @@ var obs = [
         "w": 25,
         "h": 25,
         "type": "rotatingsafe",
-        "angle": 132987,
+        "angle": 3,
         "rotateSpeed": 180,
         "pivotX": 900,
         "pivotY": 4575,
         "distToPivot": 0,
         "canCollide": true,
         "cullingRadius": 17.67766952966369,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
@@ -5089,14 +5255,14 @@ var obs = [
         "w": 25,
         "h": 100,
         "type": "rotatingsafe",
-        "angle": 132987,
+        "angle": 3,
         "rotateSpeed": 180,
         "pivotX": 1300,
         "pivotY": 4375,
         "distToPivot": 0,
         "canCollide": true,
         "cullingRadius": 51.53882032022076,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
@@ -5254,7 +5420,7 @@ var obs = [
     },
     {
         "x": 700,
-        "y": 4877.5,
+        "y": 4705,
         "w": 550,
         "h": 62.5,
         "type": "movingsafe",
@@ -5401,7 +5567,7 @@ var obs = [
         "w": 300,
         "h": 25,
         "type": "rotate-lava",
-        "angle": 66493.5,
+        "angle": 1.5,
         "rotateSpeed": 90,
         "pivotX": 500,
         "pivotY": 5100,
@@ -5409,11 +5575,11 @@ var obs = [
         "canCollide": true,
         "renderType": "rotating",
         "cullingRadius": 150.5199322349037,
-        "unSim": 0,
-        "inView": true
+        "unSim": 2.449999999999994,
+        "inView": false
     },
     {
-        "x": 348.3333333342063,
+        "x": 399.16666666666345,
         "y": 5375,
         "w": 50,
         "h": 50,
@@ -5429,18 +5595,18 @@ var obs = [
             ]
         ],
         "speed": 350,
-        "currentPoint": 1,
+        "currentPoint": 0,
         "collidable": true,
         "pointOn": {
-            "x": 137.5,
-            "y": 5375
-        },
-        "pointTo": {
             "x": 512.5,
             "y": 5375
         },
-        "xv": 350,
-        "yv": 0,
+        "pointTo": {
+            "x": 137.5,
+            "y": 5375
+        },
+        "xv": -350,
+        "yv": 4.2862637970157365e-14,
         "inView": false
     },
     {
@@ -5449,7 +5615,7 @@ var obs = [
         "w": 300,
         "h": 25,
         "type": "rotate-lava",
-        "angle": 66583.5,
+        "angle": 91.5,
         "rotateSpeed": 90,
         "pivotX": 500,
         "pivotY": 5100,
@@ -5457,16 +5623,16 @@ var obs = [
         "canCollide": true,
         "renderType": "rotating",
         "cullingRadius": 150.5199322349037,
-        "unSim": 0,
-        "inView": true
+        "unSim": 2.449999999999994,
+        "inView": false
     },
     {
-        "x": 149.35953184655315,
-        "y": 5584.64331579819,
+        "x": 369.83554417054887,
+        "y": 5643.719685250847,
         "w": 50,
         "h": 50,
         "type": "rotate-lava",
-        "angle": -132987,
+        "angle": -3,
         "rotateSpeed": -180,
         "pivotX": 250,
         "pivotY": 5650,
@@ -5474,8 +5640,8 @@ var obs = [
         "canCollide": true,
         "renderType": "rotating",
         "cullingRadius": 155.35533905932738,
-        "unSim": 0,
-        "inView": true
+        "unSim": 2.449999999999994,
+        "inView": false
     },
     {
         "x": 325,
@@ -5496,12 +5662,12 @@ var obs = [
         "inView": false
     },
     {
-        "x": 350.640468153455,
-        "y": 5715.356684201797,
+        "x": 130.16445582945113,
+        "y": 5656.280314749153,
         "w": 50,
         "h": 50,
         "type": "rotate-lava",
-        "angle": -132807,
+        "angle": 177,
         "rotateSpeed": -180,
         "pivotX": 250,
         "pivotY": 5650,
@@ -5509,8 +5675,8 @@ var obs = [
         "canCollide": true,
         "renderType": "rotating",
         "cullingRadius": 155.35533905932738,
-        "unSim": 0,
-        "inView": true
+        "unSim": 2.449999999999994,
+        "inView": false
     },
     {
         "x": 237.5,
@@ -5701,7 +5867,7 @@ var obs = [
     },
     {
         "x": 1450,
-        "y": 5545.833333350127,
+        "y": 5633.333333333379,
         "w": 100,
         "h": 100,
         "type": "movingsafe",
@@ -5739,7 +5905,7 @@ var obs = [
     },
     {
         "x": 1250,
-        "y": 5554.166666649873,
+        "y": 5466.666666666621,
         "w": 100,
         "h": 100,
         "type": "movingsafe",
@@ -6223,7 +6389,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 2172.5,
+        "x": 2180,
         "y": 5550,
         "w": 100,
         "h": 100,
@@ -6239,22 +6405,22 @@ var obs = [
             ]
         ],
         "speed": 150,
-        "currentPoint": 0,
+        "currentPoint": 1,
         "collidable": true,
         "pointOn": {
-            "x": 2150,
-            "y": 5550
-        },
-        "pointTo": {
             "x": 2350,
             "y": 5550
         },
-        "xv": 150,
-        "yv": 0,
+        "pointTo": {
+            "x": 2150,
+            "y": 5550
+        },
+        "xv": -150,
+        "yv": 1.8369701987210297e-14,
         "inView": false
     },
     {
-        "x": 2405,
+        "x": 2390,
         "y": 5450,
         "w": 100,
         "h": 100,
@@ -6270,22 +6436,22 @@ var obs = [
             ]
         ],
         "speed": 300,
-        "currentPoint": 0,
+        "currentPoint": 1,
         "collidable": true,
         "pointOn": {
-            "x": 2450,
-            "y": 5450
-        },
-        "pointTo": {
             "x": 2050,
             "y": 5450
         },
-        "xv": -300,
-        "yv": 3.6739403974420595e-14,
+        "pointTo": {
+            "x": 2450,
+            "y": 5450
+        },
+        "xv": 300,
+        "yv": 0,
         "inView": false
     },
     {
-        "x": 2017.5,
+        "x": 2040,
         "y": 5350,
         "w": 100,
         "h": 100,
@@ -6301,18 +6467,18 @@ var obs = [
             ]
         ],
         "speed": 450,
-        "currentPoint": 0,
+        "currentPoint": 1,
         "collidable": true,
         "pointOn": {
-            "x": 1950,
-            "y": 5350
-        },
-        "pointTo": {
             "x": 2550,
             "y": 5350
         },
-        "xv": 450,
-        "yv": 0,
+        "pointTo": {
+            "x": 1950,
+            "y": 5350
+        },
+        "xv": -450,
+        "yv": 5.510910596163089e-14,
         "inView": false
     },
     {
@@ -6434,7 +6600,7 @@ var obs = [
         "w": 200,
         "h": 25,
         "type": "rotate-lava",
-        "angle": -132987,
+        "angle": -3,
         "rotateSpeed": -180,
         "pivotX": 2700,
         "pivotY": 5200,
@@ -6442,8 +6608,8 @@ var obs = [
         "canCollide": true,
         "renderType": "rotating",
         "cullingRadius": 100.77822185373186,
-        "unSim": 0,
-        "inView": true
+        "unSim": 2.449999999999994,
+        "inView": false
     },
     {
         "points": [
@@ -6501,7 +6667,7 @@ var obs = [
         "w": 200,
         "h": 25,
         "type": "rotate-lava",
-        "angle": 132987,
+        "angle": 3,
         "rotateSpeed": 180,
         "pivotX": 1900,
         "pivotY": 5200,
@@ -6509,8 +6675,8 @@ var obs = [
         "canCollide": true,
         "renderType": "rotating",
         "cullingRadius": 100.77822185373186,
-        "unSim": 0,
-        "inView": true
+        "unSim": 2.449999999999994,
+        "inView": false
     },
     {
         "x": 2000,
@@ -6683,7 +6849,7 @@ var obs = [
     },
     {
         "x": 2100,
-        "y": 5147.916666639789,
+        "y": 5191.666666666577,
         "w": 100,
         "h": 50,
         "type": "lavamove",
@@ -6714,7 +6880,7 @@ var obs = [
     },
     {
         "x": 2400,
-        "y": 5147.916666639789,
+        "y": 5191.666666666577,
         "w": 100,
         "h": 50,
         "type": "lavamove",
@@ -6745,7 +6911,7 @@ var obs = [
     },
     {
         "x": 2200,
-        "y": 5204.166666639789,
+        "y": 5116.666666666577,
         "w": 200,
         "h": 50,
         "type": "lavamove",
@@ -7043,7 +7209,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1992.9166666642461,
+        "x": 2018.3333333333392,
         "y": 5900,
         "w": 75,
         "h": 50,
@@ -7059,22 +7225,22 @@ var obs = [
             ]
         ],
         "speed": 175,
-        "currentPoint": 0,
+        "currentPoint": 1,
         "pointOn": {
-            "x": 1950,
-            "y": 5900
-        },
-        "pointTo": {
             "x": 2075,
             "y": 5900
         },
-        "xv": 175,
-        "yv": 0,
+        "pointTo": {
+            "x": 1950,
+            "y": 5900
+        },
+        "xv": -175,
+        "yv": 2.1431318985078682e-14,
         "inView": false
     },
     {
         "x": 1650,
-        "y": 6045.833333360211,
+        "y": 6033.333333333423,
         "w": 50,
         "h": 75,
         "type": "movingsafe",
@@ -7103,7 +7269,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1697.5,
+        "x": 1645,
         "y": 6275,
         "w": 25,
         "h": 75,
@@ -7144,8 +7310,8 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1775,
-        "y": 5720.833333350127,
+        "x": 1758.3333333333887,
+        "y": 5625,
         "w": 100,
         "h": 100,
         "type": "lavamove",
@@ -7168,23 +7334,23 @@ var obs = [
             ]
         ],
         "speed": 250,
-        "currentPoint": 1,
+        "currentPoint": 2,
         "collidable": true,
         "pointOn": {
             "x": 1775,
-            "y": 5775
-        },
-        "pointTo": {
-            "x": 1775,
             "y": 5625
         },
-        "xv": 1.5308084989341916e-14,
-        "yv": -250,
+        "pointTo": {
+            "x": 1625,
+            "y": 5625
+        },
+        "xv": -250,
+        "yv": 3.061616997868383e-14,
         "inView": false
     },
     {
-        "x": 1625,
-        "y": 5679.166666649873,
+        "x": 1641.6666666666113,
+        "y": 5775,
         "w": 100,
         "h": 100,
         "type": "lavamove",
@@ -7207,18 +7373,18 @@ var obs = [
             ]
         ],
         "speed": 250,
-        "currentPoint": 3,
+        "currentPoint": 0,
         "collidable": true,
         "pointOn": {
             "x": 1625,
-            "y": 5625
-        },
-        "pointTo": {
-            "x": 1625,
             "y": 5775
         },
-        "xv": 1.5308084989341916e-14,
-        "yv": 250,
+        "pointTo": {
+            "x": 1775,
+            "y": 5775
+        },
+        "xv": 250,
+        "yv": 0,
         "inView": false
     },
     {
@@ -7321,7 +7487,7 @@ var obs = [
     },
     {
         "x": 1700,
-        "y": 5445.833333360211,
+        "y": 5433.333333333423,
         "w": 100,
         "h": 25,
         "type": "movingsafe",
@@ -7455,7 +7621,7 @@ var obs = [
     },
     {
         "x": 2450,
-        "y": 5691.416666639789,
+        "y": 5663.666666666577,
         "w": 50,
         "h": 25,
         "type": "movingsafe",
@@ -7485,7 +7651,7 @@ var obs = [
     },
     {
         "x": 2450,
-        "y": 5658.583333360211,
+        "y": 5686.333333333423,
         "w": 50,
         "h": 25,
         "type": "movingsafe",
@@ -7638,7 +7804,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 2802.5,
+        "x": 2580,
         "y": 5895,
         "w": 60,
         "h": 60,
@@ -7668,7 +7834,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 2712.5,
+        "x": 2935,
         "y": 5895,
         "w": 60,
         "h": 60,
@@ -7847,14 +8013,14 @@ var obs = [
         "w": 50,
         "h": 275,
         "type": "rotatingsafe",
-        "angle": 66493.5,
+        "angle": 1.5,
         "rotateSpeed": 90,
         "pivotX": 2850,
         "pivotY": 5525,
         "distToPivot": 0,
         "canCollide": true,
         "cullingRadius": 139.75424859373686,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
@@ -7863,14 +8029,14 @@ var obs = [
         "w": 50,
         "h": 275,
         "type": "rotatingsafe",
-        "angle": 66583.5,
+        "angle": 91.5,
         "rotateSpeed": 90,
         "pivotX": 2850,
         "pivotY": 5525,
         "distToPivot": 0,
         "canCollide": true,
         "cullingRadius": 139.75424859373686,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
@@ -8187,7 +8353,7 @@ var obs = [
     },
     {
         "x": 2287.5,
-        "y": 6065,
+        "y": 6107.5,
         "w": 25,
         "h": 25,
         "type": "movingsafe",
@@ -8202,22 +8368,22 @@ var obs = [
             ]
         ],
         "speed": 150,
-        "currentPoint": 1,
+        "currentPoint": 0,
         "pointOn": {
-            "x": 2287.5,
-            "y": 6112.5
-        },
-        "pointTo": {
             "x": 2287.5,
             "y": 6037.5
         },
+        "pointTo": {
+            "x": 2287.5,
+            "y": 6112.5
+        },
         "xv": 9.184850993605149e-15,
-        "yv": -150,
+        "yv": 150,
         "inView": false
     },
     {
         "x": 2287.5,
-        "y": 6240,
+        "y": 6282.5,
         "w": 25,
         "h": 25,
         "type": "movingsafe",
@@ -8232,17 +8398,17 @@ var obs = [
             ]
         ],
         "speed": 150,
-        "currentPoint": 1,
+        "currentPoint": 0,
         "pointOn": {
-            "x": 2287.5,
-            "y": 6287.5
-        },
-        "pointTo": {
             "x": 2287.5,
             "y": 6212.5
         },
+        "pointTo": {
+            "x": 2287.5,
+            "y": 6287.5
+        },
         "xv": 9.184850993605149e-15,
-        "yv": -150,
+        "yv": 150,
         "inView": false
     },
     {
@@ -8289,14 +8455,14 @@ var obs = [
         "w": 100,
         "h": 20,
         "type": "rotatingsafe",
-        "angle": 132987,
+        "angle": 3,
         "rotateSpeed": 180,
         "pivotX": 2525,
         "pivotY": 6500,
         "distToPivot": 0,
         "canCollide": true,
         "cullingRadius": 50.99019513592785,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
@@ -8332,14 +8498,14 @@ var obs = [
         "w": 300,
         "h": 50,
         "type": "rotatingsafe",
-        "angle": 66493.5,
+        "angle": 1.5,
         "rotateSpeed": 90,
         "pivotX": 2775,
         "pivotY": 6250,
         "distToPivot": 0,
         "canCollide": true,
         "cullingRadius": 152.0690632574555,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
@@ -8348,14 +8514,14 @@ var obs = [
         "w": 300,
         "h": 50,
         "type": "rotatingsafe",
-        "angle": 66583.5,
+        "angle": 91.5,
         "rotateSpeed": 90,
         "pivotX": 2775,
         "pivotY": 6250,
         "distToPivot": 0,
         "canCollide": true,
         "cullingRadius": 152.0690632574555,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
@@ -8391,7 +8557,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1845,
+        "x": 2060,
         "y": 6425,
         "w": 75,
         "h": 50,
@@ -8407,22 +8573,22 @@ var obs = [
             ]
         ],
         "speed": 300,
-        "currentPoint": 1,
+        "currentPoint": 0,
         "pointOn": {
-            "x": 1750,
-            "y": 6425
-        },
-        "pointTo": {
             "x": 2100,
             "y": 6425
         },
-        "xv": 300,
-        "yv": 0,
+        "pointTo": {
+            "x": 1750,
+            "y": 6425
+        },
+        "xv": -300,
+        "yv": 3.6739403974420595e-14,
         "inView": false
     },
     {
         "x": 2125,
-        "y": 6272.5,
+        "y": 6380,
         "w": 50,
         "h": 75,
         "type": "movingsafe",
@@ -8437,17 +8603,17 @@ var obs = [
             ]
         ],
         "speed": 150,
-        "currentPoint": 0,
+        "currentPoint": 1,
         "pointOn": {
-            "x": 2125,
-            "y": 6225
-        },
-        "pointTo": {
             "x": 2125,
             "y": 6400
         },
+        "pointTo": {
+            "x": 2125,
+            "y": 6225
+        },
         "xv": 9.184850993605149e-15,
-        "yv": 150,
+        "yv": -150,
         "inView": false
     },
     {
@@ -8833,14 +8999,14 @@ var obs = [
         "w": 200,
         "h": 25,
         "type": "rotatingsafe",
-        "angle": 66493.5,
+        "angle": 1.5,
         "rotateSpeed": 90,
         "pivotX": 975,
         "pivotY": 6475,
         "distToPivot": 0,
         "canCollide": true,
         "cullingRadius": 100.77822185373186,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
@@ -8849,14 +9015,14 @@ var obs = [
         "w": 200,
         "h": 25,
         "type": "rotatingsafe",
-        "angle": 66583.5,
+        "angle": 91.5,
         "rotateSpeed": 90,
         "pivotX": 975,
         "pivotY": 6475,
         "distToPivot": 0,
         "canCollide": true,
         "cullingRadius": 100.77822185373186,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
@@ -10746,14 +10912,14 @@ var obs = [
         "w": 525,
         "h": 175,
         "type": "rotatingsafe",
-        "angle": 66493.5,
+        "angle": 1.5,
         "rotateSpeed": 90,
         "pivotX": 2950,
         "pivotY": 7800,
         "distToPivot": 0,
         "canCollide": true,
         "cullingRadius": 276.69929526473317,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
@@ -10912,7 +11078,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 2422.5,
+        "x": 2470,
         "y": 8050,
         "w": 25,
         "h": 100,
@@ -11524,7 +11690,7 @@ var obs = [
     },
     {
         "x": 1050,
-        "y": 8426.733333371307,
+        "y": 8375.866666666532,
         "w": 150,
         "h": 50,
         "type": "lavamove",
@@ -11539,49 +11705,49 @@ var obs = [
             ]
         ],
         "speed": 476,
-        "currentPoint": 0,
+        "currentPoint": 1,
         "collidable": false,
         "pointOn": {
             "x": 1050,
-            "y": 8150
+            "y": 8850
         },
         "pointTo": {
             "x": 1050,
-            "y": 8850
-        },
-        "xv": 2.914659381970701e-14,
-        "yv": 476,
-        "inView": false
-    },
-    {
-        "x": 1200,
-        "y": 8573.266666628684,
-        "w": 150,
-        "h": 50,
-        "type": "lavamove",
-        "points": [
-            [
-                1200,
-                8850
-            ],
-            [
-                1200,
-                8150
-            ]
-        ],
-        "speed": 476,
-        "currentPoint": 0,
-        "collidable": false,
-        "pointOn": {
-            "x": 1200,
-            "y": 8850
-        },
-        "pointTo": {
-            "x": 1200,
             "y": 8150
         },
         "xv": 2.914659381970701e-14,
         "yv": -476,
+        "inView": false
+    },
+    {
+        "x": 1200,
+        "y": 8624.133333333457,
+        "w": 150,
+        "h": 50,
+        "type": "lavamove",
+        "points": [
+            [
+                1200,
+                8850
+            ],
+            [
+                1200,
+                8150
+            ]
+        ],
+        "speed": 476,
+        "currentPoint": 1,
+        "collidable": false,
+        "pointOn": {
+            "x": 1200,
+            "y": 8150
+        },
+        "pointTo": {
+            "x": 1200,
+            "y": 8850
+        },
+        "xv": 2.914659381970701e-14,
+        "yv": 476,
         "inView": false
     },
     {
@@ -11604,7 +11770,7 @@ var obs = [
     },
     {
         "x": 1050,
-        "y": 8330,
+        "y": 8325,
         "w": 175,
         "h": 50,
         "type": "lava",
@@ -11621,7 +11787,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 1138.9500000080634,
+        "x": 1122.599999999973,
         "y": 8625,
         "w": 75,
         "h": 150,
@@ -11637,21 +11803,21 @@ var obs = [
             ]
         ],
         "speed": 153,
-        "currentPoint": 0,
+        "currentPoint": 1,
         "pointOn": {
-            "x": 1050,
-            "y": 8625
-        },
-        "pointTo": {
             "x": 1275,
             "y": 8625
         },
-        "xv": 153,
-        "yv": 0,
+        "pointTo": {
+            "x": 1050,
+            "y": 8625
+        },
+        "xv": -153,
+        "yv": 1.8737096026954503e-14,
         "inView": false
     },
     {
-        "x": 1186.0499999919366,
+        "x": 1202.400000000027,
         "y": 8275,
         "w": 75,
         "h": 150,
@@ -11667,17 +11833,17 @@ var obs = [
             ]
         ],
         "speed": 153,
-        "currentPoint": 1,
+        "currentPoint": 0,
         "pointOn": {
-            "x": 1275,
-            "y": 8275
-        },
-        "pointTo": {
             "x": 1050,
             "y": 8275
         },
-        "xv": -153,
-        "yv": 1.8737096026954503e-14,
+        "pointTo": {
+            "x": 1275,
+            "y": 8275
+        },
+        "xv": 153,
+        "yv": 0,
         "inView": false
     },
     {
@@ -11794,7 +11960,7 @@ var obs = [
         "w": 130,
         "h": 10,
         "type": "rotate-lava",
-        "angle": 88658,
+        "angle": 2,
         "rotateSpeed": 120,
         "pivotX": 580,
         "pivotY": 8550,
@@ -11802,11 +11968,11 @@ var obs = [
         "canCollide": true,
         "renderType": "rotating",
         "cullingRadius": 65.19202405202648,
-        "unSim": 0,
-        "inView": true
+        "unSim": 2.449999999999994,
+        "inView": false
     },
     {
-        "x": 512.5,
+        "x": 500,
         "y": 8630,
         "w": 10,
         "h": 10,
@@ -11837,7 +12003,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 407.5,
+        "x": 420,
         "y": 8620,
         "w": 10,
         "h": 10,
@@ -11932,14 +12098,14 @@ var obs = [
         "w": 160,
         "h": 10,
         "type": "rotatingsafe",
-        "angle": 110822.5,
+        "angle": 2.5,
         "rotateSpeed": 150,
         "pivotX": 200,
         "pivotY": 8760,
         "distToPivot": 0,
         "canCollide": true,
         "cullingRadius": 80.15609770940699,
-        "unSim": 0,
+        "unSim": 2.449999999999994,
         "inView": false
     },
     {
@@ -11961,8 +12127,8 @@ var obs = [
         "inView": false
     },
     {
-        "x": 709.3315663753498,
-        "y": 8364.144417903475,
+        "x": 743.9865792556727,
+        "y": 8437.305000650797,
         "w": 10,
         "h": 20,
         "type": "lavamove",
@@ -12043,8 +12209,8 @@ var obs = [
         "inView": false
     },
     {
-        "x": 824.5330763372402,
-        "y": 8265.199421758827,
+        "x": 869.5479459337637,
+        "y": 8366.482878350975,
         "w": 10,
         "h": 20,
         "type": "lavamove",
@@ -12104,7 +12270,7 @@ var obs = [
     },
     {
         "x": 2375,
-        "y": 8670,
+        "y": 9165,
         "w": 200,
         "h": 200,
         "type": "movingsafe",
@@ -12141,7 +12307,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 2620,
+        "x": 3115,
         "y": 9775,
         "w": 200,
         "h": 200,
@@ -12180,7 +12346,7 @@ var obs = [
     },
     {
         "x": 3725,
-        "y": 9530,
+        "y": 9035,
         "w": 200,
         "h": 200,
         "type": "movingsafe",
@@ -12217,7 +12383,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 3480,
+        "x": 2985,
         "y": 8425,
         "w": 200,
         "h": 200,
@@ -12255,7 +12421,45 @@ var obs = [
         "inView": false
     },
     {
-        "x": 2720,
+        "x": 2675,
+        "y": 9465,
+        "w": 150,
+        "h": 150,
+        "type": "movingsafe",
+        "points": [
+            [
+                2675,
+                8725
+            ],
+            [
+                2675,
+                9525
+            ],
+            [
+                3475,
+                9525
+            ],
+            [
+                3475,
+                8725
+            ]
+        ],
+        "speed": 300,
+        "currentPoint": 0,
+        "pointOn": {
+            "x": 2675,
+            "y": 8725
+        },
+        "pointTo": {
+            "x": 2675,
+            "y": 9525
+        },
+        "xv": 1.8369701987210297e-14,
+        "yv": 300,
+        "inView": false
+    },
+    {
+        "x": 3415,
         "y": 9525,
         "w": 150,
         "h": 150,
@@ -12294,7 +12498,7 @@ var obs = [
     },
     {
         "x": 3475,
-        "y": 9480,
+        "y": 8785,
         "w": 150,
         "h": 150,
         "type": "movingsafe",
@@ -12331,7 +12535,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 3430,
+        "x": 2735,
         "y": 8725,
         "w": 150,
         "h": 150,
@@ -12369,46 +12573,8 @@ var obs = [
         "inView": false
     },
     {
-        "x": 2675,
-        "y": 8770,
-        "w": 150,
-        "h": 150,
-        "type": "movingsafe",
-        "points": [
-            [
-                2675,
-                8725
-            ],
-            [
-                2675,
-                9525
-            ],
-            [
-                3475,
-                9525
-            ],
-            [
-                3475,
-                8725
-            ]
-        ],
-        "speed": 300,
-        "currentPoint": 0,
-        "pointOn": {
-            "x": 2675,
-            "y": 8725
-        },
-        "pointTo": {
-            "x": 2675,
-            "y": 9525
-        },
-        "xv": 1.8369701987210297e-14,
-        "yv": 300,
-        "inView": false
-    },
-    {
-        "x": 3020,
-        "y": 9325,
+        "x": 3275,
+        "y": 9285,
         "w": 100,
         "h": 100,
         "type": "movingsafe",
@@ -12431,17 +12597,17 @@ var obs = [
             ]
         ],
         "speed": 300,
-        "currentPoint": 1,
+        "currentPoint": 2,
         "pointOn": {
-            "x": 2925,
+            "x": 3275,
             "y": 9325
         },
         "pointTo": {
             "x": 3275,
-            "y": 9325
+            "y": 8975
         },
-        "xv": 300,
-        "yv": 0,
+        "xv": 1.8369701987210297e-14,
+        "yv": -300,
         "inView": false
     },
     {
@@ -12455,7 +12621,7 @@ var obs = [
     {
         "x": 2350,
         "y": 9225,
-        "w": 175,
+        "w": 150,
         "h": 50,
         "type": "lava",
         "canCollide": true,
@@ -12542,16 +12708,16 @@ var obs = [
     },
     {
         "x": 2725,
-        "y": 9825,
+        "y": 9850,
         "w": 50,
-        "h": 175,
+        "h": 150,
         "type": "lava",
         "canCollide": true,
         "inView": false
     },
     {
         "x": 2925,
-        "y": 9897.5,
+        "y": 9845,
         "w": 75,
         "h": 50,
         "type": "lavamove",
@@ -12582,7 +12748,7 @@ var obs = [
     },
     {
         "x": 3075,
-        "y": 9802.5,
+        "y": 9855,
         "w": 75,
         "h": 50,
         "type": "lavamove",
@@ -12712,9 +12878,9 @@ var obs = [
     },
     {
         "x": 3750,
-        "y": 9250,
+        "y": 9275,
         "w": 75,
-        "h": 100,
+        "h": 50,
         "type": "lava",
         "canCollide": true,
         "inView": false
@@ -12730,9 +12896,9 @@ var obs = [
     },
     {
         "x": 3780,
-        "y": 9000,
+        "y": 9025,
         "w": 150,
-        "h": 150,
+        "h": 125,
         "type": "lava",
         "canCollide": true,
         "inView": false
@@ -12757,9 +12923,9 @@ var obs = [
     },
     {
         "x": 3700,
-        "y": 8475,
+        "y": 8500,
         "w": 50,
-        "h": 175,
+        "h": 150,
         "type": "lava",
         "canCollide": true,
         "inView": false
@@ -12775,7 +12941,7 @@ var obs = [
     },
     {
         "x": 3225,
-        "y": 8362.5,
+        "y": 8370,
         "w": 175,
         "h": 100,
         "type": "lavamove",
@@ -12790,23 +12956,23 @@ var obs = [
             ]
         ],
         "speed": 150,
-        "currentPoint": 0,
+        "currentPoint": 1,
         "collidable": true,
         "pointOn": {
             "x": 3225,
-            "y": 8340
+            "y": 8440
         },
         "pointTo": {
             "x": 3225,
-            "y": 8440
+            "y": 8340
         },
         "xv": 9.184850993605149e-15,
-        "yv": 150,
+        "yv": -150,
         "inView": false
     },
     {
         "x": 3225,
-        "y": 8527.5,
+        "y": 8535,
         "w": 175,
         "h": 100,
         "type": "lavamove",
@@ -12821,18 +12987,18 @@ var obs = [
             ]
         ],
         "speed": 150,
-        "currentPoint": 0,
+        "currentPoint": 1,
         "collidable": true,
         "pointOn": {
             "x": 3225,
-            "y": 8505
+            "y": 8605
         },
         "pointTo": {
             "x": 3225,
-            "y": 8605
+            "y": 8505
         },
         "xv": 9.184850993605149e-15,
-        "yv": 150,
+        "yv": -150,
         "inView": false
     },
     {
@@ -12956,7 +13122,7 @@ var obs = [
     },
     {
         "x": 2925,
-        "y": 9560,
+        "y": 9575,
         "w": 50,
         "h": 150,
         "type": "lava",
@@ -12965,7 +13131,7 @@ var obs = [
     },
     {
         "x": 3075,
-        "y": 9485,
+        "y": 9475,
         "w": 50,
         "h": 150,
         "type": "lava",
@@ -12988,9 +13154,9 @@ var obs = [
     },
     {
         "x": 3375,
-        "y": 9600,
+        "y": 9625,
         "w": 50,
-        "h": 75,
+        "h": 50,
         "type": "lava",
         "canCollide": true,
         "inView": false
@@ -12999,7 +13165,7 @@ var obs = [
         "x": 3175,
         "y": 9525,
         "w": 50,
-        "h": 75,
+        "h": 50,
         "type": "lava",
         "canCollide": true,
         "inView": false
@@ -13019,7 +13185,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 3440,
+        "x": 3425,
         "y": 9325,
         "w": 100,
         "h": 50,
@@ -13042,7 +13208,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 3560,
+        "x": 3575,
         "y": 9100,
         "w": 100,
         "h": 50,
@@ -13062,7 +13228,7 @@ var obs = [
     {
         "x": 3450,
         "y": 8800,
-        "w": 125,
+        "w": 100,
         "h": 100,
         "type": "lava",
         "canCollide": true,
@@ -13110,7 +13276,7 @@ var obs = [
         "inView": false
     },
     {
-        "x": 2890,
+        "x": 2875,
         "y": 9200,
         "w": 75,
         "h": 25,
@@ -13174,7 +13340,7 @@ var obs = [
     },
     {
         "x": 3100,
-        "y": 9385,
+        "y": 9400,
         "w": 25,
         "h": 25,
         "type": "lava",
@@ -13218,17 +13384,17 @@ var obs = [
         "inView": false
     },
     {
-        "x": 3440,
+        "x": 3450,
         "y": 9500,
-        "w": 125,
+        "w": 100,
         "h": 50,
         "type": "lava",
         "canCollide": true,
         "inView": false
     },
     {
-        "x": 3180,
-        "y": 8975,
+        "x": 2925,
+        "y": 9015,
         "w": 100,
         "h": 100,
         "type": "movingsafe",
@@ -13251,17 +13417,17 @@ var obs = [
             ]
         ],
         "speed": 300,
-        "currentPoint": 3,
+        "currentPoint": 0,
         "pointOn": {
-            "x": 3275,
+            "x": 2925,
             "y": 8975
         },
         "pointTo": {
             "x": 2925,
-            "y": 8975
+            "y": 9325
         },
-        "xv": -300,
-        "yv": 3.6739403974420595e-14,
+        "xv": 1.8369701987210297e-14,
+        "yv": 300,
         "inView": false
     },
     {
@@ -13361,7 +13527,7 @@ var obs = [
         "w": 225,
         "h": 30,
         "type": "rotatingsafe",
-        "angle": 88748,
+        "angle": 386,
         "rotateSpeed": 120,
         "pivotX": -50,
         "pivotY": 300,
@@ -13411,7 +13577,7 @@ var obs = [
         "inView": true
     },
     {
-        "x": 2327.5,
+        "x": 2380,
         "y": 3300,
         "w": 50,
         "h": 50,
@@ -13538,6 +13704,83 @@ var obs = [
         "type": "normal",
         "canJump": true,
         "inView": false
+    },
+    {
+        "x": -25,
+        "y": -25,
+        "w": 150,
+        "h": 150,
+        "type": "musicchange",
+        "musicPath": "https://www.youtube.com/watch?v=qgdsW7bbG24",
+        "volume": 1,
+        "startTime": 0,
+        "inView": true
+    },
+    {
+        "x": 1775,
+        "y": 775,
+        "w": 150,
+        "h": 150,
+        "type": "musicchange",
+        "musicPath": "https://www.youtube.com/watch?v=4ySri_PGaf4",
+        "volume": 1,
+        "startTime": 0,
+        "inView": false
+    },
+    {
+        "x": 1350,
+        "y": 1875,
+        "w": 150,
+        "h": 150,
+        "type": "musicchange",
+        "musicPath": "https://www.youtube.com/watch?v=AzE0EgM_zVY",
+        "volume": 1,
+        "startTime": 0,
+        "inView": false
+    },
+    {
+        "x": 2850,
+        "y": 3250,
+        "w": 150,
+        "h": 150,
+        "type": "musicchange",
+        "musicPath": "https://www.youtube.com/watch?v=4nHf6gdiAMc",
+        "volume": 1,
+        "startTime": 0,
+        "inView": false
+    },
+    {
+        "x": 2225,
+        "y": 5725,
+        "w": 150,
+        "h": 150,
+        "type": "musicchange",
+        "musicPath": "https://www.youtube.com/watch?v=yHjj9fWTZdY",
+        "volume": 1,
+        "startTime": 0,
+        "inView": false
+    },
+    {
+        "x": 1250,
+        "y": 6000,
+        "w": 150,
+        "h": 150,
+        "type": "musicchange",
+        "musicPath": "https://www.youtube.com/watch?v=ZmwHJ3NWwdw",
+        "volume": 1,
+        "startTime": 0,
+        "inView": false
+    },
+    {
+        "x": 2350,
+        "y": 8150,
+        "w": 150,
+        "h": 150,
+        "type": "musicchange",
+        "musicPath": "https://www.youtube.com/watch?v=4qe8FvP4RPA",//'https://www.youtube.com/watch?v=P0_kuFlM9wI',
+        "volume": 1,
+        "startTime": 0,
+        "inView": false
     }
 ]
 var typeMap = {
@@ -13571,7 +13814,13 @@ var typeMap = {
             }
             p.conveyorFriction = 0.8;
             p.conveyorAngleRotateSpeed = 0;
-            p.conveyorForce = params.force / 10000 * 7.08;
+            p.conveyorForce = params.force / 10000 * 7.08 * 5 / 16.66;
+
+            if(params.x === 2000 && params.y === 11300/2){
+                p.conveyorForce /= 2;
+            } else if(params.x === 3200/2 && params.y === 12000/2){
+                p.conveyorForce /= 2;
+            }
             return p;
         }
     },
@@ -13880,7 +14129,7 @@ var typeMap = {
     'bounce': {
         type: [1,[],[2]],
         customMap: (params) => {
-            return {bounciness: params.effect/3, decay: 0.5};
+            return {bounciness: params.effect/3/10, decay: 0.5};
         }
     },
     'rotate-normal': {
@@ -14232,10 +14481,10 @@ var typeMap = {
             }
             p.platformerFriction = 0.9;
             p.platformerAngleRotateSpeed = 0;
-            p.platformerForce = params.force / 10000 * 1.5 * 1.8 * 1.6;
+            p.platformerForce = params.force / 10000 * 1.5 * 1.8 * 1.6 * 5 / 16.66;
             p.jumpForce = params.jumpHeight / 8.2 * 2.32 / 1.2;
             p.jumpDecay = 0.9525;
-            p.maxJumpCooldown = 20;
+            p.maxJumpCooldown = 20 * 16.6;
             return p;
         }
         // {
@@ -14273,10 +14522,10 @@ var typeMap = {
             return {
                 changeShipStateTo: params.state,
                 initialShipAngle: -Math.PI / 2,
-                shipTurnSpeed: Math.PI / 80
+                shipTurnSpeed: Math.PI / 80 / 20
             }
         }
-    }
+    },
     // C(1,[],[10],{h:200,w:300,y:700,x:300,healSpeed:1,regenTime:100,maxStrength:60,});
     // {
     //     "x": 2950,
@@ -14291,6 +14540,20 @@ var typeMap = {
     //     "regenTime": 3,
     //     "inView": false
     // },
+    'musicchange': {
+        type: [1,[],[26]],
+        customMap: (params) => {
+            return {
+                musicPath: params.musicPath,
+            }
+        }
+        // C(0,[],[26],{
+        //     x: spawnPosition.x,
+        //     y: spawnPosition.y,
+        //     r: 50,
+        //     musicPath: 'https://www.youtube.com/watch?v=2C4lFUpI_4U'
+        // });
+    }
 }
 
 var enemyTypeMap = {
@@ -14615,15 +14878,15 @@ var enemyTypeMap = {
 var enemies = [
     {
         "type": "normal",
-        "angle": 4.18098634432203,
+        "angle": 1.4235250921910347,
         "radius": 18,
         "speed": 75,
-        "x": 1856.0022372066496,
-        "y": 8410.26736757438,
-        "renderX": 1856.0022372066496,
-        "renderY": 8410.26736757438,
-        "xv": 38.005728587267335,
-        "yv": 64.6572857035537,
+        "x": 2032.1467992027265,
+        "y": 8408.997407886389,
+        "renderX": 2031.9633748837891,
+        "renderY": 8407.760938914183,
+        "xv": 11.005459136253561,
+        "yv": 74.18813833221759,
         "bound": {
             "x": 1400,
             "y": 8150,
@@ -14635,15 +14898,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 5.002224244357532,
+        "angle": 3.6202720511115727,
         "radius": 18,
         "speed": 75,
-        "x": 2068.376108379476,
-        "y": 8494.993687874845,
-        "renderX": 2068.376108379476,
-        "renderY": 8494.993687874845,
-        "xv": -21.434577295227736,
-        "yv": 71.87182268577101,
+        "x": 1687.793264463995,
+        "y": 8331.787629978964,
+        "renderX": 1688.9027694338329,
+        "renderY": 8332.363389235863,
+        "xv": -66.57029819026594,
+        "yv": -34.54555541396134,
         "bound": {
             "x": 1400,
             "y": 8150,
@@ -14655,15 +14918,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 4.048890880334231,
+        "angle": 0.45062375950427097,
         "radius": 18,
         "speed": 75,
-        "x": 1865.4810175148834,
-        "y": 8527.731101608297,
-        "renderX": 1865.4810175148834,
-        "renderY": 8527.731101608297,
-        "xv": -46.19074252060909,
-        "yv": -59.08819937512731,
+        "x": 1979.4675115370337,
+        "y": 8590.572515700667,
+        "renderX": 1980.5927310536754,
+        "renderY": 8590.028106810798,
+        "xv": -67.51317099849015,
+        "yv": 32.66453339217672,
         "bound": {
             "x": 1400,
             "y": 8150,
@@ -14675,15 +14938,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 2.6213927636289642,
+        "angle": 2.951890672553216,
         "radius": 18,
         "speed": 75,
-        "x": 1459.5258919276162,
-        "y": 8444.31005095818,
-        "renderX": 1459.5258919276162,
-        "renderY": 8444.31005095818,
-        "xv": -65.07898807422983,
-        "yv": -37.27901971933076,
+        "x": 1616.3188121176172,
+        "y": 8866.884752681159,
+        "renderX": 1617.546387711417,
+        "renderY": 8866.649044892773,
+        "xv": -73.65453562800374,
+        "yv": 14.142467303236982,
         "bound": {
             "x": 1400,
             "y": 8150,
@@ -14695,15 +14958,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 4.050256254796846,
+        "angle": 3.358793900104755,
         "radius": 18,
         "speed": 75,
-        "x": 1976.3738338986286,
-        "y": 8271.943457258307,
-        "renderX": 1976.3738338986286,
-        "renderY": 8271.943457258307,
-        "xv": 46.11002197172789,
-        "yv": 59.15121193827538,
+        "x": 1482.3466864918519,
+        "y": 8642.132967021433,
+        "renderX": 1483.5673169885285,
+        "renderY": 8642.402338865882,
+        "xv": -73.2378298005924,
+        "yv": -16.162310667087834,
         "bound": {
             "x": 1400,
             "y": 8150,
@@ -14715,15 +14978,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 3.839695630295975,
+        "angle": 2.128157631551917,
         "radius": 18,
         "speed": 75,
-        "x": 1532.1408698945356,
-        "y": 8800.112197443097,
-        "renderX": 1532.1408698945356,
-        "renderY": 8800.112197443097,
-        "xv": -57.45471797198265,
-        "yv": 48.20742041179899,
+        "x": 1999.1444899012085,
+        "y": 8402.000952682822,
+        "renderX": 1999.8056757802547,
+        "renderY": 8400.940135434965,
+        "xv": -39.67115274276629,
+        "yv": 63.64903487139539,
         "bound": {
             "x": 1400,
             "y": 8150,
@@ -14735,15 +14998,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 5.237196130756915,
+        "angle": 2.346648186696365,
         "radius": 18,
         "speed": 75,
-        "x": 1690.3524561521742,
-        "y": 8397.891402029009,
-        "renderX": 1690.3524561521742,
-        "renderY": 8397.891402029009,
-        "xv": -37.5784588465863,
-        "yv": 64.90654382044555,
+        "x": 1795.4399845153803,
+        "y": 8466.057572246398,
+        "renderX": 1796.3153900254115,
+        "renderY": 8465.165291352841,
+        "xv": -52.52433060186426,
+        "yv": 53.53685361343218,
         "bound": {
             "x": 1400,
             "y": 8150,
@@ -14755,15 +15018,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 2.0600816925707717,
+        "angle": 2.1678193334817806,
         "radius": 18,
         "speed": 75,
-        "x": 2069.2407715722884,
-        "y": 8731.269568193757,
-        "renderX": 2069.2407715722884,
-        "renderY": 8731.269568193757,
-        "xv": -35.24964170941439,
-        "yv": 66.20017189825049,
+        "x": 1809.996153075168,
+        "y": 8662.997385026014,
+        "renderX": 1810.698881770606,
+        "renderY": 8661.963618910973,
+        "xv": -42.16372172628964,
+        "yv": 62.02596690248376,
         "bound": {
             "x": 1400,
             "y": 8150,
@@ -14775,15 +15038,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 0.02403825872326112,
+        "angle": 1.4315272095048226,
         "radius": 18,
         "speed": 75,
-        "x": 2063.450823836208,
-        "y": 8580.906640393798,
-        "renderX": 2063.450823836208,
-        "renderY": 8580.906640393798,
-        "xv": -74.9783321228151,
-        "yv": 1.8026957815544689,
+        "x": 1629.6815789520424,
+        "y": 8405.208778453627,
+        "renderX": 1629.508054769934,
+        "renderY": 8403.970881301913,
+        "xv": 10.411450926503502,
+        "yv": 74.27382910288797,
         "bound": {
             "x": 1400,
             "y": 8150,
@@ -14795,15 +15058,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 3.678106448233562,
+        "angle": 4.892418246224299,
         "radius": 24,
         "speed": 75,
-        "x": 1478.9173354628379,
-        "y": 8781.228656623407,
-        "renderX": 1478.9173354628379,
-        "renderY": 8781.228656623407,
-        "xv": -64.46218869377596,
-        "yv": -38.33570436040042,
+        "x": 1481.125797776769,
+        "y": 8213.01011378956,
+        "renderX": 1480.901974818818,
+        "renderY": 8211.780315723414,
+        "xv": 13.42937747706488,
+        "yv": 73.78788396870114,
         "bound": {
             "x": 1400,
             "y": 8150,
@@ -14815,15 +15078,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 0.13034071931420596,
+        "angle": 4.686343612870412,
         "radius": 24,
         "speed": 75,
-        "x": 1977.7813493541412,
-        "y": 8451.050401397824,
-        "renderX": 1977.7813493541412,
-        "renderY": 8451.050401397824,
-        "xv": -74.36382504783262,
-        "yv": 9.747898453273972,
+        "x": 1626.1821517598,
+        "y": 8597.062744860785,
+        "renderX": 1626.21470478845,
+        "renderY": 8598.312320909023,
+        "xv": -1.9531817189871725,
+        "yv": -74.97456289417508,
         "bound": {
             "x": 1400,
             "y": 8150,
@@ -14835,15 +15098,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 4.95265302719848,
+        "angle": 4.659628946765509,
         "radius": 24,
         "speed": 75,
-        "x": 1716.7177751204454,
-        "y": 8277.872835902093,
-        "renderX": 1716.7177751204454,
-        "renderY": 8277.872835902093,
-        "xv": -17.846932262634596,
-        "yv": 72.84563822778226,
+        "x": 1874.2439214552014,
+        "y": 8486.257425233038,
+        "renderX": 1874.3098409048284,
+        "renderY": 8487.505685873355,
+        "xv": -3.9551669776135427,
+        "yv": -74.89563841893062,
         "bound": {
             "x": 1400,
             "y": 8150,
@@ -14855,15 +15118,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 2.7220484846884188,
+        "angle": 2.793666677262043,
         "radius": 24,
         "speed": 75,
-        "x": 1576.729332988953,
-        "y": 8180.112098598234,
-        "renderX": 1576.729332988953,
-        "renderY": 8180.112098598234,
-        "xv": -68.49560365045865,
-        "yv": -30.550814728240493,
+        "x": 1859.0848540282623,
+        "y": 8717.075526169996,
+        "renderX": 1860.2599563659091,
+        "renderY": 8716.64934018236,
+        "xv": -70.50614025880158,
+        "yv": 25.57115925816032,
         "bound": {
             "x": 1400,
             "y": 8150,
@@ -14875,15 +15138,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 3.4042493956861795,
+        "angle": 4.007648194763872,
         "radius": 24,
         "speed": 75,
-        "x": 1622.232068673768,
-        "y": 8291.509107322861,
-        "renderX": 1622.232068673768,
-        "renderY": 8291.509107322861,
-        "xv": -72.42776787680802,
-        "yv": 19.473531790181692,
+        "x": 1822.1502683863055,
+        "y": 8528.07079141619,
+        "renderX": 1822.9600638701818,
+        "renderY": 8529.023015798513,
+        "xv": -48.58772903256562,
+        "yv": -57.13346293948915,
         "bound": {
             "x": 1400,
             "y": 8150,
@@ -14895,15 +15158,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 4.447079755651774,
+        "angle": 0.42940950588950166,
         "radius": 24,
         "speed": 75,
-        "x": 1503.612694345755,
-        "y": 8284.388478009872,
-        "renderX": 1503.612694345755,
-        "renderY": 8284.388478009872,
-        "xv": 19.665576457028955,
-        "yv": 72.37585994385661,
+        "x": 1700.2041739245888,
+        "y": 8701.021788309343,
+        "renderX": 1699.067659235909,
+        "renderY": 8700.501370820766,
+        "xv": 68.19088132077536,
+        "yv": 31.225049314547604,
         "bound": {
             "x": 1400,
             "y": 8150,
@@ -14915,15 +15178,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 3.061083028746892,
+        "angle": 4.698052848572002,
         "radius": 12,
         "speed": 150,
-        "x": 2119.3379396979103,
-        "y": 8884.415097900583,
-        "renderX": 2119.3379396979103,
-        "renderY": 8884.415097900583,
-        "xv": 149.51412755214176,
-        "yv": -12.063401772381063,
+        "x": 1480.695812923861,
+        "y": 8306.961978586398,
+        "renderX": 1480.7316520257268,
+        "renderY": 8304.462235487841,
+        "xv": -2.150346111939264,
+        "yv": 149.98458591334932,
         "bound": {
             "x": 1400,
             "y": 8175,
@@ -14935,15 +15198,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 5.3139598860287265,
+        "angle": 3.87315691796051,
         "radius": 12,
         "speed": 150,
-        "x": 1456.0284494686196,
-        "y": 8435.45423301381,
-        "renderX": 1456.0284494686196,
-        "renderY": 8435.45423301381,
-        "xv": -84.89074508113877,
-        "yv": 123.66713953014809,
+        "x": 1631.6717776527275,
+        "y": 8513.82724668963,
+        "renderX": 1633.5321034793983,
+        "renderY": 8515.497332860647,
+        "xv": -111.61954960024937,
+        "yv": -100.20517026100735,
         "bound": {
             "x": 1400,
             "y": 8175,
@@ -14955,15 +15218,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 3.5183723409526424,
+        "angle": 4.9764583136191405,
         "radius": 12,
         "speed": 150,
-        "x": 2065.6316956936626,
-        "y": 8522.34716616932,
-        "renderX": 2065.6316956936626,
-        "renderY": 8522.34716616932,
-        "xv": 139.47814471095472,
-        "yv": -55.18919412339676,
+        "x": 1692.5740608749638,
+        "y": 8465.174258263462,
+        "renderX": 1691.9215334366195,
+        "renderY": 8462.7609186806,
+        "xv": 39.151646300671594,
+        "yv": 144.80037497170753,
         "bound": {
             "x": 1400,
             "y": 8175,
@@ -14975,15 +15238,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 1.139434353393338,
+        "angle": 5.516665575309225,
         "radius": 12,
         "speed": 150,
-        "x": 2082.6846197796917,
-        "y": 8641.901901259673,
-        "renderX": 2082.6846197796917,
-        "renderY": 8641.901901259673,
-        "xv": 62.71626038681678,
-        "yv": -136.25957097794267,
+        "x": 1811.521750071368,
+        "y": 8417.35597271916,
+        "renderX": 1809.7209274357506,
+        "renderY": 8419.090053984572,
+        "xv": 108.04935813702792,
+        "yv": -104.04487592465225,
         "bound": {
             "x": 1400,
             "y": 8175,
@@ -14995,15 +15258,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 1.5007945312645157,
+        "angle": 3.3757055102443756,
         "radius": 12,
         "speed": 150,
-        "x": 2043.8168151033813,
-        "y": 8285.512825856096,
-        "renderX": 2043.8168151033813,
-        "renderY": 8285.512825856096,
-        "xv": 10.491695770582128,
-        "yv": -149.63263120007463,
+        "x": 1732.906593774549,
+        "y": 8706.167350281772,
+        "renderX": 1730.4747924652615,
+        "renderY": 8706.747300617706,
+        "xv": 145.908078557245,
+        "yv": -34.79702015593887,
         "bound": {
             "x": 1400,
             "y": 8175,
@@ -15015,15 +15278,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 1.4751862266272124,
+        "angle": 3.491412348110275,
         "radius": 12,
         "speed": 150,
-        "x": 2052.5453635374993,
-        "y": 8244.044138969271,
-        "renderX": 2052.5453635374993,
-        "renderY": 8244.044138969271,
-        "xv": 14.319675015525759,
-        "yv": 149.31492526686583,
+        "x": 1566.5907738544884,
+        "y": 8744.190481700905,
+        "renderX": 1564.2421875446607,
+        "renderY": 8745.047302770494,
+        "xv": 140.91517858966628,
+        "yv": -51.409264175267616,
         "bound": {
             "x": 1400,
             "y": 8175,
@@ -15035,15 +15298,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 0.8962519831555786,
+        "angle": 1.5574001842388754,
         "radius": 12,
         "speed": 150,
-        "x": 1468.4213747479575,
-        "y": 8571.772200560454,
-        "renderX": 1468.4213747479575,
-        "renderY": 8571.772200560454,
-        "xv": -93.68122766706878,
-        "yv": -117.14874127702281,
+        "x": 1955.9564244987141,
+        "y": 8875.966801019094,
+        "renderX": 1955.922935143993,
+        "renderY": 8873.467025336533,
+        "xv": 2.0093612832757013,
+        "yv": 149.98654095362446,
         "bound": {
             "x": 1400,
             "y": 8175,
@@ -15055,15 +15318,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 1.1090726241397952,
+        "angle": 4.127844036704608,
         "radius": 12,
         "speed": 150,
-        "x": 1864.157615646581,
-        "y": 8286.166452685726,
-        "renderX": 1864.157615646581,
-        "renderY": 8286.166452685726,
-        "xv": -66.82379621273165,
-        "yv": -134.2928898330783,
+        "x": 1608.1733775099074,
+        "y": 8212.56641410914,
+        "renderX": 1606.7938276618675,
+        "renderY": 8210.4815059057,
+        "xv": 82.77299088239363,
+        "yv": 125.09449220642442,
         "bound": {
             "x": 1400,
             "y": 8175,
@@ -15075,15 +15338,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 3.8612144490008165,
+        "angle": 0.8913039905993697,
         "radius": 12,
         "speed": 150,
-        "x": 2038.1205263423526,
-        "y": 8788.338524803052,
-        "renderX": 2038.1205263423526,
-        "renderY": 8788.338524803052,
-        "xv": -112.80825865126945,
-        "yv": 98.86504326640579,
+        "x": 1911.5073330689665,
+        "y": 8688.180021421009,
+        "renderX": 1909.9363375752573,
+        "renderY": 8690.124751006002,
+        "xv": 94.25972962255551,
+        "yv": -116.68377509955158,
         "bound": {
             "x": 1400,
             "y": 8175,
@@ -15095,15 +15358,15 @@ var enemies = [
     },
     {
         "type": "normal",
-        "angle": 2.3949458415173512,
+        "angle": 1.6467923728408678,
         "radius": 12,
         "speed": 150,
-        "x": 112.21043739793606,
-        "y": 714.3870240267669,
-        "renderX": 112.21043739793606,
-        "renderY": 714.3870240267669,
-        "xv": -110.09556209226966,
-        "yv": 101.87721633214758,
+        "x": 331.908521110071,
+        "y": 696.9320653098148,
+        "renderX": 332.0983283998678,
+        "renderY": 694.4392810847485,
+        "xv": -11.388437387806125,
+        "yv": 149.56705350398536,
         "bound": {
             "x": 100,
             "y": 600,
@@ -15111,19 +15374,19 @@ var enemies = [
             "h": 300
         },
         "isLava": false,
-        "inView": true
+        "inView": false
     },
     {
         "type": "normal",
-        "angle": 1.8686177558635015,
+        "angle": 1.3107743923055344,
         "radius": 12,
         "speed": 150,
-        "x": 333.28182094912273,
-        "y": 633.7674350580157,
-        "renderX": 333.28182094912273,
-        "renderY": 633.7674350580157,
-        "xv": -44.01573580624304,
-        "yv": 143.39670498806802,
+        "x": 219.12764716737092,
+        "y": 652.5622054194255,
+        "renderX": 218.48489279461842,
+        "renderY": 650.1462445719969,
+        "xv": 38.56526236515075,
+        "yv": 144.9576508457111,
         "bound": {
             "x": 100,
             "y": 600,
@@ -15131,19 +15394,19 @@ var enemies = [
             "h": 300
         },
         "isLava": false,
-        "inView": true
+        "inView": false
     },
     {
         "type": "normal",
-        "angle": 5.320245708551325,
+        "angle": 1.7625160446651105,
         "radius": 12,
         "speed": 150,
-        "x": 278.5849141938176,
-        "y": 847.2087633532071,
-        "renderX": 278.5849141938176,
-        "renderY": 847.2087633532071,
-        "xv": 85.66641257549742,
-        "yv": 123.13109175364546,
+        "x": 153.49746751022758,
+        "y": 678.2208596880564,
+        "renderX": 153.9738359729963,
+        "renderY": 675.7666646901641,
+        "xv": -28.58210776612268,
+        "yv": 147.25169987353542,
         "bound": {
             "x": 100,
             "y": 600,
@@ -15151,19 +15414,19 @@ var enemies = [
             "h": 300
         },
         "isLava": false,
-        "inView": true
+        "inView": false
     },
     {
         "type": "normal",
-        "angle": 4.408028427964355,
+        "angle": 0.6571347128267584,
         "radius": 12,
         "speed": 150,
-        "x": 266.387928780679,
-        "y": 862.0370839365113,
-        "renderX": 266.387928780679,
-        "renderY": 862.0370839365113,
-        "xv": -44.952476809757925,
-        "yv": 143.10581689319332,
+        "x": 264.054075430231,
+        "y": 730.9852100459857,
+        "renderX": 266.03343978543217,
+        "renderY": 732.5123370051344,
+        "xv": -118.76186131206912,
+        "yv": -91.62761754892931,
         "bound": {
             "x": 100,
             "y": 600,
@@ -15171,7 +15434,7 @@ var enemies = [
             "h": 300
         },
         "isLava": false,
-        "inView": true
+        "inView": false
     }
 ]
 
@@ -15206,9 +15469,9 @@ var safes = [
     },
     {
         "x": 100,
-        "y": 145,
+        "y": 140,
         "w": 100,
-        "h": 10,
+        "h": 20,
         "renderAbove": true
     },
     {
@@ -15389,7 +15652,7 @@ var safes = [
     {
         "x": 2050,
         "y": 4037.5,
-        "w": 450,
+        "w": 337.5,
         "h": 25,
         "renderAbove": true
     },
@@ -15541,7 +15804,7 @@ var safes = [
         "renderAbove": true
     },
     {
-        "x": 680,
+        "x": 685,
         "y": 8390,
         "w": 90,
         "h": 20,
@@ -15555,7 +15818,7 @@ var safes = [
         "renderAbove": true
     },
     {
-        "x": 620,
+        "x": 625,
         "y": 8390,
         "w": 10,
         "h": 40,
@@ -15759,7 +16022,7 @@ var safes = [
     },
     {
         "x": 2050,
-        "y": 9087.5,
+        "y": 9090,
         "w": 50,
         "h": 12.5,
         "renderAbove": true
@@ -15772,8 +16035,8 @@ var safes = [
         "renderAbove": true
     },
     {
-        "x": 2112.5,
-        "y": 9062.5,
+        "x": 2100,
+        "y": 9050,
         "w": 100,
         "h": 50,
         "renderAbove": true
@@ -15804,6 +16067,13 @@ var safes = [
         "y": 9150,
         "w": 100,
         "h": 100,
+        "renderAbove": true
+    },
+    {
+        "x": 605,
+        "y": 8635,
+        "w": 10,
+        "h": 50,
         "renderAbove": true
     }
 ].map(p => {
@@ -15959,6 +16229,126 @@ var texts = [
         "h": 25,
         "size": 30,
         "text": "10",
+        "angle": 0,
+        "story": false
+    },
+    {
+        "x": 350,
+        "y": 225,
+        "w": 25,
+        "h": 25,
+        "size": 30,
+        "text": "button progress",
+        "angle": 5,
+        "story": false
+    },
+    {
+        "x": 2090,
+        "y": 5975,
+        "w": 25,
+        "h": 25,
+        "size": 30,
+        "text": "!!",
+        "angle": 0,
+        "story": false
+    },
+    {
+        "x": 1625,
+        "y": 6080,
+        "w": 25,
+        "h": 25,
+        "size": 30,
+        "text": "!!",
+        "angle": 0,
+        "story": false
+    },
+    {
+        "x": 2325,
+        "y": 7950,
+        "w": 25,
+        "h": 25,
+        "size": 30,
+        "text": "this conveyor is VERY fast",
+        "angle": -90,
+        "story": false
+    },
+    {
+        "x": 1200,
+        "y": 8925,
+        "w": 25,
+        "h": 25,
+        "size": 30,
+        "text": "Hint: abuse the safes!",
+        "angle": 0,
+        "story": false
+    },
+    {
+        "x": 175,
+        "y": 9125,
+        "w": 25,
+        "h": 25,
+        "size": 30,
+        "text": "!",
+        "angle": 0,
+        "story": false
+    },
+    {
+        "x": 425,
+        "y": 9025,
+        "w": 25,
+        "h": 25,
+        "size": 30,
+        "text": "!",
+        "angle": 0,
+        "story": false
+    },
+    {
+        "x": 675,
+        "y": 9125,
+        "w": 25,
+        "h": 25,
+        "size": 30,
+        "text": "!",
+        "angle": 0,
+        "story": false
+    },
+    {
+        "x": 1175,
+        "y": 9025,
+        "w": 25,
+        "h": 25,
+        "size": 30,
+        "text": "!",
+        "angle": 0,
+        "story": false
+    },
+    {
+        "x": 1425,
+        "y": 9125,
+        "w": 25,
+        "h": 25,
+        "size": 30,
+        "text": "!",
+        "angle": 0,
+        "story": false
+    },
+    {
+        "x": 1775,
+        "y": 9025,
+        "w": 25,
+        "h": 25,
+        "size": 30,
+        "text": "!",
+        "angle": 0,
+        "story": false
+    },
+    {
+        "x": 2075,
+        "y": 9125,
+        "w": 25,
+        "h": 25,
+        "size": 30,
+        "text": "!",
         "angle": 0,
         "story": false
     }
@@ -16308,7 +16698,7 @@ for(let i = 0; i < obs.length; i++){
     str += `C(${typeString},${paramString})\n`;
 }
 
-C(1,[],[0],{h:100,w:100,y:11900,x:3900});
+C(0,[],[5],{y:11850,x:3950,r:35});
 eval(str);
 
 mapDimensions.x=8000;
@@ -16318,3 +16708,10 @@ spawnPosition.x=100;
 spawnPosition.y=100;
 window.respawnPlayer();
 colors.background='#141f52'; colors.tile='#414381';
+
+// C(0,[],[26],{
+//     x: spawnPosition.x,
+//     y: spawnPosition.y,
+//     r: 50,
+//     musicPath: 'https://www.youtube.com/watch?v=2C4lFUpI_4U'
+// });

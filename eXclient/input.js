@@ -40,6 +40,9 @@ const Controls = {
     ArrowRight: 'right',
     ShiftLeft: 'shift',
     ShiftRight: 'shift',
+    KeyC: 'action1',
+    KeyJ: 'action1',
+    KeyY: 'action1'
 };
 
 window.input = {
@@ -47,7 +50,8 @@ window.input = {
     down: false,
     left: false,
     right: false,
-    shift: false
+    shift: false,
+    action1: false,// grapple
 };
 
 let chatOpen = false, zenMode = false;

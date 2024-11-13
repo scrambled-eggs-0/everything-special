@@ -7,10 +7,19 @@ class Player {
 
         this.name = '';
 
+        this.dead = false;
+
         this.god = false;
 
         this.ship = false;
         this.shipAngle = 0;
+
+        this.grapple = false;
+        this.grappleX = Infinity;
+        this.grappleY = Infinity;
+
+        this.deathTimer = false;
+        this.deathTime = Infinity;
     }
 }
 

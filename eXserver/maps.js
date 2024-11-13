@@ -28,8 +28,8 @@ global.window.dt = global.dt = 1000 / 60;
 global.window.mouseUpFunctions = [];
 global.window.mouseDownFunctions = [];
 global.window.mouseMoveFunctions = [];
+global.window.resizeFns = [];
 
-window.setCanvasFrequentlyRead=()=>{return undefined;};
 window.defaultColors = {tile: '#1b9456',background: '#1fad64'};
 window.colors = {tile: window.defaultColors.tile,background: window.defaultColors.background};
 window.lastColors = {tile: window.defaultColors.tile,background: window.defaultColors.background};

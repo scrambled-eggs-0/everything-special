@@ -41263,7 +41263,7 @@ var typeMap = {
             }
             p.conveyorFriction = 0.8;
             p.conveyorAngleRotateSpeed = 0;
-            p.conveyorForce = params.force / 10000 * 7.08;
+            p.conveyorForce = params.force / 10000 * 7.08 * 5 / 16.66;
             return p;
         }
     },
@@ -41390,6 +41390,17 @@ var typeMap = {
             }
 
             p.currentPoint = params.currentPoint;
+
+            const currentPoint = p.path[p.currentPoint];
+            let nextPointIndex = p.currentPoint+1;
+            if(nextPointIndex === p.path.length) nextPointIndex = 0;
+            const nextPoint = p.path[nextPointIndex];
+
+            const totalDist = Math.sqrt((nextPoint[0]-currentPoint[0])**2+(nextPoint[1]-currentPoint[1])**2);
+            const fractionCovered = Math.sqrt((params.x*2-currentPoint[0])**2+(params.y*2-currentPoint[1])**2);
+            
+            p.currentPoint += fractionCovered / totalDist;
+
             p.x = p.path[0][0];
             p.y = p.path[0][1];
             return p;
@@ -41572,7 +41583,7 @@ var typeMap = {
     'bounce': {
         type: [1,[],[2]],
         customMap: (params) => {
-            return {bounciness: params.effect/3, decay: 0.5};
+            return {bounciness: params.effect/3/10, decay: 0.5};
         }
     },
     'rotate-normal': {
@@ -41924,10 +41935,10 @@ var typeMap = {
             }
             p.platformerFriction = 0.9;
             p.platformerAngleRotateSpeed = 0;
-            p.platformerForce = params.force / 10000 * 1.5 * 1.8 * 1.6;
-            p.jumpForce = params.jumpHeight / 8.2 * 2.32 / 1.2;
+            p.platformerForce = params.force / 10000 * 1.5 * 1.8 * 1.6 * 10 / 16.66;
+            p.jumpForce = params.jumpHeight / 10 / 8.2 * 2.32 / 1.2 / 2;
             p.jumpDecay = 0.9525;
-            p.maxJumpCooldown = 20;
+            p.maxJumpCooldown = 20 * 16.6;
             return p;
         }
         // {
@@ -42024,8 +42035,8 @@ var typeMap = {
                 innerRadius: params.innerRadius * 2,
                 startSliceAngle: params.startAngle,
                 endSliceAngle: params.endAngle,
-                startSliceAngleRotateSpeed: params.rotateSpeed,
-                endSliceAngleRotateSpeed: params.rotateSpeed
+                startSliceAngleRotateSpeed: params.rotateSpeed / 2000,
+                endSliceAngleRotateSpeed: params.rotateSpeed / 2000
             }
         }
     },
@@ -42050,7 +42061,7 @@ var typeMap = {
             return {
                 changeShipStateTo: params.state,
                 initialShipAngle: -Math.PI / 2,
-                shipTurnSpeed: Math.PI / 20
+                shipTurnSpeed: Math.PI / 20 / 16.66 / 2
             }
         }
     },
@@ -42058,7 +42069,6 @@ var typeMap = {
     'musicchange': {
         type: [1,[],[26]],
         customMap: (params) => {
-            console.log(params);
             return {
                 x: params.x * 2,
                 y: params.y * 2,
@@ -42067,7 +42077,19 @@ var typeMap = {
                 musicPath: params.musicPath
             };
         }
-    }
+    },
+
+    'grpu': {
+        type: [1,[],[28]],
+        customMap: (params) => {
+            return {
+                changeGrappleStateTo: params.state,       
+                grappleRange: 488,
+                grappleForce: 0.06,
+                grappleFric: 0.8,
+            };
+        }
+    },
 }
 
 var enemyTypeMap = {
@@ -43054,40 +43076,12 @@ var enemies = [
 
 var safes = [
     {
-        "x": 7975,
-        "y": 6150,
-        "w": 25,
-        "h": 50,
-        "renderAbove": false
-    },
-    {
-        "x": 4075,
-        "y": 7000,
-        "w": 225,
-        "h": 150,
-        "renderAbove": false
-    },
-    {
-        "x": 7650,
-        "y": 9450,
-        "w": 50,
-        "h": 350,
-        "renderAbove": false
-    },
-    {
         "x": 2900,
         "y": 8550,
         "w": 50,
         "h": 50,
         "renderAbove": true
     },
-    {
-        "x": 8600,
-        "y": 6250,
-        "w": 850,
-        "h": 800,
-        "renderAbove": false
-    }
 ].map(p => {
     p.type = "safe";
     return p;
@@ -43329,6 +43323,38 @@ var texts = [
     return p;
 });
 
+obs.unshift(...[{
+    "x": 7975,
+    "y": 6150,
+    "w": 25,
+    "h": 50,
+    "renderAbove": false
+},
+{
+    "x": 4075,
+    "y": 7000,
+    "w": 225,
+    "h": 150,
+    "renderAbove": false
+},
+{
+    "x": 7650,
+    "y": 9450,
+    "w": 50,
+    "h": 350,
+    "renderAbove": false
+},
+{
+    "x": 8600,
+    "y": 6250,
+    "w": 850,
+    "h": 800,
+    "renderAbove": false
+}].map(p => {
+    p.type = "safe";
+    return p;
+}));
+
 obs.push(...safes, ...texts);
 
 var a = obs.splice(86,1);
@@ -43521,6 +43547,208 @@ for(let i = 0; i < obs.length; i++){
         });\n`;
         counter++;
         continue;
+    } else if(o.type === 'grapplepoint' || o.type === 'movinggrapplepoint'){
+        o.x *= 2; o.y *= 2;
+        // {
+        //     "x": 1100,
+        //     "y": 6050,
+        //     "type": "grapplepoint",
+        //     "renderType": "grapple",
+        //     "inView": false
+        // },
+        if(o.type === 'grapplepoint'){
+            str += `C(0,[],[0],{r:20+12/2,y:${o.y},x:${o.x},
+                cr:(e)=>{
+                    e.isGrapplePoint = true;
+                    ctx.strokeStyle = '#c9c9c9';
+                    ctx.lineWidth = 12;
+                    ctx.globalAlpha = 0.5;
+                    ctx.beginPath();
+                    ctx.arc(e.pos.x, e.pos.y, 20, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.closePath();
+                    ctx.globalAlpha = 1;
+                }
+            });\n`;
+        } else {
+            // {
+            //     "x": 8091.247854069336,
+            //     "y": 6342.504291861353,
+            //     "w": 0,
+            //     "h": 0,
+            //     "type": "movinggrapplepoint",
+            //     "points": [
+            //         [
+            //             8050,
+            //             6325
+            //         ],
+            //         [
+            //             8075,
+            //             6375
+            //         ],
+            //         [
+            //             8100,
+            //             6325
+            //         ]
+            //     ],
+            //     "speed": 150,
+            //     "currentPoint": 1,
+            //     "alongWith": false,
+            //     "renderType": "grapple",
+            //     "pointOn": {
+            //         "x": 8075,
+            //         "y": 6375
+            //     },
+            //     "pointTo": {
+            //         "x": 8100,
+            //         "y": 6325
+            //     },
+            //     "xv": 67.0820393249937,
+            //     "yv": -134.16407864998737,
+            //     "inView": false
+            // },
+            const params = o;
+            const p = {path: '['};
+            for(let i = 0; i < params.points.length; i++){
+                p.path += `[${params.points[i][0]*2},[${params.points[i][1]*2}],${params.speed * 2 / 1000}],`;
+            }
+
+            p.currentPoint = params.currentPoint;
+            p.x = params.points[0][0] * 2;
+            p.y = params.points[0][1] * 2;
+
+            p.path = p.path.substring(0, p.path.length-1);
+            p.path += ']';
+            str += `C(0,[0],[0],{r:20+12/2,
+                cr:(e)=>{
+                    e.isGrapplePoint = true;
+                    ctx.strokeStyle = '#c9c9c9';
+                    ctx.lineWidth = 12;
+                    ctx.globalAlpha = 0.5;
+                    ctx.beginPath();
+                    ctx.arc(e.pos.x, e.pos.y, 20, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.closePath();
+                    ctx.globalAlpha = 1;
+                },currentPoint:${p.currentPoint},x:${p.x},y:${p.y},path:${p.path}
+            });\n`;
+
+            // 'move': {
+            //     type: [1,[0],[0]],
+            //     customMap: (params) => {
+            //         const p = {path: []};
+            //         for(let i = 0; i < params.points.length; i++){
+            //             p.path.push([
+            //                 params.points[i][0]*2,
+            //                 params.points[i][1]*2,
+            //                 params.speed * 2 / 1000
+            //             ])
+            //         }
+        
+            //         p.currentPoint = params.currentPoint;
+            //         p.x = p.path[0][0];
+            //         p.y = p.path[0][1];
+            //         return p;
+            //     }
+            // },
+        }
+        counter++;
+        continue;
+    } else if(o.type === 'circle-sentry'){
+        o.x *= 2; o.y *= 2; o.r *= 2;
+        o.laser.x *= 2; o.laser.y *= 2; o.laser.w *= 2; o.laser.h *= 2;
+        str += `C(1,[5],[1],{h:${o.laser.h},w:${o.laser.w},y:${o.y-o.laser.h/2},x:${o.x-o.laser.w/2},
+            boundPlayer: true,
+            restAngles: [${o.rest*Math.PI/180}, ${o.rest*Math.PI/180+Math.PI}],
+            toRest: true,
+            homingRotateSpeed: ${o.speed / 86000},
+            detectionRadius: ${Math.sqrt(o.laser.w**2+o.laser.h**2)/2},
+            spokeAngles: [0, Math.PI],
+            pivotX: ${o.x},
+            pivotY: ${o.y}
+        });
+        C(0,[],[0],{x:${o.x},y:${o.y},r:${o.r},cr:(e)=>{
+            ctx.fillStyle = window.colors.tile;
+            ctx.beginPath();
+            ctx.arc(e.pos.x, e.pos.y, e.sat.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.closePath();
+
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = 15;
+            ctx.beginPath();
+            ctx.arc(
+                e.pos.x,
+                e.pos.y,
+                Math.max(e.sat.r - 30, 0),
+                0,
+                Math.PI * 2
+            );
+            ctx.stroke();
+            ctx.closePath();
+        }});`
+        // ctx.fillStyle = backgroundColor;
+        //     ctx.beginPath();
+        //     ctx.arc(pos.x, pos.y, obstacle.r, 0, Math.PI * 2);
+        //     ctx.fill();
+        //     ctx.strokeStyle = 'red';
+        //     ctx.lineWidth = 7.5;
+        //     ctx.beginPath();
+        //     ctx.arc(
+        //         pos.x,
+        //         pos.y,
+        //         Math.max(obstacle.r - 15, 0),
+        //         0,
+        //         Math.PI * 2
+        //     );
+        //     ctx.stroke();
+        counter++;
+        continue;
+
+        // {
+        //     "x": 4150,
+        //     "y": 7225,
+        //     "r": 25,
+        //     "angle": -270,
+        //     "type": "circle-sentry",
+        //     "speed": 430,
+        //     "laser": {
+        //         "x": 4150,
+        //         "y": 7225,
+        //         "w": 200,
+        //         "h": 25,
+        //         "pivotX": 4250,
+        //         "pivotY": 7237.5,
+        //         "distToPivot": 0
+        //     },
+        //     "rest": 90,
+        //     "renderType": "circleSentry",
+        //     "lastNoticed": false,
+        //     "radius": 25,
+        //     "inView": false
+        // },
+    } else if(o.type === 'resetcoins'){
+        o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
+        str += `C(1,[],[20],{x:${o.x},y:${o.y},w:${o.w},h:${o.h},hex:'#000000',alpha:0,cr:()=>{},ef:()=>{
+            for(let i = 0; i < obstacles.length; i++){
+                if(obstacles[i].collected !== undefined){
+                    obstacles[i].collected = false;
+                } else if(obstacles[i].isCoindoor === true){
+                    obstacles[i].coins = obstacles[i].maxCoins; 
+                }
+            }    
+        }});`;
+        continue;
+    } else if(o.type === 'resettimetraps'){
+        o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
+        str += `C(1,[],[20],{x:${o.x},y:${o.y},w:${o.w},h:${o.h},hex:'#000000',alpha:0,cr:()=>{},ef:()=>{
+            for(let i = 0; i < obstacles.length; i++){
+                if(obstacles[i].timeTrapTime !== undefined){
+                    obstacles[i].timeTrapTime = obstacles[i].timeTrapMaxTime;
+                }
+            }    
+        }});`;
+        continue;
     }
 
     if(typeDef === undefined) {
@@ -43578,3 +43806,10 @@ spawnPosition.x=100;
 spawnPosition.y=100;
 window.respawnPlayer();
 colors.background='#383838'; colors.tile='#0d0d0d';
+
+C(0,[],[26],{
+    x: spawnPosition.x,
+    y: spawnPosition.y,
+    r: 50,
+    musicPath: 'https://www.youtube.com/watch?v=0g2OB-y8bW4'
+});

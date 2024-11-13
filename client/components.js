@@ -108,7 +108,7 @@ function term(d,f){
 }
 
 let res = new SAT.Response();
-let angle, collided = false, fac=1;
+let angle, collided = false, fac=1, ffac=1, ffac2=1, grappleForceObj={};
 function simulate(){
     // player simulation
     const player = window.players[window.selfId];
@@ -152,27 +152,40 @@ function simulate(){
 
         if(player.stopForces === true){
             player.stopForces = false;
-            player.forces.length = 0;
+            // player.forces.length = 0;
+            for(let i = 0; i < player.forces.length; i++){
+                player.forces[i][0] = player.forces[i][1] = 0;
+                // player.forces[i][2] = player.forces[i][3] = 0;
+            }
         } else {
             for(let i = 0; i < player.forces.length; i++){
                 // each force uses the same differentials as the movement
                 // so that we dont get that jittering effect that comes
                 // from the variation of dt with diff approximations
-                // force format: [xv,yv,xa,ya,fric]
-                fac = term(dt, player.forces[i][4]); // ln(oldDecay) / 16.66 = newDecay
-        
+                // force format: [xv,yv,xa,ya,vfric,afric]
+                ffac = term(dt, player.forces[i][4]); // ln(oldDecay) / 16.66 = newDecay
+                ffac2 = term(dt, player.forces[i][5]);
+
+                // accounting for xa = 0, ya = 0 or xv = 0, yv = 0
+                if(ffac === 0) ffac = ffac2;
+                else if(ffac2 === 0) ffac = ffac;
+                else ffac *= ffac2;
+
                 // xv += xa * dt
-                player.forces[i][2] += player.forces[i][0] * dt;
-                player.forces[i][3] += player.forces[i][1] * dt;
+                player.forces[i][0] += player.forces[i][2] * dt;
+                player.forces[i][1] += player.forces[i][3] * dt;
         
-                // xv *= e^(fric*dt)
-                player.forces[i][2] *= Math.exp(player.forces[i][4] * dt);
-                player.forces[i][3] *= Math.exp(player.forces[i][4] * dt);
+                // xv *= e^(vfric*dt)
+                player.forces[i][0] *= Math.exp(player.forces[i][4] * dt);
+                player.forces[i][1] *= Math.exp(player.forces[i][4] * dt);
+
+                // new term - xa *= e^(afric*dt)
+                player.forces[i][2] *= Math.exp(player.forces[i][5] * dt);
+                player.forces[i][3] *= Math.exp(player.forces[i][5] * dt);
         
                 // x += xv * dt * fac
-                player.pos.x += player.forces[i][2] * dt * fac;
-                player.pos.y += player.forces[i][3] * dt * fac;
-                // console.log(player.forces[i][3] * fac * dt);
+                player.pos.x += player.forces[i][0] * dt * ffac;
+                player.pos.y += player.forces[i][1] * dt * ffac;
             }
         }
     } else if(window.dragging === true && player.dead === false){
@@ -253,6 +266,76 @@ function simulate(){
                 for(let j = 0; j < obstacles[i].simulate.length; j++){
                     obstacles[i].simulate[j](obstacles[i], player);
                 }
+            }
+        }
+
+        if(player.grapple === true){
+            if(input.action1 === true && player.grappleX === Infinity){
+                let resetRadius = player.sat.r;
+                player.sat.r = player.grappleRange;
+                let closestAngle = 0;
+                let priorityResetRadius = 0;
+                let grapPointPriority = false;
+                for(let i = 0; i < obstacles.length; i++){
+                    if(obstacles[i].isGrapplePoint === true && grapPointPriority === false){
+                        priorityResetRadius = player.sat.r;
+                        player.sat.r = player.grappleRange;
+                    }
+
+                    if(obstacles[i].sat.r !== undefined){
+                        if(obstacles[i].startSlice !== undefined){
+                            collided = testCircleSliceCircle(obstacles[i], player, res);
+                        } else {
+                            collided = SAT.testCircleCircle(obstacles[i].sat, player.sat, res);
+                        }
+                    } else {
+                        collided = SAT.testPolygonCircle(obstacles[i].sat, player.sat, res);
+                    }
+
+                    if(obstacles[i].isGrapplePoint === true){
+                        if(collided === true){
+                            grapPointPriority = true;
+                            player.sat.r -= res.overlap;
+                            closestAngle = Math.atan2(res.overlapN.y, res.overlapN.x);
+                        } else if(grapPointPriority === false){
+                            player.sat.r = priorityResetRadius;
+                        }
+                    } else if(collided === true && grapPointPriority === false){
+                        player.sat.r -= res.overlap;
+                        closestAngle = Math.atan2(res.overlapN.y, res.overlapN.x);
+                    }
+                    
+                    res.clear();// TODO: test if this is really needed
+                }
+
+                if(player.sat.r < player.grappleRange){
+                    player.grappleX = player.pos.x - Math.cos(closestAngle) * player.sat.r;
+                    player.grappleY = player.pos.y - Math.sin(closestAngle) * player.sat.r;
+                }
+                player.sat.r = resetRadius;
+            } else if(player.grappleX !== Infinity){
+                if(input.action1 === false){
+                    player.grappleX = player.grappleY = Infinity;
+                } else {
+                    let grappleLen = Math.sqrt((player.pos.x - player.grappleX) ** 2 + (player.pos.y - player.grappleY) ** 2);
+                    let grappleAngle = Math.atan2(player.grappleY - player.pos.y, player.grappleX - player.pos.x);
+                    addVelSetAccelForce(player, grappleForceObj, Math.cos(grappleAngle) * grappleLen * player.grappleForce, Math.sin(grappleAngle) * grappleLen * player.grappleForce, 0, 0, player.grappleFric, 0);
+                }
+            }
+        }
+        if(player.deathTimer === true){
+            player.deathTime -= dt / 1000;
+            if(player.deathTime < 0){
+                player.timeTrapOverrideSafe = true;
+                player.deathTime = Infinity;
+                player.deathTimer = false;
+                player.dead = true;
+                const buf = new ArrayBuffer(8);
+                const u8 = new Uint8Array(buf);
+                const f32 = new Float32Array(buf);
+                u8[0] = 13;
+                f32[1] = -Infinity;
+                send(buf);
             }
         }
     }
@@ -339,6 +422,7 @@ function testCircleSliceCircle(circleSlice, circle, res){
                     res.clear();
                     res.overlapN.x = res.overlapN.y = 0;
                     res.overlapV.x = res.overlapV.y = 0;
+                    return false;
                 } else {
                     // we're inside the circle - bound the opp way
                     res.overlapN = res.overlapN.scale(-1,-1);
@@ -407,20 +491,32 @@ window.isABColliding = (a,b) => {
     res.clear();
     return hasCollided;
 }
-function setForce(p, o, xv, yv, xa, ya, fric){
-    if(o.playerForceId === undefined/* || o.playerForceId !== p.id*/) /*{*/ o.playerForceId = p.forces.length;/* o.playerForcePlayerId = p.id; }*/
-    p.forces[o.playerForceId] = [xv, yv, xa, ya, fric];
+function setForce(p, o, xv, yv, xa, ya, vfric, afric){
+    if(p.forces[o.playerForceId] === undefined/* || o.playerForceId !== p.id*/) /*{*/ o.playerForceId = p.forces.length;/* o.playerForcePlayerId = p.id; }*/
+    p.forces[o.playerForceId] = [xv, yv, xa, ya, vfric, afric];
 }
 
-function addForce(p, o, xv, yv, xa, ya, fric){
-    if(o.playerForceId === undefined) {
+function addForce(p, o, xv, yv, xa, ya, vfric, afric){
+    if(p.forces[o.playerForceId] === undefined) {
         o.playerForceId = p.forces.length;
-        p.forces[o.playerForceId] = [xv, yv, xa, ya, fric];
+        p.forces[o.playerForceId] = [xv, yv, xa, ya, vfric, afric];
     } else {
         p.forces[o.playerForceId][0] += xv;
         p.forces[o.playerForceId][1] += yv;
         p.forces[o.playerForceId][2] += xa;
         p.forces[o.playerForceId][3] += ya;
+    }
+}
+
+function addVelSetAccelForce(p, o, xv, yv, xa, ya, vfric, afric){
+    if(p.forces[o.playerForceId] === undefined) {
+        o.playerForceId = p.forces.length;
+        p.forces[o.playerForceId] = [xv, yv, xa, ya, vfric, afric];
+    } else {
+        p.forces[o.playerForceId][0] += xv;
+        p.forces[o.playerForceId][1] += yv;
+        p.forces[o.playerForceId][2] = xa;
+        p.forces[o.playerForceId][3] = ya;
     }
 }
 
@@ -581,7 +677,8 @@ window.satConstraintsMap = [
     undefined,
     undefined,
     undefined,
-    {fontSize: [1]}
+    {fontSize: [1]},
+    undefined,
 ];
 
 window.satDefaultMap = [
@@ -728,6 +825,17 @@ const initSimulateMap = [
         let id = init.id.toString().trim();
         if(window.idToObs[id] !== undefined && environment === 'editor') alert(`Warning! Duplicate id "${id}" found! Duplicate ids override each other.`);
         window.idToObs[id] = o;
+    },
+    // /*rotateHoming*/
+    (o, init) => {
+        o.toRest = init.toRest;
+        o.restAngles = init.restAngles;
+        o.homingRotateSpeed = init.homingRotateSpeed;
+        o.rotation = 0;
+        o.detectionRadiusSquared = init.detectionRadius ** 2;
+        o.spokeAngles = init.spokeAngles;// array of angles of spokes
+        o.pivotX = init.pivotX;
+        o.pivotY = init.pivotY;
     }
 ]
 
@@ -835,15 +943,72 @@ const simulateMap = [
     /*custom*/
     () => {},
     /*id*/
-    () => {}
+    () => {},
+    /*rotateHoming*/
+    (o, p) => {
+        let [middleX, middleY] = generateTopLeftCoordinates(o);
+        middleX += o.dimensions.x / 2;
+        middleY += o.dimensions.y / 2;
+
+        window.bump = () => {
+            o.rotateSpeed = 2 / dt; simulateMap[1](o);
+        }
+        if(p.dead === true || (p.pos.x - middleX)**2 + (p.pos.y - middleY) ** 2 > o.detectionRadiusSquared) {
+            if(o.toRest === false) return;
+
+            let minSpokeAngularDist = Infinity;
+
+            for(let i = 0; i < o.restAngles.length; i++){
+                let angleDist = shortAngleDist(o.rotation, o.restAngles[i]);
+                if(Math.abs(angleDist) < Math.abs(minSpokeAngularDist)){
+                    minSpokeAngularDist = angleDist;
+                }
+            }
+
+            if(minSpokeAngularDist === Infinity) return;
+
+            if(Math.abs(minSpokeAngularDist) < o.homingRotateSpeed * dt) o.rotateSpeed = minSpokeAngularDist / dt;
+            else o.rotateSpeed = Math.sign(minSpokeAngularDist) * o.homingRotateSpeed;
+            simulateMap[1](o);
+            return;
+        }
+
+        angle = Math.atan2(p.pos.y - middleY, p.pos.x - middleX);
+
+        let minSpokeAngularDist = Infinity;
+
+        for(let i = 0; i < o.spokeAngles.length; i++){
+            let angleDist = shortAngleDist(o.spokeAngles[i] + o.rotation, angle);
+            if(Math.abs(angleDist) < Math.abs(minSpokeAngularDist)){
+                minSpokeAngularDist = angleDist;
+            }
+        }
+
+        if(minSpokeAngularDist === Infinity) return;
+
+        if(Math.abs(minSpokeAngularDist) < o.homingRotateSpeed * dt) o.rotateSpeed = minSpokeAngularDist / dt;
+        else o.rotateSpeed = Math.sign(minSpokeAngularDist) * o.homingRotateSpeed;
+
+        simulateMap[1](o);
+    }
 ]
+
+// ---
+
+// ---
+
+function shortAngleDist(a0,a1) {
+    let da = (a1 - a0) % TAU;
+    return 2*da % TAU - da;
+}
 
 window.simulateMapI2N = [
     'pathMove',
     'rotate',
     'grow',
     'custom',
-    'id'
+    'id',
+    'rotateHoming',
 ]
 
 window.simulateDefaultMap = [
@@ -873,6 +1038,16 @@ window.simulateDefaultMap = [
     // id
     {
         id: 'uniqueId'
+    },
+    // rotateHoming
+    {
+        toRest: true,
+        restAngles: [0, Math.PI],
+        homingRotateSpeed: 0.01,
+        detectionRadius: 200,
+        spokeAngles: [0, Math.PI],
+        pivotX: 450,
+        pivotY: 800
     }
 ]
 
@@ -926,7 +1101,7 @@ const initEffectMap = [
     },
     /*checkpoint*/
     (o, params) => {
-        o.collected = false;
+        o.checkpointCollected = false;
         o.checkpointOffsetX = params.checkpointOffsetX;
         o.checkpointOffsetY = params.checkpointOffsetY;
     },
@@ -964,6 +1139,8 @@ const initEffectMap = [
         o.jumpCooldown = 0;
         o.jumpForce = params.jumpForce;
         o.jumpFriction = params.jumpDecay;
+
+        o.jumpForceObj = {playerForceId: undefined};
 
         o.touchingPlatformer = false;
     },
@@ -1063,6 +1240,26 @@ const initEffectMap = [
         o.initialShipAngle = params.initialShipAngle;
         o.shipTurnSpeed = params.shipTurnSpeed;
     },
+    /*changeGrapple*/
+    (o, params) => {
+        o.changeGrappleStateTo = params.changeGrappleStateTo;
+        o.grappleRange = params.grappleRange;
+        o.grappleForce = params.grappleForce;
+        o.grappleFric = params.grappleFric;
+    },
+    /*changeDeathTimer*/
+    (o, params) => {
+        o.changeDeathTimerStateTo = params.changeDeathTimerStateTo;
+        o.drainAmountWhileStandingOn = params.drainAmountWhileStandingOn;
+        o.deathTime = params.deathTime;
+
+        // for vignette
+        for(let key in window.effectDefaultMap[24]){
+            o[key] = window.effectDefaultMap[24][key];
+        }
+
+        o.innerR = o.outerR = 255;
+    }
 ]
 
 let freeVariable = -1;
@@ -1090,8 +1287,8 @@ const effectMap = [
 
         angle = Math.atan2(res.overlapV.y, res.overlapV.x);
 
-        // TODO FORCE
-        p.forces.push([Math.cos(angle) * o.bounciness, Math.sin(angle) * o.bounciness, o.decay]);
+        // p.forces.push([Math.cos(angle) * o.bounciness, Math.sin(angle) * o.bounciness, o.decay]);
+        addForce(p, o, 0, 0, Math.cos(angle) * o.bounciness * dt, Math.sin(angle) * o.bounciness * dt, p.friction, Math.log(o.decay) / 16.66);// / 10
     },
     /*custom*/
     () => {},
@@ -1147,8 +1344,8 @@ const effectMap = [
     },
     /*checkpoint*/
     (p, res, o) => {
-        if(o.collected === true) return;
-        o.collected = true;
+        if(o.checkpointCollected === true) return;
+        o.checkpointCollected = true;
 
         let [topLeftX, topLeftY] = generateTopLeftCoordinates(o);
         
@@ -1181,20 +1378,20 @@ const effectMap = [
     },
     /*conveyor*/
     (p, res, o) => {
-        addForce(p, o, 0, 0, Math.cos(o.conveyorAngle) * o.conveyorForce * 5 * dt/16.66, Math.sin(o.conveyorAngle) * o.conveyorForce * 5 * dt/16.66, Math.log(o.conveyorFriction) / 16.66);
+        addForce(p, o, 0, 0, Math.cos(o.conveyorAngle) * o.conveyorForce * dt, Math.sin(o.conveyorAngle) * o.conveyorForce * dt, p.friction, Math.log(o.conveyorFriction) / 16.66); // * 5 / 16.66
         // p.forces.push([Math.cos(o.conveyorAngle) * o.conveyorForce, Math.sin(o.conveyorAngle) * o.conveyorForce, o.conveyorFriction, 0, 0]);
     },
     /*platformer*/
     (p, res, o, id) => {
         o.touchingPlatformer = true;
-        o.jumpCooldown--;
+        o.jumpCooldown -= dt;
 
         // add conveyor force
-        addForce(p, o, 0, 0, Math.cos(o.platformerAngle) * o.platformerForce, Math.sin(o.platformerAngle) * o.platformerForce, Math.log(o.platformerFriction) / 16.66);
+        addForce(p, o, 0, 0, Math.cos(o.platformerAngle) * o.platformerForce * dt, Math.sin(o.platformerAngle) * o.platformerForce * dt, p.friction, Math.log(o.platformerFriction) / 16.66); // * 5 / 16.66
         // p.forces.push([Math.cos(o.platformerAngle) * o.platformerForce, Math.sin(o.platformerAngle) * o.platformerForce, o.platformerFriction, 0, 0]);
 
-        const velocityMovedX = window.isExClient === true ? p.xv / Math.pow(p.friction, dt / 16.66) * dt : p.xv;
-        const velocityMovedY = window.isExClient === true ? p.yv / Math.pow(p.friction, dt / 16.66) * dt : p.yv;
+        const velocityMovedX = window.isExClient === true ? p.xv * fac * dt : p.xv;
+        const velocityMovedY = window.isExClient === true ? p.yv * fac * dt : p.yv;
 
         // idea: find the amount of x/y the player moves in the platformer and move the opposite to effectively lock the player's motion perpendicular to the platformer's direction
         const playerVelAngle = Math.atan2(velocityMovedY, velocityMovedX);
@@ -1211,7 +1408,8 @@ const effectMap = [
             o.canJump = true;
             // OLD: if we're within 30 degrees, jump; NEW: if the mouse is above the thumbs up in the rendering
             if(/*Math.abs(shortAngleDist(o.platformerAngle + Math.PI, playerVelAngle)) < Math.PI / 6*/(window.dragging === true || (window.isExClient === true && p.ya < -0.01)) && p.pos.y - window.mouseY > p.sat.r + 50){
-                // p.forces.push([-Math.cos(o.platformerAngle) * o.jumpForce, -Math.sin(o.platformerAngle) * o.jumpForce, o.jumpFriction, 0, 0]); // TODO FORCE
+                // p.forces.push([-Math.cos(o.platformerAngle) * o.jumpForce, -Math.sin (o.platformerAngle) * o.jumpForce, o.jumpFriction, 0, 0]);
+                setForce(p, o.jumpForceObj, -Math.cos(o.platformerAngle) * o.jumpForce * 2000, -Math.sin(o.platformerAngle) * o.jumpForce * 2000, 0, 0, Math.log(o.jumpFriction) / 16.66, 0);
                 o.jumpCooldown = o.maxJumpCooldown;
             }
         } else {
@@ -1418,22 +1616,60 @@ const effectMap = [
     },
     /*changeShip*/
     (p, res, o) => {
-        if(p.ship !== o.changeShipStateTo){
-            if(window.isExClient === true) {
-                // send changed ship
-                const buf = new ArrayBuffer(8);
-                const u8 = new Uint8Array(buf);
-                const f32 = new Float32Array(buf);
-                u8[0] = 9;
-                u8[1] = o.changeShipStateTo;
-                f32[1] = o.initialShipAngle;
-                send(buf);
-            }
-            if(p.ship === false && o.changeShipStateTo === true) {p.shipAngle = o.initialShipAngle; p.shipTurnSpeed = o.shipTurnSpeed; }
+        if(p.ship === o.changeShipStateTo) return;
+            
+        if(window.isExClient === true) {
+            // send changed ship
+            const buf = new ArrayBuffer(8);
+            const u8 = new Uint8Array(buf);
+            const f32 = new Float32Array(buf);
+            u8[0] = 9;
+            u8[1] = o.changeShipStateTo;
+            f32[1] = o.initialShipAngle;
+            send(buf);
         }
+        if(p.ship === false && o.changeShipStateTo === true) {p.shipAngle = o.initialShipAngle; p.shipTurnSpeed = o.shipTurnSpeed; }
         
         p.ship = o.changeShipStateTo;
     },
+    /*changeGrapple*/
+    (p, res, o) => {
+        if(window.isExClient === true && p.grapple !== o.changeGrappleStateTo){
+            // send remove grapple
+            const buf = new ArrayBuffer(12);
+            const u8 = new Uint8Array(buf);
+            const f32 = new Float32Array(buf);
+            u8[0] = 12;
+            f32[1] = f32[2] = o.changeGrappleStateTo === true ? Infinity : -Infinity;
+            send(buf);
+        }
+
+        p.grapple = o.changeGrappleStateTo;
+        p.grappleRange = o.grappleRange;
+        p.grappleForce = o.grappleForce;
+        p.grappleFric = Math.log(o.grappleFric) / 16.66;
+    },
+    /*changeDeathTimer*/
+    (p, res, o) => {
+        if(window.isExClient === true && p.deathTimer === true && o.changeDeathTimerStateTo === false){
+            // send remove death timer
+            const buf = new ArrayBuffer(8);
+            const u8 = new Uint8Array(buf);
+            const f32 = new Float32Array(buf);
+            u8[0] = 13;
+            f32[1] = -Infinity;
+            send(buf);
+        }
+
+        p.deathTimer = o.changeDeathTimerStateTo;
+        if(p.deathTimer === true){
+            p.deathTime = Math.min(p.deathTime, o.deathTime);
+            p.deathTime -= o.drainAmountWhileStandingOn * dt;
+
+            // changeVignette
+            effectMap[24](p, res, o);
+        } else { p.deathTime = Infinity; }
+    }
 ]
 
 const idleEffectMap = [
@@ -1596,6 +1832,10 @@ window.effectConstraintsMap = [
     undefined,
     /*changeShip*/
     undefined,
+    /*changeGrapple*/
+    undefined,
+    /*changeDeathTimer*/
+    undefined,
 ]
 
 window.effectMapI2N = [
@@ -1626,7 +1866,9 @@ window.effectMapI2N = [
     'changeVignette',
     'pushable',
     'changeMusic',
-    'changeShip'
+    'changeShip',
+    'changeGrapple',
+    'changeDeathTimer',
 ]
 
 window.effectDefaultMap = [
@@ -1643,7 +1885,7 @@ window.effectDefaultMap = [
     },
     // custom
     {},
-    // customEffect
+    // customImage
     {
         url: 'http://tinyurl.com/dwayne-t-rj'
     },
@@ -1742,7 +1984,7 @@ window.effectDefaultMap = [
     {tornadoStrength: 1},
     // changeVignette
     {
-        innerR: 0, innerG: 0, innerB: 0, innerSize: 0.1, innerOpacity: 1,
+        innerR: 0, innerG: 0, innerB: 0, innerSize: 0.1, innerOpacity: 0,
         outerR: 0, outerG: 0, outerB: 0, outerSize: 0.5, outerOpacity: 1
     },
     // pushable
@@ -1756,7 +1998,11 @@ window.effectDefaultMap = [
     // changeMusic
     {musicPath: 'https://www.youtube.com/watch?v=OidXKRVVV70'},
     // changeShip
-    {changeShipStateTo: true, initialShipAngle: 0, shipTurnSpeed: Math.PI * 3},
+    {changeShipStateTo: true, initialShipAngle: 0, shipTurnSpeed: Math.PI / 100},
+    // changeGrapple
+    {changeGrappleStateTo: true, grappleRange: 488, grappleForce: 0.01, grappleFric: 0.4},
+    // changeDeathTimer
+    {changeDeathTimerStateTo: true, drainAmountWhileStandingOn: 0, deathTime: 10},
 ]
 
 const renderEffectMap = [
@@ -1874,7 +2120,7 @@ const renderEffectMap = [
     },
     /*checkpoint*/
     (o) => {
-        if (o.collected === true) {
+        if (o.checkpointCollected === true) {
             ctx.fillStyle = '#0fba09';
             ctx.globalAlpha = 0.15;
         } else {
@@ -2161,7 +2407,6 @@ const renderEffectMap = [
                 ctx.fillStyle = '#1c1852';
             }
         }
-
         
         ctx.globalAlpha = 0.28;
     },
@@ -2349,7 +2594,72 @@ const renderEffectMap = [
         ctx.cleanUpFunction = () => {
             ctx.setLineDash([]);
         }
-    }
+    },
+    /*changeGrapple*/
+    (o) => {
+        let [middleX, middleY] = generateTopLeftCoordinates(o);
+        middleX += o.dimensions.x / 2; middleY += o.dimensions.y/2;
+
+        let grd = ctx.createRadialGradient(middleX, middleY, 0, middleX, middleY, Math.sqrt(o.dimensions.x**2 + o.dimensions.y**2)/2);
+
+        let t;
+        if(o.changeGrappleStateTo === true){
+            t = (window.time / 1600) % 0.33;
+            grd.addColorStop(1, "rgba(127,127,255,0)");
+            grd.addColorStop((0.67+t), "rgba(127,127,255,1)");
+
+            grd.addColorStop((0.66+t), "rgba(127,127,255,0)");
+            grd.addColorStop((0.34+t), "rgba(127,127,255,1)");
+
+            grd.addColorStop((0.33+t), "rgba(127,127,255,0)");
+            grd.addColorStop((0.0101+t), "rgba(127,127,255,1)");
+
+            if(0.01+t > 0)grd.addColorStop(0.01+t, "rgba(127,127,255,0)");
+            grd.addColorStop(0, "rgba(127,127,255,1)");
+        } else {
+            t = 0.33 - (window.time / 1600) % 0.33;
+            grd.addColorStop(1, "rgba(255,255,127,0)");
+            grd.addColorStop((0.67+t), "rgba(255,255,127,1)");
+
+            grd.addColorStop((0.66+t), "rgba(255,255,127,0)");
+            grd.addColorStop((0.34+t), "rgba(255,255,127,1)");
+
+            grd.addColorStop((0.33+t), "rgba(255,255,127,0)");
+            grd.addColorStop((0.0101+t), "rgba(255,255,127,1)");
+
+            if(0.01+t > 0)grd.addColorStop(0.01+t, "rgba(255,255,127,0)");
+            grd.addColorStop(0, "rgba(255,255,127,1)");
+        }
+
+        ctx.fillStyle = grd;
+        // ctx.globalAlpha = Math.abs(Math.sin(window.time / 760));
+    },
+    /*changeDeathTimer*/
+    (o) => {
+        if(window.skullImg === undefined){
+            window.skullImg = new Image();
+            window.skullImg.src = 'https://svgsilh.com/svg/1294357.svg';
+            window.skullImg.onload = () => {
+                window.skullImgLoaded = true;
+            }
+            return;
+        }
+
+        ctx.fillStyle = o.changeDeathTimerStateTo === true ? 'red' : 'white';
+        ctx.globalAlpha = 0.4;
+
+        if(window.skullImgLoaded === false) return;
+
+        ctx.cleanUpFunction = () => {
+            ctx.globalAlpha = 1;
+            let [middleX, middleY] = generateTopLeftCoordinates(o);
+            middleX += o.dimensions.x / 2; middleY += o.dimensions.y/2;
+
+            let minDimension = Math.min(o.dimensions.x, o.dimensions.y);
+
+            ctx.drawImage(window.skullImg, middleX - minDimension/2, middleY - minDimension/2, minDimension, minDimension);
+        }
+    },
 ]
 
 const difficultyImageColors = window.difficultyImageColors = [
@@ -2607,7 +2917,10 @@ window.createPlayer = () => {
     player.id = undefined;
     player.dev = true; /*dev only for players[selfId]*/ player.god = false;
     player.friction = -0.91629073187 / 16.66//old phys: 0.4 formula: fric = ln(oldphys)/16.66
-    player.ship = false; player.shipAngle = 0; player.shipTurnSpeed = Math.PI * 3 / 16.66;
+    player.ship = false; player.shipAngle = 0; player.shipTurnSpeed = Math.PI / 100;
+    player.deathTime = Infinity; player.deathTimer = false;
+    player.grappleX = Infinity; player.grappleY = Infinity; player.grapple = false;
+    player.grappleRange = 488; player.grappleForce = 0.01; player.grappleFric = -0.055;
     player.timeTrapOverrideSafe = false;
     return player;
 }
