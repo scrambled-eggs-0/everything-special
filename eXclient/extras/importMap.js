@@ -1217,6 +1217,29 @@ function importMap(str){
 
     var str = '';
 
+    for(let i = 0; i < obs.length; i++){
+        if(['spawner','square','switch','turret','flashlight'].includes(obs[i].type) === false) continue;
+        const o = obs[i];
+
+        const spawnData = obs[i].spawnData;
+        spawnData.bound = {
+            x: obs[i].x, y: obs[i].y, w: obs[i].w, h: obs[i].h
+        }
+
+        for(let i = 0; i < spawnData.amount; i++){
+            const s = structuredClone(spawnData);
+
+            s.x = o.x + Math.random() * o.w;
+            s.y = o.y + Math.random() * o.h;
+            s.angle = Math.random() * Math.PI * 2;
+            s.xv = Math.cos(s.angle) * s.speed;
+            s.yv = Math.sin(s.angle) * s.speed;
+
+            enemies.push(s);
+            console.log(s);
+        }
+    }
+
     let alreadyLoggedEnemy = {};
     for(let i = 0; i < enemies.length; i++){
         if(enemyTypeMap[enemies[i].type] !== undefined){
@@ -1231,6 +1254,7 @@ function importMap(str){
         const o = obs[i];
         const typeDef = typeMap[o.type];
 
+        if(o.type === 'spawner') continue;
         if(o.type === 'roundedcorners' || o.type === 'roundedlava'){
             const circleType = o.type === 'roundedcorners' ? 'circle-normal' : 'circle-lava';
             for(let i = 0; i < o.circles.length; i++){
