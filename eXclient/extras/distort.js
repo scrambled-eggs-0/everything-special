@@ -12,7 +12,7 @@
 const placeholder = document.getElementById('webglplaceholder');
 let glCanvas;
 
-function initNonlinearTransform(vs, fs){
+function initNonlinearTransform(vs, fs, uniformNames, uniformLambdas){
     if(window.distortionsActive === true) unInitNonlinearTransform();
     window.distortionsActive = true;
 
@@ -162,8 +162,11 @@ function initNonlinearTransform(vs, fs){
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);// gl.LINEAR
     }
-    
-    const uTime = gl.getUniformLocation(program, "uTime");
+
+    const uniforms = [];
+    for(let i = 0; i < uniformNames.length; i++){
+        uniforms.push(gl.getUniformLocation(program, uniformNames[i]));
+    }
     
     //TODO: flipY gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
     window.renderGl = () => {
@@ -173,9 +176,12 @@ function initNonlinearTransform(vs, fs){
         updateTexture();
     
         // setup uniforms
-        let t = Date.now() / 1000;
-        t -= Math.floor(t/100)*100;
-        gl.uniform1f(uTime, t);
+        for(let i = 0; i < uniformLambdas.length; i++){
+            gl.uniform1f(uniforms[i], uniformLambdas[i]());
+        }
+        // let t = Date.now() / 1000;
+        // t -= Math.floor(t/100)*100;
+        // gl.uniform1f(uTime, t);
         
         gl.clearColor(0, 0, 0, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT);

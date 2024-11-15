@@ -18,6 +18,9 @@ const require = createRequire(import.meta.url);
 global.defaultMapName = 'hub';
 global.tutorialMapName = 'potb';
 
+global.isServer = true;
+global.window.isServer = true;
+
 global.maps = {};
 
 global.spawnPosition = window.spawnPosition;

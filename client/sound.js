@@ -29,7 +29,7 @@ window.stopMusic = async (toAwait=false) => {
     lastLoadedLink = undefined;
 }
 
-window.playMusic = async (link) => {
+window.playMusic = async (link, startTime=0) => {
     window.hasLoadedNewMusic = true;
 
     await until(() => {return navigator.userActivation.hasBeenActive === true});
@@ -46,7 +46,7 @@ window.playMusic = async (link) => {
     audioIframe.height = 0;
     
     const videoId = link.split('?v=')[1];
-    audioIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&enablejsapi=1`;
+    audioIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&enablejsapi=1${startTime === 0 ? '' : "&start=$" + startTime}`;
     
     audioIframe.allow = "autoplay";
     audioIframe.security = "restricted";

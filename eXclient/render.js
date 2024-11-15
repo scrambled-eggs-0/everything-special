@@ -561,12 +561,12 @@ changeCameraScale(0.5);
 
 // if there's ever more extras, make an array system
 let nonLinearFns;
-window.initDistortion = async (vs, fs) => {
+window.initDistortion = async (vs, fs, uniformNames=[], uniformLambdas=[]) => {
     if(nonLinearFns === undefined) nonLinearFns = (await import('./extras/distort.js')).default;
-    nonLinearFns.initNonlinearTransform(vs, fs);
+    nonLinearFns.initNonlinearTransform(vs, fs, uniformNames, uniformLambdas);
 }
 
-window.unInitDistortion = (vs, fs) => {
+window.unInitDistortion = () => {
     // can't be active if not loaded
     if(nonLinearFns === undefined) return;
     nonLinearFns.unInitNonlinearTransform();
