@@ -178,8 +178,10 @@ const messageMap = [
         if(id === window.selfId) return;
         window.players[id].shipAngle = f32[1];
     },
-    // 11 - unused
-    () => {},
+    // 11 - change to create account page
+    (data) => {
+        location.replace(location.origin + '/create');
+    },
     // 12 - change grapple
     (data) => {
         const u16 = new Uint16Array(data.buffer);

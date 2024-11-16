@@ -13,50 +13,6 @@ body {
     font-family: 'Inter', sans-serif;
 }
 
-.menu {
-    background-color: rgb(5,5,5);
-    position: fixed;
-    text-align: center;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.nameInput {
-    outline: none;
-    margin: 5px;
-    height: 20px;
-    width: 200px;
-
-    box-shadow: 0px 0px 10px 2px white;
-    outline: none;
-    border: none;
-    color: white;
-    background: rgba(0,0,0,1);
-    padding: 5px;
-    font-size: 1.25rem;
-    position: relative;
-    width: 250px;
-    height: 30px;
-    top: 75px;
-}
-
-.playForm {
-    display: flex;
-    flex-direction: column;
-}
-
-.title {
-    position: relative;
-    top: -50px;
-    font-size: 3.5rem;
-    text-shadow: 0px 0px 15px white;
-    user-select: none;
-}
-
 .hidden {
     display: none !important;
 }

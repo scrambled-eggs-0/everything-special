@@ -62,6 +62,7 @@ window.decorationImgs = {};
 if(typeof Image !== 'undefined'){
 	window.arrowImg = new Image();
 	window.starImg = new Image();
+	window.starImg.crossOrigin = "Anonymous";
 	if(environment === 'editor'){
 		// editor
 		(async() => {

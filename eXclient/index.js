@@ -24,42 +24,30 @@ const {encodeAtPosition} = Utils;
 import '../eXserver/maps/_difficulty.js';
 
 // joining game
-const menu = document.querySelector('.menu');
-const form = document.querySelector('.playForm');
-const nameInput = document.querySelector('.nameInput');
 const gui = window.gui = document.querySelector('.gui');
 window.state = 'menu';
-form.onsubmit = (e) => {
-    window.username = nameInput.value;
+window.username = ''
 
-    // temp, eventually we'll get rid of the form
-    if(localStorage.getItem('tutorialCompleted') !== 't'){
-        // localStorage.setItem('tutorialCompleted', 't');
-        const buf = new Uint8Array(1);
-        buf[0] = 11;
-        window.send(buf);
-        window.state = 'game';
-        window.onkeydown({code: 'KeyZ', repeat: false, type: 'keydown'});
-        window.state = 'menu';
-    } else {
-        const buf = new Uint8Array(window.username.length + 1);
-        buf[0] = 0;// type 0 - set username and join game
-        encodeAtPosition(window.username, buf, 1);
-        window.send(buf);
-    }
-    return e.preventDefault();
+const username = localStorage.getItem('username');
+const password = localStorage.getItem('password');
+if(username === null || password === null){
+    const buf = new Uint8Array(1);
+    buf[0] = 11;
+    window.send(buf);
+    window.state = 'game';
+    window.onkeydown({code: 'KeyZ', repeat: false, type: 'keydown'});
+    window.state = 'menu';
+} else {
+    const buf = new Uint8Array(1 + 64 + username.length);
+    buf[0] = 0;// type 0 - set username and join game
+    encodeAtPosition(password, buf, 1);
+    encodeAtPosition(username, buf, 1 + 64);
+    window.send(buf);
 }
 
 window.startGame = () => {
     window.state = 'game';
-    nameInput.value = '';
-    menu.classList.add('fade-out');
     gui.classList.remove('hidden');
-    menu.onanimationend = () => {
-        nameInput.blur();
-        menu.classList.remove('fade-out');
-        menu.classList.add('hidden');
-    }
     lastTime = now = performance.now();
     window.respawnPlayer();
     run();
@@ -71,11 +59,9 @@ let lastTime, accum, offtabTime;
 accum = window.frames = offtabTime = 0;
 window.time = window.now = 0;
 window.dt = 1;
-window.runRAF = -1;
 // const FRAME_TIME = 1000 / 60;
-let run;
-window.runFn = run = function(){
-    window.runRAF = requestAnimationFrame(run);
+function run(){
+    requestAnimationFrame(run);
 
     now = performance.now();
     dt = now - lastTime;

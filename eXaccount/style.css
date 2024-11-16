@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+.title {
+  position: relative;
+  /* top: -50px; */
+  font-size: 3.5rem;
+  text-shadow: 0px 0px 15px white;
+  color: white;
+}
+ 
+html {
+  font-family: "Inter";
+  line-height: 1.15;
+}
+ 
+body {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: white;
+  text-align: left;
+  background-color: black;
+  cursor: crosshair;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+  background-color: black;
+}
+  
+#play-menu {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  padding: 20px 30px;
+  /* background-color: rgba(0,0,0, 1); */
+  border-radius: 10vmax !important;
+  display: flex;
+  /* box-shadow: 0px 0px 5vmax 5vmax rgba(0,0,0,1); */
+  flex-direction: column;
+  align-items: center;
+  border-radius: 5px;
+  text-align: center;
+}
+
+#marginSpacer {
+  height: 1.42vmax;
+}
+
+#canvas {
+  position: absolute;
+  margin: auto;
+  cursor: crosshair;
+}
+
+#logininstead {
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  cursor: pointer !important;
+  transition: 1s;
+}
+
+#logininstead:hover {
+  text-shadow: 0px 0px 5px white;
+}
+
+input {
+  outline: none;
+  margin: 5px;
+
+  box-shadow: 0px 0px 10px 2px black;
+  outline: none;
+  border: none;
+  color: white;
+  background: rgba(0,0,0,1);
+  padding: 5px;
+  font-size: 1.25rem;
+  position: relative;
+
+  text-align: center;
+
+  /* border: 0.1vh solid white;  */
+}
+
+.playForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  position: relative;
+  margin-bottom: 3vh;
+  font-size: 3.5rem;
+  text-shadow: 0px 0px 11px white;
+  user-select: none;
+}
+
+#join-button {
+  background: rgba(0,0,0,1);
+  box-shadow: 0px 0px 10px 2px black;
+  outline: none;
+  margin: 5px;
+  padding: 5px;
+  color: white;
+  border: 0;
+  border-radius: 0.7vh;
+  cursor: pointer !important;
+  /* border: 0.1vh solid white;  */
+  transition: 1s;
+}
+
+#join-button:hover {
+  text-shadow: 0px 0px 5px white;
+}
+
+::placeholder {
+  color: rgba(255,255,255,0.8);
+  user-select: none;
+}

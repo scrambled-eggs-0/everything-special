@@ -46,7 +46,7 @@ window.playMusic = async (link, startTime=0) => {
     audioIframe.height = 0;
     
     const videoId = link.split('?v=')[1];
-    audioIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&enablejsapi=1${startTime === 0 ? '' : "&start=$" + startTime}`;
+    audioIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&enablejsapi=1${startTime === 0 ? '' : "&start=" + startTime}`;
     
     audioIframe.allow = "autoplay";
     audioIframe.security = "restricted";

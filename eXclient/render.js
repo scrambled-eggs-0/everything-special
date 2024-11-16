@@ -1,4 +1,4 @@
-const canvas = window.canvas = document.getElementById('canvas');
+let canvas = window.canvas = document.getElementById('canvas');
 let ctx = window.ctx = canvas.getContext('2d');
 
 const camera = window.camera = {
@@ -576,6 +576,22 @@ let noiseFns;
 window.importNoise = async() => {
     if(noiseFns !== undefined) return noiseFns;
     return noiseFns = (await import('./extras/noise.js')).default;
+}
+
+window.unTaintCanvas = () => {
+    const transform = ctx.getTransform();
+
+    const newCanvas = document.createElement('canvas');
+
+    document.body.insertBefore(newCanvas, canvas);
+
+    canvas.remove();
+
+    canvas = window.canvas = newCanvas;
+    ctx = window.ctx = canvas.getContext('2d');
+    resize();
+
+    ctx.setTransform(transform);
 }
 
 export default render;

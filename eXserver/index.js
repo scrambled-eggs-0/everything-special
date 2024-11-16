@@ -43,7 +43,8 @@ global.app = uWS.App().ws('/*', {
             ws,
             mapName: '',
             player: new Player(),
-            dev: true
+            dev: true,
+            accountData: {}
         }
         
         const ind = reusableClientIndexes.length === 0 ? clients.length : reusableClientIndexes.pop();
@@ -54,6 +55,7 @@ global.app = uWS.App().ws('/*', {
     },
     message: (ws, data) => {
         const decoded = new Uint8Array(data);
+        if(ws.me.mapName === '' && decoded[0] !== 0 && decoded[0] !== 11) return;
         if(messageMap[decoded[0]] !== undefined) messageMap[decoded[0]](decoded, ws.me);
     },
     close: (ws, code, message) => {
@@ -119,6 +121,23 @@ app.get("/maps/:filename", (res, req) => {
     }
 });
 
+app.get("/eXclient/extras/:filename", (res, req) => {
+    const path = 'eXclient/extras/' + req.getParameter(0);
+
+    res.writeHeader("Content-Type", "text/javascript");
+
+    // Check if the file exists
+    if (fs.existsSync(path)) {
+        // Read and serve the file
+        const file = fs.readFileSync(path);
+        res.end(file);
+    } else {
+        // File not found
+        res.writeStatus('404 Not Found');
+        res.end();
+    }
+});
+
 // DUPLICATE FROM OMNI SERVER. REMOVE WHEN MERGE
 app.get("/gfx/:filename", (res, req) => {
     let path = "client" + req.getUrl();
@@ -150,17 +169,129 @@ app.get("/gfx/decorations/:filename", (res, req) => {
     }
 });
 
+app.get('/create', (res, req) => {
+    res.end(fs.readFileSync('eXaccount/index.html'));
+});
+
+app.get('/login', (res, req) => {
+    res.end(fs.readFileSync('eXaccount/index.html'));
+});
+
+app.get("/eXaccount/:filename", (res, req) => {
+    let path = "eXaccount/" + req.getParameter(0);
+
+    const extension = path.slice(path.length - 3, path.length);
+
+    res.cork(() => {
+        if (extension === "css") {
+            res.writeHeader("Content-Type", "text/css");
+        } else {
+            res.writeHeader("Content-Type", "text/javascript");
+        }
+    });
+
+    // Check if the file exists
+    if (fs.existsSync(path)) {
+        // Read and serve the file
+        res.end(fs.readFileSync(path));
+    } else {
+        // File not found
+        res.cork(() => {
+            res.writeStatus("404 Not Found");
+            res.end();
+        });
+    }
+});
+
+app.post("/create", async (res, req) => {
+    let aborted = false;
+    res.onAborted(() => {
+        aborted = true;
+    });
+
+    const username = req.getHeader("u");
+    const password = req.getHeader("p");
+    const email = req.getHeader("e");
+
+    if((email !== '' && validateEmail(email) === false) || username.length > 32 || password.length !== 64 || email.length > 320){
+        res.cork(() => {
+            res.end("n");
+        });
+        return;
+    }
+    
+    const succeeded = await db.createAccount(username, password, email);
+
+    if (aborted === false){
+        if(succeeded === true){
+            res.cork(() => {
+                res.end("y");
+            });  
+        } else {
+            res.cork(() => {
+                res.end("n");
+            });
+        }
+    }
+});
+
+const validateEmail = (email) => {
+    return !!email.match(
+        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+};
+
+app.post("/login", async (res, req) => {
+    let aborted = false;
+    res.onAborted(() => {
+        aborted = true;
+    });
+
+    const username = req.getHeader("u");
+    const password = req.getHeader("p");
+
+    const account = await db.getAccountRequirePassword(username, password);
+    const succeeded = account !== undefined && account !== null;
+
+    if (aborted === false){
+        if(succeeded === true){
+            res.cork(() => {
+                res.end("y");
+            });
+        } else {
+            res.cork(() => {
+                res.end("n");
+            });
+        }
+    }
+});
 
 const decoder = new TextDecoder();
 
 // functions that each correspond to a message. Tells the server what to do when processing the message
 const messageMap = [
-    // 0 - set username and join game
+    // 0 - login and join game
     (data, me) => {
-        if(data.byteLength > 33 || me.mapName !== '') return;
+        if(data.byteLength > 97 || me.mapName !== '') return;
         // this should never fail
-        me.player.name = decoder.decode(data).slice(1);
+        const str = decoder.decode(data);
+
+        const password = str.slice(1,65);
+        me.player.name = str.slice(65);
         changeMap(me, defaultMapName);
+        
+        (async()=>{
+            const loginData = await db.getAccountRequirePassword(me.player.name, password);
+
+            if(loginData === null){
+                const buf = new Uint8Array(1);
+                buf[0] = 11;
+                send(me, buf);
+                me.ws.close();
+            } else {
+                me.accountData = loginData;
+            }
+        })();
     },
     // 1 (ONE = WON same thing !! it pronounces the same!) - won map
     (data, me) => {
@@ -178,7 +309,7 @@ const messageMap = [
     () => {},
     // 4 - x and y
     (data, me) => {
-        if(me.mapName === '' || data.byteLength !== 12) return;
+        if(data.byteLength !== 12) return;
         // format (in bytes): [type]1 [blank]1 [u16 id]2 [float position x]4 [float position y]4
         const u16view = new Uint16Array(data.buffer);
         u16view[1] = me.player.id;
@@ -197,7 +328,7 @@ const messageMap = [
     },
     // 8 - toggle godmode
     (data, me) => {
-        if(me.mapName === '' || me.dev !== true) return;
+        if(me.dev !== true) return;
         const buf = new ArrayBuffer(4);
         const u8 = new Uint8Array(buf);
         const u16 = new Uint16Array(buf);
@@ -211,7 +342,7 @@ const messageMap = [
     },
     // 9 - change ship
     (data, me) => {
-        if(me.mapName === '' || data.byteLength !== 8) return;
+        if(data.byteLength !== 8) return;
         const f32 = new Float32Array(data.buffer);
         me.player.ship = data[1] === 1;
         me.player.shipAngle = f32[1];
@@ -221,7 +352,7 @@ const messageMap = [
     },
     // 10 - change ship angle
     (data, me) => {
-        if(me.mapName === '' || data.byteLength !== 12) return;
+        if(data.byteLength !== 12) return;
         const f32 = new Float32Array(data.buffer);
         me.player.shipAngle = f32[1];
         const u16 = new Uint16Array(data.buffer);
@@ -235,7 +366,7 @@ const messageMap = [
     },
     // 12 - change grapple
     (data, me) => {
-        if(me.mapName === '' || data.byteLength !== 12) return;
+        if(data.byteLength !== 12) return;
         const f32 = new Float32Array(data.buffer);
         if(f32[1] === Infinity){// Inf = enable
             me.player.grapple = true;
@@ -254,7 +385,7 @@ const messageMap = [
     },
     // 13 - change death timer 
     (data, me) => {
-        if(me.mapName === '' || data.byteLength < 8/*can be 8 or 12*/) return;
+        if(data.byteLength < 8/*can be 8 or 12*/) return;
         const f32 = new Float32Array(data.buffer);
         if(f32[1] === -Infinity) {me.player.deathTimer = false; me.player.deathTime = Infinity;} // -Inf = disable
         else {me.player.deathTimer = true; me.player.deathTime = f32[1];}
@@ -264,7 +395,7 @@ const messageMap = [
     },
     // 14 - change dead
     (data, me) => {
-        if(me.mapName === '' || data.byteLength < 2) return;
+        if(data.byteLength < 2) return;
         const f32 = new Float32Array(data.buffer);
         const u16 = new Uint16Array(data.buffer);
         me.player.dead = f32[1] === 1;

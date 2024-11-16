@@ -9,9 +9,9 @@ const client = new MongoClient(uri, {
 
 let db;
 let connected = false;
-let bucket;
+// let bucket;
 let userCollection;
-let mapCollection;
+// let mapCollection;
 
 async function run() {
     try {
@@ -19,7 +19,7 @@ async function run() {
 
         db = client.db("Cluster0");
         userCollection = db.collection("User");
-        mapCollection = db.collections("Map");
+        // mapCollection = db.collections("Map");
 
         connected = true;
         console.log("connected to db!");
@@ -52,53 +52,36 @@ function randomString(len = 16) {
 
 async function createAccount(
     username,
-    hashedPassword,
-    profilePic = undefined,
-    pfpFileType = undefined,
+    password,
+    email=''
 ) {
     const nameTaken = await userCollection.findOne({ username });
     if (nameTaken) return false;
     const newAccount = {
         username,
-        hashedPassword,
-        levels: [],
-        trackRecord: 0.5,
-        followers: 0,
-        liked: {},
-        disliked: {},
+        password,
+        email: email,// '' means no email provided
+        levelsBeaten: {/*posc: 3, levelName: numTimes*/},
+        fastestTimes: {/*posc: 58, levelName: fastestTimeInSeconds*/},
+        custom: {/*key: value api for level creators*/},
+        cosmetics: [/*{type: 'sunglasses'},{type: 'snowball', color: 'white'}*/],
+        unlockedPlanets: {/*pounlocked: true (only for planets that are locked)*/},
+        unlockedUniverses: [1]
     };
-    if (profilePic !== undefined) {
-        const fileName = `pfp_${randomString(16)}.${pfpFileType}`;
-        // upload profile pic
-        const uploadStream = bucket.openUploadStream(fileName);
-        uploadStream.end(profilePic);
-
-        let finished = false;
-
-        uploadStream.on("finish", () => {
-            console.log("Pfp uploaded to GridFS");
-            finished = true;
-            newAccount.pfp = fileName;
-        });
-
-        uploadStream.on("error", (error) => {
-            console.error("Error uploading pfp to GridFS:", error);
-        });
-
-        await until(() => {
-            return finished === true;
-        });
-    }
     userCollection.insertOne(newAccount);
     return true;
 }
 
-// might want password for this?
-async function getUserData(username) {
+async function getAccount(username) {
     return await userCollection.findOne({ username });
+}
+
+async function getAccountRequirePassword(username, password){
+    return await userCollection.findOne({ username, password });
 }
 
 export default {
     createAccount,
-    getUserData
+    getAccount,
+    getAccountRequirePassword
 };

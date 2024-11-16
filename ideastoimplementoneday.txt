@@ -30,6 +30,17 @@ optimize death message to [type, isDead, ...id bytes for server]
 
 Divide dt by 1000. Much better for numerical stability
 
+Advanced music extra file that overrides play, pause, etc. Loads the youtube api behind the scenes (https://www.youtube.com/iframe_api)
+let player = new YT.Player('player', {
+    height: '360',
+    width: '640',
+    videoId: 'VIDEO_ID', // Replace with your video ID
+    events: {
+        'onReady': (e) => {console.log('player is ready!');}
+    }
+});
+and uses player.pauseVideo / player.playVideo or other stuff in the api
+
 Cool animations:
 https://www.sololearn.com/en/compiler-playground/Wx4yblest1ed/?ref=app
 https://www.sololearn.com/en/compiler-playground/W3e4O44DgY0Y/?ref=app

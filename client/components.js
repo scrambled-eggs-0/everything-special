@@ -2031,7 +2031,7 @@ const renderEffectMap = [
             ctx.clip();
 
             const [topLeftX, topLeftY] = generateTopLeftCoordinates(o);
-            // ctx.drawImage(window.starImg, topLeftX, topLeftY, o.dimensions.x, o.dimensions.y);
+            ctx.drawImage(window.starImg, topLeftX, topLeftY, o.dimensions.x, o.dimensions.y);
 
             ctx.restore();
         }
@@ -2046,7 +2046,7 @@ const renderEffectMap = [
             ctx.clip();
 
             const [topLeftX, topLeftY] = generateTopLeftCoordinates(o);
-            // ctx.drawImage(o.img, topLeftX, topLeftY, o.dimensions.x, o.dimensions.y);
+            ctx.drawImage(o.img, topLeftX, topLeftY, o.dimensions.x, o.dimensions.y);
 
             ctx.restore();
         }
@@ -2181,7 +2181,7 @@ const renderEffectMap = [
                 for(let y = topLeftY + 50; y <= topLeftY + o.dimensions.y + 50; y += 100){
                     ctx.translate(x,y);
                     ctx.rotate(o.conveyorAngle+Math.PI/2);
-                    // ctx.drawImage(window.arrowImg, -50, -50, 100, 100);
+                    ctx.drawImage(window.arrowImg, -50, -50, 100, 100);
                     ctx.rotate(-o.conveyorAngle-Math.PI/2);
                     ctx.translate(-x,-y);
                 }
@@ -2212,7 +2212,7 @@ const renderEffectMap = [
                 for(let y = topLeftY + offsetY + 50; y <= topLeftY + o.dimensions.y + 50; y += 100){
                     ctx.translate(x,y);
                     ctx.rotate(o.platformerAngle+Math.PI/2);
-                    // ctx.drawImage(window.arrowImg, -50, -50, 100, 100);
+                    ctx.drawImage(window.arrowImg, -50, -50, 100, 100);
                     ctx.rotate(-o.platformerAngle-Math.PI/2);
                     ctx.translate(-x,-y);
                 }
@@ -2481,7 +2481,7 @@ const renderEffectMap = [
 
         ctx.translate(middleX, middleY);
         if(o.rotation !== undefined) ctx.rotate(o.rotation);
-        // ctx.drawImage(decoImg, -maxDimension / 2, -maxDimension / 2, maxDimension, maxDimension);
+        ctx.drawImage(decoImg, -maxDimension / 2, -maxDimension / 2, maxDimension, maxDimension);
         if(o.rotation !== undefined) ctx.rotate(-o.rotation);
         ctx.translate(-middleX, -middleY);
     },
@@ -2658,7 +2658,7 @@ const renderEffectMap = [
 
             let minDimension = Math.min(o.dimensions.x, o.dimensions.y);
 
-            // ctx.drawImage(window.skullImg, middleX - minDimension/2, middleY - minDimension/2, minDimension, minDimension);
+            ctx.drawImage(window.skullImg, middleX - minDimension/2, middleY - minDimension/2, minDimension, minDimension);
         }
     },
 ]

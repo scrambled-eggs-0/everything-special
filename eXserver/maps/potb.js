@@ -780,7 +780,7 @@ window.obsArr.push(...[
     "C(1,[],[27],{\"w\":200,\"h\":200,\"changeShipStateTo\":true,\"initialShipAngle\":-Math.PI/2,\"shipTurnSpeed\":0.0031415926535897934,\"x\":10100,\"y\":2700})",
     "C(0,[],[27],{\"r\":100,\"changeShipStateTo\":false,\"initialShipAngle\":0,\"shipTurnSpeed\":0.031415926535897934,\"x\":10300,\"y\":3100})",
     "C(2,[],[18],{\"points\":[[10100,3500],[10150,3300],[10250,3300],[10300,3500]],\"sizeMult\":0.5,\"sizeChangePermanent\":false,\"x\":0,\"y\":0})",
-    "C(0,[],[4],{\"r\":100,\"url\":\"http://tinyurl.com/dwayne-t-rj\",\"x\":9000,\"y\":3400})",
+    "C(0,[],[4],{\"r\":100,\"url\":\"https://images.pexels.com/photos/12043242/pexels-photo-12043242.jpeg\",\"x\":9000,\"y\":3400})",
     "C(4,[],[23],{\"r\":100,\"innerRadius\":0,\"startSliceAngle\":5.3197196411114005,\"endSliceAngle\":0.6615698517358614,\"endSliceAngleRotateSpeed\":-0.0021034335423010786,\"startSliceAngleRotateSpeed\":-0.000723994345467791,\"tornadoStrength\":7,\"x\":9300,\"y\":3700})",
     "var tutorialMorphTriggered = false;\nC(1,[],[5],{h:200,w:200,y:2700,x:8900,\n    cr:(e)=>{\n        ctx.globalAlpha = 0.8;\n        if (tutorialMorphTriggered === true) {\n            ctx.globalAlpha = 0.3;\n        }\n\n        ctx.strokeStyle = ctx.fillStyle = 'white';\n\n        let [topX, topY] = generateTopLeftCoordinates(e);\n\n        ctx.fillRect(topX, topY, e.dimensions.x, e.dimensions.y);\n        ctx.globalAlpha *= 1 / 0.8;\n        ctx.strokeRect(topX, topY, e.dimensions.x, e.dimensions.y);\n\n        ctx.fillStyle = colors.tile;\n        ctx.fillRect(\n            topX + 15,\n            topY + 15,\n            e.dimensions.x - 30,\n            e.dimensions.y - 30\n        );\n\n        ctx.globalAlpha = 1;\n    },\n    ef:(e) => {\n        tutorialMorphTriggered = true;    \n    }\n});",
     "var tutorialMorphTriggered = false;\nC(0,[],[0],{r:100,y:3100,x:8900,\n    cr:(e)=>{\n        if(tutorialMorphTriggered){\n            e.pos.x = -1E9;\n            return;\n        }\n        ctx.beginPath();\n        let [middleX, middleY] = generateTopLeftCoordinates(e);\n        middleX += e.dimensions.x / 2;\n        middleY += e.dimensions.y / 2;\n        ctx.translate(middleX, middleY);\n        ctx.fillStyle = colors.tile;\n        for(let i = 0; i < 100; i++){\n            const t = Math.PI * 2 * i / 100;\n            const a = Math.sin(window.time / 1000) * 8;\n\n            let x = Math.cos(t) * 100 * (Math.cos(8*t + a) / 8 + 0.9);\n            let y = Math.sin(t) * 100 * (Math.sin(8*t + a) / 8 + 0.9);\n\n            if(i === 0){\n                ctx.moveTo(x,y);\n            } else {\n                ctx.lineTo(x,y);\n            }\n        }\n        ctx.fill();\n        ctx.closePath();\n        ctx.translate(-middleX, -middleY);\n    }\n});",
@@ -5191,6 +5191,8 @@ window.obsArr.push(...[
                 ctx.fillText(txt, 9200, 4800 - 12 - (chosenOpaq-1)*38);
                 ctx.setLineDash([]);
             }
+
+            ctx.globalAlpha = 1;
         },
         ef:(o)=>{
             chosenOpaq = interpolate(chosenOpaq, 1, 0.03);
@@ -7797,6 +7799,12 @@ if(window.importNoise !== undefined){
         let animState = 'welcome';
         let animT = 0;
 
+        if(isSecond === true){
+            // what we did in the desert changing to the grand cathedral
+            // TODO (when i get back): Make is the unexpected have a bit more delay, fix oval skipping some of the animation again? Also test the ++ time thing instead of date.now (dt?) and maybe the canvas zooms as well or like sine waves from -1 to 1 so it inverts even after anim?
+            if(musicObs !== undefined) {musicObs.musicPath = 'https://www.youtube.com/watch?v=pM7xCwaCV6g'; musicObs.musicStartTime = 17;}
+        }
+
         let oldRender = window.render;
         window.render = (...params) => {
             oldRender(...params);
@@ -8037,7 +8045,7 @@ if(window.importNoise !== undefined){
         const fadeTime = 100;
         const solidTime = 200;
         const texts = isSecond === false ? ['Welcome, Traveler.', 'Welcome to Evades X.'] : 
-        ["Good job!", "Now, you're almost ready to be released into the wide world of Evades X.", "But before I let you in, I must warn you.", "Evades X is a game where anything is possible.", "So the only thing you should expect...","is the unexpected."];
+        ["Good job!", "Now, you're almost ready to be released into the wide world of Evades X.", "But before I let you in, I must warn you.", "Evades X is a game where anything is possible.", "So you should expect...","the unexpected!"];
         let curText = 0;
         let state = 'fadeIn';
         let stateTime = fadeTime;
@@ -8060,6 +8068,14 @@ if(window.importNoise !== undefined){
         let inittedFade = false;
 
         // let tps;
+
+        let firstRenderTime = undefined;
+        let inittedFinalObs = false;
+
+        let curText5Time = undefined;
+
+        let scaleRenderApplied = false;
+        let scaleRenderStartTime = 0;
         
         let renderCanvas2 = () => {
             c.clearRect(0,0,canvas2.w,canvas2.h);
@@ -8074,6 +8090,13 @@ if(window.importNoise !== undefined){
                 c.fillStyle = 'white';
                 c.textAlign = 'center';
                 c.textBaseline = 'middle';
+
+                if(curText === 5) {
+                    if(curText5Time === undefined) curText5Time = Date.now();
+                    c.font = `${Math.min(canvas2.w,canvas2.h)*(0.05 + 0.01 * Math.pow(1.1, (Date.now() - curText5Time) / 12) )}px Inter`;
+                    c.fillStyle = c.shadowColor = 'red';
+                    scaleRenderApplied = true;
+                }
 
                 stateTime -= timeScale * dt * 60;
                 if(stateTime < 0){
@@ -8098,17 +8121,120 @@ if(window.importNoise !== undefined){
                     } else if(curText === 4 && isSecond === true && inittedFade === false){
                         secondTimeDomElFade = Date.now();
                         inittedFade = true;
+                        stateEndTime += 1400;
+
+                        scaleRenderApplied = true;
+                        scaleRenderStartTime = window.time;
+
+                        C(1,[],[0],{x:7500,y:1050,w:10000,h:5000});
                     }
                 }
 
-                // idea for arena: Taste the edge text above and winpad below (whole wall). But of course the winpad is a custom and will just refresh the page.
+                // idea for arena: Taste the edge text above and winpad below (whole wall). But of course the winpad is a custom and will just refresh the page. Also switch to the grand cathedral w/ timestap whatever it works out to be
                 if(isSecond === true && curText > 5) return;// no undefineds
 
                 if(secondTimeDomElFade !== 0){
                     const opaq = Math.min(1,Math.max(0,1 - (Date.now() - secondTimeDomElFade) / 2000));
                     releasePlayer = true;
-                    window.render = oldRender;
+                    if(scaleRenderApplied === true){
+                        window.render = (...params) => {
+                            changeCameraScale(Math.abs(Math.cos((window.time - scaleRenderStartTime) / 800)));
+                            oldRender(...params);
+                        }
+                    }
+                    else window.render = oldRender;
                     if(opaq <= 0 && alreadyInnittedCone === false){
+                        let hasRefreshed = false;
+                        const centerX = 3100;
+                        const centerY = 3000;
+                        const rx = 1200;
+                        const ry = 700;
+                        for(let a = 0; a < 8; a++){
+                            const angleOffset = Math.PI * 2 * ((a%4)/4);
+                            const sign = (a < 4) ? 1 : -1;
+                            C(0,[],[3],{x:0,y:0,r:100,cr:(o)=>{
+                                if(firstRenderTime < 50) return;
+                                ctx.globalAlpha = 1;
+                                ctx.fillStyle = `hsl(${window.time/12},50%,50%)`;
+                                ctx.shadowColor = ctx.fillStyle;
+                                ctx.shadowBlur = 15;
+                                ctx.beginPath();
+                                ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+                                ctx.fill();
+                                ctx.closePath();
+                                ctx.shadowBlur = 0;
+                            },ef:()=>{
+                                if(hasRefreshed === true) return;
+                                hasRefreshed = true;
+                                localStorage.setItem('tutorialCompleted', 't');
+                                location.replace(location.origin + '/create');
+                            },sf:(o)=>{
+                                const angle = angleOffset + window.time * 0.0026 * sign;
+                                o.pos.x = centerX + Math.cos(angle) * rx;
+                                o.pos.y = centerY + Math.sin(angle) * ry;
+                            }})
+                        }
+
+                        // feel the flame
+                        // taste the edge
+                        // feed the X
+                        // darkness hold
+
+                        // texts
+                        {
+                            const rx = 560;
+                            const ry = 560;
+                            const rotateSpeed = 0.00043 * 2.5;
+                            C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Taste the edge.",sf:(o)=>{
+                                const angle = window.time * rotateSpeed + Math.PI*3/2;
+                                o.pos.x = centerX + Math.cos(angle) * rx - o.dimensions.x/2;
+                                o.pos.y = centerY + Math.sin(angle) * ry - o.dimensions.y/2;
+                            },cr:(o)=>{
+                                if(firstRenderTime < 50) return;
+                                ctx.font = `${o.fontSize}px Inter`;
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'middle';
+                                ctx.fillStyle = 'white';
+                                ctx.fillText(o.text, o.pos.x, o.pos.y);
+                            }})
+                            C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Feed The X.",sf:(o)=>{
+                                const angle = window.time * rotateSpeed * -1 + Math.PI;
+                                o.pos.x = centerX + Math.cos(angle) * rx - o.dimensions.x/2;
+                                o.pos.y = centerY + Math.sin(angle) * ry - o.dimensions.y/2;
+                            },cr:(o)=>{
+                                if(firstRenderTime < 50) return;
+                                ctx.font = `${o.fontSize}px Inter`;
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'middle';
+                                ctx.fillStyle = 'white';
+                                ctx.fillText(o.text, o.pos.x, o.pos.y);
+                            }})
+                            C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Feel the flame.",sf:(o)=>{
+                                const angle = window.time * rotateSpeed + Math.PI/2;
+                                o.pos.x = centerX + Math.cos(angle) * rx - o.dimensions.x/2;
+                                o.pos.y = centerY + Math.sin(angle) * ry - o.dimensions.y/2;
+                            },cr:(o)=>{
+                                if(firstRenderTime < 50) return;
+                                ctx.font = `${o.fontSize}px Inter`;
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'middle';
+                                ctx.fillStyle = 'white';
+                                ctx.fillText(o.text, o.pos.x, o.pos.y);
+                            }})
+                            C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Darkness Hold.",sf:(o)=>{
+                                const angle = window.time * rotateSpeed * -1;
+                                o.pos.x = centerX + Math.cos(angle) * rx - o.dimensions.x/2;
+                                o.pos.y = centerY + Math.sin(angle) * ry - o.dimensions.y/2;
+                            },cr:(o)=>{
+                                if(firstRenderTime < 50) return;
+                                ctx.font = `${o.fontSize}px Inter`;
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'middle';
+                                ctx.fillStyle = 'white';
+                                ctx.fillText(o.text, o.pos.x, o.pos.y);
+                            }})
+                        }
+
                         alreadyInnittedCone = true;
                         renderer.domElement.remove();
                         // removedRendererDOMel = true;
@@ -8118,7 +8244,8 @@ if(window.importNoise !== undefined){
 
                         // CONE DISTORTION
                         (async()=>{
-                            const initConeTime = Date.now();
+                            obstacles = obstacles.filter(o => o.img === undefined && o.deathTime === undefined);
+                            window.unTaintCanvas();
                             await window.initDistortion(`#version 300 es
                                 in highp vec4 pos;
                                 
@@ -8181,13 +8308,81 @@ if(window.importNoise !== undefined){
                             }`,
                             /*uniformNames*/['uTime'],
                             /*uniformLambdas*/[()=>{
-                                return Math.max(0,Math.min(1, (Date.now() - initConeTime) / 3000));
+                                if(firstRenderTime === undefined) firstRenderTime = 0;
+                                else firstRenderTime++;
+                                return Math.max(0,Math.min(1, (firstRenderTime) / 42));
                             }]);
                             // swapping our webglcanvas 
                             const c = document.getElementById('webglplaceholder');
                             const f = c.firstChild;
                             f.remove();
                             c.appendChild(f);
+
+                            // let hasRefreshed = false;
+                            // const centerX = 3100;
+                            // const centerY = 3000;
+                            // const rx = 1200;
+                            // const ry = 700;
+                            // for(let a = 0; a < 8; a++){
+                            //     const angleOffset = Math.PI * 2 * ((a%4)/4);
+                            //     const sign = (a < 4) ? 1 : -1;
+                            //     C(0,[],[3],{x:0,y:0,r:100,cr:(o)=>{
+                            //         ctx.globalAlpha = 1;
+                            //         ctx.fillStyle = `hsl(${window.time/12},50%,50%)`;
+                            //         ctx.shadowColor = ctx.fillStyle;
+                            //         ctx.shadowBlur = 15;
+                            //         ctx.beginPath();
+                            //         ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+                            //         ctx.fill();
+                            //         ctx.closePath();
+                            //         ctx.shadowBlur = 0;
+
+                            //         if(Math.random() < 0.01) console.log(o.pos.x, o.pos.y, o.sat.r);
+                            //     },ef:()=>{
+                            //         if(hasRefreshed === true) return;
+                            //         hasRefreshed = true;
+                            //         localStorage.setItem('tutorialCompleted', 't');
+                            //         location.replace(location.origin + '/create');
+                            //     },sf:(o)=>{
+                            //         const angle = angleOffset + window.time * 0.0026 * sign;
+                            //         o.pos.x = centerX + Math.cos(angle) * rx;
+                            //         o.pos.y = centerY + Math.sin(angle) * ry;
+                            //     }})
+                            // }
+
+                            // // feel the flame
+                            // // taste the edge
+                            // // feed the X
+                            // // darkness hold
+
+                            // // texts
+                            // {
+                            //     const rx = 560;
+                            //     const ry = 560;
+                            //     const rotateSpeed = 0.00043 * 2.5;
+                            //     C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Taste the edge.",sf:(o)=>{
+                            //         const angle = window.time * rotateSpeed + Math.PI*3/2;
+                            //         o.pos.x = centerX + Math.cos(angle) * rx - o.dimensions.x/2;
+                            //         o.pos.y = centerY + Math.sin(angle) * ry - o.dimensions.y/2;
+                            //     }})
+                            //     C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Feed The X.",sf:(o)=>{
+                            //         const angle = window.time * rotateSpeed * -1 + Math.PI;
+                            //         o.pos.x = centerX + Math.cos(angle) * rx - o.dimensions.x/2;
+                            //         o.pos.y = centerY + Math.sin(angle) * ry - o.dimensions.y/2;
+                            //     }})
+                            //     C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Feel the flame.",sf:(o)=>{
+                            //         const angle = window.time * rotateSpeed + Math.PI/2;
+                            //         o.pos.x = centerX + Math.cos(angle) * rx - o.dimensions.x/2;
+                            //         o.pos.y = centerY + Math.sin(angle) * ry - o.dimensions.y/2;
+                            //     }})
+                            //     C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Darkness Hold.",sf:(o)=>{
+                            //         const angle = window.time * rotateSpeed * -1;
+                            //         o.pos.x = centerX + Math.cos(angle) * rx - o.dimensions.x/2;
+                            //         o.pos.y = centerY + Math.sin(angle) * ry - o.dimensions.y/2;
+                            //     }})
+                            // }
+                            // safe in the middle
+                            // C(1,[],[11],{x:3100,y:3000,r:100});
                         })();
 
                         // canvas2.remove();
@@ -8203,6 +8398,7 @@ if(window.importNoise !== undefined){
                 } else if(state === 'fadeOut'){
                     c.globalAlpha = interpolateBetween(1, 0, stateStartTime, stateEndTime);
                 }
+                if(curText === 5) {c.globalAlpha = ctx.globalAlpha = Math.random();c.globalAlpha}
                 c.fillText(texts[curText], canvas2.w/2, canvas2.h/2);
 
                 c.globalAlpha = 1;
@@ -8539,6 +8735,12 @@ if(window.importNoise !== undefined){
                 c.font = `${15 * ((Math.abs(50) + 0.5) / 25)}px Inter`;
                 c.textAlign = 'center';
                 c.textBaseline = 'middle';
+
+                // preventing artifacting
+                if(t > ts.zoomCamera){
+                    // canvas2.style.opacity = "0";
+                    if(renderer.domElement !== undefined)renderer.domElement.style.opacity = 0;
+                }
             
                 c.globalAlpha = interpolateBetween(0, 1, ts.wait0, ts.nameFade) * interpolateBetween(1, 0, ts.expandBG, ts.zoomCamera);
                 c.shadowBlur = 10;
@@ -8611,9 +8813,6 @@ if(window.importNoise !== undefined){
                         renderer.domElement.remove();
                         removedRendererDOMel = true;
                         window.resizeFns = window.resizeFns.filter(f => f !== webglResize);
-
-                        // what we did in the desert music obs
-                        // if(musicObs !== undefined) musicObs.pos.x = -1E9;
 
                         for(let i = 0; i < obsArr.length; i++){
                             eval(obsArr[i]);
@@ -9186,7 +9385,7 @@ var crystalRotation = 0;
 var releasePlayer = false;
 var justStarted = true;
 
-// var musicObs;
+var musicObs;
 if(window.isServer !== true){
     // npc (should render above)
     {let fadeState = -1;
@@ -9239,5 +9438,5 @@ if(window.isServer !== true){
 
     // music
     C(1,[],[26],{x:0,y:0,w:1E6,h:1E6,musicPath:'https://www.youtube.com/watch?v=dHID5Yv-Z0s'});
-    // musicObs = obstacles[obstacles.length-1];
+    musicObs = obstacles[obstacles.length-1];
 }
