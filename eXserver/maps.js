@@ -2,7 +2,7 @@
 
 import './utils.js';
 import '../client/components.js';
-import './maps/_difficulty.js';
+import './maps/_metadata.js';
 global.C = window.C;
 
 // serializing messages
@@ -26,8 +26,6 @@ global.maps = {};
 global.spawnPosition = window.spawnPosition;
 global.mapDimensions = window.mapDimensions;
 
-global.window.dt = global.dt = 1000 / 60;
-
 global.window.mouseUpFunctions = [];
 global.window.mouseDownFunctions = [];
 global.window.mouseMoveFunctions = [];
@@ -49,7 +47,8 @@ const __dirname = path.dirname(__filename); // get the name of the directory
 const directory = fs.opendirSync(path.join(__dirname, "maps"));
 let file;
 while((file=directory.readSync()) !== null){validPaths[`./maps/${file.name}`] = true;}
-delete validPaths[`./maps/_difficulty.js`];
+delete validPaths[`./maps/_metadata.js`];
+delete validPaths[`./maps/_converter.js`];
 directory.closeSync();
 
 async function createMap(name){

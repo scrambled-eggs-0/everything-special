@@ -1297,7 +1297,7 @@ function importMap(str){
             o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
             str += `var timer${counter} = ${o.timer}; var state${counter} =${o.state}; var x${counter} = ${o.x}; 
             C(1,[],[1],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},sf:(e)=>{
-                    timer${counter} -= dt / 1000;
+                    timer${counter} -= 1/60;
                     if(timer${counter} < 0){
                         state${counter} = !state${counter};
                         if(state${counter} === true){

@@ -32,7 +32,7 @@ C(1,[],[19],{h:200*2,w:200*2,y:2400*2,x:2400*2,speedChangePermanent:false,speedM
 
 C(1,[],[13],{h:100*2,w:100*2,y:2100*2,x:4650*2,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorAngle:90,conveyorForce:0.6*5/16.66,});
 
-C(1,[],[10],{h:100*2,w:150*2,y:3300*2,x:3050*2,healSpeed:1,regenTime:600,maxStrength:620,});
+C(1,[],[10],{h:100*2,w:150*2,y:3300*2,x:3050*2,healSpeed:1,regenTime:(600/16.66),maxStrength:~~(620/16.66),});
 
 C(0,[],[0],{r:100*2,y:2050*2,x:500*2,});
 
@@ -98,7 +98,7 @@ C(1,[],[12],{h:10*2,w:1350*2,y:2290*2,x:2800*2,tpy:2500*2,tpx:2500*2,});
 C(1,[],[12],{h:60*2,w:10*2,y:2150*2,x:2970*2,tpy:2500*2,tpx:2500*2,});
 C(1,[],[12],{h:10*2,w:350*2,y:1950*2,x:3800*2,tpy:2500*2,tpx:2500*2,});
 
-var fac = 1 / 360 / 360 * Math.PI / 2;
+var fac = 1 / 360 / 360 * Math.PI / 2 * 16.66;
 C(1,[1],[1],{h:40,w:1200,y:3480,x:8500,pivotY:3500,pivotX:9100,rotateSpeed:-160*fac,initialRotation:0,});
 C(1,[1],[1],{h:40,w:300,y:4350,x:6300,pivotY:4370,pivotX:6450,rotateSpeed:-110*fac,initialRotation:0,});
 C(1,[1],[1],{h:40,w:400,y:4500,x:5950,pivotY:4520,pivotX:6150,rotateSpeed:110*fac,initialRotation:45,});
@@ -128,12 +128,14 @@ C(1,[],[22],{h:200,w:200,y:6900,x:6100,mapName:'poca'});
 
 C(1,[],[22],{h:200,w:200,y:4200,x:2800,mapName:'pos'});
 
+C(1,[],[22],{h:200,w:200,y:6600,x:6100,mapName:'povv'});
+
 C(1,[],[22],{h:100*2,w:100*2,y:2100*2+200,x:4650*2,mapName:'pospd'});
 
 var difficultyChangeTime, maxDifficultyChangeTime;
 difficultyChangeTime = maxDifficultyChangeTime = 1000;
 C(1,[],[22],{h:700,w:700,y:3300,x:4600,mapName:'podc',sf:(o) => {
-        o.difficulty += window.dt / 1000;
+        o.difficulty += 1 / 60;
         while(o.difficulty >= 9) o.difficulty -= 9;
     },
     cr:(o)=>{

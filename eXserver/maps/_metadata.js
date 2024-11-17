@@ -4,4 +4,5 @@ const mapDifficulties = window.mapDifficulties = Object.freeze({
     pospd: 2.8,
     pos: 4.1,
     pols: 5,
+    povv: 0.9,
 });

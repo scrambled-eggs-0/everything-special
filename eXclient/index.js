@@ -2,7 +2,7 @@ window.isExClient = true;
 import './style.css';
 
 // init rendering
-import render from './render.js';
+import './render.js';
 
 // handle client-server communication
 import './networking.js';
@@ -21,7 +21,7 @@ import Utils from '../client/utils.js';
 const {encodeAtPosition} = Utils;
 
 // mapName to difficulty dict
-import '../eXserver/maps/_difficulty.js';
+import '../eXserver/maps/_metadata.js';
 
 // joining game
 const gui = window.gui = document.querySelector('.gui');
@@ -48,59 +48,33 @@ if(username === null || password === null){
 window.startGame = () => {
     window.state = 'game';
     gui.classList.remove('hidden');
-    lastTime = now = performance.now();
+    lastTime = performance.now();
     window.respawnPlayer();
     run();
     console.log('game starting');
 }
 
 // gameloop
-let lastTime, accum, offtabTime;
-accum = window.frames = offtabTime = 0;
-window.time = window.now = 0;
-window.dt = 1;
-// const FRAME_TIME = 1000 / 60;
+let lastTime, accum, now;
+lastTime = accum = now = 0;
+window.frames = 0;
+const FRAME_TIME = 1000 / 60;
 function run(){
     requestAnimationFrame(run);
 
     now = performance.now();
-    dt = now - lastTime;
-    if(dt === 0) dt = 0.1;
-    else if(dt > 2000) dt = 1;// TODO: get map from other players if other players are in the map
-    accum += dt;
-    window.time += dt;
+    accum += now - lastTime;
     lastTime = now;
 
-    simulate();
+    // TODO: Get the map from another player
+    if(accum > 2000) accum = 0;
 
-    // if(dt > 2000) offtabTime += dt;
-    
-    // // if we're not ahead
-    // if(accum > 0){
-    //     // simulate the frame as usual
-    //     window.frames++;
-    //     accum -= FRAME_TIME;
-    //     simulate();
-    // } else {
-    //     // we don't want to re-render, we have no interpolation! So just wait until next frame ig
-    //     requestAnimationFrame(run);
-    //     return;
-    // }
-
-    // requestAnimationFrame(run);
-
-    // // if we're behind
-    // if(accum > FRAME_TIME){
-    //     // if we're too far behind then give up
-    //     if(accum > 2000) accum = 0;
-
-    //     // otherwise simulate an extra catch-up tick
-    //     accum -= FRAME_TIME;
-    //     simulate();
-    // }
+    while(accum >= 0){
+        accum -= FRAME_TIME;
+        simulate();
+    }
 
     sendUpdatePack();
-
     window.render();
 }
 

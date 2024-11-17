@@ -55,6 +55,7 @@ async function createAccount(
     password,
     email=''
 ) {
+    await until(() => {return connected;});
     const nameTaken = await userCollection.findOne({ username });
     if (nameTaken) return false;
     const newAccount = {
@@ -73,10 +74,12 @@ async function createAccount(
 }
 
 async function getAccount(username) {
+    await until(() => {return connected;});
     return await userCollection.findOne({ username });
 }
 
 async function getAccountRequirePassword(username, password){
+    await until(() => {return connected;});
     return await userCollection.findOne({ username, password });
 }
 

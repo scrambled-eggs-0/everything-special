@@ -171,8 +171,6 @@ function resize() {
     camera.updateProjectionMatrix();
 
     renderer.setSize(window.innerWidth, window.innerHeight);
-
-    // window.resizeElements([renderer.domElement]);
 }
 
 resize();

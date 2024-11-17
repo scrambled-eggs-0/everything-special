@@ -18,7 +18,8 @@ window.defaultColors = {
         inner: {size:0.1,r:0,g:0,b:0,opacity:0},
         outer: {size:0.6,r:0,g:0,b:0,opacity:1},
         innerInterp: {size:0.1,r:0,g:0,b:0,opacity:0},
-        outerInterp: {size:0.6,r:0,g:0,b:0,opacity:1}
+        outerInterp: {size:0.6,r:0,g:0,b:0,opacity:1},
+        holeFunctions: []
     }
 }
 
@@ -29,7 +30,8 @@ window.colors = {
         inner: {size:0.1,r:0,g:0,b:0,opacity:0},
         outer: {size:0.6,r:0,g:0,b:0,opacity:1},
         innerInterp: {size:0.1,r:0,g:0,b:0,opacity:0},
-        outerInterp: {size:0.6,r:0,g:0,b:0,opacity:1}
+        outerInterp: {size:0.6,r:0,g:0,b:0,opacity:1},
+        holeFunctions: []
     }
 }
 
@@ -39,10 +41,10 @@ window.renderDebug = false;
 window.distortionsActive = false;
 window.skullImgLoaded = false;
 window.skullImg = undefined;
-// const fullscreen = {
-//     ratio: 9 / 16,
-//     zoom: 1800,
-// }
+const fullscreen = {
+    ratio: 9 / 16,
+    zoom: 1800,
+}
 const width = 1600;
 const height = 900;
 
@@ -291,7 +293,7 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
             lastNLDX = lastNLDX * 0.96 + 2/7*diameter/timesAround * 0.04;
             lastNLDY = lastNLDY * 0.96 + 5/7*diameter/timesAround * 0.04;
             ctx.setLineDash([lastNLDX, lastNLDY]);
-            ctx.lineDashOffset = (-window.time / 26) % diameter;
+            ctx.lineDashOffset = (-window.frames / 1.56) % diameter;
             ctx.strokeStyle = ctx.fillStyle;
             ctx.lineWidth = 8;
             ctx.lineCap = 'round';
@@ -356,7 +358,7 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
             ctx.textBaseline = 'middle';
             ctx.shadowBlur = 2;
             ctx.shadowColor = 'red';
-            ctx.fillText(~~(player.deathTime), player.pos.x, player.pos.y);
+            ctx.fillText(~~(player.deathTime / 60), player.pos.x, player.pos.y);
             ctx.shadowBlur = 0;
         }
         ctx.closePath();
@@ -424,6 +426,7 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
     for(let key in v.outerInterp){
         v.outerInterp[key] = interpolate(v.outerInterp[key], v.outer[key], 0.03);
     }
+    
     ctx.beginPath();
     const grd = ctx.createRadialGradient(
         canvas.w / 2,
@@ -443,12 +446,20 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
         `rgba(${v.outerInterp.r},${v.outerInterp.g},${v.outerInterp.b},${v.outerInterp.opacity})`
     );
     ctx.fillStyle = grd;
-    ctx.fillRect(0,0,canvas.w,canvas.h);
-    ctx.fill();
+    ctx.rect(0,0,canvas.w,canvas.h);
+    if(v.holeFunctions.length !== 0){
+        ctx.translate(canvas.w/2-camera.x, canvas.h/2-camera.y);
+        for(let i = 0; i < v.holeFunctions.length; i++){
+            v.holeFunctions[i]();
+        }
+        ctx.translate(camera.x-canvas.w/2, camera.y-canvas.h/2);
+    }
+    ctx.fill('evenodd');
     ctx.closePath();
 
     window.colors.vignette.inner = {size:0.1,r:0,g:0,b:0,opacity:0};
     window.colors.vignette.outer = {size:0.6,r:0,g:0,b:0,opacity:1};
+    window.colors.vignette.holeFunctions.length=0;
     // window.colors = {
     //     tile: window.defaultColors.tile,
     //     background: window.defaultColors.background,
@@ -489,25 +500,20 @@ function renderTextSpecials(o, cols){
 
 // canvas resizing
 window.resizeFns = [];
+const gui = document.querySelector('.gui');
 function resize(){
-    // const dpi = window.devicePixelRatio;
-    // canvas.style.width = Math.ceil(window.innerWidth) + 'px';
-    // canvas.style.height = Math.ceil(window.innerHeight) + 'px';
-    // canvas.width = Math.ceil(window.innerWidth) * dpi;
-    // canvas.height = Math.ceil(window.innerHeight) * dpi;
-    // canvas.zoom = Math.max(0.1, Math.round((Math.max(canvas.height, canvas.width * fullscreen.ratio) / fullscreen.zoom * camera.scale) * 100) / 100);
-    // // w and h are calced with zoom
-    // canvas.w = canvas.width / canvas.zoom;
-    // canvas.h = canvas.height / canvas.zoom;
-    // ctx.scale(canvas.zoom, canvas.zoom);
-    // ctx.lineJoin = 'round';
-    // ctx.lineCap = 'round';
-
-    // ctx.imageSmoothingEnabled = false;
-    // canvas._scaleMult = 0.5;
-    canvas.zoom = 1;window.resizeElements([canvas, document.querySelector('.gui')]);
-    canvas.w = canvas.width / canvas.zoom / window.camera.scale;
-    canvas.h = canvas.height / canvas.zoom / window.camera.scale;
+    const dpi = window.devicePixelRatio;
+    gui.style.width = canvas.style.width = Math.ceil(window.innerWidth) + 'px';
+    gui.style.height = canvas.style.height = Math.ceil(window.innerHeight) + 'px';
+    gui.width = canvas.width = Math.ceil(window.innerWidth) * dpi;
+    gui.height = canvas.height = Math.ceil(window.innerHeight) * dpi;
+    canvas.zoom = Math.max(0.1, Math.round((Math.max(canvas.height, canvas.width * fullscreen.ratio) / fullscreen.zoom * camera.scale) * 100) / 100);
+    // w and h are calced with zoom
+    canvas.w = canvas.width / canvas.zoom;
+    canvas.h = canvas.height / canvas.zoom;
+    ctx.scale(canvas.zoom, canvas.zoom);
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
 
     for(let i = 0; i < window.resizeFns.length; i++){
         window.resizeFns[i]();
@@ -531,33 +537,11 @@ window.changeCameraScale = (scale) => {
     
     ctx.translate((1-1/window.camera.scale)*canvas.w/2, (1-1/window.camera.scale)*canvas.h/2);
 }
-
-window.resizeElements = function (elements) {
-    for (const element of elements) {
-        if (element.width !== width) {
-            element.width = width;
-            element.style.width = `${width}px`;
-        }
-        if (element.height !== height) {
-            element.height = height;
-            element.style.height = `${height}px`;
-        }
-        let scaleMult = element?._scaleMult ?? 1;
-        element.style.transform = `scale(${
-            Math.min(window.innerWidth / width, window.innerHeight / height) *
-            scaleMult
-        })`;
-        element.style.left = `${(window.innerWidth - width) / 2}px`;
-        element.style.top = `${(window.innerHeight - height) / 2}px`;
-    }
-    return Math.min(window.innerWidth / width, window.innerHeight / height);
-};
   
 window.addEventListener('resize', function () {
     resize();
 });
 resize();
-changeCameraScale(0.5);
 
 // if there's ever more extras, make an array system
 let nonLinearFns;

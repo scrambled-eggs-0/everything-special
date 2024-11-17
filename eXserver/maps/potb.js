@@ -324,6 +324,8 @@ var obs = [
     // {"type":"poly-safe","points":[[4762.5,1450],[4837.5,1450],[4900,1512.5],[4900,1587.5],[4837.5,1650],[4762.5,1650],[4700,1587.5],[4700,1512.5]]}
 ]
 
+var dt = 1000 / 60;
+
 var mainSafeCollided=false;
 var thisFrameCol=false;
 C(2,[],[11],{x:0,y:0,points:[
@@ -833,6 +835,7 @@ window.obsArr.push(...[
     var topX = 0;
     var topY = 0;
     C(0,[],[1],{r:30,y:3700,x:8700,collidable:false,sf:(e)=>{
+        window.time = Date.now();
         e.pos.y += yv_ * dt;
         e.pos.x += xv_ * dt;
         topX = e.pos.x; topY = e.pos.y;
@@ -1708,8 +1711,8 @@ window.obsArr.push(...[
                 e.pos.y = Math.min(4100 - e.sat.r, e.pos.y);
             }
 
-            vz -= gravity * dt / 1000;
-            z += vz * dt / 1000;
+            vz -= gravity * 1 / 60;
+            z += vz * 1 / 60;
             e.sat.r = baseRadius + z;
             if (z < 0) {
                 e.sat.r = baseRadius;
@@ -1717,7 +1720,7 @@ window.obsArr.push(...[
                 jumping = false;
             }
         } else {
-            timer += dt / 1000;
+            timer += 1 / 60;
             if (timer >= maxTimer) {
                 timer = 0;
                 jumping = true;
@@ -1765,8 +1768,8 @@ window.obsArr.push(...[
                 e.pos.y = Math.min(4100 - e.sat.r, e.pos.y);
             }
 
-            vz -= gravity * dt / 1000;
-            z += vz * dt / 1000;
+            vz -= gravity * 1 / 60;
+            z += vz * 1 / 60;
             e.sat.r = baseRadius + z;
             if (z < 0) {
                 e.sat.r = baseRadius;
@@ -1774,7 +1777,7 @@ window.obsArr.push(...[
                 jumping = false;
             }
         } else {
-            timer += dt / 1000;
+            timer += 1 / 60;
             if (timer >= maxTimer) {
                 timer = 0;
                 jumping = true;
@@ -1845,7 +1848,7 @@ window.obsArr.push(...[
             p.pos.y -= Math.sin(iditangle) * 50;
 
             // inc idit angle
-            iditangle += dt / 1000 * 5;
+            iditangle += 1 / 60 * 5;
 
             // moving to this angle
             p.pos.x += Math.cos(iditangle) * 50;
@@ -1902,7 +1905,7 @@ window.obsArr.push(...[
             p.pos.y -= Math.sin(iditangle) * 50;
 
             // inc idit angle
-            iditangle += dt / 1000 * 5;
+            iditangle += 1 / 60 * 5;
 
             // moving to this angle
             p.pos.x += Math.cos(iditangle) * 50;
@@ -4650,7 +4653,8 @@ window.obsArr.push(...[
         ctx.lineTo(o.pos.x, o.pos.y);
         ctx.fill();
         ctx.closePath();
-    }})}`,
+    }}) 
+    }`,
 
     // obs you can rotate, rendering has a notch at the center (white circle stroked)
     `var angularVel=0;C(1,[1],[0],{"w":200,"h":100-20,"x":8000,"y":3650+20/2,"initialRotation":0,"rotateSpeed":0,"pivotX":8100,"pivotY":3700,ef:(p,res,o)=>{
@@ -5221,7 +5225,7 @@ window.obsArr.push(...[
         [baseX+radii[1]+radii[2]+radii[3], baseY, 0],
     ];C(0,[],[3],{x:-1E9,y:0,r:1,sf:()=>{
         for(let i = 1; i < fourierPts.length; i++){
-            fourierPts[i][2] += spinSpeeds[i] * dt / 1000;
+            fourierPts[i][2] += spinSpeeds[i] * 1 / 60;
 
             fourierPts[i][0] = fourierPts[i-1][0] + Math.cos(fourierPts[i][2]) * radii[i];
             fourierPts[i][1] = fourierPts[i-1][1] + Math.sin(fourierPts[i][2]) * radii[i];
@@ -7585,7 +7589,7 @@ for(let i = 0; i < obs.length; i++){
         // let x = params.x * 2;
         str += `var timer${counter} = ${o.timer}; var state${counter} =${o.state}; var x${counter} = ${o.x}; 
         C(1,[],[1],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},sf:(e)=>{
-                timer${counter} -= dt / 1000;
+                timer${counter} -= 1 / 60;
                 if(timer${counter} < 0){
                     state${counter} = !state${counter};
                     if(state${counter} === true){
@@ -8547,9 +8551,9 @@ if(window.importNoise !== undefined){
         //     for(let i = 0; i < tps.length; i++){
         //         const tp = tps[i];
 
-        //         tp.angle += dt / 1000;
+        //         tp.angle += 1 / 60;
         //         // approximation of dt consistency of course
-        //         tp.r = interpolate(tp.r, mn, dt / 1000);
+        //         tp.r = interpolate(tp.r, mn, 1 / 60);
 
                 
         //         const x = w/2 + Math.cos(tp.angle) * tp.r;

@@ -215,6 +215,7 @@ function renderTextSpecials(o, cols){
 }
 
 // gameloop
+// TODO: rework this to use interpolation and not dt once omni is back up
 let lastTime, now, firstTime, accum, dt, offtabTime;
 lastTime = now = firstTime = Date.now();
 accum = window.time = window.frames = offtabTime = 0;

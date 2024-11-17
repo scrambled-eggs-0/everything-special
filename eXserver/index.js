@@ -108,6 +108,8 @@ app.get("/:filename", (res, req) => {
 
 app.get("/maps/:filename", (res, req) => {
     const path = 'eXserver' + req.getUrl();
+
+    res.writeHeader("Content-Type", "text/javascript");
     
     // Check if the file exists
     if (fs.existsSync(path)) {

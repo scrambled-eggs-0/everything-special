@@ -99,28 +99,19 @@ function interpolate(start, end, t){
     return (1-t) * start + t * end;
 }
 
-// Most of the times in eX you're at terminal velocity so it's a good approximation
-// to the unsolvable integral (no closed form) of acceleration + drag equation.
-// we solve for terminal speed with (xv + xa*dt)e^(fric*dt)=xv, solving for xv
-// gives this function. To correct speeds at different dts, xv *= term(dt2)/term(dt1).
-function term(d,f){
-    return (1 - Math.exp(f*d)) / (Math.exp(f*d) * d);
-}
-
 let res = new SAT.Response();
-let angle, collided = false, fac=1, ffac=1, ffac2=1, grappleForceObj={};
+let angle, collided = false, grappleForceObj={};
 function simulate(){
     // player simulation
     const player = window.players[window.selfId];
 
     if(window.isExClient === true){
-        player.renderRadius = interpolate(player.renderRadius, player.sat.r, dt * 1 / 90);
+        player.renderRadius = interpolate(player.renderRadius, player.sat.r, 1 / 5.4);
     } else {
         player.renderRadius = player.renderRadius * 0.83 + player.sat.r * 0.17;
     }
 
     if(window.isExClient === true && player.dead === false) {
-        fac = term(dt, player.friction);
         player.xa = (input.right - input.left) * player.speed;
         player.ya = (input.down - input.up) * player.speed;
 
@@ -135,59 +126,20 @@ function simulate(){
         }
 
         if(player.ship === false){
-            player.xv += player.xa * player.axisSpeedMultX * dt;
-            player.yv += player.ya * player.axisSpeedMultY * dt;
+            player.xv += player.xa * player.axisSpeedMultX;
+            player.yv += player.ya * player.axisSpeedMultY;
         } else {
-            player.shipAngle += player.xa * player.shipTurnSpeed * dt;
+            player.shipAngle += player.xa * player.shipTurnSpeed;
 
-            player.xv -= Math.cos(player.shipAngle) * player.ya * player.axisSpeedMultX * dt;
-            player.yv -= Math.sin(player.shipAngle) * player.ya * player.axisSpeedMultY * dt;
+            player.xv -= Math.cos(player.shipAngle) * player.ya * player.axisSpeedMultX;
+            player.yv -= Math.sin(player.shipAngle) * player.ya * player.axisSpeedMultY;
         }
 
-        player.xv *= Math.exp(player.friction * dt);
-        player.yv *= Math.exp(player.friction * dt);
+        player.pos.x += player.xv;
+        player.pos.y += player.yv;
 
-        player.pos.x += player.xv * dt * fac;
-        player.pos.y += player.yv * dt * fac;
-
-        if(player.stopForces === true){
-            player.stopForces = false;
-            // player.forces.length = 0;
-            for(let i = 0; i < player.forces.length; i++){
-                player.forces[i][0] = player.forces[i][1] = 0;
-                // player.forces[i][2] = player.forces[i][3] = 0;
-            }
-        } else {
-            for(let i = 0; i < player.forces.length; i++){
-                // each force uses the same differentials as the movement
-                // so that we dont get that jittering effect that comes
-                // from the variation of dt with diff approximations
-                // force format: [xv,yv,xa,ya,vfric,afric]
-                ffac = term(dt, player.forces[i][4]); // ln(oldDecay) / 16.66 = newDecay
-                ffac2 = term(dt, player.forces[i][5]);
-
-                // accounting for xa = 0, ya = 0 or xv = 0, yv = 0
-                if(ffac === 0) ffac = ffac2;
-                else if(ffac2 === 0) ffac = ffac;
-                else ffac *= ffac2;
-
-                // xv += xa * dt
-                player.forces[i][0] += player.forces[i][2] * dt;
-                player.forces[i][1] += player.forces[i][3] * dt;
-        
-                // xv *= e^(vfric*dt)
-                player.forces[i][0] *= Math.exp(player.forces[i][4] * dt);
-                player.forces[i][1] *= Math.exp(player.forces[i][4] * dt);
-
-                // new term - xa *= e^(afric*dt)
-                player.forces[i][2] *= Math.exp(player.forces[i][5] * dt);
-                player.forces[i][3] *= Math.exp(player.forces[i][5] * dt);
-        
-                // x += xv * dt * fac
-                player.pos.x += player.forces[i][0] * dt * ffac;
-                player.pos.y += player.forces[i][1] * dt * ffac;
-            }
-        }
+        player.xv *= player.friction;
+        player.yv *= player.friction;
     } else if(window.dragging === true && player.dead === false){
         if(player.axisSpeedMultX === 0 || player.axisSpeedMultY === 0) angle = Math.atan2((window.mouseY - player.pos.y), (window.mouseX - player.pos.x));
         else angle = Math.atan2((window.mouseY - player.pos.y) * player.axisSpeedMultX, (window.mouseX - player.pos.x) * player.axisSpeedMultY);
@@ -196,29 +148,46 @@ function simulate(){
         if(Math.abs(player.xv) > Math.abs(player.pos.x - window.mouseX)) player.xv = window.mouseX - player.pos.x;
         if(Math.abs(player.yv) > Math.abs(player.pos.y - window.mouseY)) player.yv = window.mouseY - player.pos.y;
         player.pos.x += player.xv;
-        player.pos.y += player.yv;
-
-        if(player.stopForces === true){
-            player.stopForces = false;
-            player.forces.length = 0;
-        } else {
-            for(let i = 0; i < player.forces.length; i++){
-                // [x, y, decay]
-                player.pos.x += player.forces[i][0] * dt/16.66;
-                player.pos.y += player.forces[i][1] * dt/16.66;
-                player.forces[i][0] *= Math.pow(player.forces[i][2], dt / 16.66);
-                player.forces[i][1] *= Math.pow(player.forces[i][2], dt / 16.66);
-                if(Math.abs(player.forces[i][0]) < 0.01 && Math.abs(player.forces[i][1]) < 0.01){
-                    player.forces.splice(i,1);
-                    i--;
-                    continue;
-                }
-            }
-        }    
+        player.pos.y += player.yv; 
     } else {
         player.xv = player.yv = 0;
     }
     player.axisSpeedMultX = player.axisSpeedMultY = 1;
+
+    if(player.stopForces === true){
+        player.stopForces = false;
+        for(let i = 0; i < player.forces.length; i++){
+            player.forces[i][0] = player.forces[i][1] = 0;
+            // player.forces[i][2] = player.forces[i][3] = 0;
+        }
+    } else {
+        for(let i = 0; i < player.forces.length; i++){
+            // [xv, yv, xa, ya, vfric, afric]
+
+            // xv += xa
+            player.forces[i][0] += player.forces[i][2];
+            player.forces[i][1] += player.forces[i][3];
+
+            // pos += xv
+            player.pos.x += player.forces[i][0];
+            player.pos.y += player.forces[i][1];
+
+            // xa *= afric
+            player.forces[i][2] *= player.forces[i][5];
+            player.forces[i][3] *= player.forces[i][5];
+
+            // xv *= vfric
+            player.forces[i][0] *= player.forces[i][4];
+            player.forces[i][1] *= player.forces[i][4];
+
+            // if(Math.abs(player.forces[i][0]) < 0.01 && Math.abs(player.forces[i][1]) < 0.01){
+            //     player.forces.splice(i,1);
+            //     i--;
+            //     continue;
+            // }
+            // TODO: Better system for removing forces. Player.forceRefs corresponding indicies to player.forces and you can remove by modifying obs force obj and splicing from both arrs also can clean up here w/ splice and in player.stopForces === true
+        }
+    }
 
     if(player.dead === true){
         player.renderRadius = player.lastAliveRadius;
@@ -323,21 +292,6 @@ function simulate(){
                 }
             }
         }
-        if(player.deathTimer === true){
-            player.deathTime -= dt / 1000;
-            if(player.deathTime < 0){
-                player.timeTrapOverrideSafe = true;
-                player.deathTime = Infinity;
-                player.deathTimer = false;
-                player.dead = true;
-                const buf = new ArrayBuffer(8);
-                const u8 = new Uint8Array(buf);
-                const f32 = new Float32Array(buf);
-                u8[0] = 13;
-                f32[1] = -Infinity;
-                send(buf);
-            }
-        }
     }
 
     if(player.touchingNormalIndexes.length !== 0 || player.lastTouchingNormalIndexes.length !== 0){
@@ -351,6 +305,21 @@ function simulate(){
             player.timeTrapOverrideSafe = false;
         } else {
             player.dead = false;
+        }
+    }
+
+    if(player.deathTimer === true){
+        player.deathTime--;
+        if(player.deathTime < 0 || player.dead === true){
+            player.deathTime = Infinity;
+            player.deathTimer = false;
+            player.dead = true;
+            const buf = new ArrayBuffer(8);
+            const u8 = new Uint8Array(buf);
+            const f32 = new Float32Array(buf);
+            u8[0] = 13;
+            f32[1] = -Infinity;
+            send(buf);
         }
     }
 
@@ -391,7 +360,7 @@ function simulate(){
         scroll();
     }
 
-    // (rendering happens in between)
+    window.frames++;
 }
 
 let runningOverlapN = new SAT.Vector(), runningOverlapV = new SAT.Vector();
@@ -572,8 +541,8 @@ const satMap = [
         o.startSlice.pos = o.endSlice.pos = sat.pos;
         if(p.startSliceAngleRotateSpeed !== 0 || p.endSliceAngleRotateSpeed !== 0){
             p.circleSliceRotate = (o) => {
-                o.startSliceAngle += o.startSliceAngleRotateSpeed * dt * (window.scaleMult===undefined?1:window.scaleMult);
-                o.endSliceAngle += o.endSliceAngleRotateSpeed * dt * (window.scaleMult===undefined?1:window.scaleMult);
+                o.startSliceAngle += o.startSliceAngleRotateSpeed;
+                o.endSliceAngle += o.endSliceAngleRotateSpeed;
                 o.startSliceAngle %= Math.PI * 2;
                 o.endSliceAngle %= Math.PI * 2;
                 if(o.startSliceAngle < 0) o.startSliceAngle += Math.PI * 2;
@@ -801,11 +770,8 @@ const initSimulateMap = [
         o.pivotY = init.pivotY;
         o.rotation = 0;
         if(init.initialRotation !== 0 && init.initialRotation !== undefined){
-            let lastDt = window.dt;
-            window.dt = 1;//60 / 1000;
-            o.rotateSpeed = init.initialRotation * Math.PI / 180;
+            o.rotateSpeed = init.initialRotation;
             simulateMap[1](o);
-            window.dt = lastDt;
         }
         o.rotateSpeed = init.rotateSpeed;
     },
@@ -842,10 +808,10 @@ const initSimulateMap = [
 const simulateMap = [
     /*pathMove*/
     (o) => {
-        o.pos.x += o.xv * dt;
-        o.pos.y += o.yv * dt;
+        o.pos.x += o.xv;
+        o.pos.y += o.yv;
 
-        o.timeRemain -= dt;
+        o.timeRemain--;
         if (o.timeRemain <= 0) {
             o.currentPoint++;
             if (o.currentPoint === o.path.length) o.currentPoint = 0;
@@ -886,29 +852,29 @@ const simulateMap = [
         if(o.sat.r !== undefined){
             o.pos.x -= o.pivotX;
             o.pos.y -= o.pivotY;
-            o.sat.rotate(o.rotateSpeed * dt);
+            o.sat.rotate(o.rotateSpeed);
             o.pos.x += o.pivotX;
             o.pos.y += o.pivotY;
         } else {
             o.sat.translate(o.pos.x-o.pivotX, o.pos.y-o.pivotY);
-            o.sat.rotate(o.rotateSpeed * dt);
+            o.sat.rotate(o.rotateSpeed);
             o.sat.translate(o.pivotX-o.pos.x, o.pivotY-o.pos.y);
         }
         
-        o.rotation += o.rotateSpeed * dt;
+        o.rotation += o.rotateSpeed;
         o.dimensions = generateDimensions(o);
     },
     /*grow*/
     (o) => {
         if(o.growing === true) {
-            o.growth += o.growSpeed * dt;
+            o.growth += o.growSpeed;
             if(o.growth >= o.maxGrowth){
                 o.growing = false;
                 o.growth = o.maxGrowth;
             }
         }
         else {
-            o.growth -= o.shrinkSpeed * dt;
+            o.growth -= o.shrinkSpeed;
             if(o.growth <= o.minGrowth){
                 o.growing = true;
                 o.growth = o.minGrowth;
@@ -950,9 +916,6 @@ const simulateMap = [
         middleX += o.dimensions.x / 2;
         middleY += o.dimensions.y / 2;
 
-        window.bump = () => {
-            o.rotateSpeed = 2 / dt; simulateMap[1](o);
-        }
         if(p.dead === true || (p.pos.x - middleX)**2 + (p.pos.y - middleY) ** 2 > o.detectionRadiusSquared) {
             if(o.toRest === false) return;
 
@@ -967,7 +930,7 @@ const simulateMap = [
 
             if(minSpokeAngularDist === Infinity) return;
 
-            if(Math.abs(minSpokeAngularDist) < o.homingRotateSpeed * dt) o.rotateSpeed = minSpokeAngularDist / dt;
+            if(Math.abs(minSpokeAngularDist) < o.homingRotateSpeed) o.rotateSpeed = minSpokeAngularDist;
             else o.rotateSpeed = Math.sign(minSpokeAngularDist) * o.homingRotateSpeed;
             simulateMap[1](o);
             return;
@@ -986,7 +949,7 @@ const simulateMap = [
 
         if(minSpokeAngularDist === Infinity) return;
 
-        if(Math.abs(minSpokeAngularDist) < o.homingRotateSpeed * dt) o.rotateSpeed = minSpokeAngularDist / dt;
+        if(Math.abs(minSpokeAngularDist) < o.homingRotateSpeed) o.rotateSpeed = minSpokeAngularDist;
         else o.rotateSpeed = Math.sign(minSpokeAngularDist) * o.homingRotateSpeed;
 
         simulateMap[1](o);
@@ -1159,11 +1122,10 @@ const initEffectMap = [
         o.snapAngle = params.snapAngle * Math.PI / 180;
         o.snapAngleRotateSpeed = params.snapAngleRotateSpeed * Math.PI/180;
 
-        o.interpolatePlayerData = {};
+        o.interpolatePlayerData = {time: 0, nextX: -1, nextY: -1};
         // o.snapDistanceX = Math.max(35, o.snapDistanceX);
         // o.snapDistanceY = Math.max(35, o.snapDistanceY);
-
-        o.snapToShowVelocity = Math.min(o.snapDistanceX, o.snapDistanceY) > 40;
+        
         o.snapMagnitude = Math.sqrt(o.snapDistanceX ** 2 + o.snapDistanceY ** 2); //(o.snapDistanceX + o.snapDistanceY)/2
     },
     /*timeTrap*/
@@ -1263,7 +1225,7 @@ const initEffectMap = [
     }
 ]
 
-let freeVariable = -1;
+let freeVariable = -1, freeVariable2 = -1;;
 const effectMap = [
     /*bound*/
     (p, res, o, id) => {
@@ -1288,8 +1250,7 @@ const effectMap = [
 
         angle = Math.atan2(res.overlapV.y, res.overlapV.x);
 
-        // p.forces.push([Math.cos(angle) * o.bounciness, Math.sin(angle) * o.bounciness, o.decay]);
-        addForce(p, o, 0, 0, Math.cos(angle) * o.bounciness * dt, Math.sin(angle) * o.bounciness * dt, p.friction, Math.log(o.decay) / 16.66);// / 10
+        addForce(p, o, 0, 0, Math.cos(angle) * o.bounciness, Math.sin(angle) * o.bounciness, p.friction, o.decay);
     },
     /*custom*/
     () => {},
@@ -1358,13 +1319,13 @@ const effectMap = [
         if(o.strength > 0){
             p.pos.x += res.overlapV.x;
             p.pos.y += res.overlapV.y;
-            o.strength -= dt;
+            o.strength--;
             if(o.strength < 0) o.strength = 0;
             p.touchingNormalIndexes.push(id);
         }
 
         // breakable obs shouldn't regenerate on top of you
-        o.lastBrokeTime = window.now;
+        o.lastBrokeTime = window.frames;
     },
     /*safe*/
     (p, res, o) => {
@@ -1379,27 +1340,22 @@ const effectMap = [
     },
     /*conveyor*/
     (p, res, o) => {
-        addForce(p, o, 0, 0, Math.cos(o.conveyorAngle) * o.conveyorForce * dt, Math.sin(o.conveyorAngle) * o.conveyorForce * dt, p.friction, Math.log(o.conveyorFriction) / 16.66); // * 5 / 16.66
-        // p.forces.push([Math.cos(o.conveyorAngle) * o.conveyorForce, Math.sin(o.conveyorAngle) * o.conveyorForce, o.conveyorFriction, 0, 0]);
+        addForce(p, o, 0, 0, Math.cos(o.conveyorAngle) * o.conveyorForce, Math.sin(o.conveyorAngle) * o.conveyorForce, p.friction, o.conveyorFriction);
     },
     /*platformer*/
     (p, res, o, id) => {
         o.touchingPlatformer = true;
-        o.jumpCooldown -= dt;
+        o.jumpCooldown--;
 
         // add conveyor force
-        addForce(p, o, 0, 0, Math.cos(o.platformerAngle) * o.platformerForce * dt, Math.sin(o.platformerAngle) * o.platformerForce * dt, p.friction, Math.log(o.platformerFriction) / 16.66); // * 5 / 16.66
-        // p.forces.push([Math.cos(o.platformerAngle) * o.platformerForce, Math.sin(o.platformerAngle) * o.platformerForce, o.platformerFriction, 0, 0]);
-
-        const velocityMovedX = window.isExClient === true ? p.xv * fac * dt : p.xv;
-        const velocityMovedY = window.isExClient === true ? p.yv * fac * dt : p.yv;
+        addForce(p, o, 0, 0, Math.cos(o.platformerAngle) * o.platformerForce, Math.sin(o.platformerAngle) * o.platformerForce, p.friction, o.platformerFriction);
 
         // idea: find the amount of x/y the player moves in the platformer and move the opposite to effectively lock the player's motion perpendicular to the platformer's direction
-        const playerVelAngle = Math.atan2(velocityMovedY, velocityMovedX);
+        const playerVelAngle = Math.atan2(p.yv, p.xv);
 
         const angleBetween = o.platformerAngle - playerVelAngle;
 
-        const distMovedOnPlatAngle = Math.cos(angleBetween) * Math.sqrt(velocityMovedY ** 2 + velocityMovedX ** 2);
+        const distMovedOnPlatAngle = Math.cos(angleBetween) * Math.sqrt(p.yv ** 2 + p.xv ** 2) / p.friction;
 
         p.pos.x -= Math.cos(o.platformerAngle) * distMovedOnPlatAngle;
         p.pos.y -= Math.sin(o.platformerAngle) * distMovedOnPlatAngle;
@@ -1410,7 +1366,7 @@ const effectMap = [
             // OLD: if we're within 30 degrees, jump; NEW: if the mouse is above the thumbs up in the rendering
             if(/*Math.abs(shortAngleDist(o.platformerAngle + Math.PI, playerVelAngle)) < Math.PI / 6*/(window.dragging === true || (window.isExClient === true && p.ya < -0.01)) && p.pos.y - window.mouseY > p.sat.r + 50){
                 // p.forces.push([-Math.cos(o.platformerAngle) * o.jumpForce, -Math.sin (o.platformerAngle) * o.jumpForce, o.jumpFriction, 0, 0]);
-                setForce(p, o.jumpForceObj, -Math.cos(o.platformerAngle) * o.jumpForce * 2000, -Math.sin(o.platformerAngle) * o.jumpForce * 2000, 0, 0, Math.log(o.jumpFriction) / 16.66, 0);
+                setForce(p, o.jumpForceObj, -Math.cos(o.platformerAngle) * o.jumpForce * 2000, -Math.sin(o.platformerAngle) * o.jumpForce, 0, 0, o.jumpFriction, 0);
                 o.jumpCooldown = o.maxJumpCooldown;
             }
         } else {
@@ -1429,18 +1385,14 @@ const effectMap = [
         // the basic idea of how it works is we have to snap to a rotated snap grid in space, so we
         // translate the player to the snapGrid until its like the snap grid is unrotated. Then we snap
         // by moduloing the x to the grid and then rotate back to get the final position.
-        o.snapCooldown -= dt;
-
-        if(o.snapCooldown <= 0 && (Math.abs(p.xv) > 0.01 || Math.abs(p.yv) > 0.01)){
+        if(o.snapCooldown <= 0 && ((o.toSnapX === true && Math.abs(p.xv) > 0.01) || (o.toSnapY === true && Math.abs(p.yv) > 0.01))){
             o.snapCooldown = o.maxSnapCooldown;
-            let playerSnapAngle = Math.atan2(p.yv, p.xv);
+            let playerSnapAngle = Math.atan2(o.toSnapY === true ? p.yv : 0, o.toSnapX === true ? p.xv : 0);
             o.interpolatePlayerData = {
                 time: Math.min(o.maxSnapCooldown-1, 5),
                 nextX: p.pos.x + Math.cos(playerSnapAngle) * o.snapMagnitude * 0.95,
                 nextY: p.pos.y + Math.sin(playerSnapAngle) * o.snapMagnitude * 0.95
             };
-            // p.pos.x += Math.cos(o.pSnapAngle) * o.snapDistanceX;
-            // p.pos.y += Math.sin(o.pSnapAngle) * o.snapDistanceY;
         }
 
         if(o.interpolatePlayerData.time > 1){
@@ -1463,8 +1415,8 @@ const effectMap = [
 
             // applying the transform just like the norotate snap that i coded earlier
             // in other words, snap the relative p to the relative grid
-            prt.x = prt.x * 0.4 + 0.6 * (Math.round(prt.x / o.snapDistanceX) * o.snapDistanceX + p.xv * (o.snapToShowVelocity*2-1));
-            prt.y = prt.y * 0.4 + 0.6 * (Math.round(prt.y / o.snapDistanceY) * o.snapDistanceY + p.yv * (o.snapToShowVelocity*2-1));
+            if(o.toSnapX === true) prt.x = prt.x * 0.4 + 0.6 * (Math.round(prt.x / o.snapDistanceX) * o.snapDistanceX);
+            if(o.toSnapY === true) prt.y = prt.y * 0.4 + 0.6 * (Math.round(prt.y / o.snapDistanceY) * o.snapDistanceY);
 
             prt.angle = Math.atan2(prt.y, prt.x) + o.snapAngle;
             prt.distance = Math.sqrt(prt.y**2 + prt.x**2);
@@ -1475,19 +1427,19 @@ const effectMap = [
             p.pos.y = Math.sin(prt.angle) * prt.distance + middleY;
 
             // checking if the original point was outside of the snapgrid as a result of rotation. If so, apply translations to make it right
-            if(p.pos.x < topLeftX - p.speed || p.pos.x > topLeftX + o.dimensions.x + p.speed){
-                p.pos.x += Math.sign(p.xv) * o.snapDistanceX*0.6;
-            }
+            // if(p.pos.x < topLeftX - p.speed || p.pos.x > topLeftX + o.dimensions.x + p.speed){
+            //     p.pos.x += Math.sign(p.xv) * o.snapDistanceX*0.6;
+            // }
 
-            if(p.pos.y < topLeftY - p.speed || p.pos.y > topLeftY + o.dimensions.y + p.speed){
-                p.pos.y += Math.sign(p.yv) * o.snapDistanceY*0.6;
-            }
+            // if(p.pos.y < topLeftY - p.speed || p.pos.y > topLeftY + o.dimensions.y + p.speed){
+            //     p.pos.y += Math.sign(p.yv) * o.snapDistanceY*0.6;
+            // }
         }
     },
     /*timeTrap*/
     (p, res, o) => {
         o.timeTrapIntersecting = true;
-        o.timeTrapTime -= dt;
+        o.timeTrapTime--;
         if(o.timeTrapTime < 0){
             if(o.timeTrapToKill === true) p.dead = p.timeTrapOverrideSafe = true;
             o.timeTrapTime = 0;
@@ -1665,7 +1617,7 @@ const effectMap = [
         p.deathTimer = o.changeDeathTimerStateTo;
         if(p.deathTimer === true){
             p.deathTime = Math.min(p.deathTime, o.deathTime);
-            p.deathTime -= o.drainAmountWhileStandingOn * dt;
+            p.deathTime -= o.drainAmountWhileStandingOn;
 
             // changeVignette
             effectMap[24](p, res, o);
@@ -1696,10 +1648,10 @@ const idleEffectMap = [
     undefined,
     // 'breakable',
     (o) => {
-        if (o.strength < o.maxStrength && window.now-o.lastBrokeTime > o.regenTime) {
-            o.strength += o.healSpeed * dt;
+        if (o.strength < o.maxStrength && window.frames-o.lastBrokeTime > o.regenTime) {
+            o.strength += o.healSpeed;
             if(o.strength >= o.maxStrength){
-                o.lastBrokeTime = window.now;
+                o.lastBrokeTime = window.frames;
                 o.strength = o.maxStrength;
             }
         }
@@ -1710,21 +1662,22 @@ const idleEffectMap = [
     undefined,
     // 'conveyor',
     (o) => {
-        o.conveyorAngle += o.conveyorAngleRotateSpeed * dt;
+        o.conveyorAngle += o.conveyorAngleRotateSpeed;
     },
     // 'platformer',
     (o) => {
-        o.platformerAngle += o.platformerAngleRotateSpeed * dt;
+        o.platformerAngle += o.platformerAngleRotateSpeed;
     },
     // 'restrictAxis',
     undefined,
     // 'snapGrid',
     (o) => {
-        o.snapAngle += o.snapAngleRotateSpeed * dt;
+        o.snapCooldown--;
+        o.snapAngle += o.snapAngleRotateSpeed;
     },
     // 'timeTrap'
     (o) => {
-        if(o.timeTrapIntersecting !== true) o.timeTrapTime += o.timeTrapRecoverySpeed * dt;
+        if(o.timeTrapIntersecting !== true) o.timeTrapTime += o.timeTrapRecoverySpeed;
         if(o.timeTrapTime > o.timeTrapMaxTime) o.timeTrapTime = o.timeTrapMaxTime;
         o.timeTrapIntersecting = false;
     },
@@ -1758,7 +1711,7 @@ const idleEffectMap = [
     // 'pushable'
     (o, p) => {
         // freeVariable = pushDelta
-        freeVariable = -o.idlePushBackSpeed * dt;
+        freeVariable = -o.idlePushBackSpeed;
         o.pushPercent += freeVariable / o.maxPushDistance;
 
         if(o.pushPercent > 1){
@@ -2061,7 +2014,7 @@ const renderEffectMap = [
     },
     /*winpad*/
     (o) => {
-        ctx.fillStyle = `hsl(${window.time/12},50%,50%)`;
+        ctx.fillStyle = `hsl(${window.frames*1000/60/12},50%,50%)`;
         ctx.shadowColor = ctx.fillStyle;
         ctx.shadowBlur = 15;
         ctx.cleanUpFunction = () => {
@@ -2204,8 +2157,8 @@ const renderEffectMap = [
             ctx.clip();
             let [topLeftX, topLeftY] = generateTopLeftCoordinates(o);
 
-            const offsetX = (window.time * o.platformerForce * Math.cos(o.platformerAngle) / 10) % 100 - 100;
-            const offsetY = (window.time * o.platformerForce * Math.sin(o.platformerAngle) / 10) % 100 - 100;
+            const offsetX = (window.frames*1000/60 * o.platformerForce * Math.cos(o.platformerAngle) / 10) % 100 - 100;
+            const offsetY = (window.frames*1000/60 * o.platformerForce * Math.sin(o.platformerAngle) / 10) % 100 - 100;
 
             ctx.globalAlpha = 1;
             for(let x = topLeftX + offsetX + 50; x <= topLeftX + o.dimensions.x + 50; x += 100){
@@ -2378,7 +2331,7 @@ const renderEffectMap = [
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
-            ctx.fillText(o.timeTrapToShowTenth === true ? Math.round(o.timeTrapTime/1000 * 10) / 10 : Math.round(o.timeTrapTime/1000), middleX, middleY);
+            ctx.fillText(o.timeTrapToShowTenth === true ? Math.round(o.timeTrapTime/60 * 10) / 10 : Math.round(o.timeTrapTime/60), middleX, middleY);
         }
     },
     /*changeSize*/
@@ -2386,7 +2339,7 @@ const renderEffectMap = [
         if(o.sizeChangePermanent === true){
             ctx.toStroke = true;
             ctx.lineWidth = 10;
-            ctx.lineDashOffset = -window.time / 15;
+            ctx.lineDashOffset = -window.frames*1000/60 / 15;
             if (o.sizeMult > 1){
                 ctx.strokeStyle = '#0e30ad';
             } else {
@@ -2416,7 +2369,7 @@ const renderEffectMap = [
         if(o.speedChangePermanent === true){
             ctx.toStroke = true;
             ctx.lineWidth = 10;
-            ctx.lineDashOffset = -window.time / 15;
+            ctx.lineDashOffset = -window.frames*1000/60 / 15;
             ctx.strokeStyle = '#eba500';
             ctx.setLineDash([30, 40]);
 
@@ -2487,14 +2440,14 @@ const renderEffectMap = [
     },
     /*changeMap*/
     (o) => {
-        // ctx.fillStyle = `hsl(${window.time/12},50%,50%)`;
+        // ctx.fillStyle = `hsl(${window.frames*1000/60/12},50%,50%)`;
         // ctx.shadowColor = ctx.fillStyle;
         // ctx.shadowBlur = 15;
         // ctx.cleanUpFunction = () => {
         //     ctx.shadowBlur = 0;
         // }
 
-        let t = (1+Math.sin(window.time / 600))/2 * (o.difficulty % 1);
+        let t = (1+Math.sin(window.frames*1000/60 / 600))/2 * (o.difficulty % 1);
 
         ctx.fillStyle = blendColor(difficultyImageColors[Math.floor(o.difficulty)],difficultyImageColors[Math.min(8,Math.ceil(o.difficulty))],t);
 
@@ -2587,7 +2540,7 @@ const renderEffectMap = [
     (o) => {
         ctx.fillStyle = o.changeShipStateTo === true ? 'rgba(0,0,255,0.3)' : 'rgba(255,255,0,0.3)';
         ctx.strokeStyle = o.changeShipStateTo === true ? 'blue' : 'yellow';
-        ctx.lineDashOffset = -window.time * 150 / 1000;
+        ctx.lineDashOffset = -window.frames*1000/60 * 150 / 1000;
         ctx.lineWidth = 4;
         ctx.setLineDash([30, 30]);
         ctx.toStroke = true;
@@ -2605,7 +2558,7 @@ const renderEffectMap = [
 
         let t;
         if(o.changeGrappleStateTo === true){
-            t = (window.time / 1600) % 0.33;
+            t = (window.frames*1000/60 / 1600) % 0.33;
             grd.addColorStop(1, "rgba(127,127,255,0)");
             grd.addColorStop((0.67+t), "rgba(127,127,255,1)");
 
@@ -2618,7 +2571,7 @@ const renderEffectMap = [
             if(0.01+t > 0)grd.addColorStop(0.01+t, "rgba(127,127,255,0)");
             grd.addColorStop(0, "rgba(127,127,255,1)");
         } else {
-            t = 0.33 - (window.time / 1600) % 0.33;
+            t = 0.33 - (window.frames*1000/60 / 1600) % 0.33;
             grd.addColorStop(1, "rgba(255,255,127,0)");
             grd.addColorStop((0.67+t), "rgba(255,255,127,1)");
 
@@ -2633,7 +2586,7 @@ const renderEffectMap = [
         }
 
         ctx.fillStyle = grd;
-        // ctx.globalAlpha = Math.abs(Math.sin(window.time / 760));
+        // ctx.globalAlpha = Math.abs(Math.sin(window.frames*1000/60 / 760));
     },
     /*changeDeathTimer*/
     (o) => {
@@ -2907,7 +2860,7 @@ window.createPlayer = () => {
     player.renderRadius = player.lastAliveRadius = player.sat.r;
     player.xv = player.yv = player.xa = player.ya = 0;
     player.xf = player.yf = 0;
-    player.speed = player.baseSpeed = 0.717; // old phys: 0.43
+    player.speed = player.baseSpeed = 7.167;
     player.dead = false;
     player.onSafe = false;
     player.touchingWall = false;
@@ -2917,11 +2870,11 @@ window.createPlayer = () => {
     player.forces = [];
     player.id = undefined;
     player.dev = true; /*dev only for players[selfId]*/ player.god = false;
-    player.friction = -0.91629073187 / 16.66//old phys: 0.4 formula: fric = ln(oldphys)/16.66
+    player.friction = 0.4;
     player.ship = false; player.shipAngle = 0; player.shipTurnSpeed = Math.PI / 100;
     player.deathTime = Infinity; player.deathTimer = false;
     player.grappleX = Infinity; player.grappleY = Infinity; player.grapple = false;
-    player.grappleRange = 488; player.grappleForce = 0.01; player.grappleFric = -0.055;
+    player.grappleRange = 488; player.grappleForce = 0.01; player.grappleFric = 0.414;
     player.timeTrapOverrideSafe = false;
     return player;
 }

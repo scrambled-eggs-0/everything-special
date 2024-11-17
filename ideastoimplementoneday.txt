@@ -28,8 +28,6 @@ button press animation (less alpha) when standing on powerup blocks (namely grap
 
 optimize death message to [type, isDead, ...id bytes for server]
 
-Divide dt by 1000. Much better for numerical stability
-
 Advanced music extra file that overrides play, pause, etc. Loads the youtube api behind the scenes (https://www.youtube.com/iframe_api)
 let player = new YT.Player('player', {
     height: '360',
@@ -45,8 +43,6 @@ Cool animations:
 https://www.sololearn.com/en/compiler-playground/Wx4yblest1ed/?ref=app
 https://www.sololearn.com/en/compiler-playground/W3e4O44DgY0Y/?ref=app
 
-fix conveyor with perfect speed against you being dt dependent
-
 posc energy drink should be toec. Either find the song or modify
 
 ok so this is what i'll do in order:
@@ -58,7 +54,6 @@ ok so this is what i'll do in order:
     - update to dynamic resolution if need be
 - fix platformer
 - "R to Respawn" on the tutorial
-- divide dt by 1000 because that will make numbers more stable
 - fix grapple bugs (can't grapple to normal obs even if outside the range of grap points and they exist and intersecting normal obs)
     - fix stopForces cancelling grap force permanently even when you step off (maybe should just set xv and accels to 0)
 - fix breakable bugs (after letting it regen and messing around a bit in tutorial)
@@ -85,7 +80,7 @@ ok so this is what i'll do in order:
 - trailer (should be working on continuously for like an hour a day)
 - make server not load maps
 - anticheat, load testing, security
-    - also clean up code, idk if there will be any other examples but window.resizeElements taking an array should b changed
+    - also clean up code, idk if there will be any other examples but window.resizeElements taking an array should b changed ✅
     - players should simulate other players, get some bonus if they catch hackers (to incentivise)
 
 // 3d system design. Had to design it now because im designing the tutorial and we shouldnt make 2 diff systems
