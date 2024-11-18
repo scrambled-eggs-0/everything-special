@@ -55,7 +55,7 @@ const tutorialMaps = [
     C(1,[3],[4],{h:250,w:250,y:700,x:705,url:'https://www.svgrepo.com/show/349610/pointer.svg',sf:(e)=>{
     pointery = (typeof pointery === 'number' ? pointery : 0) + -15;
     if (pointery < 200) pointery = 1200;
-    e.pos.y += pointery - generateTopLeftCoordinates(e)[1];
+    e.pos.y += pointery - e.topLeft.y;
     },});
     colors.tile=colourRgb(44,3,3);colors.background=colourRgb(62,11,11);`,
 

@@ -5,8 +5,6 @@ else require('./_converter.js');
 {
     let counter = 1000;
 
-    console.log('xd');
-
     const obs = [
         {
             "x": 20400,

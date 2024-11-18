@@ -147,7 +147,8 @@ C(1,[],[22],{h:700,w:700,y:3300,x:4600,mapName:'podc',sf:(o) => {
         ctx.fill();
         ctx.closePath();
 
-        let [topX, topY] = generateTopLeftCoordinates(o);
+        let topX = o.topLeft.x;
+        let topY = o.topLeft.y;
 
         if(o.dimensions.x > o.dimensions.y){
             ctx.translate(o.dimensions.x - o.dimensions.y + topX, topY);

@@ -134,13 +134,13 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                     innerR: params.vc.r,
                     innerG: params.vc.g,
                     innerB: params.vc.b,
-                    innerSize: params.ir,
+                    innerSize: params.ir * 0.1,
                     outerR: params.vc.r,
                     outerG: params.vc.g,
                     outerB: params.vc.b,
-                    outerSize: params.or,
+                    outerSize: params.or * 0.6,
                     innerOpacity: 0,
-                    outerOpacity: params.o
+                    outerOpacity: 1// params.o
                 };
                 for(let i = 0; i < params.points.length; i++){
                     p.points.push([
@@ -178,6 +178,22 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                 }
 
                 p.currentPoint = params.currentPoint;
+
+                const currentPoint = p.path[p.currentPoint];
+                let nextPointIndex = p.currentPoint+1;
+                if(nextPointIndex === p.path.length) nextPointIndex = 0;
+                const nextPoint = p.path[nextPointIndex];
+
+                const totalDist = Math.sqrt((nextPoint[0]-currentPoint[0])**2+(nextPoint[1]-currentPoint[1])**2);
+                const fractionCovered = Math.sqrt((params.x*2-currentPoint[0])**2+(params.y*2-currentPoint[1])**2);
+                
+                p.currentPoint += fractionCovered / totalDist;
+
+                if(special === 'povv' && params.x <= 2000 && params.y === 8100){
+                    p.currentPoint++;
+                    if(p.currentPoint === p.path.length) p.currentPoint = 0;
+                }
+
                 p.x = p.path[0][0];
                 p.y = p.path[0][1];
                 return p;
@@ -226,13 +242,13 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                     innerR: params.vc.r,
                     innerG: params.vc.g,
                     innerB: params.vc.b,
-                    innerSize: params.ir,
+                    innerSize: params.ir * 0.1,
                     outerR: params.vc.r,
                     outerG: params.vc.g,
                     outerB: params.vc.b,
-                    outerSize: params.or,
+                    outerSize: params.or * 0.6,
                     innerOpacity: 0,
-                    outerOpacity: params.o
+                    outerOpacity: 1// params.o
                 }
             }
         },
@@ -302,13 +318,13 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                     innerR: params.vc.r,
                     innerG: params.vc.g,
                     innerB: params.vc.b,
-                    innerSize: params.ir,
+                    innerSize: params.ir * 0.1,
                     outerR: params.vc.r,
                     outerG: params.vc.g,
                     outerB: params.vc.b,
-                    outerSize: params.or,
+                    outerSize: params.or * 0.6,
                     innerOpacity: 0,
-                    outerOpacity: params.o
+                    outerOpacity: 1// params.o
                 };
                 for(let i = 0; i < params.points.length; i++){
                     p.path.push([
@@ -318,6 +334,17 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                     ])
                 }
                 p.currentPoint = params.currentPoint;
+
+                const currentPoint = p.path[p.currentPoint];
+                let nextPointIndex = p.currentPoint+1;
+                if(nextPointIndex === p.path.length) nextPointIndex = 0;
+                const nextPoint = p.path[nextPointIndex];
+
+                const totalDist = Math.sqrt((nextPoint[0]-currentPoint[0])**2+(nextPoint[1]-currentPoint[1])**2);
+                const fractionCovered = Math.sqrt((params.x*2-currentPoint[0])**2+(params.y*2-currentPoint[1])**2);
+                
+                p.currentPoint += fractionCovered / totalDist;
+
                 p.x = p.path[0][0];
                 p.y = p.path[0][1];
                 return p;
@@ -363,13 +390,13 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                     innerR: params.vc.r,
                     innerG: params.vc.g,
                     innerB: params.vc.b,
-                    innerSize: params.ir,
+                    innerSize: params.ir * 0.1,
                     outerR: params.vc.r,
                     outerG: params.vc.g,
                     outerB: params.vc.b,
-                    outerSize: params.or,
+                    outerSize: params.or * 0.6,
                     innerOpacity: 0,
-                    outerOpacity: params.o,
+                    outerOpacity: 1,// params.o
                     r: (params.r ?? params.radius) * 2
                 }
             }
@@ -402,7 +429,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                         pivotX: params.pivotX * 2,
                         pivotY: params.pivotY * 2
                     };
-                } else if(special === 'povv'){
+                } else if(special === 'posc' || special === 'povv' || (special === 'pospd' && params.x > 3750/2 && params.y >11400/2 && params.x < 6100/2 && params.y < 13450/2)){
                     params.x = params.distToPivot + params.pivotX;
                     params.y = params.pivotY;
                     return {
@@ -441,14 +468,14 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
             }
         },
         'rotate-tp': {
-            type: [1,[1],[1]],
+            type: [1,[1],[12]],
             customMap: (params) => {
                 params.x = params.distToPivot + params.pivotX;
                 params.y = params.pivotY;
                 return {
                     x: params.x * 2 - params.w,
                     y: params.y * 2 - params.h,
-                    tpx: params.tpx, tpy: params.tpy,
+                    tpx: params.tpx * 2, tpy: params.tpy * 2,
                     initialRotation: params.angle * Math.PI / 180,
                     rotateSpeed: params.rotateSpeed / 360 / 220 * 1.36 * 1000/60,
                     pivotX: params.pivotX * 2,
@@ -560,13 +587,13 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                     innerR: params.vc.r,
                     innerG: params.vc.g,
                     innerB: params.vc.b,
-                    innerSize: params.ir,
+                    innerSize: params.ir * 0.1,
                     outerR: params.vc.r,
                     outerG: params.vc.g,
                     outerB: params.vc.b,
-                    outerSize: params.or,
+                    outerSize: params.or * 0.6,
                     innerOpacity: 0,
-                    outerOpacity: params.o
+                    outerOpacity: 1// params.o
                 
                 };
             }
@@ -618,8 +645,8 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                     snapAngleRotateSpeed: 0,
                     snapAngle: 0,
                     snapCooldown: params.snapWait * 60,
-                    snapDistanceY: params.snapDistance,
-                    snapDistanceX: params.snapDistance,
+                    snapDistanceY: params.snapDistance * 2,
+                    snapDistanceX: params.snapDistance * 2,
                     toSnapX: params.snapX,
                     toSnapY: params.snapY
                 }
@@ -778,6 +805,43 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                 p.jumpForce = params.jumpHeight / 20 * 5.8;
                 p.jumpDecay = 0.96;
                 p.maxJumpCooldown = 20;
+
+                if(special === 'povv'){
+                    if(params.y >= 9600){
+                        p.platformerFriction = 0.962;
+                        // p.platformerFriction = 0.981;
+                        // p.platformerForce *= 0.6;
+                        p.jumpDecay = 0.96 * 0.962 / 0.972;
+                        p.jumpForce /= 1.2;
+                        // p.jumpDecay = 0.952;
+                    }
+                    // p.platformerFriction = 0.96;
+                    // p.platformerForce *= 1.2 / 3;
+                    // p.jumpForces *= 0.56;
+                    // p.jumpDecay = 0.92;
+                    // p.platformerForce /= 1.2;
+
+
+                    if(params.x === 3300 && params.y === 3300){
+                        p.platformerFriction *= 0.972;
+                        p.jumpForce *= 0.95;
+                        p.jumpDecay *= 0.96;
+                        // p.platformerForce *= 0.56;
+                    }
+
+                    p.canJumpMidair = true;
+                } else if(special === 'pospd'){
+                    p.canJumpMidair = true;
+                    if(params.specialPOSPDPlatformer === true){
+                        p.platformerForce *= 1.2;
+                        p.jumpForce *= 0.65;
+                        p.jumpDecay = 0.92;
+                        p.platformerFriction = 0.9;
+                    }
+                } else {
+                    p.canJumpMidair = false;
+                }
+                
                 return p;
             }
             // {
@@ -814,8 +878,8 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
             customMap: (params) => {
                 return {
                     changeShipStateTo: params.state,
-                    initialShipAngle: -Math.PI / 2,
-                    shipTurnSpeed: Math.PI / 80 / 12
+                    initialShipAngle: special === 'posc' ? Math.PI / 2 : -Math.PI / 2,
+                    shipTurnSpeed: special === 'pospd' ? Math.PI / 20 / 16.66 / 2 : Math.PI / 80 / 12
                 }
             }
         },
@@ -895,7 +959,18 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                     drainAmountWhileStandingOn: 0
                 }
             }
-        }
+        },
+        'grpu': {
+            type: [1,[],[28]],
+            customMap: (params) => {
+                return {
+                    changeGrappleStateTo: params.state,       
+                    grappleRange: 488,
+                    grappleForce: (params.forceMult??1) * 0.003,// manually added
+                    grappleFric: 0.97,
+                };
+            }
+        },
     }
 
     if(special === 'pols' || special === 'povv'){
@@ -1039,7 +1114,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
             if ((e.pos.y - e.sat.r) < ${bounds.y} || e.pos.y + e.sat.r > ${bounds.y + bounds.h}) {
                 yv${counter} = yv${counter} * -1;
             }
-            }${params.isLava === false ? `cr:(o)=>{
+            }${params.isLava === false ? `,cr:(o)=>{
                 ctx.strokeStyle = 'black';
                 ctx.lineWidth = 4;
                 ctx.fillStyle = '#7d7d7d';
@@ -1086,11 +1161,19 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
             C(1,[3],[1],{w:${size},h:${size},y:${params.y*2},x:${params.x*2},boundPlayer:false,sf:(e)=>{
             e.pos.y += yv${counter};
             e.pos.x += xv${counter};
-            if ((e.pos.x) < ${bounds.x} || e.pos.x + ${size} > ${bounds.x + bounds.w}) {
+            if ((e.pos.x) < ${bounds.x}) {
                 xv${counter} = xv${counter} * -1;
+                e.pos.x = ${bounds.x};
+            } else if(e.pos.x + ${size} > ${bounds.x + bounds.w}){
+                xv${counter} = xv${counter} * -1;
+                e.pos.x = ${bounds.x + bounds.w} - ${size};
             }
-            if ((e.pos.y) < ${bounds.y} || e.pos.y + ${size} > ${bounds.y + bounds.h}) {
+            if ((e.pos.y) < ${bounds.y}) {
                 yv${counter} = yv${counter} * -1;
+                e.pos.y = ${bounds.y};
+            } else if(e.pos.y + ${size} > ${bounds.y + bounds.h}){
+                yv${counter} = yv${counter} * -1;
+                e.pos.y = ${bounds.y + bounds.h} - ${size};
             }
             },cr:(o)=>{
                 ctx.strokeStyle = 'black';
@@ -1230,23 +1313,36 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                     // });
                     dyingTimer--;
 
-                    if(dyingTimer <= 0){
+                    if(dyingTimer <= 0 && dyingTimer !== -Infinity){
                         e.pos.x = -1E9;
                         reusableIndexes.push(index);
+                        dyingTimer = -Infinity;
                     }
                 }
                 },cr:(o)=>{
                     if(dyingTimer < 0) return;
+
+                    ${special === 'posc' ? `
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.rect(7500,4400,1300,3800);
+                    ctx.clip();
+                    ctx.closePath();
+                    ` : ''}
+
                     ctx.globalAlpha = dyingTimer / 30;
                     ctx.lineWidth = 4;
                     ctx.strokeStyle = 'black';
                     ctx.fillStyle = '#107691';
+
                     ctx.beginPath();
                     ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
                     ctx.fill();
                     ctx.stroke();
                     ctx.closePath();
                     ctx.globalAlpha = 1;
+
+                    ${special === 'posc' ? `ctx.restore();` : ''}
                 }});
 
                 if(reusableIndexes.length === 0){
@@ -1299,11 +1395,11 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                 h: params.bound.h * 2
             };
             counter++;
-            const maxSwitchTime = params.switchTime*1000/16; 
+            const maxSwitchTime = params.switchTime*60; 
             return `
             var xv${counter} = ${params.xv/42*4};
             var yv${counter} = ${params.yv/42*4};
-            var switchTime${counter} = ${maxSwitchTime*Math.random()*2};
+            var switchTime${counter} = ${special === 'povv' ? maxSwitchTime : maxSwitchTime*Math.random()*2};
             var switchState${counter} = true;
             var pos${counter} = {
                 x: ${params.x*2}, y: ${params.y*2} 
@@ -1327,7 +1423,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
 
                 switchTime${counter}--;
                 if(switchTime${counter} <= 0){
-                    switchTime${counter} = ${params.switchTimer*1000/15};
+                    switchTime${counter} = ${maxSwitchTime};
                     switchState${counter} = !switchState${counter};
                     if(switchState${counter} === true){
                         /*if we're switching on, reset to pos we were on. This wasn't how the enemy worked before but it's ok*/
@@ -1344,7 +1440,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                     ctx.globalAlpha = 0.4;
                 }
                 ctx.beginPath();
-                ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+                ctx.arc(pos${counter}.x, pos${counter}.y, o.sat.r, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.stroke();
                 ctx.closePath();
@@ -1381,7 +1477,14 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
             // },
         },
         enemymove: (params) => {
-            return `C(0,[0],[1],{x:${params.points[0][0]*2},y:${params.points[0][1]*2},r:${params.radius*2},currentPoint:${params.currentPoint},path:[${params.points.map(p => `[${p[0]*2},${p[1]*2},${params.speed / 2 * 60 / 1000}]`)}],
+            const x = params.x;
+            const y = params.y;
+            const pointTo = params.pointTo;
+            const pointOn = params.pointOn;
+            const pointsDist = Math.sqrt((pointOn.x-pointTo.x)**2 + (pointOn.y-pointTo.y)**2);
+            const distToPointOn = Math.sqrt((x-pointOn.x)**2 + (y-pointOn.y)**2);
+            const fractionalCurrentPt = distToPointOn / pointsDist;
+            return `C(0,[0],[1],{x:${params.points[0][0]*2},y:${params.points[0][1]*2},r:${params.radius*2},currentPoint:${params.currentPoint + fractionalCurrentPt},path:[${params.points.map(p => `[${p[0]*2},${p[1]*2},${params.speed / 2 * 60 / 1000}]`)}],
             cr:(o)=>{
                 ctx.lineWidth = 4;
                 ctx.strokeStyle = 'black';
@@ -1459,6 +1562,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
             params.flSize *= 1.5;
             params.flSize += params.radius * 1.2;
             counter++;
+            if(window.isServer === true) return `\n`;
             return `
             var xv${counter} = ${params.xv/33};
             var yv${counter} = ${params.yv/33};
@@ -1529,7 +1633,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                 // const maxX = 18650; const maxY = 4650
 
                 if(!(${special === 'povv'} && o.pos.x > 17550 && o.pos.x < 18650 && o.pos.y > 3850 && o.pos.y < 4650)){
-                    if((o.startSliceAngle - o.endSliceAngle)%(Math.PI*2) !== 0){
+                    if(Math.abs((o.startSliceAngle - o.endSliceAngle)%(Math.PI*2)) > 0.01){
                         window.colors.vignette.holeFunctions.push(()=>{
                             ctx.moveTo(o.pos.x,o.pos.y);
                             ctx.arc(o.pos.x, o.pos.y, ${params.flSize*1.5}, o.startSliceAngle, o.endSliceAngle);
@@ -1592,8 +1696,8 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                 obs.push({
                     ...obs[i],
                     type: obs[i].type.replaceAll('safe', 'vinette'),
-                    "ir": 0.1,
-                    "or": 0.6,
+                    "ir": 1,
+                    "or": 1,
                     "o": 1,
                     "vc": {
                         "r": 255,
@@ -1620,7 +1724,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
 
     let str = '';
 
-    if(special === 'povv'){
+    if(special === 'povv' && window.isServer !== true){
         // parent and child ids
         const alreadyLoggedEnemy = {};
         for(let i = 0; i < enemies.length; i++){
@@ -1635,8 +1739,15 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                         let parent = parent${enemies[i].childId};
 
                         C(0,[],[3],{x:-1E9,y:0,r:1,sf:()=>{
-                            child.pos.x = (parent.pos.x) - child.dimensions.x/2;
-                            child.pos.y = (parent.pos.y) - child.dimensions.y/2;  
+                            let childOffsetX = child.topLeft.x; let childOffsetY = child.topLeft.y;
+                            childOffsetX = child.pos.x - childOffsetX;
+                            childOffsetY = child.pos.y - childOffsetY;
+                            let parentMiddleX = parent.topLeft.x + parent.dimensions.x/2;
+                            let parentMiddleY = parent.topLeft.y + parent.dimensions.y/2;
+
+                            child.pos.x = parent
+                            child.pos.x = parentMiddleX + childOffsetX - child.dimensions.x/2;
+                            child.pos.y = parentMiddleY + childOffsetY - child.dimensions.y/2;
                         }})
                     }`
                 }
@@ -1791,7 +1902,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
         } else if(o.type === 'switchnormal'){
             o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
             str += `var timer${counter} = ${o.timer}; var state${counter} =${o.state}; var x${counter} = ${o.x}; 
-            C(1,[],[0],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},sf:(e)=>{
+            C(1,[],[0],{h:${o.h},w:${o.w},y:${o.y},x:${o.state === true ? o.x : -1E9},sf:(e)=>{
                     timer${counter} -= 1 / 60;
                     if(timer${counter} < 0){
                         state${counter} = !state${counter};
@@ -1842,7 +1953,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
         //         return {hex: '#000000', alpha: params.opaq};
         //     }
         // },
-            str += `C(1,[],[20],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},
+            str += `C(1,[],[20],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},hex:'#FFFFFF',alpha:1,
                 cr:(e)=>{
                     ctx.beginPath();
                     ctx.lineWidth = 2;
@@ -1872,9 +1983,8 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                         `}
                     }
                     ctx.beginPath();
-                    let [middleX, middleY] = generateTopLeftCoordinates(e);
-                    middleX += e.dimensions.x / 2;
-                    middleY += e.dimensions.y / 2;
+                    let middleX = e.topLeft.x + e.dimensions.x/2;
+                    let middleY = e.topLeft.y + e.dimensions.y/2;
                     ctx.translate(middleX, middleY);
                     ctx.fillStyle = colors.tile;
                     for(let i = 0; i < 100; i++){
@@ -1977,17 +2087,15 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
 
                     ctx.strokeStyle = ctx.fillStyle = 'white';
 
-                    let [topX, topY] = generateTopLeftCoordinates(e);
-
-                    ctx.fillRect(topX, topY, e.dimensions.x, e.dimensions.y);
+                    ctx.fillRect(e.topLeft.x, e.topLeft.y, e.dimensions.x, e.dimensions.y);
                     ctx.globalAlpha *= 1 / 0.8;
-                    ctx.strokeRect(topX, topY, e.dimensions.x, e.dimensions.y);
+                    ctx.strokeRect(e.topLeft.x, e.topLeft.y, e.dimensions.x, e.dimensions.y);
 
 
                     ctx.fillStyle = colors.tile; //'rgb(12, 12, 12)'//"#c4c4c4"//'#0652cc';
                     ctx.fillRect(
-                        topX + 15,
-                        topY + 15,
+                        e.topLeft.x + 15,
+                        e.topLeft.y + 15,
                         e.dimensions.x - 30,
                         e.dimensions.y - 30
                     );
@@ -2022,15 +2130,13 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                     ctx.strokeStyle = 'white';
                     ctx.fillStyle = '#a229ff';
 
-                    let [topX, topY] = generateTopLeftCoordinates(e);
-
-                    ctx.fillRect(topX, topY, e.dimensions.x, e.dimensions.y);
+                    ctx.fillRect(e.topLeft.x, e.topLeft.y, e.dimensions.x, e.dimensions.y);
                     ctx.globalAlpha *= 1 / 0.8;
 
                     ctx.fillStyle = colors.tile;
                     ctx.fillRect(
-                        topX + 15,
-                        topY + 15,
+                        e.topLeft.x + 15,
+                        e.topLeft.y + 15,
                         e.dimensions.x - 30,
                         e.dimensions.y - 30
                     );
@@ -2042,7 +2148,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'middle';
                         ctx.font = '40px Inter';
-                        ctx.fillText(Math.round(time/60),topX + e.dimensions.x/2, topY + e.dimensions.y/2);
+                        ctx.fillText(Math.round(time/60),e.topLeft.x + e.dimensions.x/2, e.topLeft.y + e.dimensions.y/2);
                     }
 
                     ctx.globalAlpha = 1;
@@ -2175,10 +2281,10 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
             o.x *= 2; o.y *= 2; o.r *= 2;
             o.laser.x *= 2; o.laser.y *= 2; o.laser.w *= 2; o.laser.h *= 2;
             str += `C(1,[5],[1],{h:${o.laser.h},w:${o.laser.w},y:${o.y-o.laser.h/2},x:${o.x-o.laser.w/2},
-                boundPlayer: true,
+                boundPlayer: ${o.overrideCanCollide !== undefined ? false : true},
                 restAngles: [${o.rest*Math.PI/180}, ${o.rest*Math.PI/180+Math.PI}],
                 toRest: true,
-                homingRotateSpeed: ${o.speed / 86 / 60},
+                homingRotateSpeed: ${o.speed / 86 / 60 * (special === 'povv' ? 0.888 : 1)},
                 detectionRadius: ${Math.sqrt(o.laser.w**2+o.laser.h**2)/2},
                 spokeAngles: [0, Math.PI],
                 pivotX: ${o.x},
@@ -2218,16 +2324,16 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                     }
                 },
                 cr:(o)=>{
-                    let [middleX, middleY] = generateTopLeftCoordinates(o);
-                    middleX += o.dimensions.x / 2; middleY += o.dimensions.y/2;
+                    let middleX = o.topLeft.x + o.dimensions.x/2;
+                    let middleY = o.topLeft.y + o.dimensions.y/2;
 
                     let grd = ctx.createRadialGradient(middleX, middleY, 0, middleX, middleY, Math.min(100, (o.dimensions.x + o.dimensions.y)/3));
 
-                    grd.addColorStop(0, "blue");//rgba(56, 171, 48,0)
+                    grd.addColorStop(0, "rgba(56, 171, 48,0)");
                     grd.addColorStop(1, "rgba(56, 171, 48,1)");
 
                     ctx.fillStyle = grd;
-                    ctx.globalAlpha = Math.max(0.12, 0.5 - o.timeTrapTime / o.timeTrapMaxTime / 2);
+                    ctx.globalAlpha = Math.max(0.24, 1 - o.timeTrapTime / o.timeTrapMaxTime);
 
                     ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y);
                     
@@ -2239,9 +2345,294 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
 
                     ctx.fillText(o.timeTrapToShowTenth === true ? Math.round(o.timeTrapTime/60 * 10) / 10 : Math.round(o.timeTrapTime/60), middleX, middleY);
                     ctx.globalAlpha = 1;
+
+                    ${(special === 'povv' || special === 'posc') ? `
+                        if(o.timeTrapTime === o.timeTrapMaxTime){ return; }
+                        const v = window.colors.vignette;
+
+                        const interpolate = (s,e,t) => {return (1-t)*s + e*t};
+                        let t = Math.sqrt(Math.max(0,o.timeTrapTime) / o.timeTrapMaxTime);
+                        let r = interpolate(56,0,t);
+                        let g = interpolate(171,0,t);
+                        let b = interpolate(48,0,t);
+                        v.inner.r = r;
+                        v.inner.g = g;
+                        v.inner.b = b;
+                        v.inner.size = 0;
+                        v.inner.opacity = 0;
+
+                        v.outer.r = r;
+                        v.outer.g = g;
+                        v.outer.b = b;
+                        v.outer.size = interpolate(0.4,0.6,t);
+                        v.outer.opacity = 1;
+                    `: ''}
                 }
             });`;
             continue;
+        } else if(o.type === 'grapplepoint' || o.type === 'movinggrapplepoint'){
+            o.x *= 2; o.y *= 2;
+            if(o.type === 'grapplepoint'){
+                // {
+                //     "x": 1100,
+                //     "y": 6050,
+                //     "type": "grapplepoint",
+                //     "renderType": "grapple",
+                //     "inView": false
+                // },
+                str += `C(0,[],[0],{r:20+12/2,y:${o.y},x:${o.x},
+                    cr:(e)=>{
+                        e.isGrapplePoint = true;
+                        ctx.strokeStyle = '#c9c9c9';
+                        ctx.lineWidth = 12;
+                        ctx.globalAlpha = 0.5;
+                        ctx.beginPath();
+                        ctx.arc(e.pos.x, e.pos.y, 20, 0, Math.PI * 2);
+                        ctx.stroke();
+                        ctx.closePath();
+                        ctx.globalAlpha = 1;
+                    }
+                });\n`;
+            } else {
+                // {
+                //     "x": 8091.247854069336,
+                //     "y": 6342.504291861353,
+                //     "w": 0,
+                //     "h": 0,
+                //     "type": "movinggrapplepoint",
+                //     "points": [
+                //         [
+                //             8050,
+                //             6325
+                //         ],
+                //         [
+                //             8075,
+                //             6375
+                //         ],
+                //         [
+                //             8100,
+                //             6325
+                //         ]
+                //     ],
+                //     "speed": 150,
+                //     "currentPoint": 1,
+                //     "alongWith": false,
+                //     "renderType": "grapple",
+                //     "pointOn": {
+                //         "x": 8075,
+                //         "y": 6375
+                //     },
+                //     "pointTo": {
+                //         "x": 8100,
+                //         "y": 6325
+                //     },
+                //     "xv": 67.0820393249937,
+                //     "yv": -134.16407864998737,
+                //     "inView": false
+                // },
+                const params = o;
+                const p = {path: '['};
+                for(let i = 0; i < params.points.length; i++){
+                    p.path += `[${params.points[i][0]*2},[${params.points[i][1]*2}],${params.speed * 2 / 60}],`;
+                }
+
+                p.currentPoint = params.currentPoint;
+                p.x = params.points[0][0] * 2;
+                p.y = params.points[0][1] * 2;
+
+                p.path = p.path.substring(0, p.path.length-1);
+                p.path += ']';
+                str += `C(0,[0],[0],{r:20+12/2,
+                    cr:(e)=>{
+                        e.isGrapplePoint = true;
+                        ctx.strokeStyle = '#c9c9c9';
+                        ctx.lineWidth = 12;
+                        ctx.globalAlpha = 0.5;
+                        ctx.beginPath();
+                        ctx.arc(e.pos.x, e.pos.y, 20, 0, Math.PI * 2);
+                        ctx.stroke();
+                        ctx.closePath();
+                        ctx.globalAlpha = 1;
+                    },currentPoint:${p.currentPoint},x:${p.x},y:${p.y},path:${p.path}
+                });\n`;
+            }
+            counter++;
+            continue;
+        } else if(o.type === 'typing'){
+            o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
+            // {
+            //     "x": 0,
+            //     "y": 2250,
+            //     "w": 250,
+            //     "h": 250,
+            //     "type": "typing",
+            //     "text": "Relax. This planet will only get a little bit harder.",
+            //     "active": true,
+            //     "currentChar": 0,
+            //     "inView": false
+            // },
+
+            str += `var typingVinette${counter};
+            C(1,[],[24],{x:${o.x},y:${o.y},w: ${o.w},h:${o.h},innerR: 0, innerG: 0, innerB: 0, innerSize: 0, innerOpacity: 0, outerR: 0, outerG: 0, outerB: 0, outerSize: 0.42, outerOpacity: 0.9});typingVinette${counter}=window.obstacles[window.obstacles.length-1];\n`;
+            str += `{let completed = false;let active = false;let curChar = 0;let text="${o.text}";let freezeX, freezeY;
+            C(1,[],[3],{"x":${o.x},"y":${o.y},w:${o.w},h:${o.h},ef:(p)=>{
+                if(completed === true) return;
+                if(active === true) {
+                    p.pos.x = freezeX;
+                    p.pos.y = freezeY;
+                    return;
+                }
+                active = true;
+
+                freezeX = p.pos.x;
+                freezeY = p.pos.y;
+
+                let oldKeyDown = window.onkeydown;
+                let oldKeyUp = window.onkeyup;
+
+                for(let key in window.input){window.input[key] = false;}
+
+                window.onkeyup = () => {};
+                window.onkeydown = (e) => {
+                    if(e.type !== 'keydown') return;
+                    if(text[curChar] === e.key) curChar++;
+                    if(curChar >= text.length) {window.onkeydown = oldKeyDown; window.onkeyup = oldKeyUp; completed = true; active = false;typingVinette${counter}.pos.x = -1E9;}
+                }
+            },cr:(o)=>{
+                if (completed === true) ctx.globalAlpha = 0.2;
+                ctx.fillStyle = 'white';
+                ctx.font = (o.dimensions.x / 10) + "px Inter";
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                const aheadChar = Math.min(
+                    text.length,
+                    curChar + 15
+                );
+                const textToDisplay = text.slice(curChar, aheadChar);
+                ctx.fillText(
+                    textToDisplay,
+                    ${o.x+o.w/2}, ${o.y+o.h/2},
+                );
+                ctx.fillStyle = 'black';
+                ctx.globalAlpha = 0.17;
+                if (completed === true) ctx.globalAlpha = 0.05;
+
+                // ctx.beginPath();
+                // for(let i = 0; i < o.sat.points.length; i++){
+                //     ctx.lineTo(o.pos.x + o.sat.points[i].x, o.pos.y + o.sat.points[i].y);
+                // }
+                // ctx.lineTo(o.pos.x + o.sat.points[0].x, o.pos.y + o.sat.points[0].y);
+                // ctx.fill();
+                // ctx.closePath();
+                ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y);
+
+                ctx.globalAlpha = 1;
+            }})};\n`;
+            counter++;
+            continue;
+        } else if(o.type === 'pushbox'){
+            // {
+            //     "x": 8600,
+            //     "y": 1800,
+            //     "w": 50,
+            //     "h": 50,
+            //     "type": "pushbox",
+            //     "weight": 22,
+            //     "initX": 8600,
+            //     "initY": 1800,
+            //     "pusherId": 0.00603314892176221,
+            //     "resetId": -1,
+            //     "lastPos": {
+            //         "x": 8600,
+            //         "y": 1800
+            //     },
+            //     "inView": false
+            // },
+            o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
+            let weightPercent = o.weight / 100;
+            if(special === 'posc') weightPercent = 0.6;
+            str += `C(1,[],[3],{w:${o.w},h:${o.h},"x":${o.x},"y":${o.y},ef:(p, res, o)=>{
+                p.pos.x += res.overlapV.x * ${weightPercent};
+                p.pos.y += res.overlapV.y * ${weightPercent};
+                o.pos.x -= res.overlapV.x * ${1-weightPercent};
+                o.pos.y -= res.overlapV.y * ${1-weightPercent};
+
+                ${special === 'posc' ? 'o.pos.x = Math.min(o.pos.x, 17500);' : ''}
+            },cr:(e)=>{
+                ctx.lineJoin = 'miter';
+                ctx.fillStyle = window.colors.tile;
+                ctx.fillRect(e.pos.x, e.pos.y, e.dimensions.x, e.dimensions.y);
+
+                ctx.globalAlpha = 0.3;
+                ctx.lineWidth = 10;
+                ctx.strokeStyle = 'white';
+                ctx.strokeRect(e.pos.x+8, e.pos.y+8, e.dimensions.x-8*2, e.dimensions.y-8*2);
+                ctx.globalAlpha = 1;
+                ctx.lineJoin = 'round';
+            }});\n`,
+            counter++;
+            continue;
+        }
+
+        if(special === 'povv' || special === 'posc'){
+            if(o.type === 'door'){
+                o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
+                str += `window.morphsTriggered[${o.id}]=false;var x${o.id}=${o.x};C(1,[],[0],{y:${o.y},x:${o.x},w:${o.w},h:${o.h},
+                    cr:(o)=>{
+                        ctx.beginPath();
+                        ctx.rect(x${o.id}, o.pos.y, o.dimensions.x, o.dimensions.y);// 5 and -10
+
+                        ctx.globalAlpha = 1;
+                        if(window.morphsTriggered[${o.id}] === true){
+                            o.pos.x = -1E9;
+                            ctx.globalAlpha = 0.3;
+                        }
+                        ctx.fillStyle = '#787878';
+
+                        ctx.fill();
+
+                        ctx.strokeStyle = 'rgb(0, 0, 0)';
+                        ctx.lineWidth = 8;
+                        ctx.globalAlpha = window.morphsTriggered[${o.id}] === true ? 0.5 : 1;
+
+                        ctx.stroke();
+                        ctx.closePath();
+                        ctx.globalAlpha = 1;// maybe a light effect like mirror?
+                    }
+                }); var c = window.obstacles[window.obstacles.length-1]; window.linkDoors[${o.id}] = {pos: {x: c.pos.x, y: c.pos.y}, dimensions: {x: c.dimensions.x, y: c.dimensions.y}};\n`;
+                continue;
+            } else if(o.type === 'button'){
+                o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
+                str += `window.morphsTriggered[${o.id}]=false;C(1,[],[3],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},
+                    cr:(e)=>{
+                        ctx.globalAlpha = 0.8;
+                        if (window.morphsTriggered[${o.id}] === true) {
+                            ctx.globalAlpha = 0.3;
+                        }
+
+                        ctx.strokeStyle = ctx.fillStyle = 'white';
+
+                        ctx.fillRect(e.topLeft.x, e.topLeft.y, e.dimensions.x, e.dimensions.y);
+                        ctx.globalAlpha *= 1 / 0.8;
+                        ctx.strokeRect(e.topLeft.x, e.topLeft.y, e.dimensions.x, e.dimensions.y);
+
+                        ctx.fillStyle = colors.tile;
+                        ctx.fillRect(
+                            e.topLeft.x + 15,
+                            e.topLeft.y + 15,
+                            e.dimensions.x - 30,
+                            e.dimensions.y - 30
+                        );
+
+                        ctx.globalAlpha = 1;
+                    },
+                    ef:(e) => {
+                        window.morphsTriggered[${o.id}] = true;
+                    }
+                }); var c = window.obstacles[window.obstacles.length-1]; window.linkButtons[${o.id}] = {pos: {x: c.pos.x, y: c.pos.y}, dimensions: {x: c.dimensions.x, y: c.dimensions.y}};\n`
+                continue;
+            }
         }
 
         if(typeDef === undefined) {
@@ -2289,6 +2680,5 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
         //C(1,[],[0],{h:100,w:1100,y:4300,x:4600,});
         str += `C(${typeString},${paramString})\n`;
     }
-
     return str;
 }

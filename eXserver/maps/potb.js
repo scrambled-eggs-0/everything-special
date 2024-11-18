@@ -784,8 +784,8 @@ window.obsArr.push(...[
     "C(2,[],[18],{\"points\":[[10100,3500],[10150,3300],[10250,3300],[10300,3500]],\"sizeMult\":0.5,\"sizeChangePermanent\":false,\"x\":0,\"y\":0})",
     "C(0,[],[4],{\"r\":100,\"url\":\"https://images.pexels.com/photos/12043242/pexels-photo-12043242.jpeg\",\"x\":9000,\"y\":3400})",
     "C(4,[],[23],{\"r\":100,\"innerRadius\":0,\"startSliceAngle\":5.3197196411114005,\"endSliceAngle\":0.6615698517358614,\"endSliceAngleRotateSpeed\":-0.0021034335423010786,\"startSliceAngleRotateSpeed\":-0.000723994345467791,\"tornadoStrength\":7,\"x\":9300,\"y\":3700})",
-    "var tutorialMorphTriggered = false;\nC(1,[],[5],{h:200,w:200,y:2700,x:8900,\n    cr:(e)=>{\n        ctx.globalAlpha = 0.8;\n        if (tutorialMorphTriggered === true) {\n            ctx.globalAlpha = 0.3;\n        }\n\n        ctx.strokeStyle = ctx.fillStyle = 'white';\n\n        let [topX, topY] = generateTopLeftCoordinates(e);\n\n        ctx.fillRect(topX, topY, e.dimensions.x, e.dimensions.y);\n        ctx.globalAlpha *= 1 / 0.8;\n        ctx.strokeRect(topX, topY, e.dimensions.x, e.dimensions.y);\n\n        ctx.fillStyle = colors.tile;\n        ctx.fillRect(\n            topX + 15,\n            topY + 15,\n            e.dimensions.x - 30,\n            e.dimensions.y - 30\n        );\n\n        ctx.globalAlpha = 1;\n    },\n    ef:(e) => {\n        tutorialMorphTriggered = true;    \n    }\n});",
-    "var tutorialMorphTriggered = false;\nC(0,[],[0],{r:100,y:3100,x:8900,\n    cr:(e)=>{\n        if(tutorialMorphTriggered){\n            e.pos.x = -1E9;\n            return;\n        }\n        ctx.beginPath();\n        let [middleX, middleY] = generateTopLeftCoordinates(e);\n        middleX += e.dimensions.x / 2;\n        middleY += e.dimensions.y / 2;\n        ctx.translate(middleX, middleY);\n        ctx.fillStyle = colors.tile;\n        for(let i = 0; i < 100; i++){\n            const t = Math.PI * 2 * i / 100;\n            const a = Math.sin(window.time / 1000) * 8;\n\n            let x = Math.cos(t) * 100 * (Math.cos(8*t + a) / 8 + 0.9);\n            let y = Math.sin(t) * 100 * (Math.sin(8*t + a) / 8 + 0.9);\n\n            if(i === 0){\n                ctx.moveTo(x,y);\n            } else {\n                ctx.lineTo(x,y);\n            }\n        }\n        ctx.fill();\n        ctx.closePath();\n        ctx.translate(-middleX, -middleY);\n    }\n});",
+    "var tutorialMorphTriggered = false;\nC(1,[],[5],{h:200,w:200,y:2700,x:8900,\n    cr:(e)=>{\n        ctx.globalAlpha = 0.8;\n        if (tutorialMorphTriggered === true) {\n            ctx.globalAlpha = 0.3;\n        }\n\n        ctx.strokeStyle = ctx.fillStyle = 'white';\n\n        let topX = o.topLeft.x; let topY = o.topLeft.y;\n\n        ctx.fillRect(topX, topY, e.dimensions.x, e.dimensions.y);\n        ctx.globalAlpha *= 1 / 0.8;\n        ctx.strokeRect(topX, topY, e.dimensions.x, e.dimensions.y);\n\n        ctx.fillStyle = colors.tile;\n        ctx.fillRect(\n            topX + 15,\n            topY + 15,\n            e.dimensions.x - 30,\n            e.dimensions.y - 30\n        );\n\n        ctx.globalAlpha = 1;\n    },\n    ef:(e) => {\n        tutorialMorphTriggered = true;    \n    }\n});",
+    "var tutorialMorphTriggered = false;\nC(0,[],[0],{r:100,y:3100,x:8900,\n    cr:(e)=>{\n        if(tutorialMorphTriggered){\n            e.pos.x = -1E9;\n            return;\n        }\n        ctx.beginPath();\n        let middleX = e.topLeft.x; let middleY = e.topLeft.y;\n        middleX += e.dimensions.x / 2;\n        middleY += e.dimensions.y / 2;\n        ctx.translate(middleX, middleY);\n        ctx.fillStyle = colors.tile;\n        for(let i = 0; i < 100; i++){\n            const t = Math.PI * 2 * i / 100;\n            const a = Math.sin(window.time / 1000) * 8;\n\n            let x = Math.cos(t) * 100 * (Math.cos(8*t + a) / 8 + 0.9);\n            let y = Math.sin(t) * 100 * (Math.sin(8*t + a) / 8 + 0.9);\n\n            if(i === 0){\n                ctx.moveTo(x,y);\n            } else {\n                ctx.lineTo(x,y);\n            }\n        }\n        ctx.fill();\n        ctx.closePath();\n        ctx.translate(-middleX, -middleY);\n    }\n});",
     "C(2,[1],[0],{\"points\":[[9500,3850],[9500,3750],[9700,3700],[9700,3900]],\"x\":0,\"y\":0,\"initialRotation\":0,\"rotateSpeed\":0.001,\"pivotX\":9600,\"pivotY\":3800})",
     "C(0,[],[5],{\"r\":100,\"x\":9100,\"y\":2500})",
     "C(1,[5],[1],{h:60,w:200,y:2500-30,x:10000,\n    boundPlayer: true,\n    restAngles: [0, Math.PI],\n    toRest: true,\n    homingRotateSpeed: 0.0007,\n    detectionRadius: 150,\n    spokeAngles: [0, Math.PI],\n    pivotX: 10100,\n    pivotY: 2500\n});",
@@ -1214,7 +1214,7 @@ window.obsArr.push(...[
         ctx.globalAlpha = 0.3;
         ctx.lineWidth = 10;
         ctx.strokeStyle = 'white';
-        ctx.strokeRect(e.pos.x+8, e.pos.y+8, 200-8*2, 200-8*2, 0, Math.PI * 2);
+        ctx.strokeRect(e.pos.x+8, e.pos.y+8, 200-8*2, 200-8*2);
         ctx.globalAlpha = 1;
     },sf:(e)=>{
         // collide w/ pushCircle
@@ -1428,9 +1428,8 @@ window.obsArr.push(...[
     
     cr:(e)=>{
         ctx.beginPath();
-        let [middleX, middleY] = generateTopLeftCoordinates(e);
-        middleX += e.dimensions.x / 2;
-        middleY += e.dimensions.y / 2;
+        let middleX = e.topLeft.x + e.dimensions.x/2;
+        let middleY = e.topLeft.y + e.dimensions.y/2;
         ctx.translate(middleX, middleY);
         const range = 0.25;
         ctx.fillStyle = blendColor('#00FF00','#0000FF', ((Math.sin(Date.now()/300)+1)/2 * range) + (0.5 - range / 2) );
@@ -2405,8 +2404,8 @@ window.obsArr.push(...[
         "r":100,"x":9900,"y":1900,innerRadius: 30, startSliceAngle: Math.PI/6 - Math.PI/2, endSliceAngle: -Math.PI/6 - Math.PI/2, startSliceAngleRotateSpeed:0, endSliceAngleRotateSpeed: 0,
         "timeTrapMaxTime":4000,"timeTrapRecoverySpeed":3,"timeTrapToKill":false,"timeTrapToShowTenth":true,
         cr:(o)=>{
-            let [middleX, middleY] = generateTopLeftCoordinates(o);
-            middleX += o.dimensions.x / 2; middleY += o.dimensions.y/2;
+            let middleX = o.topLeft.x + o.dimensions.x/2;
+            let middleY = o.topLeft.y + o.dimensions.y/2;
 
             // changeSpeed '#eba500'
             // changeSize (<1) '#1c1852'

@@ -7,6 +7,10 @@ class Player {
 
         this.name = '';
 
+        this.reset();
+    }
+    // reset powerups
+    reset(){
         this.dead = false;
 
         this.god = false;

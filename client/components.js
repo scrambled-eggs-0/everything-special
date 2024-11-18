@@ -48,6 +48,7 @@ function create(shape, simulates, effects, params){
         else if(e[key] > c[1]) e[key] = c[1];
     }
     e.dimensions = generateDimensions(e);
+    e.topLeft = generateTopLeftCoordinates(e);
     for(let i = 0; i < simulates.length; i++){
         e.simulate.push(simulateMap[simulates[i]]);
         initSimulateMap[simulates[i]](e, params);
@@ -73,6 +74,7 @@ function create(shape, simulates, effects, params){
     }
     if(params.sf !== undefined) e.simulate.push(params.sf);
     if(params.ef !== undefined) {e.effect.push(params.ef); e.renderEffect.push(renderEffectMap[3]);}
+    if(params.sf !== undefined || params.ef !== undefined) {e.simulate.push(()=>{e.dimensions=generateDimensions(e);e.topLeft=generateTopLeftCoordinates(e);})};
     if(params.cr !== undefined) e.cr = params.cr;
     
     obstacles.push(e);
@@ -82,11 +84,13 @@ function create(shape, simulates, effects, params){
         if(environment === 'editor'){
             e.sat.setPoints(window.fixPolygon(params.points).map(pt => new SAT.Vector(pt[0], pt[1])));
             e.dimensions = generateDimensions(e);
+            e.topLeft = generateTopLeftCoordinates(e);
         } else {
             (async()=>{
                 await import('../shared/fixPolygon.js');
                 e.sat.setPoints(window.fixPolygon(params.points).map(pt => new SAT.Vector(pt[0], pt[1])));
                 e.dimensions = generateDimensions(e);
+                e.topLeft = generateTopLeftCoordinates(e);
             })();
         }
     }
@@ -207,22 +211,26 @@ function simulate(){
         
             for(let i = 0; i < obstacles.length; i++){
                 // collision (done before simulation because that is what last rendered frame sees)
-                // TODO: bounding box check
-                if(obstacles[i].sat.r !== undefined){
-                    if(obstacles[i].startSlice !== undefined){
-                        collided = testCircleSliceCircle(obstacles[i], player, res);
+
+                // bounding box check (TODO: spatial hashing)
+                if(obstacles[i].topLeft.x < player.pos.x + player.sat.r && obstacles[i].topLeft.x + obstacles[i].dimensions.x > player.pos.x - player.sat.r && 
+                   obstacles[i].topLeft.y < player.pos.y + player.sat.r && obstacles[i].topLeft.y + obstacles[i].dimensions.y > player.pos.y - player.sat.r){
+                    if(obstacles[i].sat.r !== undefined){
+                        if(obstacles[i].startSlice !== undefined){
+                            collided = testCircleSliceCircle(obstacles[i], player, res);
+                        } else {
+                            collided = SAT.testCircleCircle(obstacles[i].sat, player.sat, res);
+                        }
                     } else {
-                        collided = SAT.testCircleCircle(obstacles[i].sat, player.sat, res);
+                        collided = SAT.testPolygonCircle(obstacles[i].sat, player.sat, res);
                     }
-                } else {
-                    collided = SAT.testPolygonCircle(obstacles[i].sat, player.sat, res);
-                }
-                if(collided === true){
-                    for(let j = 0; j < obstacles[i].effect.length; j++){
-                        obstacles[i].effect[j](player, res, obstacles[i], i);
+                    if(collided === true){
+                        for(let j = 0; j < obstacles[i].effect.length; j++){
+                            obstacles[i].effect[j](player, res, obstacles[i], i);
+                        }
                     }
+                    res.clear();// TODO: test if this is really needed
                 }
-                res.clear();// TODO: test if this is really needed
         
                 // obstacle simulation
                 for(let j = 0; j < obstacles[i].simulate.length; j++){
@@ -251,16 +259,21 @@ function simulate(){
                         player.sat.r = player.grappleRange;
                     }
 
-                    if(obstacles[i].sat.r !== undefined){
-                        if(obstacles[i].startSlice !== undefined){
-                            collided = testCircleSliceCircle(obstacles[i], player, res);
+                    if(obstacles[i].topLeft.x < player.pos.x + player.sat.r && obstacles[i].topLeft.x + obstacles[i].dimensions.x > player.pos.x - player.sat.r && 
+                        obstacles[i].topLeft.y < player.pos.y + player.sat.r && obstacles[i].topLeft.y + obstacles[i].dimensions.y > player.pos.y - player.sat.r){
+                        if(obstacles[i].sat.r !== undefined){
+                            if(obstacles[i].startSlice !== undefined){
+                                collided = testCircleSliceCircle(obstacles[i], player, res);
+                            } else {
+                                collided = SAT.testCircleCircle(obstacles[i].sat, player.sat, res);
+                            }
                         } else {
-                            collided = SAT.testCircleCircle(obstacles[i].sat, player.sat, res);
+                            collided = SAT.testPolygonCircle(obstacles[i].sat, player.sat, res);
                         }
                     } else {
-                        collided = SAT.testPolygonCircle(obstacles[i].sat, player.sat, res);
+                        collided = false;
                     }
-
+                    
                     if(obstacles[i].isGrapplePoint === true){
                         if(collided === true){
                             grapPointPriority = true;
@@ -278,6 +291,7 @@ function simulate(){
                 }
 
                 if(player.sat.r < player.grappleRange){
+                    player.sat.r = Math.max(player.sat.r, 0);
                     player.grappleX = player.pos.x - Math.cos(closestAngle) * player.sat.r;
                     player.grappleY = player.pos.y - Math.sin(closestAngle) * player.sat.r;
                 }
@@ -318,7 +332,7 @@ function simulate(){
             const u8 = new Uint8Array(buf);
             const f32 = new Float32Array(buf);
             u8[0] = 13;
-            f32[1] = -Infinity;
+            f32[1] = -1; // -1 = disable
             send(buf);
         }
     }
@@ -571,6 +585,7 @@ function fixFonts() {
         os[i].dimensions = generateDimensions(os[i]);
         os[i].pos.x += (oldDimensions.x - os[i].dimensions.x) / 2;
         os[i].pos.y += (oldDimensions.y - os[i].dimensions.y) / 2;
+        os[i].topLeft = generateTopLeftCoordinates(os[i]);
     }
 }
 setTimeout(fixFonts, 1000);
@@ -590,11 +605,11 @@ function generateDimensions(o){
         ctx.textBaseline = 'middle';
         ctx.font = `${o.fontSize}px Inter`;
         const dimensions = ctx.measureText(o.text);
+        o.wOffset = (dimensions.actualBoundingBoxRight - dimensions.actualBoundingBoxLeft) / 2;
+        o.hOffset = (dimensions.actualBoundingBoxDescent - dimensions.actualBoundingBoxAscent) / 2; // *0.75?
         return {
             x: dimensions.actualBoundingBoxRight + dimensions.actualBoundingBoxLeft,
-            wOffset: (dimensions.actualBoundingBoxRight - dimensions.actualBoundingBoxLeft) / 2,
             y: dimensions.actualBoundingBoxDescent + dimensions.actualBoundingBoxAscent,
-            hOffset: (dimensions.actualBoundingBoxDescent - dimensions.actualBoundingBoxAscent) / 2// *0.75?
         }
     }
     
@@ -630,7 +645,7 @@ function generateTopLeftCoordinates(o){
         topLeftX += minX;
         topLeftY += minY;
     }
-    return [topLeftX, topLeftY];
+    return {x: topLeftX, y: topLeftY};
 }
 window.generateTopLeftCoordinates = generateTopLeftCoordinates;
 
@@ -846,6 +861,8 @@ const simulateMap = [
             // time = distance / speed
             o.timeRemain = dist / o.speed;
         }
+
+        o.topLeft = window.generateTopLeftCoordinates(o);
     },
     /*rotate*/
     (o) => {
@@ -863,6 +880,7 @@ const simulateMap = [
         
         o.rotation += o.rotateSpeed;
         o.dimensions = generateDimensions(o);
+        o.topLeft = window.generateTopLeftCoordinates(o);
     },
     /*grow*/
     (o) => {
@@ -888,9 +906,8 @@ const simulateMap = [
             o.sat.r *= growthRatio;
         } else {
             // poly
-            let [middleX, middleY] = generateTopLeftCoordinates(o);
-            middleX += o.dimensions.x / 2;
-            middleY += o.dimensions.y / 2;
+            let middleX = o.topLeft.x + o.dimensions.x/2;
+            let middleY = o.topLeft.y + o.dimensions.y/2; 
 
             for(let i = 0; i < o.sat.points.length; i++){
                 o.sat.points[i].x = (o.sat.points[i].x + o.pos.x - middleX) * growthRatio - o.pos.x + middleX;
@@ -903,6 +920,7 @@ const simulateMap = [
             }
         }
 
+        o.topLeft = window.generateTopLeftCoordinates(o);
         o.dimensions = generateDimensions(o);
         o.lastGrowth = o.growth;
     },
@@ -912,9 +930,8 @@ const simulateMap = [
     () => {},
     /*rotateHoming*/
     (o, p) => {
-        let [middleX, middleY] = generateTopLeftCoordinates(o);
-        middleX += o.dimensions.x / 2;
-        middleY += o.dimensions.y / 2;
+        let middleX = o.topLeft.x + o.dimensions.x/2;
+        let middleY = o.topLeft.y + o.dimensions.y/2; 
 
         if(p.dead === true || (p.pos.x - middleX)**2 + (p.pos.y - middleY) ** 2 > o.detectionRadiusSquared) {
             if(o.toRest === false) return;
@@ -1102,6 +1119,10 @@ const initEffectMap = [
         o.jumpCooldown = 0;
         o.jumpForce = params.jumpForce;
         o.jumpFriction = params.jumpDecay;
+
+        o.canJumpMidair = params.canJumpMidair;
+        o.midairStoredJump = false;
+        o.justJumped = false;
 
         o.jumpForceObj = {playerForceId: undefined};
 
@@ -1308,11 +1329,9 @@ const effectMap = [
     (p, res, o) => {
         if(o.checkpointCollected === true) return;
         o.checkpointCollected = true;
-
-        let [topLeftX, topLeftY] = generateTopLeftCoordinates(o);
         
-        window.spawnPosition.x = topLeftX + o.dimensions.x / 2;
-        window.spawnPosition.y = topLeftY + o.dimensions.y / 2;
+        window.spawnPosition.x = o.topLeft.x + o.dimensions.x / 2;
+        window.spawnPosition.y = o.topLeft.y + o.dimensions.y / 2;
     },
     /*breakable*/
     (p, res, o, id) => {
@@ -1360,14 +1379,20 @@ const effectMap = [
         p.pos.x -= Math.cos(o.platformerAngle) * distMovedOnPlatAngle;
         p.pos.y -= Math.sin(o.platformerAngle) * distMovedOnPlatAngle;
 
+        const touchingNormalThisFrame = p.touchingNormalIndexes.length !== 0 || (p.lastTouchingNormalIndexes[p.lastTouchingNormalIndexes.length-1] >= id && o.justJumped === false) || p.touchingWall === true;
+        o.midairStoredJump = o.midairStoredJump || touchingNormalThisFrame;
+        o.justJumped = false;
+
         // checking if we were either intersecting with a normal last frame that's indexed after the obs or we are intersecting with a normal rn
-        if(o.jumpCooldown <= 0 && (p.touchingNormalIndexes.length !== 0 || p.lastTouchingNormalIndexes[p.lastTouchingNormalIndexes.length-1] >= id || p.touchingWall === true)){
+        if(o.jumpCooldown <= 0 && (touchingNormalThisFrame === true || (o.canJumpMidair === true && o.midairStoredJump === true))){
             o.canJump = true;
             // OLD: if we're within 30 degrees, jump; NEW: if the mouse is above the thumbs up in the rendering
             if(/*Math.abs(shortAngleDist(o.platformerAngle + Math.PI, playerVelAngle)) < Math.PI / 6*/(window.dragging === true || (window.isExClient === true && p.ya < -0.01)) && p.pos.y - window.mouseY > p.sat.r + 50){
                 // p.forces.push([-Math.cos(o.platformerAngle) * o.jumpForce, -Math.sin (o.platformerAngle) * o.jumpForce, o.jumpFriction, 0, 0]);
                 setForce(p, o.jumpForceObj, -Math.cos(o.platformerAngle) * o.jumpForce * 2000, -Math.sin(o.platformerAngle) * o.jumpForce, 0, 0, o.jumpFriction, 0);
                 o.jumpCooldown = o.maxJumpCooldown;
+                o.midairStoredJump = false;
+                o.justJumped = true;
             }
         } else {
             o.canJump = false;
@@ -1400,9 +1425,8 @@ const effectMap = [
             p.pos.x = p.pos.x * 0.8 + 0.2 * o.interpolatePlayerData.nextX;
             p.pos.y = p.pos.y * 0.8 + 0.2 * o.interpolatePlayerData.nextY;
         } else {
-            let [topLeftX, topLeftY] = generateTopLeftCoordinates(o);
-            let middleX = topLeftX + o.dimensions.x / 2;
-            let middleY = topLeftY + o.dimensions.y / 2;
+            let middleX = o.topLeft.x + o.dimensions.x / 2;
+            let middleY = o.topLeft.y + o.dimensions.y / 2;
             // in order to snap correctly, rotate both the p and the o the negative snapAngle relative to the o's center
             // this means that the player will be relatively correct to the obs and the obs will be axis-aligned
             let prt = {
@@ -1427,11 +1451,11 @@ const effectMap = [
             p.pos.y = Math.sin(prt.angle) * prt.distance + middleY;
 
             // checking if the original point was outside of the snapgrid as a result of rotation. If so, apply translations to make it right
-            // if(p.pos.x < topLeftX - p.speed || p.pos.x > topLeftX + o.dimensions.x + p.speed){
+            // if(p.pos.x < o.topLeft.x - p.speed || p.pos.x > o.topLeft.x + o.dimensions.x + p.speed){
             //     p.pos.x += Math.sign(p.xv) * o.snapDistanceX*0.6;
             // }
 
-            // if(p.pos.y < topLeftY - p.speed || p.pos.y > topLeftY + o.dimensions.y + p.speed){
+            // if(p.pos.y < o.topLeft.y - p.speed || p.pos.y > o.topLeft.y + o.dimensions.y + p.speed){
             //     p.pos.y += Math.sign(p.yv) * o.snapDistanceY*0.6;
             // }
         }
@@ -1600,7 +1624,7 @@ const effectMap = [
         p.grapple = o.changeGrappleStateTo;
         p.grappleRange = o.grappleRange;
         p.grappleForce = o.grappleForce;
-        p.grappleFric = Math.log(o.grappleFric) / 16.66;
+        p.grappleFric = o.grappleFric;
     },
     /*changeDeathTimer*/
     (p, res, o) => {
@@ -1610,7 +1634,7 @@ const effectMap = [
             const u8 = new Uint8Array(buf);
             const f32 = new Float32Array(buf);
             u8[0] = 13;
-            f32[1] = -Infinity;
+            f32[1] = -1;// -1 = disable
             send(buf);
         }
 
@@ -1983,8 +2007,7 @@ const renderEffectMap = [
             ctx.save();
             ctx.clip();
 
-            const [topLeftX, topLeftY] = generateTopLeftCoordinates(o);
-            ctx.drawImage(window.starImg, topLeftX, topLeftY, o.dimensions.x, o.dimensions.y);
+            ctx.drawImage(window.starImg, o.topLeft.x, o.topLeft.y, o.dimensions.x, o.dimensions.y);
 
             ctx.restore();
         }
@@ -1998,8 +2021,7 @@ const renderEffectMap = [
             ctx.save();
             ctx.clip();
 
-            const [topLeftX, topLeftY] = generateTopLeftCoordinates(o);
-            ctx.drawImage(o.img, topLeftX, topLeftY, o.dimensions.x, o.dimensions.y);
+            ctx.drawImage(o.img, o.topLeft.x, o.topLeft.y, o.dimensions.x, o.dimensions.y);
 
             ctx.restore();
         }
@@ -2031,8 +2053,8 @@ const renderEffectMap = [
         }
         if(o.coinAmount !== 1){
             ctx.cleanUpFunction = () => {
-                let [middleX, middleY] = generateTopLeftCoordinates(o);
-                middleX += o.dimensions.x / 2; middleY += o.dimensions.y / 2;
+                let middleX = o.topLeft.x + o.dimensions.x/2;
+                let middleY = o.topLeft.y + o.dimensions.y/2; 
 
                 ctx.fillStyle = window.colors.tile;//'#313131';
                 ctx.font = `${Math.min(60, o.dimensions.x/4, o.dimensions.y/4)}px Inter`;
@@ -2053,8 +2075,8 @@ const renderEffectMap = [
         ctx.cleanUpFunction = () => {
             ctx.fillStyle = o.coinDoorColor;
 
-            let [middleX, middleY] = generateTopLeftCoordinates(o);
-            middleX += o.dimensions.x / 2; middleY += o.dimensions.y / 2;
+            let middleX = o.topLeft.x + o.dimensions.x/2;
+            let middleY = o.topLeft.y + o.dimensions.y/2; 
 
             ctx.beginPath();
             ctx.roundRect(middleX-o.dimensions.x/4, middleY-o.dimensions.y/4, o.dimensions.x/2, o.dimensions.y/2, Math.min(o.dimensions.x,o.dimensions.y)/20);
@@ -2127,11 +2149,10 @@ const renderEffectMap = [
         ctx.cleanUpFunction = () => {
             ctx.save();
             ctx.clip();
-            let [topLeftX, topLeftY] = generateTopLeftCoordinates(o);
 
             ctx.globalAlpha = 1;
-            for(let x = topLeftX + 50; x <= topLeftX + o.dimensions.x + 50; x += 100){
-                for(let y = topLeftY + 50; y <= topLeftY + o.dimensions.y + 50; y += 100){
+            for(let x = o.topLeft.x + 50; x <= o.topLeft.x + o.dimensions.x + 50; x += 100){
+                for(let y = o.topLeft.y + 50; y <= o.topLeft.y + o.dimensions.y + 50; y += 100){
                     ctx.translate(x,y);
                     ctx.rotate(o.conveyorAngle+Math.PI/2);
                     ctx.drawImage(window.arrowImg, -50, -50, 100, 100);
@@ -2143,7 +2164,7 @@ const renderEffectMap = [
             ctx.restore();
             // ctx.beginPath();
             // ctx.fillStyle = 'red';
-            // ctx.arc(topLeftX, topLeftY, 30, 0, Math.PI * 2);
+            // ctx.arc(o.topLeft.x, o.topLeft.y, 30, 0, Math.PI * 2);
             // ctx.fill();
             // ctx.closePath();
         }
@@ -2155,14 +2176,13 @@ const renderEffectMap = [
         ctx.cleanUpFunction = () => {
             ctx.save();
             ctx.clip();
-            let [topLeftX, topLeftY] = generateTopLeftCoordinates(o);
 
             const offsetX = (window.frames*1000/60 * o.platformerForce * Math.cos(o.platformerAngle) / 10) % 100 - 100;
             const offsetY = (window.frames*1000/60 * o.platformerForce * Math.sin(o.platformerAngle) / 10) % 100 - 100;
 
             ctx.globalAlpha = 1;
-            for(let x = topLeftX + offsetX + 50; x <= topLeftX + o.dimensions.x + 50; x += 100){
-                for(let y = topLeftY + offsetY + 50; y <= topLeftY + o.dimensions.y + 50; y += 100){
+            for(let x = o.topLeft.x + offsetX + 50; x <= o.topLeft.x + o.dimensions.x + 50; x += 100){
+                for(let y = o.topLeft.y + offsetY + 50; y <= o.topLeft.y + o.dimensions.y + 50; y += 100){
                     ctx.translate(x,y);
                     ctx.rotate(o.platformerAngle+Math.PI/2);
                     ctx.drawImage(window.arrowImg, -50, -50, 100, 100);
@@ -2207,8 +2227,7 @@ const renderEffectMap = [
             ctx.lineWidth = 3;
             ctx.save();
 
-            let [topLeftX, topLeftY] = generateTopLeftCoordinates(o);
-            ctx.translate(topLeftX + o.dimensions.x / 2, topLeftY + o.dimensions.y / 2);
+            ctx.translate(o.topLeft.x + o.dimensions.x / 2, o.topLeft.y + o.dimensions.y / 2);
 
             ctx.clip();
 
@@ -2251,8 +2270,8 @@ const renderEffectMap = [
             ctx.lineWidth = 4;
             ctx.globalAlpha = 0.17;
 
-            let [middleX, middleY] = generateTopLeftCoordinates(o);
-            middleX += o.dimensions.x / 2; middleY += o.dimensions.y / 2;
+            let middleX = o.topLeft.x + o.dimensions.x/2;
+            let middleY = o.topLeft.y + o.dimensions.y/2; 
             ctx.translate(middleX, middleY);
 
             o.snapRotateMovementExpansion = {
@@ -2308,8 +2327,8 @@ const renderEffectMap = [
     },
     /*timeTrap*/
     (o) => {
-        let [middleX, middleY] = generateTopLeftCoordinates(o);
-        middleX += o.dimensions.x / 2; middleY += o.dimensions.y/2;
+        let middleX = o.topLeft.x + o.dimensions.x/2;
+        let middleY = o.topLeft.y + o.dimensions.y/2; 
 
         let grd = ctx.createRadialGradient(middleX, middleY, 0, middleX, middleY, Math.min(100, (o.dimensions.x + o.dimensions.y)/3));
 
@@ -2427,9 +2446,8 @@ const renderEffectMap = [
             return;
         }
 
-        let [middleX, middleY] = generateTopLeftCoordinates(o);
-        middleX += o.dimensions.x / 2;
-        middleY += o.dimensions.y / 2;
+        let middleX = o.topLeft.x + o.dimensions.x/2;
+        let middleY = o.topLeft.y + o.dimensions.y/2; 
         const maxDimension = Math.max(o.dimensions.x, o.dimensions.y);
 
         ctx.translate(middleX, middleY);
@@ -2452,12 +2470,10 @@ const renderEffectMap = [
         ctx.fillStyle = blendColor(difficultyImageColors[Math.floor(o.difficulty)],difficultyImageColors[Math.min(8,Math.ceil(o.difficulty))],t);
 
         ctx.cleanUpFunction = () => {
-            let [topX, topY] = generateTopLeftCoordinates(o);
-
             if(o.dimensions.x > o.dimensions.y){
-                ctx.translate(o.dimensions.x - o.dimensions.y + topX, topY);
+                ctx.translate(o.dimensions.x - o.dimensions.y + o.topLeft.x, o.topLeft.y);
             } else {
-                ctx.translate(topX, o.dimensions.y - o.dimensions.x + topY);
+                ctx.translate(o.topLeft.x, o.dimensions.y - o.dimensions.x + o.topLeft.y);
             }
 
             ctx.lineCap = 'round';
@@ -2470,9 +2486,9 @@ const renderEffectMap = [
             ctx.globalAlpha = 1;
 
             if(o.dimensions.x > o.dimensions.y){
-                ctx.translate(-(o.dimensions.x - o.dimensions.y + topX), -topY);
+                ctx.translate(-(o.dimensions.x - o.dimensions.y + o.topLeft.x), -o.topLeft.y);
             } else {
-                ctx.translate(-topX, -(o.dimensions.y - o.dimensions.x + topY));
+                ctx.translate(-o.topLeft.x, -(o.dimensions.y - o.dimensions.x + o.topLeft.y));
             }
 
             ctx.font = `${o.dimensions.x / 3.5}px Inter`;
@@ -2481,8 +2497,8 @@ const renderEffectMap = [
             ctx.textBaseline = 'middle';
             ctx.fillText(
                 o.mapName.toUpperCase().replace('O','o'),
-                topX + o.dimensions.x / 2,
-                topY - o.dimensions.y / 4
+                o.topLeft.x + o.dimensions.x / 2,
+                o.topLeft.y - o.dimensions.y / 4
             );
 
             // // line marking - scrapped
@@ -2514,14 +2530,13 @@ const renderEffectMap = [
             ctx.strokeStyle = 'white';
             ctx.lineWidth = 3;
             ctx.globalAlpha = 0.25;
-            let [topX, topY] = generateTopLeftCoordinates(o);
             ctx.beginPath();
-            ctx.lineTo(topX, topY);
-            ctx.lineTo(topX + o.dimensions.x, topY + o.dimensions.y);
+            ctx.lineTo(o.topLeft.x, o.topLeft.y);
+            ctx.lineTo(o.topLeft.x + o.dimensions.x, o.topLeft.y + o.dimensions.y);
             ctx.stroke();
             ctx.beginPath();
-            ctx.lineTo(topX + o.dimensions.x, topY);
-            ctx.lineTo(topX, topY + o.dimensions.y);
+            ctx.lineTo(o.topLeft.x + o.dimensions.x, o.topLeft.y);
+            ctx.lineTo(o.topLeft.x, o.topLeft.y + o.dimensions.y);
             ctx.stroke();
             ctx.globalAlpha = 1;
             ctx.lineWidth = 3;
@@ -2551,8 +2566,8 @@ const renderEffectMap = [
     },
     /*changeGrapple*/
     (o) => {
-        let [middleX, middleY] = generateTopLeftCoordinates(o);
-        middleX += o.dimensions.x / 2; middleY += o.dimensions.y/2;
+        let middleX = o.topLeft.x + o.dimensions.x/2;
+        let middleY = o.topLeft.y + o.dimensions.y/2; 
 
         let grd = ctx.createRadialGradient(middleX, middleY, 0, middleX, middleY, Math.sqrt(o.dimensions.x**2 + o.dimensions.y**2)/2);
 
@@ -2606,8 +2621,8 @@ const renderEffectMap = [
 
         ctx.cleanUpFunction = () => {
             ctx.globalAlpha = 1;
-            let [middleX, middleY] = generateTopLeftCoordinates(o);
-            middleX += o.dimensions.x / 2; middleY += o.dimensions.y/2;
+            let middleX = o.topLeft.x + o.dimensions.x/2;
+            let middleY = o.topLeft.y + o.dimensions.y/2; 
 
             let minDimension = Math.min(o.dimensions.x, o.dimensions.y);
 
@@ -2859,7 +2874,6 @@ window.createPlayer = () => {
     player.lastTouchingNormalIndexes = [];
     player.renderRadius = player.lastAliveRadius = player.sat.r;
     player.xv = player.yv = player.xa = player.ya = 0;
-    player.xf = player.yf = 0;
     player.speed = player.baseSpeed = 7.167;
     player.dead = false;
     player.onSafe = false;

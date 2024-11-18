@@ -84,8 +84,8 @@ uview[0] = 4;// type 4 - player x and y
 const fview = new Float32Array(buf);
 
 const buf2 = new ArrayBuffer(8);
-const u2 = new Uint8Array(buf);
-const f2 = new Float32Array(buf);
+const u2 = new Uint8Array(buf2);
+const f2 = new Float32Array(buf2);
 
 let lastShipAngle = Infinity;
 let lastDead = false;
@@ -116,7 +116,7 @@ function sendUpdatePack(){
     if(player.deathTimer === true){
         u2[0] = 13;
         f2[1] = player.deathTime;
-        send(buf);
+        send(buf2);
     }
 
     if(player.dead !== lastDead){
@@ -124,6 +124,6 @@ function sendUpdatePack(){
         u2[0] = 14;
         // float is wasteful but we want to give server space to put id
         f2[1] = player.dead === true ? 1 : 0;
-        send(buf);
+        send(buf2);
     }
 }

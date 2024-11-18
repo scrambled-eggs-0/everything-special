@@ -55,24 +55,25 @@ global.app = uWS.App().ws('/*', {
     },
     message: (ws, data) => {
         const decoded = new Uint8Array(data);
-        if(ws.me.mapName === '' && decoded[0] !== 0 && decoded[0] !== 11) return;
+        if((ws.me.mapName === '' && decoded[0] !== 0 && decoded[0] !== 11) || decoded[0] >= messageMap.length) return;
         if(messageMap[decoded[0]] !== undefined) messageMap[decoded[0]](decoded, ws.me);
     },
     close: (ws, code, message) => {
         ws.closed = true;
         if(ws.me.mapName !== '') {
-            global.maps[ws.me.mapName].removePlayer(ws.me.player);
-            // global.maps[ws.me.mapName].removeClient(ws.me); // we don't have to unsub, ws already closed
+            removeFromMap(ws.me, false);
+            // global.maps[ws.me.mapName].removePlayer(ws.me.player);
+            // // global.maps[ws.me.mapName].removeClient(ws.me); // we don't have to unsub, ws already closed
 
-            // send to all other clients removePlayer
-            const buf = new ArrayBuffer(4);
-            const u8 = new Uint8Array(buf);
-            const u16 = new Uint16Array(buf);
+            // // send to all other clients removePlayer
+            // const buf = new ArrayBuffer(4);
+            // const u8 = new Uint8Array(buf);
+            // const u16 = new Uint16Array(buf);
 
-            u8[0] = 6;// message type 6 - remove player
-            u16[1] = ws.me.player.id;
+            // u8[0] = 6;// message type 6 - remove player
+            // u16[1] = ws.me.player.id;
 
-            global.maps[ws.me.mapName].broadcast(buf);
+            // global.maps[ws.me.mapName].broadcast(buf);
         }
 
         clients[ws.clientArrayIndex] = undefined;
@@ -387,13 +388,15 @@ const messageMap = [
     },
     // 13 - change death timer 
     (data, me) => {
-        if(data.byteLength < 8/*can be 8 or 12*/) return;
+        if(data.byteLength !== 8 && data.byteLength !== 12) return;
         const f32 = new Float32Array(data.buffer);
-        if(f32[1] === -Infinity) {me.player.deathTimer = false; me.player.deathTime = Infinity;} // -Inf = disable
+        if(f32[1] === -1) {me.player.deathTimer = false; me.player.deathTime = Infinity;} // -1 = disable
         else {me.player.deathTimer = true; me.player.deathTime = f32[1];}
         const u16 = new Uint16Array(data.buffer);
         u16[1] = me.player.id;
         global.maps[me.mapName].broadcast(data);
+
+        console.log('changeDeathTimer', f32[1]);
     },
     // 14 - change dead
     (data, me) => {
@@ -424,7 +427,10 @@ function changeMap(me, newMapName='winroom'){
     // 1. remove from old map .1
     if(me.mapName !== '') removeFromMap(me);
 
-    // 2. add to new map (winroom) .2
+    // 2. reset powerups .2
+    me.player.reset();
+
+    // 3. add to new map (winroom) .3
     me.mapName = newMapName;
     addToMap(me, newMapName);
 }

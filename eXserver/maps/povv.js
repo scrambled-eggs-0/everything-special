@@ -1271,7 +1271,7 @@
                 "w": 200,
                 "h": 575,
                 "type": "snap",
-                "snapDistance": 100,
+                "snapDistance": 50,
                 "snapWait": 0.2,
                 "snapX": true,
                 "snapY": false,
@@ -2194,7 +2194,7 @@
             {
                 "x": 2050,
                 "y": 8050,
-                "w": 2500,
+                "w": 2600,
                 "h": 400,
                 "type": "snap",
                 "snapDistance": 100,
@@ -2366,10 +2366,11 @@
                 "inView": false
             },
             {
-                "x": 3700,
-                "y": 3300,
-                "w": 2600,
-                "h": 400,
+                // "x": 3700,
+                // "y": 3300,
+                // "w": 2600,
+                // "h": 400,
+                x: 3300,y:3300,w:6600,h:6600,
                 "type": "vinette",
                 "ir": 0,
                 "or": 0.3 * 0.3,
@@ -3499,7 +3500,7 @@
                 "h": 500,
                 "type": "timetrap",
                 "time": 0,
-                "maxTime": 6,
+                "maxTime": 9,
                 "cdmult": 3,
                 "trapType": "death",
                 "inView": false
@@ -3654,30 +3655,6 @@
                     "y": 4200
                 },
                 "direction": "down",
-                "inView": false
-            },
-            {
-                "x": 4500,
-                "y": 1500,
-                "w": 500,
-                "h": 500,
-                "type": "switchnormal",
-                "onTime": 100,
-                "offTime": 100,
-                "state": false,
-                "timer": 42.00833333328029,
-                "inView": false
-            },
-            {
-                "x": 5000,
-                "y": 1500,
-                "w": 500,
-                "h": 500,
-                "type": "switchnormal",
-                "onTime": 100,
-                "offTime": 100,
-                "state": true,
-                "timer": 42.00833333328029,
                 "inView": false
             },
             {
@@ -3960,17 +3937,17 @@
             {
                 "x": 6050,
                 "y": 825,
-                "w": 675,
+                "w": 650,
                 "h": 250,
                 "type": "size",
                 "size": 18,
                 "inView": false
             },
             {
-                "x": 6425,
+                "x": 6400,
                 "y": 800,
-                "w": 250,
-                "h": 275,
+                "w": 300,
+                "h": 300,
                 "type": "snap",
                 "snapDistance": 25,
                 "snapWait": 0.35,
@@ -9578,22 +9555,22 @@
                 "regenTime": 3,
                 "inView": false
             },
-            {
-                "x": 3925,
-                "y": 5800,
-                "w": 2200,
-                "h": 900,
-                "type": "vinette",
-                "ir": 0.25,
-                "or": 0.65,
-                "o": 0.85,
-                "vc": {
-                    "r": 0,
-                    "g": 0,
-                    "b": 0
-                },
-                "inView": false
-            },
+            // {
+            //     "x": 3925,
+            //     "y": 5800,
+            //     "w": 2200,
+            //     "h": 900,
+            //     "type": "vinette",
+            //     "ir": 0.25,
+            //     "or": 0.65,
+            //     "o": 0.85,
+            //     "vc": {
+            //         "r": 0,
+            //         "g": 0,
+            //         "b": 0
+            //     },
+            //     "inView": false
+            // },
             {
                 "x": 9600,
                 "y": 4100,
@@ -31428,7 +31405,31 @@
                 "volume": 1,
                 "startTime": 0,
                 "inView": false
-            }
+            },
+            {
+                "x": 4500,
+                "y": 1450,
+                "w": 500,
+                "h": 550,
+                "type": "switchnormal",
+                "onTime": 100,
+                "offTime": 100,
+                "state": false,
+                "timer": 42.00833333328029,
+                "inView": false
+            },
+            {
+                "x": 5000,
+                "y": 1450,
+                "w": 500,
+                "h": 550,
+                "type": "switchnormal",
+                "onTime": 100,
+                "offTime": 100,
+                "state": true,
+                "timer": 42.00833333328029,
+                "inView": false
+            },
         ]
         const enemies = [
             {
@@ -35808,13 +35809,13 @@
             {
                 "type": "flashlight",
                 "angle": 3.002403022079388,
-                "flSize": 140,
+                "flSize": 140 * (4/5 + 5/6)/2,
                 "flAngle": 1.5707963267948966,
                 "flashlightDir": 0,
                 "radius": 0.001,
                 "speed": 0,
-                "x": 8903,
-                "y": 2106,
+                "x": 8900,
+                "y": 2100,
                 "renderX": 8903,
                 "renderY": 2106,
                 "xv": 0,
@@ -35830,13 +35831,13 @@
             {
                 "type": "flashlight",
                 "angle": 0.7020289239240158,
-                "flSize": 140,
+                "flSize": 140 * (4/5 + 5/6)/2,
                 "flAngle": 1.5707963267948966,
                 "flashlightDir": 0,
                 "radius": 0.001,
                 "speed": 0,
-                "x": 8906,
-                "y": 2102,
+                "x": 8900,
+                "y": 2100,
                 "renderX": 8906,
                 "renderY": 2102,
                 "xv": 0,
@@ -35851,234 +35852,14 @@
             },
             {
                 "type": "flashlight",
-                "angle": 5.197989584486151,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8908,
-                "y": 2107,
-                "renderX": 8908,
-                "renderY": 2107,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2100,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 0.12390304398051202,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8900,
-                "y": 2105,
-                "renderX": 8900,
-                "renderY": 2105,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2100,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 1.0693518856868112,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8904,
-                "y": 2101,
-                "renderX": 8904,
-                "renderY": 2101,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2100,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 1.6926899562597386,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8908,
-                "y": 2103,
-                "renderX": 8908,
-                "renderY": 2103,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2100,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 2.7375060704148613,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8907,
-                "y": 2105,
-                "renderX": 8907,
-                "renderY": 2105,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2100,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 1.0086557492072066,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8904,
-                "y": 2109,
-                "renderX": 8904,
-                "renderY": 2109,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2100,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 5.27751459922778,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8903,
-                "y": 2107,
-                "renderX": 8903,
-                "renderY": 2107,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2100,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 5.835712918575201,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8904,
-                "y": 2103,
-                "renderX": 8904,
-                "renderY": 2103,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2100,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 3.215471699528272,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8906,
-                "y": 2101,
-                "renderX": 8906,
-                "renderY": 2101,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2100,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 4.364199724019281,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8904,
-                "y": 2104,
-                "renderX": 8904,
-                "renderY": 2104,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2100,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
                 "angle": 0.08159755565273513,
-                "flSize": 140,
+                "flSize": 140 * (4/5 + 5/6)/2,
                 "flAngle": 1.5707963267948966,
                 "flashlightDir": 3.141592653589793,
                 "radius": 0.001,
                 "speed": 0,
-                "x": 9209,
-                "y": 2101,
+                "x": 9200,
+                "y": 2100,
                 "renderX": 9209,
                 "renderY": 2101,
                 "xv": 0,
@@ -36094,235 +35875,15 @@
             {
                 "type": "flashlight",
                 "angle": 4.086849891630726,
-                "flSize": 140,
+                "flSize": 140 * (4/5 + 5/6)/2,
                 "flAngle": 1.5707963267948966,
                 "flashlightDir": 3.141592653589793,
                 "radius": 0.001,
                 "speed": 0,
-                "x": 9203,
-                "y": 2109,
+                "x": 9200,
+                "y": 2100,
                 "renderX": 9203,
                 "renderY": 2109,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2100,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 5.522515399819415,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9206,
-                "y": 2101,
-                "renderX": 9206,
-                "renderY": 2101,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2100,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 4.19916725745027,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9201,
-                "y": 2102,
-                "renderX": 9201,
-                "renderY": 2102,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2100,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 2.6714149166288106,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9207,
-                "y": 2110,
-                "renderX": 9207,
-                "renderY": 2110,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2100,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 5.405951364912455,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9203,
-                "y": 2106,
-                "renderX": 9203,
-                "renderY": 2106,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2100,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 0.5044218444118164,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9202,
-                "y": 2109,
-                "renderX": 9202,
-                "renderY": 2109,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2100,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 3.0409989992093296,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9203,
-                "y": 2107,
-                "renderX": 9203,
-                "renderY": 2107,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2100,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 3.1334864914840765,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9205,
-                "y": 2105,
-                "renderX": 9205,
-                "renderY": 2105,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2100,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 5.24724607101059,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9205,
-                "y": 2101,
-                "renderX": 9205,
-                "renderY": 2101,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2100,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 3.7830838044985784,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9208,
-                "y": 2102,
-                "renderX": 9208,
-                "renderY": 2102,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2100,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 1.5744656007719937,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9204,
-                "y": 2110,
-                "renderX": 9204,
-                "renderY": 2110,
                 "xv": 0,
                 "yv": 0,
                 "bound": {
@@ -36336,13 +35897,13 @@
             {
                 "type": "flashlight",
                 "angle": 4.496876563418181,
-                "flSize": 140,
+                "flSize": 140 * (4/5+5/6)/2,
                 "flAngle": 1.5707963267948966,
                 "flashlightDir": 3.141592653589793,
                 "radius": 0.001,
                 "speed": 0,
                 "x": 9200,
-                "y": 2029,
+                "y": 2025,
                 "renderX": 9200,
                 "renderY": 2029,
                 "xv": 0,
@@ -36357,256 +35918,14 @@
             },
             {
                 "type": "flashlight",
-                "angle": 5.237443212524656,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9209,
-                "y": 2034,
-                "renderX": 9209,
-                "renderY": 2034,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2025,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 2.896250705760589,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9200,
-                "y": 2032,
-                "renderX": 9200,
-                "renderY": 2032,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2025,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 4.630398428166812,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9206,
-                "y": 2030,
-                "renderX": 9206,
-                "renderY": 2030,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2025,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 1.234875632904469,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9200,
-                "y": 2026,
-                "renderX": 9200,
-                "renderY": 2026,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2025,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 4.768794662498131,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9208,
-                "y": 2030,
-                "renderX": 9208,
-                "renderY": 2030,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2025,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 3.522871765312514,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9204,
-                "y": 2032,
-                "renderX": 9204,
-                "renderY": 2032,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2025,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 0.074817362807038,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9205,
-                "y": 2032,
-                "renderX": 9205,
-                "renderY": 2032,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2025,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 1.75560341819688,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9208,
-                "y": 2028,
-                "renderX": 9208,
-                "renderY": 2028,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2025,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 0.38989882744494975,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9210,
-                "y": 2031,
-                "renderX": 9210,
-                "renderY": 2031,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2025,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 4.445150543405082,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9206,
-                "y": 2027,
-                "renderX": 9206,
-                "renderY": 2027,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2025,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 5.4858834445005575,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9206,
-                "y": 2033,
-                "renderX": 9206,
-                "renderY": 2033,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2025,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
                 "angle": 0.8747696498922279,
-                "flSize": 140,
+                "flSize": 140 * (4/5+5/6)/2,
                 "flAngle": 1.5707963267948966,
                 "flashlightDir": 3.141592653589793,
                 "radius": 0.001,
                 "speed": 0,
-                "x": 9203,
-                "y": 2182,
+                "x": 9200,
+                "y": 2175,
                 "renderX": 9203,
                 "renderY": 2182,
                 "xv": 0,
@@ -36621,499 +35940,15 @@
             },
             {
                 "type": "flashlight",
-                "angle": 1.1593243689702517,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9205,
-                "y": 2176,
-                "renderX": 9205,
-                "renderY": 2176,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2175,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 1.6967010338770403,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9206,
-                "y": 2176,
-                "renderX": 9206,
-                "renderY": 2176,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2175,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 0.1409777014499519,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9204,
-                "y": 2183,
-                "renderX": 9204,
-                "renderY": 2183,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2175,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 5.22072604643691,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9203,
-                "y": 2180,
-                "renderX": 9203,
-                "renderY": 2180,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2175,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 1.0082702273537925,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9202,
-                "y": 2185,
-                "renderX": 9202,
-                "renderY": 2185,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2175,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 0.6670121006188982,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9201,
-                "y": 2177,
-                "renderX": 9201,
-                "renderY": 2177,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2175,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 1.5982062094517797,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9206,
-                "y": 2178,
-                "renderX": 9206,
-                "renderY": 2178,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2175,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 5.472365863285677,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9207,
-                "y": 2177,
-                "renderX": 9207,
-                "renderY": 2177,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2175,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 2.919228762189539,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9205,
-                "y": 2180,
-                "renderX": 9205,
-                "renderY": 2180,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2175,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 4.021742345408099,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9209,
-                "y": 2184,
-                "renderX": 9209,
-                "renderY": 2184,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2175,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 6.275667511994608,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 3.141592653589793,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 9207,
-                "y": 2178,
-                "renderX": 9207,
-                "renderY": 2178,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 9200,
-                    "y": 2175,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
                 "angle": 0.7079220268419916,
-                "flSize": 140,
+                "flSize": 140 * (4/5+5/6)/2,
                 "flAngle": 1.5707963267948966,
                 "flashlightDir": 0,
                 "radius": 0.001,
                 "speed": 0,
                 "x": 8900,
-                "y": 2031,
+                "y": 2025,
                 "renderX": 8900,
-                "renderY": 2031,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2025,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 3.3696327193479076,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8908,
-                "y": 2035,
-                "renderX": 8908,
-                "renderY": 2035,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2025,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 0.2998266500940187,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8905,
-                "y": 2029,
-                "renderX": 8905,
-                "renderY": 2029,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2025,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 4.704152010579624,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8905,
-                "y": 2034,
-                "renderX": 8905,
-                "renderY": 2034,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2025,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 0.43137996097626397,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8903,
-                "y": 2026,
-                "renderX": 8903,
-                "renderY": 2026,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2025,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 3.922053269144929,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8908,
-                "y": 2032,
-                "renderX": 8908,
-                "renderY": 2032,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2025,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 5.618670363746857,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8901,
-                "y": 2027,
-                "renderX": 8901,
-                "renderY": 2027,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2025,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 4.819325513166954,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8903,
-                "y": 2027,
-                "renderX": 8903,
-                "renderY": 2027,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2025,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 3.2325371330495773,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8901,
-                "y": 2030,
-                "renderX": 8901,
-                "renderY": 2030,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2025,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 4.379877304313867,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8900,
-                "y": 2027,
-                "renderX": 8900,
-                "renderY": 2027,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2025,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 0.7222108472307656,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8904,
-                "y": 2027,
-                "renderX": 8904,
-                "renderY": 2027,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2025,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 3.3324773621686914,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8910,
-                "y": 2031,
-                "renderX": 8910,
                 "renderY": 2031,
                 "xv": 0,
                 "yv": 0,
@@ -37128,257 +35963,15 @@
             {
                 "type": "flashlight",
                 "angle": 6.238346449858291,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8908,
-                "y": 2175,
-                "renderX": 8908,
-                "renderY": 2175,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2175,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 3.4092119357576407,
-                "flSize": 140,
+                "flSize": 140 * (4/5+5/6)/2,
                 "flAngle": 1.5707963267948966,
                 "flashlightDir": 0,
                 "radius": 0.001,
                 "speed": 0,
                 "x": 8900,
-                "y": 2184,
-                "renderX": 8900,
-                "renderY": 2184,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2175,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 0.414722394667036,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8903,
-                "y": 2178,
-                "renderX": 8903,
-                "renderY": 2178,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2175,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 2.620899972919929,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8903,
-                "y": 2176,
-                "renderX": 8903,
-                "renderY": 2176,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2175,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 1.475430456754461,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8901,
                 "y": 2175,
-                "renderX": 8901,
-                "renderY": 2175,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2175,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 3.202607548582427,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8907,
-                "y": 2180,
-                "renderX": 8907,
-                "renderY": 2180,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2175,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 5.7391641627828704,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8904,
-                "y": 2177,
-                "renderX": 8904,
-                "renderY": 2177,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2175,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 0.3609624810415912,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8909,
-                "y": 2177,
-                "renderX": 8909,
-                "renderY": 2177,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2175,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 1.9818835824737677,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8904,
-                "y": 2184,
-                "renderX": 8904,
-                "renderY": 2184,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2175,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 1.3608075549341838,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8904,
-                "y": 2177,
-                "renderX": 8904,
-                "renderY": 2177,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2175,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 1.805208159805508,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8905,
-                "y": 2182,
-                "renderX": 8905,
-                "renderY": 2182,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 8900,
-                    "y": 2175,
-                    "w": 10,
-                    "h": 10
-                },
-                "inView": false
-            },
-            {
-                "type": "flashlight",
-                "angle": 5.384416006361703,
-                "flSize": 140,
-                "flAngle": 1.5707963267948966,
-                "flashlightDir": 0,
-                "radius": 0.001,
-                "speed": 0,
-                "x": 8908,
-                "y": 2181,
                 "renderX": 8908,
-                "renderY": 2181,
+                "renderY": 2175,
                 "xv": 0,
                 "yv": 0,
                 "bound": {
@@ -38568,9 +37161,9 @@
                 "renderAbove": false
             },
             {
-                "x": 2850,
+                "x": 2900,
                 "y": 7100,
-                "w": 1950,
+                "w": 1850,
                 "h": 500,
                 "renderAbove": false
             },
@@ -39062,8 +37655,59 @@
                 "story": false
             },
         ]
+        window.linkDoors = {};
+        window.linkButtons = {};
+        window.morphsTriggered = {};
     
-        const str = convertOldExMap(obs, enemies, safes, texts, counter, 'povv');
+        const str = `C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
+            // render links
+            ctx.strokeStyle = '#969696';
+            ctx.setLineDash([50, 70]);
+            ctx.lineDashOffset = -window.frames / 60 * 100 * 2;
+            ctx.lineWidth = 10;
+            for(let id in window.linkButtons){
+                if(window.linkDoors[id] === undefined) continue;
+                const btnPos = {x: window.linkButtons[id].pos.x + window.linkButtons[id].dimensions.x/2, y: window.linkButtons[id].pos.y + window.linkButtons[id].dimensions.y/2};
+                const doorPos = {x: window.linkDoors[id].pos.x + window.linkDoors[id].dimensions.x/2, y: window.linkDoors[id].pos.y + window.linkDoors[id].dimensions.y/2};
+                
+                ctx.globalAlpha = window.morphsTriggered[id] === true ? 0.3 : 0.8;
+                
+                ctx.beginPath();
+                ctx.lineTo(btnPos.x, btnPos.y);
+                ctx.lineTo(doorPos.x, doorPos.y);
+                ctx.stroke();
+                ctx.closePath();
+            }
+            ctx.globalAlpha = 1;
+            ctx.setLineDash([]);
+        }});\n` + convertOldExMap(obs, enemies, safes, texts, counter, 'povv');
+
+        C(1,[],[15],{
+            x:0,y:19100,w:800,h:100,
+            axisSpeedMultX: 1.5,
+            axisSpeedMultY: 0
+        })
+
+        C(1,[],[18],{
+            x: 16400, y: 7400,
+            w: 200, h: 200,
+            sizeChangePermanent: false,
+            sizeMult: 0.75
+        })
+
+        // if(window.isServer !== true){
+        //     C(1,[],[5],{
+        //         x: 9000, y: 3000, h: 0, w: 2000,
+        //         sf:(o)=>{
+        //             if(window.input.up === true){
+        //                 o.pos.x = 9000;
+        //             } else {
+        //                 o.pos.x = -1E9;
+        //             }
+        //         }
+        //     })
+        // }
+        
         
         eval(str);
     
@@ -39077,26 +37721,122 @@
 
         // for platformer
 
-        for(let i = 0; i < obstacles.length; i++){
-            if(obstacles[i].boundPlayer === undefined)continue;
+        for(let i = 0; i < window.obstacles.length; i++){
+            if(window.obstacles[i].boundPlayer === undefined)continue;
 
-            const oldEffect = obstacles[i].effect[0];
-            obstacles[i].effect[0] = (p, res, o, id) => {
+            const oldEffect = window.obstacles[i].effect[0];
+            window.obstacles[i].effect[0] = (p, res, o, id) => {
                 oldEffect(p, res, o, id);
                 p.touchingNormalIndexes.push(id);
             }
-            
+            if(window.obstacles[i].cr !== undefined) continue;
+            window.obstacles[i].cr = (o) => {
+                // base render
+                ctx.lineWidth = 4; 
+                ctx.beginPath();
+                o.renderShape(o);
+                o.renderEffect[0](o);
+                ctx.fill();
+                ctx.stroke();
+                ctx.closePath();
+                ctx.globalAlpha = 1;
+
+                // spooky
+                if(window.colors.vignette.outer.size < 0.4){
+                    let middleX = o.topLeft.x + o.dimensions.x/2;
+                    let middleY = o.topLeft.y + o.dimensions.y/2;
+
+                    ctx.globalAlpha = 1 - window.colors.vignette.outer.size / 0.4;
+                    const grd = ctx.createRadialGradient(middleX, middleY, 0, middleX, middleY, Math.sqrt(o.dimensions.x**2+o.dimensions.y**2));
+                    grd.addColorStop(0, "rgba(230, 230, 21, 0.8)");
+                    grd.addColorStop(1, "rgba(230, 230, 21, 0.0)");
+                    ctx.fillStyle = grd;
+
+                    ctx.beginPath();
+                    o.renderShape(o);
+
+                    ctx.fill();
+                    ctx.closePath();
+                    ctx.globalAlpha = 1;
+
+                    window.colors.vignette.holeFunctions.push(()=>{
+                        ctx.moveTo(o.pos.x, o.pos.y);
+                        o.renderShape(o);
+                    })
+                }         
+            }
+        }
+
+        C(0,[],[26],{
+            x: spawnPosition.x,
+            y: spawnPosition.y,
+            r: 50,
+            musicPath: 'https://www.youtube.com/watch?v=q9LqCb8WnSw'
+        });
+
+        if(window.isServer !== true){
+            const ids = [1809, 1793, 1806, 1791];
+            for(let i = 0; i < ids.length; i++){
+                const id = ids[i];
+                obstacles[id].pivotX = obstacles[id].pos.x = -1E9;
+                obstacles[id].pos.y = obstacles[id].pivotY = 0;
+            }
+            // 1809 1793 1806 1791
+            // window.obstacles[1924].pivotX = window.obstacles[1940].pivotX = window.obstacles[1922].pivotX = window.obstacles[1937].pivotX = -1E9;
+            // window.obstacles[1924].pivotY = window.obstacles[1940].pivotY = window.obstacles[1922].pivotY = window.obstacles[1937].pivotY = 0;
+            // window.obstacles[1924].pos.x = window.obstacles[1940].pos.x = window.obstacles[1922].pos.x = window.obstacles[1937].pos.x = -1E9;
+            // window.obstacles[1924].pos.y = window.obstacles[1940].pos.y = window.obstacles[1922].pos.y = window.obstacles[1937].pos.y = 0;
+
+            // invincibility powerup
+            // safe rendering on the player
+            {
+                const maxInv = 30;// half a second
+                let inv = maxInv;
+                C(0,[],[11],{x:-1E9,y:0,r:100,sf:(o,p)=>{
+                    if(p.pos.x > 800 || p.pos.y < 7400 || p.pos.y > 11850){
+                        inv = maxInv;
+                        o.pos.x = -1E9;
+                        return;
+                    }
+
+                    if(p.pos.y < 8200){
+                        inv = maxInv;
+                    }
+
+                    if(inv <= 0){
+                        o.pos.x = -1E9;
+                        return;
+                    }
+
+                    if(p.dead === true){
+                        inv--;
+                    }
+
+                    o.sat.r = p.sat.r + inv; 
+                    o.pos.x = p.pos.x;
+                    o.pos.y = p.pos.y;
+                }})
+            } 
+
+            {
+                let scale = 1; let colliding = false; let lastColliding = false;
+                // custom obs that slowly zooms out, resets on death
+                C(1,[],[3],{x:6600,y:6600,w:13400,h:13400,cr:()=>{},ef:()=>{
+                    if(scale <= 0.15) scale = 0.15;
+                    else scale *= 0.9995;
+                    window.changeCameraScale(scale);
+                    colliding = true;
+                },sf:()=>{
+                    if(lastColliding === true && colliding === false){
+                        scale = 1;
+                        window.changeCameraScale(scale);
+                    }
+                    lastColliding = colliding;
+                    colliding = false;
+                }})
+            }
         }
     }
-
-    C(0,[],[26],{
-        x: spawnPosition.x,
-        y: spawnPosition.y,
-        r: 50,
-        musicPath: 'https://www.youtube.com/watch?v=q9LqCb8WnSw'
-    });
-
-    
 })();
 
 // {

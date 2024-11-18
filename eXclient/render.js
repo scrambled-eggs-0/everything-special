@@ -122,7 +122,7 @@ const height = 900;
 //     return canv;
 // }
 
-let opaqIndex, len, lastPlayerX, lastPlayerY, lastPlayerRadius, diagonalStartOffset, diagonalDist, overRenderTiles = false, lastGA, j = false, lastNLDX = 0, lastNLDY = 0;
+let opaqIndex, len, lastPlayerX, lastPlayerY, lastPlayerRadius, diagonalStartOffset, diagonalDist, overRenderTiles = false, lastGA, j = false, lastNLDX = 0, lastNLDY = 0, cullingMinX=0, cullingMaxX=0, cullingMinY=0, cullingMaxY=0, canvSum=0;
 window.render = (os=window.obstacles, cols=window.colors, players=window.players) => {
     document.body.style.backgroundColor = cols.tile;
 
@@ -139,16 +139,9 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
             ctx.translate(canvas.w/2, canvas.h/2);
             ctx.rotate(-Math.PI/2-me.shipAngle);
             ctx.translate(-canvas.w/2, -canvas.h/2);
-            overRenderTiles = true;
+            overRenderTiles = true;            
         }
     }
-    
-    ctx.fillStyle = cols.tile;
-    ctx.fillRect(0,0,canvas.w, canvas.h);
-
-    ctx.fillStyle = cols.background;
-    // add 1 to all dimensions so that we don't get gap artifacts on the edge of the arena
-    ctx.fillRect(-(camera.x-canvas.w/2)+1, -(camera.y-canvas.h/2)+1, window.mapDimensions.x-2, window.mapDimensions.y-2);
 
     // tile background
     // ctx.strokeStyle = cols.tile;
@@ -161,11 +154,27 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
     // const img = tileImg;
     //ctx.translate(pos.x , pos.y + (gridOffset.y % 50));
     // ctx.drawImage(img, (canvas.w/2-camera.x)%tileSize, (canvas.h/2-camera.y)%tileSize);
-    ctx.globalAlpha = 0.75;
-    ctx.lineWidth = 4.8;
-    ctx.strokeStyle = cols.tile;
+    
 
     if(overRenderTiles === true){
+        ctx.fillStyle = cols.tile;
+
+        canvSum = (canvas.w + canvas.h)/2;
+        ctx.fillRect(-canvSum,-canvSum,4*canvSum, 4*canvSum);
+
+        cullingMinX = camera.x-canvSum;
+        cullingMaxX = camera.x+canvSum;
+        cullingMinY = camera.y-canvSum;
+        cullingMaxY = camera.y+canvSum;
+
+        ctx.fillStyle = cols.background;
+        // add 1 to all dimensions so that we don't get gap artifacts on the edge of the arena
+        ctx.fillRect(-(camera.x-canvas.w/2)+1, -(camera.y-canvas.h/2)+1, window.mapDimensions.x-2, window.mapDimensions.y-2);
+
+        ctx.globalAlpha = 0.75;
+        ctx.lineWidth = 4.8;
+        ctx.strokeStyle = cols.tile;
+
         // accounting for rotation and such
         diagonalDist = Math.sqrt(canvas.w ** 2 + canvas.h ** 2);
         diagonalStartOffset = (diagonalDist/2) % tileSize - tileSize - diagonalDist / 2;
@@ -185,6 +194,22 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
             ctx.closePath();
         }
     } else {
+        ctx.fillStyle = cols.tile;
+        ctx.fillRect(0,0,canvas.w, canvas.h);
+
+        cullingMinX = camera.x-canvas.w/2;
+        cullingMaxX = camera.x+canvas.w/2;
+        cullingMinY = camera.y-canvas.h/2;
+        cullingMaxY = camera.y+canvas.h/2;
+
+        ctx.fillStyle = cols.background;
+        // add 1 to all dimensions so that we don't get gap artifacts on the edge of the arena
+        ctx.fillRect(-(camera.x-canvas.w/2)+1, -(camera.y-canvas.h/2)+1, window.mapDimensions.x-2, window.mapDimensions.y-2);
+
+        ctx.globalAlpha = 0.75;
+        ctx.lineWidth = 4.8;
+        ctx.strokeStyle = cols.tile;
+
         for (let x = (canvas.w/2-camera.x)%tileSize; x < canvas.w + ctx.lineWidth + window.tileSize; x += window.tileSize) {
             ctx.beginPath();
             ctx.moveTo(x, 0);
@@ -216,6 +241,10 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
     // render obstacles
     for(let i = 0; i < os.length; i++){
         if(os[i].cr !== undefined) { os[i].cr(os[i]); continue; }
+
+        // culling
+        if(os[i].topLeft.x > cullingMaxX || os[i].topLeft.x + os[i].dimensions.x < cullingMinX || os[i].topLeft.y > cullingMaxY || os[i].topLeft.y + os[i].dimensions.y < cullingMinY) continue;
+
         len = os[i].effect.length;
         if(len === 1){
             j = 0;
@@ -381,14 +410,13 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
         ctx.fillStyle = 'red';
         ctx.strokeStyle = 'red';
         ctx.lineWidth = 2;
-        for(let i = 0; i < obstacles.length; i++){
+        for(let i = 0; i < os.length; i++){
+            if(os[i].topLeft.x > cullingMaxX || os[i].topLeft.x + os[i].dimensions.x < cullingMinX || os[i].topLeft.y > cullingMaxY || os[i].topLeft.y + os[i].dimensions.y < cullingMinY) continue;
             ctx.beginPath();
             ctx.arc(os[i].pos.x, os[i].pos.y, 10, 0, Math.PI * 2);
             ctx.fill();
             ctx.closePath();
-
-            const [topX, topY] = generateTopLeftCoordinates(os[i]);
-            ctx.strokeRect(topX, topY, os[i].dimensions.x, os[i].dimensions.y);
+            ctx.strokeRect(os[i].topLeft.x, os[i].topLeft.y, os[i].dimensions.x, os[i].dimensions.y);
         }
 
         ctx.fillStyle = 'white';
@@ -448,11 +476,27 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
     ctx.fillStyle = grd;
     ctx.rect(0,0,canvas.w,canvas.h);
     if(v.holeFunctions.length !== 0){
+        if(window.selfId !== undefined){
+            const me = players[window.selfId];
+            if(me.ship === true){
+                ctx.translate(canvas.w/2, canvas.h/2);
+                ctx.rotate(-me.shipAngle-Math.PI/2);
+                ctx.translate(-canvas.w/2, -canvas.h/2);
+            }
+        }
         ctx.translate(canvas.w/2-camera.x, canvas.h/2-camera.y);
         for(let i = 0; i < v.holeFunctions.length; i++){
             v.holeFunctions[i]();
         }
         ctx.translate(camera.x-canvas.w/2, camera.y-canvas.h/2);
+        if(window.selfId !== undefined){
+            const me = players[window.selfId];
+            if(me.ship === true){
+                ctx.translate(canvas.w/2, canvas.h/2);
+                ctx.rotate(me.shipAngle+Math.PI/2);
+                ctx.translate(-canvas.w/2, -canvas.h/2);
+            }
+        }
     }
     ctx.fill('evenodd');
     ctx.closePath();
@@ -486,12 +530,12 @@ function renderTextSpecials(o, cols){
     ctx.translate(o.sat.points[0].x + o.sat.pos.x, o.sat.points[0].y + o.sat.pos.y);
     if(o.rotation !== undefined) ctx.rotate(o.rotation);
     if(ctx.globalAlpha < 0.5) ctx.globalAlpha = 0.5;
-    if(ctx.toFill === true) ctx.fillText(o.text, o.dimensions.x/2 - o.dimensions.wOffset, o.dimensions.y/2 - o.dimensions.hOffset);
-    if(ctx.toStroke === true) ctx.strokeText(o.text, o.dimensions.x/2 - o.dimensions.wOffset, o.dimensions.y/2 - o.dimensions.hOffset);
+    if(ctx.toFill === true) ctx.fillText(o.text, o.dimensions.x/2 - o.wOffset, o.dimensions.y/2 - o.hOffset);
+    if(ctx.toStroke === true) ctx.strokeText(o.text, o.dimensions.x/2 - o.wOffset, o.dimensions.y/2 - o.hOffset);
     else if(ctx.toFill === false) {
         ctx.globalAlpha = 1;
         ctx.fillStyle = cols.tile;
-        ctx.fillText(o.text, o.dimensions.x/2 - o.dimensions.wOffset, o.dimensions.y/2 - o.dimensions.hOffset);
+        ctx.fillText(o.text, o.dimensions.x/2 - o.wOffset, o.dimensions.y/2 - o.hOffset);
     }
     if(o.rotation !== undefined) ctx.rotate(-o.rotation);
     ctx.translate(-o.sat.points[0].x - o.sat.pos.x, -o.sat.points[0].y - o.sat.pos.y);

@@ -94,9 +94,9 @@ async function addToMap(me, mapName){
 const buf4 = new ArrayBuffer(4);
 const u8 = new Uint8Array(buf4);
 const u16 = new Uint16Array(buf4);
-function removeFromMap(me){
+function removeFromMap(me, isConnected=true){
     global.maps[me.mapName].removePlayer(me.player);
-    global.maps[me.mapName].removeClient(me);
+    if(isConnected === true) global.maps[me.mapName].removeClient(me);
 
     if(global.maps[me.mapName].players.length === 0) delete global.maps[me.mapName];
     else {

@@ -47,10 +47,8 @@ initWS();
 
 // first byte encodes the message type
 const messageMap = [
-    // 0 - selfId / all data needed to start game 
-    (data) => {
-        // TODO
-    },
+    // 0 - unused
+    () => {},
     // 1 - reload page (for hot refresh)
     () => {
         location.reload();
@@ -208,6 +206,8 @@ const messageMap = [
         const f32 = new Float32Array(data.buffer);
         if(f32[1] === -Infinity) {window.players[id].deathTimer = false; window.players[id].deathTime = Infinity;}
         else {window.players[id].deathTimer = true; window.players[id].deathTime = f32[1]};
+
+        console.log('recieving change death timer', id, f32[1]);
     },
     // 14 - change dead
     (data, me) => {

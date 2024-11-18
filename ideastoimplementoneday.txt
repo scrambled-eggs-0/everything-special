@@ -28,6 +28,12 @@ button press animation (less alpha) when standing on powerup blocks (namely grap
 
 optimize death message to [type, isDead, ...id bytes for server]
 
+optimize ctx.createRadialGradient and regenerate on init and if(dimensions.x !== o.timeTrapGradientDimensionsX) in cr
+
+when decoupling rendering from simulation (interpolation) make sure to regenerate topLeft and dimensions or have a margin 
+
+invisible maze but you have grapple with 0 force
+
 Advanced music extra file that overrides play, pause, etc. Loads the youtube api behind the scenes (https://www.youtube.com/iframe_api)
 let player = new YT.Player('player', {
     height: '360',

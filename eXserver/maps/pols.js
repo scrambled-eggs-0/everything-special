@@ -26099,23 +26099,24 @@
         //     musicPath: 'https://www.youtube.com/watch?v=zCxn6Rz4dNE'
         // });
 
-        C(1,[],[0],{x:-150,y:3050,w:150,h:300})
-        C(1,[],[0],{x:0,y:2900,w:150,h:200})
-        const o = obstacles.splice(239,1)[0];
+        if(window.isServer !== true){
+            C(1,[],[0],{x:-150,y:3050,w:150,h:300})
+            C(1,[],[0],{x:0,y:2900,w:150,h:200})
+            const o = obstacles.splice(239,1)[0];
 
-        C(1,[0],[11],{type:[1,[0],[11]],x:700,y:3400,w:100,h:400,points:[[350,1700],[950,1700]],speed:150,currentPoint:1.9166666666666665,pointOn:{"x":950,"y":1700},pointTo:{"x":350,"y":1700},xv:-150,yv:1.8369701987210297e-14,inView:false,path:[[700,3400,5],[1900,3400,5]],})
-        C(1,[0],[11],{type:[1,[0],[11]],x:1900,y:3400,w:100,h:400,points:[[950,1700],[350,1700]],speed:150,currentPoint:1.9166666666666665,pointOn:{"x":350,"y":1700},pointTo:{"x":950,"y":1700},xv:150,yv:0,inView:false,path:[[1900,3400,5],[700,3400,5]],})
+            C(1,[0],[11],{type:[1,[0],[11]],x:700,y:3400,w:100,h:400,points:[[350,1700],[950,1700]],speed:150,currentPoint:1.9166666666666665,pointOn:{"x":950,"y":1700},pointTo:{"x":350,"y":1700},xv:-150,yv:1.8369701987210297e-14,inView:false,path:[[700,3400,5],[1900,3400,5]],})
+            C(1,[0],[11],{type:[1,[0],[11]],x:1900,y:3400,w:100,h:400,points:[[950,1700],[350,1700]],speed:150,currentPoint:1.9166666666666665,pointOn:{"x":350,"y":1700},pointTo:{"x":950,"y":1700},xv:150,yv:0,inView:false,path:[[1900,3400,5],[700,3400,5]],})
 
-        let o1 = obstacles.pop();
-        let o2 = obstacles.pop();
+            let o1 = obstacles.pop();
+            let o2 = obstacles.pop();
 
-        obstacles.unshift(o1);
-        obstacles.unshift(o2);
+            obstacles.unshift(o1);
+            obstacles.unshift(o2);
 
-        obstacles.unshift(o);
+            obstacles.unshift(o);
 
-        obstacles.unshift(obstacles.splice(1454,1)[0]);
-
+            obstacles.unshift(obstacles.splice(1454,1)[0]);
+        }
         // obstacles.push(
         //     convertOldExMap([{
         //         "x": 400,
