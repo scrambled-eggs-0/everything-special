@@ -110,3 +110,18 @@ tutorial
     - "Evades X is a game where anything is possible."
     - "So the only thing you should expect..."
         - "is the unexpected." [shader morphs from normal to flag warp to oval to lens distort - winpad at the top and you have to reach it and then page refreshes and you get put in the hub]
+
+New plan (17th-20th)
+- sync map system
+- fix networking bugs
+- win messages or some way to tell that players are 
+- import poqt (funky version)
+- import pohistory
+- fix tutorial (w/ dynamic res, no dt)
+- anticheat, load testing, security
+- make all maps C calls instead of generators
+- remove bounding box check
+- friction system remove xa and use accel / (1-fric) to find the max which will be what we input into the map
+
+"tomorrow plan is to finish the new networking, players getting maps from other players, and all networking-related bugs"
+"then ill move onto PoH and then PoQT"

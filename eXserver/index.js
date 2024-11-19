@@ -29,10 +29,9 @@ import db from './db.js';
 
 const PORT = 3000;
 
-const clients = global.clients = [];
-
-const reusableClientIndexes = [];
-// create the server and has functions for when a connection opens, closes, and sends a message
+const clients = global.clients = {};
+const randomBuf = new Uint32Array(2);
+// create the server and set functions for when a connection opens, closes, and sends a message
 global.app = uWS.App().ws('/*', {
     compression: 0,
     maxPayloadLength: 16 * 1024 * 1024,
@@ -44,40 +43,30 @@ global.app = uWS.App().ws('/*', {
             mapName: '',
             player: new Player(),
             dev: true,
-            accountData: {}
+            accountData: undefined
         }
+
+        do {
+            crypto.getRandomValues(randomBuf);
+        } while(clients[randomBuf[1]] !== undefined);
+        clients[randomBuf[1]] = ws;
+        ws.id = randomBuf[1];
         
-        const ind = reusableClientIndexes.length === 0 ? clients.length : reusableClientIndexes.pop();
-        clients[ind] = ws;
-        ws.clientArrayIndex = ind;
+        randomBuf[0] = 0;
+
+        global.send(ws.me, randomBuf);
 
         ws.subscribe('global');
     },
     message: (ws, data) => {
+        if(ws.me.mapName === '') return;
         const decoded = new Uint8Array(data);
-        if((ws.me.mapName === '' && decoded[0] !== 0 && decoded[0] !== 11) || decoded[0] >= messageMap.length) return;
-        if(messageMap[decoded[0]] !== undefined) messageMap[decoded[0]](decoded, ws.me);
+        if(messageMap[decoded[0]] !== undefined && decoded[0] < messageMap.length) messageMap[decoded[0]](decoded, ws.me);
     },
     close: (ws, code, message) => {
         ws.closed = true;
-        if(ws.me.mapName !== '') {
-            removeFromMap(ws.me, false);
-            // global.maps[ws.me.mapName].removePlayer(ws.me.player);
-            // // global.maps[ws.me.mapName].removeClient(ws.me); // we don't have to unsub, ws already closed
-
-            // // send to all other clients removePlayer
-            // const buf = new ArrayBuffer(4);
-            // const u8 = new Uint8Array(buf);
-            // const u16 = new Uint16Array(buf);
-
-            // u8[0] = 6;// message type 6 - remove player
-            // u16[1] = ws.me.player.id;
-
-            // global.maps[ws.me.mapName].broadcast(buf);
-        }
-
-        clients[ws.clientArrayIndex] = undefined;
-        reusableClientIndexes.push(ws.clientArrayIndex);
+        if(ws.me.mapName !== '') removeFromMap(ws.me, false);
+        delete clients[ws.id];
     }
 }).listen(PORT, (token) => {
     if (token) {
@@ -94,23 +83,6 @@ app.get('/', (res, req) => {
 
 app.get("/:filename", (res, req) => {
     const path = 'z_dev' + req.getUrl();
-    
-    // Check if the file exists
-    if (fs.existsSync(path)) {
-        // Read and serve the file
-        const file = fs.readFileSync(path);
-        res.end(file);
-    } else {
-        // File not found
-        res.writeStatus('404 Not Found');
-        res.end();
-    }
-});
-
-app.get("/maps/:filename", (res, req) => {
-    const path = 'eXserver' + req.getUrl();
-
-    res.writeHeader("Content-Type", "text/javascript");
     
     // Check if the file exists
     if (fs.existsSync(path)) {
@@ -269,45 +241,91 @@ app.post("/login", async (res, req) => {
     }
 });
 
-const decoder = new TextDecoder();
+app.get("/maps/:filename", (res, req) => {
+    // use this to associate with wsId
+    const authId = req.getHeader("id");
+    
+    const mapName = req.getParameter(0);
+
+    if(mapName[0] === '_'){
+        const path = 'eXserver/maps/' + mapName;
+        if(fs.existsSync(path)){
+            res.writeHeader("Content-Type", "text/javascript");
+            res.end(fs.readFileSync(path));
+        } else {
+            res.writeStatus('404 Not Found');
+            res.end();
+        }
+        return;
+    }
+
+    const ws = clients[authId];
+
+    if(mapExists(mapName) === false || ws === undefined || ws.accountData === undefined){
+        res.writeStatus('404 Not Found');
+        res.end();
+        return;
+    }
+
+    changeMap(ws.me, mapName, res);
+});
+
+app.get("/tutorial", (res, req) => {
+    const authId = req.getHeader("id");
+
+    const ws = clients[authId];
+    if(ws === undefined) return;
+
+    // send tutorial map
+    changeMap(ws.me, 'tutorial', res);
+
+    ws.close();
+});
+
+// login and get default map
+app.post("/join",async (res, req) => {
+    let aborted = false;
+    res.onAborted(() => {
+        aborted = true;
+    });
+
+    const username = req.getHeader("u");
+    const password = req.getHeader("p");
+
+    const authId = req.getHeader("id");
+    const ws = clients[authId];
+
+    if(ws === undefined){
+        res.end("n");
+        return;
+    }
+
+    const account = await db.getAccountRequirePassword(username, password);
+    const succeeded = account !== null;
+
+    if(aborted === true) return;
+    if(succeeded === false){
+        res.end("n");
+        return;
+    }
+
+    ws.accountData = account;
+    ws.me.player.name = username;
+    
+    // send default map
+    changeMap(ws.me, global.defaultMapName, res);
+});
+
+// const decoder = new TextDecoder();
 
 // functions that each correspond to a message. Tells the server what to do when processing the message
 const messageMap = [
-    // 0 - login and join game
-    (data, me) => {
-        if(data.byteLength > 97 || me.mapName !== '') return;
-        // this should never fail
-        const str = decoder.decode(data);
-
-        const password = str.slice(1,65);
-        me.player.name = str.slice(65);
-        changeMap(me, defaultMapName);
-        
-        (async()=>{
-            const loginData = await db.getAccountRequirePassword(me.player.name, password);
-
-            if(loginData === null){
-                const buf = new Uint8Array(1);
-                buf[0] = 11;
-                send(me, buf);
-                me.ws.close();
-            } else {
-                me.accountData = loginData;
-            }
-        })();
-    },
-    // 1 (ONE = WON same thing !! it pronounces the same!) - won map
-    (data, me) => {
-        if(me.mapName === 'winroom') changeMap(me, defaultMapName);
-        else changeMap(me, 'winroom');
-    },
-    // 2 - change to specified map
-    (data, me) => {
-        const mapName = decoder.decode(data).slice(1);
-        if(mapExists(mapName) === true){
-            changeMap(me, mapName);
-        }
-    },
+    // 0 - unused
+    () => {},
+    // 1 - unused
+    () => {},
+    // 2 - unused
+    () => {},
     // 3 - unused
     () => {},
     // 4 - x and y
@@ -343,70 +361,74 @@ const messageMap = [
         u16[1] = me.player.id;
         global.maps[me.mapName].broadcast(buf);
     },
-    // 9 - change ship
+    // 9 - set ship angle
     (data, me) => {
         if(data.byteLength !== 8) return;
         const f32 = new Float32Array(data.buffer);
-        me.player.ship = data[1] === 1;
+        me.player.ship = true;
         me.player.shipAngle = f32[1];
+
         const u16 = new Uint16Array(data.buffer);
         u16[1] = me.player.id;
         global.maps[me.mapName].broadcast(data);
     },
-    // 10 - change ship angle
+    // 10 - disable ship
+    (data, me) => {
+        if(data.byteLength !== 4) return;
+        me.player.ship = false;
+        const u16 = new Uint16Array(data.buffer);
+        u16[1] = me.player.id;
+        global.maps[me.mapName].broadcast(data);
+    },
+    // 11 - set grapple position
     (data, me) => {
         if(data.byteLength !== 12) return;
         const f32 = new Float32Array(data.buffer);
-        me.player.shipAngle = f32[1];
-        const u16 = new Uint16Array(data.buffer);
-        u16[1] = me.player.id;
-        global.maps[me.mapName].broadcast(data);
-    },
-    // 11 - join tutorial. Only used first time, joining tutorial from hub is handed with joinMap
-    (data, me) => {
-        if(me.mapName !== '') return;
-        changeMap(me, tutorialMapName);
-    },
-    // 12 - change grapple
-    (data, me) => {
-        if(data.byteLength !== 12) return;
-        const f32 = new Float32Array(data.buffer);
-        if(f32[1] === Infinity){// Inf = enable
-            me.player.grapple = true;
-            me.player.grappleX = me.player.grappleY = Infinity;
-        } else if(f32[1] === -Infinity){// -Inf = disable
-            me.player.grapple = false;
-            me.player.grappleX = me.player.grappleY = Infinity;
-        } else {// normal 2 numbers - set pos
-            me.player.grapple = true;
-            me.player.grappleX = f32[1];
-            me.player.grappleY = f32[2];
-        }
-        const u16 = new Uint16Array(data.buffer);
-        u16[1] = me.player.id;
-        global.maps[me.mapName].broadcast(data);
-    },
-    // 13 - change death timer 
-    (data, me) => {
-        if(data.byteLength !== 8 && data.byteLength !== 12) return;
-        const f32 = new Float32Array(data.buffer);
-        if(f32[1] === -1) {me.player.deathTimer = false; me.player.deathTime = Infinity;} // -1 = disable
-        else {me.player.deathTimer = true; me.player.deathTime = f32[1];}
-        const u16 = new Uint16Array(data.buffer);
-        u16[1] = me.player.id;
-        global.maps[me.mapName].broadcast(data);
+        me.player.grapple = true;
+        me.player.grappleX = f32[1];
+        me.player.grappleY = f32[2];
 
-        console.log('changeDeathTimer', f32[1]);
-    },
-    // 14 - change dead
-    (data, me) => {
-        if(data.byteLength < 2) return;
-        const f32 = new Float32Array(data.buffer);
         const u16 = new Uint16Array(data.buffer);
-        me.player.dead = f32[1] === 1;
+        u16[1] = me.player.id;
+        global.maps[me.mapName].broadcast(data);
+    },
+    // 12 - disable grapple
+    (data, me) => {
+        if(data.byteLength !== 4) return;
+        me.player.grapple = false;
+        const u16 = new Uint16Array(data.buffer);
+        u16[1] = me.player.id;
+        global.maps[me.mapName].broadcast(data);
+    },
+    // 13 - set death timer
+    (data, me) => {
+        if(data.byteLength !== 8) return;
+        const f32 = new Float32Array(data.buffer);
+        me.player.deathTimer = true;
+        me.player.deathTime = f32[1];
+
+        const u16 = new Uint16Array(data.buffer);
+        u16[1] = me.player.id;
+        global.maps[me.mapName].broadcast(data);
+    },
+    // 14 - disable death timer
+    (data, me) => {
+        if(data.byteLength !== 4) return;
+        me.player.deathTimer = false;
+        const u16 = new Uint16Array(data.buffer);
+        u16[1] = me.player.id;
+        global.maps[me.mapName].broadcast(data);
+    },
+    // 15 - change dead
+    (data, me) => {
+        if(data.byteLength !== 4) return;
+        const u16 = new Uint16Array(data.buffer);
+        me.player.dead = data[1] === 1;
 
         u16[1] = me.player.id;
         global.maps[me.mapName].broadcast(data);
+
+        console.log('set dead to ', data[1]);
     },
 ]
 
@@ -423,7 +445,7 @@ global.broadcastEveryone = (msg) => {
     app.publish('global', msg, true, false);
 }
 
-function changeMap(me, newMapName='winroom'){
+function changeMap(me, newMapName, res){
     // 1. remove from old map .1
     if(me.mapName !== '') removeFromMap(me);
 
@@ -433,4 +455,11 @@ function changeMap(me, newMapName='winroom'){
     // 3. add to new map (winroom) .3
     me.mapName = newMapName;
     addToMap(me, newMapName);
+
+    // 4. send as response (new system) .4
+    res.cork(() => {
+        res.writeHeader("Content-Type", "text/javascript");
+        res.writeHeader("X-Init-Data", JSON.stringify(global.maps[newMapName].getInitDataForPlayer(me.player)));
+        res.end(fs.readFileSync(`eXserver/maps/${newMapName}.js`));
+    });
 }

@@ -211,26 +211,21 @@ function simulate(){
         
             for(let i = 0; i < obstacles.length; i++){
                 // collision (done before simulation because that is what last rendered frame sees)
-
-                // bounding box check (TODO: spatial hashing)
-                if(obstacles[i].topLeft.x < player.pos.x + player.sat.r && obstacles[i].topLeft.x + obstacles[i].dimensions.x > player.pos.x - player.sat.r && 
-                   obstacles[i].topLeft.y < player.pos.y + player.sat.r && obstacles[i].topLeft.y + obstacles[i].dimensions.y > player.pos.y - player.sat.r){
-                    if(obstacles[i].sat.r !== undefined){
-                        if(obstacles[i].startSlice !== undefined){
-                            collided = testCircleSliceCircle(obstacles[i], player, res);
-                        } else {
-                            collided = SAT.testCircleCircle(obstacles[i].sat, player.sat, res);
-                        }
+                if(obstacles[i].sat.r !== undefined){
+                    if(obstacles[i].startSlice !== undefined){
+                        collided = testCircleSliceCircle(obstacles[i], player, res);
                     } else {
-                        collided = SAT.testPolygonCircle(obstacles[i].sat, player.sat, res);
+                        collided = SAT.testCircleCircle(obstacles[i].sat, player.sat, res);
                     }
-                    if(collided === true){
-                        for(let j = 0; j < obstacles[i].effect.length; j++){
-                            obstacles[i].effect[j](player, res, obstacles[i], i);
-                        }
-                    }
-                    res.clear();// TODO: test if this is really needed
+                } else {
+                    collided = SAT.testPolygonCircle(obstacles[i].sat, player.sat, res);
                 }
+                if(collided === true){
+                    for(let j = 0; j < obstacles[i].effect.length; j++){
+                        obstacles[i].effect[j](player, res, obstacles[i], i);
+                    }
+                }
+                res.clear();// TODO: test if this is really needed
         
                 // obstacle simulation
                 for(let j = 0; j < obstacles[i].simulate.length; j++){
@@ -247,7 +242,7 @@ function simulate(){
         }
 
         if(player.grapple === true){
-            if(input.action1 === true && player.grappleX === Infinity){
+            if(input.action1 === true && player.grappleX === -1){
                 let resetRadius = player.sat.r;
                 player.sat.r = player.grappleRange;
                 let closestAngle = 0;
@@ -259,19 +254,14 @@ function simulate(){
                         player.sat.r = player.grappleRange;
                     }
 
-                    if(obstacles[i].topLeft.x < player.pos.x + player.sat.r && obstacles[i].topLeft.x + obstacles[i].dimensions.x > player.pos.x - player.sat.r && 
-                        obstacles[i].topLeft.y < player.pos.y + player.sat.r && obstacles[i].topLeft.y + obstacles[i].dimensions.y > player.pos.y - player.sat.r){
-                        if(obstacles[i].sat.r !== undefined){
-                            if(obstacles[i].startSlice !== undefined){
-                                collided = testCircleSliceCircle(obstacles[i], player, res);
-                            } else {
-                                collided = SAT.testCircleCircle(obstacles[i].sat, player.sat, res);
-                            }
+                    if(obstacles[i].sat.r !== undefined){
+                        if(obstacles[i].startSlice !== undefined){
+                            collided = testCircleSliceCircle(obstacles[i], player, res);
                         } else {
-                            collided = SAT.testPolygonCircle(obstacles[i].sat, player.sat, res);
+                            collided = SAT.testCircleCircle(obstacles[i].sat, player.sat, res);
                         }
                     } else {
-                        collided = false;
+                        collided = SAT.testPolygonCircle(obstacles[i].sat, player.sat, res);
                     }
                     
                     if(obstacles[i].isGrapplePoint === true){
@@ -296,9 +286,9 @@ function simulate(){
                     player.grappleY = player.pos.y - Math.sin(closestAngle) * player.sat.r;
                 }
                 player.sat.r = resetRadius;
-            } else if(player.grappleX !== Infinity){
+            } else if(player.grappleX !== -1){
                 if(input.action1 === false){
-                    player.grappleX = player.grappleY = Infinity;
+                    player.grappleX = player.grappleY = -1;
                 } else {
                     let grappleLen = Math.sqrt((player.pos.x - player.grappleX) ** 2 + (player.pos.y - player.grappleY) ** 2);
                     let grappleAngle = Math.atan2(player.grappleY - player.pos.y, player.grappleX - player.pos.x);
@@ -328,12 +318,9 @@ function simulate(){
             player.deathTime = Infinity;
             player.deathTimer = false;
             player.dead = true;
-            const buf = new ArrayBuffer(8);
-            const u8 = new Uint8Array(buf);
-            const f32 = new Float32Array(buf);
-            u8[0] = 13;
-            f32[1] = -1; // -1 = disable
-            send(buf);
+
+            window.u4[0] = 14;
+            send(window.u4);
         }
     }
 
@@ -1293,9 +1280,7 @@ const effectMap = [
         } else if(window.won !== true){
             window.won = true;
             if(window.isExClient === true){
-                const buf = new Uint8Array(1);
-                buf[0] = 1; // type 1 - won map
-                send(buf);
+                window.changeMap('/maps/winroom');
             } else {
                 // scroll
                 toScroll = true;
@@ -1518,11 +1503,7 @@ const effectMap = [
         if(window.won === true) return;
         window.won = true;
         if(window.isExClient === true){
-            const mapName = o.mapName;
-            const buf = new Uint8Array(1 + mapName.length);
-            buf[0] = 2; // type 2 - change map
-            encodeAtPosition(mapName, buf, 1);
-            send(buf);
+            window.changeMap('/maps/' + o.mapName);
         } else {
             // TODO: send user to the specified omni
         }
@@ -1595,15 +1576,10 @@ const effectMap = [
     (p, res, o) => {
         if(p.ship === o.changeShipStateTo) return;
             
-        if(window.isExClient === true) {
-            // send changed ship
-            const buf = new ArrayBuffer(8);
-            const u8 = new Uint8Array(buf);
-            const f32 = new Float32Array(buf);
-            u8[0] = 9;
-            u8[1] = o.changeShipStateTo;
-            f32[1] = o.initialShipAngle;
-            send(buf);
+        if(window.isExClient === true && o.changeShipStateTo === false) {
+            // send disable ship
+            window.u4[0] = 10;
+            send(window.u4);
         }
         if(p.ship === false && o.changeShipStateTo === true) {p.shipAngle = o.initialShipAngle; p.shipTurnSpeed = o.shipTurnSpeed; }
         
@@ -1611,14 +1587,13 @@ const effectMap = [
     },
     /*changeGrapple*/
     (p, res, o) => {
-        if(window.isExClient === true && p.grapple !== o.changeGrappleStateTo){
-            // send remove grapple
-            const buf = new ArrayBuffer(12);
-            const u8 = new Uint8Array(buf);
-            const f32 = new Float32Array(buf);
-            u8[0] = 12;
-            f32[1] = f32[2] = o.changeGrappleStateTo === true ? Infinity : -Infinity;
-            send(buf);
+        if(p.grapple === true && o.changeGrappleStateTo === false){
+            if(window.isExClient === true){
+                // send disable grapple
+                window.u4[0] = 12;
+                send(window.u4);
+            }
+            p.grappleX = p.grappleY = -1;
         }
 
         p.grapple = o.changeGrappleStateTo;
@@ -1629,23 +1604,20 @@ const effectMap = [
     /*changeDeathTimer*/
     (p, res, o) => {
         if(window.isExClient === true && p.deathTimer === true && o.changeDeathTimerStateTo === false){
-            // send remove death timer
-            const buf = new ArrayBuffer(8);
-            const u8 = new Uint8Array(buf);
-            const f32 = new Float32Array(buf);
-            u8[0] = 13;
-            f32[1] = -1;// -1 = disable
-            send(buf);
+            // send disable death timer
+            window.u4[0] = 14;
+            send(window.u4);
         }
 
-        p.deathTimer = o.changeDeathTimerStateTo;
-        if(p.deathTimer === true){
-            p.deathTime = Math.min(p.deathTime, o.deathTime);
+        if(o.changeDeathTimerStateTo === true){
+            if(p.deathTimer === false) p.deathTime = o.deathTime;
+            else p.deathTime = Math.min(p.deathTime, o.deathTime);
             p.deathTime -= o.drainAmountWhileStandingOn;
 
             // changeVignette
             effectMap[24](p, res, o);
-        } else { p.deathTime = Infinity; }
+        }
+        p.deathTimer = o.changeDeathTimerStateTo;
     }
 ]
 
@@ -2886,8 +2858,8 @@ window.createPlayer = () => {
     player.dev = true; /*dev only for players[selfId]*/ player.god = false;
     player.friction = 0.4;
     player.ship = false; player.shipAngle = 0; player.shipTurnSpeed = Math.PI / 100;
-    player.deathTime = Infinity; player.deathTimer = false;
-    player.grappleX = Infinity; player.grappleY = Infinity; player.grapple = false;
+    player.deathTime = 0; player.deathTimer = false;
+    player.grappleX = -1; player.grappleY = -1; player.grapple = false;
     player.grappleRange = 488; player.grappleForce = 0.01; player.grappleFric = 0.414;
     player.timeTrapOverrideSafe = false;
     return player;

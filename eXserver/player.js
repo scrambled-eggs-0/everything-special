@@ -1,3 +1,4 @@
+let str = '', pos;
 // this class is just to store player data so that other clients can get it if they're late to the map.
 class Player {
     constructor(){
@@ -19,11 +20,11 @@ class Player {
         this.shipAngle = 0;
 
         this.grapple = false;
-        this.grappleX = Infinity;
-        this.grappleY = Infinity;
+        this.grappleX = -1;
+        this.grappleY = -1;
 
         this.deathTimer = false;
-        this.deathTime = Infinity;
+        this.deathTime = 0;
     }
 }
 

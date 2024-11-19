@@ -66,16 +66,14 @@ const chatDiv = document.querySelector('.chatDiv');
 const visChatDiv = document.querySelector('.chat-div');
 
 function handleKey(e){
-    if(window.state !== 'game') return;
-    if(chatOpen){
+    if(chatOpen === true){
         if(e.type === 'keydown' && e.code === 'Enter'){
             let msg = chat.value.trim();
             if(msg === '/reset'){
-                const mapName = 'hub';
-                const buf = new Uint8Array(1 + mapName.length);
-                buf[0] = 2; // type 2 - change map
-                encodeAtPosition(mapName, buf, 1);
-                send(buf);
+                window.changeMap('/maps/hub');
+            }
+            else if(msg.slice(0,10) === '/changeMap'){
+                window.changeMap(`/maps/` + msg.slice(11).toLowerCase());
             }
             else if(msg.slice(0,6) === '/scale'){
                 const num = parseFloat(msg.slice(7));

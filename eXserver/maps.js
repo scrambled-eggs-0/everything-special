@@ -51,16 +51,11 @@ delete validPaths[`./maps/_metadata.js`];
 delete validPaths[`./maps/_converter.js`];
 directory.closeSync();
 
-async function createMap(name){
+function createMap(name){
     const path = `./maps/${name}.js`;
     if(validPaths[path] === undefined) return console.error('Trying to load undefined map name!', name);
-    // basically just add obstacles. We have the same blockly editor as omni so we can just run the code
     const map = new Map();
-    require(path);
-    map.obstacles = window.obstacles;
     map.name = name;
-    map.dimensions = {x: window.mapDimensions.x, y: window.mapDimensions.y};
-    window.resetGame();
     return map;
 }
 
@@ -69,17 +64,12 @@ function mapExists(name){
 }
 
 const buf2 = new Uint8Array(2);
-async function addToMap(me, mapName){
-    if(global.maps[mapName] === undefined) global.maps[mapName] = await createMap(mapName);
+buf2[0] = 3;
+function addToMap(me, mapName){
+    if(global.maps[mapName] === undefined) global.maps[mapName] = createMap(mapName);
 
     // add player up here for id
     global.maps[mapName].addPlayer(me.player);
-
-    // send player's init data (one big)
-    buf2[0] = 3;// message type 3 - flag next message as message type
-    buf2[1] = 2;// byte[1] = 2 - flag next as init data
-    send(me, buf2)// first a flag telling the client that the next message won't have a prefix
-    send(me, pack(global.maps[mapName].getInitDataForPlayer(me.player)));
 
     // for all other players send them other player's init data (many small)
     buf2[1] = 5// reusing the buffer from earlier. byte[1] = 5 - flag next as new player msg
@@ -107,27 +97,14 @@ function removeFromMap(me, isConnected=true){
     }
 }
 
-const initPackExcludedKeys = {
-    sat: true,
-    renderShape: true,
-    simulate: true,
-    effect: true,
-    renderEffect: true,
-    renderEffectTimer: true,
-    pos: true,
-    dimensions: true
-}
-
+let str;
 class Map {
-    constructor(){
+    constructor(name){
         this.players = [];
-        this.obstacles = [];
 
         this.reusablePlayerIds = [];
 
-        this.name = '';
-
-        this.dimensions = {x: 2000, y: 2000};
+        this.name = name;
     }
     addPlayer(p){
         const id = this.reusablePlayerIds.length === 0 ? this.players.length : this.reusablePlayerIds.pop();
@@ -145,17 +122,7 @@ class Map {
         me.ws.unsubscribe(this.name);
     }
     getInitDataForPlayer(p){
-        const obstacleData = [];
-        for(let i = 0; i < this.obstacles.length; i++){
-            const obs = {};
-            for(let key in this.obstacles[i]){
-                if(initPackExcludedKeys[key] === undefined){
-                    obs[key] = this.obstacles[i][key];
-                }
-            }
-            obstacleData.push(obs);// TODO: optimize with ".skip" for encoding skipping over obs with no params
-        }
-        return [this.players, obstacleData, this.name, this.dimensions, p.id];
+        return [this.players, p.id];
     }
     broadcast(msg){
         global.app.publish(this.name, msg, true, false);

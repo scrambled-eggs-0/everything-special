@@ -20,7 +20,7 @@ function initWS() {
         if(nextMsgFlag !== undefined){
             messageMap[nextMsgFlag](data.data);
             nextMsgFlag = undefined;
-            return;//
+            return;
         }
         const decoded = new Uint8Array(data.data);
         messageMap[decoded[0]](decoded);
@@ -37,7 +37,6 @@ function initWS() {
     }
 
     ws.onclose = () => {
-        nextMsgFlag = undefined;
         console.log('Websocket closed.');// Attempting to reconnect...
         // TODO: reconnection.
     }
@@ -45,61 +44,72 @@ function initWS() {
 
 initWS();
 
+window.changeMap = function changeMap(url=`/maps/hub`, method='GET', headers=new Headers()){
+    headers.append('id', window.authId);
+    fetch(location.origin + url, {method, headers}).then(async (d) => {
+        const levelData = await d.text();
+        if(levelData === 'n') {console.error(`failed to load map url ${url}`); return;}
+        const [players, selfId] = JSON.parse(d.headers.get("X-Init-Data"));
+
+        const prevScript = document.getElementById('gameScript');
+        if(prevScript !== null) prevScript.remove();
+
+        window.resetGame();
+        window.players.length = window.obstacles.length = 0;
+        const s = document.createElement('script');
+        s.id = "gameScript";
+        s.text = levelData;
+        document.body.appendChild(s);
+
+        for(let i = 0; i < players.length; i++){
+            if(players[i] === undefined) {window.players[i] = undefined; continue;}
+            const playerData = players[i];
+            const p = createPlayerFromData(playerData);
+            window.players[i] = p;
+        }
+
+        window.selfId = selfId;
+
+        window.won = false;
+        if(!gameStarted) {
+            window.startGame();
+            gameStarted = true;
+        } else {
+            window.respawnPlayer();
+        }
+    })
+}
+
 // first byte encodes the message type
 const messageMap = [
-    // 0 - unused
-    () => {},
+    // 0 - set auth id (not clientid)
+    (data) => {
+        const u32 = new Uint32Array(data.buffer);
+        window.authId = u32[1];
+
+        const username = localStorage.getItem('username');
+        const password = localStorage.getItem('password');
+        if(username === null || password === null){
+            // get tutorial
+            window.onkeydown({code: 'KeyZ', repeat: false, type: 'keydown'});
+            window.changeMap('/tutorial');
+        } else {
+            // log in
+            const headers = new Headers();
+            headers.append('u', username);
+            headers.append('p', password);
+            window.changeMap('/join', 'POST', headers);
+        }
+    },
     // 1 - reload page (for hot refresh)
     () => {
         location.reload();
     },
-    // 2 - init planet
+    // 2 - change to create account page
     (data) => {
-        // unpack it
-        data = msgpackr.unpack(data);
-        const [players, obstacleData, mapName, dimensions, selfId] = data;
-        fetch(location.origin + `/maps/${mapName}.js`, {method: 'GET'}).then(async (d) => {
-            const levelData = await d.text();
-
-            const prevScript = document.getElementById('gameScript');
-            if(prevScript) prevScript.remove();
-
-            window.resetGame();
-            window.players.length = window.obstacles.length = 0;
-            const s = document.createElement('script');
-            s.id = "gameScript";
-            s.text = levelData;
-            document.body.appendChild(s);
-
-            for(let i = 0; i < players.length; i++){
-                if(players[i] === undefined) {window.players.push(undefined); continue;}
-                const playerData = players[i];
-                const p = createPlayerFromData(playerData);
-    
-                window.players.push(p);// pushing p!!
-            }
-
-            for(let i = 0; i < obstacleData.length; i++){
-                const o = window.obstacles[i];
-                for(let key in obstacleData[i]){
-                    o[key] = obstacleData[i][key];
-                }
-            }
-
-            window.mapDimensions = dimensions;
-    
-            window.selfId = selfId;
-    
-            window.won = false;
-            if(!gameStarted) {
-                window.startGame();
-                gameStarted = true;
-            } else {
-                window.respawnPlayer();
-            }
-        })
+        location.replace(location.origin + '/create');
     },
-    // 3 - flag next message as type and don't decode it
+    // 3 - flag next message as type
     (data) => {
         nextMsgFlag = data[1];
     },
@@ -159,64 +169,69 @@ const messageMap = [
 
         window.players[id].god = data[1] === 1;
     },
-    // 9 - change ship
-    (data) => {
-        const f32 = new Float32Array(data.buffer);
-        const u16 = new Uint16Array(data.buffer);
-        const id = u16[1];
-        if(id === window.selfId) return;
-        window.players[id].ship = data[1] === 1;
-        window.players[id].shipAngle = f32[1];
-    },
-    // 10 - change ship angle
-    (data) => {
-        const f32 = new Float32Array(data.buffer);
-        const u16 = new Uint16Array(data.buffer);
-        const id = u16[1];
-        if(id === window.selfId) return;
-        window.players[id].shipAngle = f32[1];
-    },
-    // 11 - change to create account page
-    (data) => {
-        location.replace(location.origin + '/create');
-    },
-    // 12 - change grapple
-    (data) => {
-        const u16 = new Uint16Array(data.buffer);
-        const f32 = new Float32Array(data.buffer);
-        const id = u16[1];
-        if(id === window.selfId) return;
-        if(f32[1] === Infinity){
-            window.players[id].grapple = true;
-            window.players[id].grappleX = window.players[id].grappleY = Infinity;
-        } else if(f32[1] === -Infinity){
-            window.players[id].grapple = false;
-            window.players[id].grappleX = window.players[id].grappleY = Infinity;
-        } else {
-            window.players[id].grapple = true;
-            window.players[id].grappleX = f32[1];
-            window.players[id].grappleY = f32[2];
-        }
-    },
-    // 13 - change death timer 
+    // 9 - set ship angle
     (data) => {
         const u16 = new Uint16Array(data.buffer);
         const id = u16[1];
         if(id === window.selfId) return;
-        const f32 = new Float32Array(data.buffer);
-        if(f32[1] === -Infinity) {window.players[id].deathTimer = false; window.players[id].deathTime = Infinity;}
-        else {window.players[id].deathTimer = true; window.players[id].deathTime = f32[1]};
 
-        console.log('recieving change death timer', id, f32[1]);
-    },
-    // 14 - change dead
-    (data, me) => {
         const f32 = new Float32Array(data.buffer);
+        window.players[id].ship = true;
+        window.players[id].shipAngle = f32[1];
+    },
+    // 10 - disable ship
+    (data) => {
         const u16 = new Uint16Array(data.buffer);
         const id = u16[1];
         if(id === window.selfId) return;
-        window.players[id].dead = f32[1] === 1;
-    }
+
+        window.players[id].ship = false;
+    },
+    // 11 - set grapple
+    (data) => {
+        const u16 = new Uint16Array(data.buffer);
+        const id = u16[1];
+        if(id === window.selfId) return;
+
+        const f32 = new Float32Array(data.buffer);
+        window.players[id].grapple = true;
+        window.players[id].grappleX = f32[1];
+        window.players[id].grappleY = f32[2];
+    },
+    // 13 - disable grapple
+    (data) => {
+        const u16 = new Uint16Array(data.buffer);
+        const id = u16[1];
+        if(id === window.selfId) return;
+
+        window.players[id].grapple = false;
+    },
+    // 13 - set death timer
+    (data) => {
+        const u16 = new Uint16Array(data.buffer);
+        const id = u16[1];
+        if(id === window.selfId) return;
+
+        const f32 = new Float32Array(data.buffer);
+        window.players[id].deathTimer = true;
+        window.players[id].deathTime = f32[1];
+    },
+    // 14 - disable death timer
+    (data) => {
+        const u16 = new Uint16Array(data.buffer);
+        const id = u16[1];
+        if(id === window.selfId) return;
+
+        window.players[id].deathTimer = false;
+    },
+    // 15 - change dead
+    (data) => {
+        const u16 = new Uint16Array(data.buffer);
+        const id = u16[1];
+        if(id === window.selfId) return;
+
+        window.players[id].dead = data[1] === 1;
+    },
 ]
 
 function createPlayerFromData(data){

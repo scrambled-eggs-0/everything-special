@@ -345,7 +345,7 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
             ctx.lineWidth = 12;
             ctx.arc(player.pos.x, player.pos.y, Math.abs(player.renderRadius) / 2, 0, Math.PI * 2);
 
-            if(player.grappleX === Infinity && player.id === window.selfId && input.action1 === true){
+            if(player.grappleX === -1 && player.id === window.selfId && input.action1 === true){
                 ctx.strokeStyle = 'white';
                 ctx.stroke();
                 ctx.closePath();
@@ -356,7 +356,7 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
                 ctx.arc(player.pos.x, player.pos.y, player.grappleRange, 0, Math.PI * 2);
                 ctx.stroke();
                 ctx.closePath();
-            } else if(player.grappleX !== Infinity){
+            } else if(player.grappleX !== -1){
                 ctx.strokeStyle = 'white';
                 ctx.stroke();
                 ctx.closePath();

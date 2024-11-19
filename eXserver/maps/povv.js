@@ -2366,23 +2366,6 @@
                 "inView": false
             },
             {
-                // "x": 3700,
-                // "y": 3300,
-                // "w": 2600,
-                // "h": 400,
-                x: 3300,y:3300,w:6600,h:6600,
-                "type": "vinette",
-                "ir": 0,
-                "or": 0.3 * 0.3,
-                "o": 1.5,
-                "vc": {
-                    "r": 0,
-                    "g": 0,
-                    "b": 0
-                },
-                "inView": false
-            },
-            {
                 "x": 8000,
                 "y": 7500,
                 "w": 500,
@@ -31430,6 +31413,40 @@
                 "timer": 42.00833333328029,
                 "inView": false
             },
+            {
+                // "x": 3700,
+                // "y": 3300,
+                // "w": 2600,
+                // "h": 400,
+                x: 3300,y:3300,w:6600,h:6600,
+                "type": "vinette",
+                "ir": 0,
+                "or": 0.3 * 0.3,
+                "o": 1.5,
+                "vc": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0
+                },
+                "inView": false
+            },
+            {
+                // "x": 3700,
+                // "y": 3300,
+                // "w": 2600,
+                // "h": 400,
+                x: 4500,y:4500,w:1000,h:1000,
+                "type": "vinette",
+                "ir": 0.2,
+                "or": 1.2,
+                "o": 1,
+                "vc": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0
+                },
+                "inView": false
+            },
         ]
         const enemies = [
             {
@@ -37821,9 +37838,10 @@
             {
                 let scale = 1; let colliding = false; let lastColliding = false;
                 // custom obs that slowly zooms out, resets on death
-                C(1,[],[3],{x:6600,y:6600,w:13400,h:13400,cr:()=>{},ef:()=>{
-                    if(scale <= 0.15) scale = 0.15;
-                    else scale *= 0.9995;
+                C(1,[],[3],{x:6600,y:6600,w:13400,h:13400,cr:()=>{},ef:(p)=>{
+                    if(p.pos.x > 8850 && p.pos.x < 11150 && p.pos.y < 11200 && p.pos.y > 8750) return; /*inside middle secrets*/
+                    const t = (p.pos.y - 6600) / 6600;
+                    scale = (1-t) * 1 + (t) * 0.15;
                     window.changeCameraScale(scale);
                     colliding = true;
                 },sf:()=>{
