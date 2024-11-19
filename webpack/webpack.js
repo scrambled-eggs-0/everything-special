@@ -68,9 +68,8 @@ compiler.watch(
         const buf = new Uint8Array(1);
         buf[0] = 1;// type 1 - reload
 
-        for(let i = 0; i < global.clients.length; i++){
-            if(global.clients[i] === undefined) continue;
-            send(global.clients[i].me, buf);
+        for(let id in global.clients){
+            send(global.clients[id].me, buf);
         }
     }
 );

@@ -69,7 +69,6 @@ function addToMap(me, mapName){
     if(global.maps[mapName] === undefined) global.maps[mapName] = createMap(mapName);
 
     // add player up here for id
-    console.log(mapName, global.maps[mapName])
     global.maps[mapName].addPlayer(me.player);
 
     // for all other players send them other player's init data (many small)

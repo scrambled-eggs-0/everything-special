@@ -977,7 +977,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
         },
     }
 
-    if(special === 'pols' || special === 'povv'){
+    if(special === 'pols' || special === 'povv' || special === 'poqt'){
         safes = safes.map(p => {
             p.type = "safe";
             return p;
@@ -1584,7 +1584,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                 params.flSize *= 1.5;
                 params.flSize += params.radius * 1.2;
             } else {
-                params.flSize *= 1.26;
+                params.flSize *= 1.18;
             }
             
             counter++;
@@ -1620,7 +1620,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
             base${counter} = obstacles[obstacles.length-1];
 
             {let overrideAngle=undefined;let angle=0;C(4,[],[1],{"r":${params.flSize*2}*2/3,boundPlayer:false,"innerRadius":0,"startSliceAngle":0,"endSliceAngle":0,"startSliceAngleRotateSpeed":0,"endSliceAngleRotateSpeed":0,"x":base${counter}.pos.x,"y":base${counter}.pos.y,sf:(o,p)=>{
-                angle = ${alwaysOverrideAngle !== undefined ? alwaysOverrideAngle : "Math.atan2(yv${counter}, xv${counter});"}
+                angle = ${alwaysOverrideAngle !== undefined ? alwaysOverrideAngle : `Math.atan2(yv${counter}, xv${counter});`}
 
                 if(overrideAngle !== undefined) angle = overrideAngle;
 
@@ -2601,6 +2601,13 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
             }});\n`,
             counter++;
             continue;
+        }
+
+        if(special === 'poqt' && o.type === 'invpu'){
+            // powerup obj
+            str += `var inv${i}=0;C(1,[],[3],{cr:()=>{},x:${o.x*2},y:${o.y*2},w:${o.w*2},h:${o.h*2},ef:()=>{
+                inv${i} = ${o.maxAmount * 60};
+            }});\n`
         }
 
         if(special === 'povv' || special === 'posc' || special === 'poqt'){
