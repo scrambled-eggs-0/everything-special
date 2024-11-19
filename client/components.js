@@ -1359,6 +1359,8 @@ const effectMap = [
         // the basic idea of how it works is we have to snap to a rotated snap grid in space, so we
         // translate the player to the snapGrid until its like the snap grid is unrotated. Then we snap
         // by moduloing the x to the grid and then rotate back to get the final position.
+        o.snapCooldown--;
+        
         if(o.snapCooldown <= 0 && ((o.toSnapX === true && Math.abs(p.xv) > 0.01) || (o.toSnapY === true && Math.abs(p.yv) > 0.01))){
             o.snapCooldown = o.maxSnapCooldown;
             let playerSnapAngle = Math.atan2(o.toSnapY === true ? p.yv : 0, o.toSnapX === true ? p.xv : 0);
@@ -1632,7 +1634,6 @@ const idleEffectMap = [
     undefined,
     // 'snapGrid',
     (o) => {
-        o.snapCooldown--;
         o.snapAngle += o.snapAngleRotateSpeed;
     },
     // 'timeTrap'
@@ -1686,7 +1687,13 @@ const idleEffectMap = [
         o.pos.y += freeVariable * Math.sin(o.pushAngle);
     },
     // changeMusic
-    undefined
+    undefined,
+    // changeShip
+    undefined,
+    // changeGrapple
+    undefined,
+    // changeDeathTimer
+    undefined,
 ]
 
 window.effectConstraintsMap = [
@@ -2431,11 +2438,14 @@ const renderEffectMap = [
             ctx.fillStyle = 'white';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
+
+            ctx.globalAlpha = Math.min(1,((window.players[window.selfId].pos.y + canvas.h/2) - (o.topLeft.y)) / (o.dimensions.y));
             ctx.fillText(
                 o.mapName.toUpperCase().replace('O','o'),
                 o.topLeft.x + o.dimensions.x / 2,
                 o.topLeft.y - o.dimensions.y / 4
             );
+            ctx.globalAlpha = 1;
 
             // // line marking - scrapped
             // ctx.fillStyle = 'black';

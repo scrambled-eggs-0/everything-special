@@ -117,12 +117,18 @@ New plan (17th-20th)
 - sync map system
 - win messages or some way to tell that players are 
 - import poqt (funky version)
-- import pohistory
+- fix pohistory (down the list gets more optional)
+    - z8 and z9
+    - e1 render like e1, e2 like e2, ex like ex
+    - redo some of the eX levels
+    - e1 -> eX text animation at the start?
+- fix pospd
+    - make the normal section consistent
+    - make platformer use the old route, add coin below so that player knows to fall off to not hit their head between jumps
 - fix tutorial (w/ dynamic res, no dt)
 - anticheat, load testing, security
 - make all maps C calls instead of generators
-- remove bounding box check
-- friction system remove xa and use accel / (1-fric) to find the max which will be what we input into the map
+- remove all TEMP
 
 "tomorrow plan is to finish the new networking, players getting maps from other players, and all networking-related bugs"
 "then ill move onto PoH and then PoQT"

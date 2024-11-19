@@ -45,8 +45,8 @@ const fullscreen = {
     ratio: 9 / 16,
     zoom: 1800,
 }
-const width = 1600;
-const height = 900;
+// const width = 1600;
+// const height = 900;
 
 // window.tileImage = undefined;
 // window.tileImageColors = {

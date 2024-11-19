@@ -82,6 +82,17 @@ function handleKey(e){
             else if(msg.slice(0,4) === '/map'){
                 window.initImportMap(msg.slice(5));
             }
+            // TEMP PLEASE REMOVE
+            else if(window.zones !== undefined && msg.slice(0,7).toLowerCase() === '/tpzone'){
+                const num = parseInt(msg.slice(8));
+                for(let i = 0; i < window.zones.length; i++){
+                    if(window.zones[i].zone === num){
+                        window.players[window.selfId].pos.x = window.zones[i].x;
+                        window.players[window.selfId].pos.y = window.zones[i].y;
+                        break;
+                    }
+                }
+            }
             else if(msg.length !== 0){
                 msg = window.username + ': ' + msg;
                 const buf = new Uint8Array(msg.length + 2);

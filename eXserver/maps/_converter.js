@@ -975,6 +975,32 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                 };
             }
         },
+        'portal': {
+            type: [1,[],[22]],
+            customMap: (params) => {
+                return {
+                    x: params.x * 2,
+                    y: params.y * 2,
+                    w: params.w * 2,
+                    h: params.h * 2,
+                    mapName: params.acronym.toLowerCase()
+                };
+            }
+            // {
+            //     "x": 3000,
+            //     "y": 2600,
+            //     "w": 100,
+            //     "h": 100,
+            //     "type": "portal",
+            //     "name": "Planet of Peaceful Beginnings",
+            //     "acronym": "PoPB",
+            //     "difficulty": "Peaceful",
+            //     "difficultyNumber": "0.3",
+            //     "musicPath": null,
+            //     "renderType": "portal",
+            //     "inView": true
+            // },
+        },
     }
 
     if(special === 'pols' || special === 'povv' || special === 'poqt'){
@@ -996,7 +1022,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
         }
         obs.push(...aboveSafes);
         obs.unshift(...belowSafes);
-        safes = [];
+        safes.length = 0;
     }
 
     if(special === 'pols'){
@@ -2666,6 +2692,14 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                         window.morphsTriggered[${o.id}] = true;
                     }
                 }); var c = window.obstacles[window.obstacles.length-1]; window.linkButtons[${o.id}] = {pos: {x: c.pos.x, y: c.pos.y}, dimensions: {x: c.dimensions.x, y: c.dimensions.y}};\n`
+                continue;
+            } else if(o.type === 'zone'){// TEMP PLEASE REMOVE
+                if(window.zones === undefined) window.zones = [];
+                window.zones.push({
+                    x: o.x*2 + o.w,
+                    y: o.y*2 + o.h,
+                    zone: o.value
+                })
                 continue;
             }
         }
