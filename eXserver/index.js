@@ -427,8 +427,6 @@ const messageMap = [
 
         u16[1] = me.player.id;
         global.maps[me.mapName].broadcast(data);
-
-        console.log('set dead to ', data[1]);
     },
 ]
 

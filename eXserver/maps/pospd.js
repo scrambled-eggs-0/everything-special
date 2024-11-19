@@ -6,8 +6,22 @@
         let counter = 8000;
 
         C(1,[],[19],{x:18500,y:14050,w:400,h:50,speedMult:1/3,speedChangePermanent:false});
+        C(1,[],[15],{x:9400,y:17700,w:100,h:200,axpsSpeedMultX: 0, axisSpeedMultY:0})
     
         const obs = [
+            {
+                "x": 5800,
+                "y": 8800,
+                "w": 175,
+                "h": 175,
+                "type": "tp",
+                "tpx": 6225,
+                "tpy": 9175,
+                "bgColor": "#0d0d0d",
+                "tileColor": "#383838",
+                "changeColor": false,
+                "inView": false
+            },
             {
                 type: 'safe',
                 x: 17150/2,
@@ -25949,7 +25963,7 @@
                 "w": 100,
                 "h": 50,
                 "type": "bounce",
-                "effect": 1600,
+                "effect": 2000,
                 "inView": false
             },
             {
@@ -41281,9 +41295,6 @@
                 "inView": false
             }
         ]
-        const a = obs.splice(86,1);
-        obs.unshift(...a);
-
         const len = obs.length;
         for(let i = 0; i < len; i++){
             if(obs[i].type.includes('safe')){

@@ -160,36 +160,20 @@ function simulate(){
 
     if(player.stopForces === true){
         player.stopForces = false;
-        for(let i = 0; i < player.forces.length; i++){
-            player.forces[i][0] = player.forces[i][1] = 0;
-            // player.forces[i][2] = player.forces[i][3] = 0;
-        }
+        player.forces.length = 0;
     } else {
-        for(let i = 0; i < player.forces.length; i++){
-            // [xv, yv, xa, ya, vfric, afric]
+        for(let i = 0; i < player.forces.length; i+=3){
+            player.pos.x += player.forces[i];
+            player.pos.y += player.forces[i+1];
 
-            // xv += xa
-            player.forces[i][0] += player.forces[i][2];
-            player.forces[i][1] += player.forces[i][3];
+            player.forces[i] *= player.forces[i+2];
+            player.forces[i+1] *= player.forces[i+2];
 
-            // pos += xv
-            player.pos.x += player.forces[i][0];
-            player.pos.y += player.forces[i][1];
-
-            // xa *= afric
-            player.forces[i][2] *= player.forces[i][5];
-            player.forces[i][3] *= player.forces[i][5];
-
-            // xv *= vfric
-            player.forces[i][0] *= player.forces[i][4];
-            player.forces[i][1] *= player.forces[i][4];
-
-            // if(Math.abs(player.forces[i][0]) < 0.01 && Math.abs(player.forces[i][1]) < 0.01){
-            //     player.forces.splice(i,1);
-            //     i--;
-            //     continue;
-            // }
-            // TODO: Better system for removing forces. Player.forceRefs corresponding indicies to player.forces and you can remove by modifying obs force obj and splicing from both arrs also can clean up here w/ splice and in player.stopForces === true
+            if(Math.abs(player.forces[i]) < 0.01 && Math.abs(player.forces[i+1]) < 0.01){
+                player.forces.splice(i,3);
+                i-=3;
+                continue;
+            }
         }
     }
 
@@ -292,7 +276,12 @@ function simulate(){
                 } else {
                     let grappleLen = Math.sqrt((player.pos.x - player.grappleX) ** 2 + (player.pos.y - player.grappleY) ** 2);
                     let grappleAngle = Math.atan2(player.grappleY - player.pos.y, player.grappleX - player.pos.x);
-                    addVelSetAccelForce(player, grappleForceObj, Math.cos(grappleAngle) * grappleLen * player.grappleForce, Math.sin(grappleAngle) * grappleLen * player.grappleForce, 0, 0, player.grappleFric, 0);
+
+                    player.forces.push(
+                        Math.cos(grappleAngle) * grappleLen * player.grappleForce,
+                        Math.sin(grappleAngle) * grappleLen * player.grappleForce,
+                        player.grappleFric
+                    );
                 }
             }
         }
@@ -460,34 +449,6 @@ window.isABColliding = (a,b) => {
     const hasCollided = res.hasCollided;
     res.clear();
     return hasCollided;
-}
-function setForce(p, o, xv, yv, xa, ya, vfric, afric){
-    if(p.forces[o.playerForceId] === undefined/* || o.playerForceId !== p.id*/) /*{*/ o.playerForceId = p.forces.length;/* o.playerForcePlayerId = p.id; }*/
-    p.forces[o.playerForceId] = [xv, yv, xa, ya, vfric, afric];
-}
-
-function addForce(p, o, xv, yv, xa, ya, vfric, afric){
-    if(p.forces[o.playerForceId] === undefined) {
-        o.playerForceId = p.forces.length;
-        p.forces[o.playerForceId] = [xv, yv, xa, ya, vfric, afric];
-    } else {
-        p.forces[o.playerForceId][0] += xv;
-        p.forces[o.playerForceId][1] += yv;
-        p.forces[o.playerForceId][2] += xa;
-        p.forces[o.playerForceId][3] += ya;
-    }
-}
-
-function addVelSetAccelForce(p, o, xv, yv, xa, ya, vfric, afric){
-    if(p.forces[o.playerForceId] === undefined) {
-        o.playerForceId = p.forces.length;
-        p.forces[o.playerForceId] = [xv, yv, xa, ya, vfric, afric];
-    } else {
-        p.forces[o.playerForceId][0] += xv;
-        p.forces[o.playerForceId][1] += yv;
-        p.forces[o.playerForceId][2] = xa;
-        p.forces[o.playerForceId][3] = ya;
-    }
 }
 
 const satMap = [
@@ -1258,7 +1219,11 @@ const effectMap = [
 
         angle = Math.atan2(res.overlapV.y, res.overlapV.x);
 
-        addForce(p, o, 0, 0, Math.cos(angle) * o.bounciness, Math.sin(angle) * o.bounciness, p.friction, o.decay);
+        p.forces.push(
+            Math.cos(angle) * o.bounciness,
+            Math.sin(angle) * o.bounciness,
+            o.decay
+        )
     },
     /*custom*/
     () => {},
@@ -1344,7 +1309,7 @@ const effectMap = [
     },
     /*conveyor*/
     (p, res, o) => {
-        addForce(p, o, 0, 0, Math.cos(o.conveyorAngle) * o.conveyorForce, Math.sin(o.conveyorAngle) * o.conveyorForce, p.friction, o.conveyorFriction);
+        p.forces.push(Math.cos(o.conveyorAngle) * o.conveyorForce, Math.sin(o.conveyorAngle) * o.conveyorForce, o.conveyorFriction);
     },
     /*platformer*/
     (p, res, o, id) => {
@@ -1352,7 +1317,7 @@ const effectMap = [
         o.jumpCooldown--;
 
         // add conveyor force
-        addForce(p, o, 0, 0, Math.cos(o.platformerAngle) * o.platformerForce, Math.sin(o.platformerAngle) * o.platformerForce, p.friction, o.platformerFriction);
+        p.forces.push(Math.cos(o.platformerAngle) * o.platformerForce, Math.sin(o.platformerAngle) * o.platformerForce, o.platformerFriction);
 
         // idea: find the amount of x/y the player moves in the platformer and move the opposite to effectively lock the player's motion perpendicular to the platformer's direction
         const playerVelAngle = Math.atan2(p.yv, p.xv);
@@ -1373,8 +1338,7 @@ const effectMap = [
             o.canJump = true;
             // OLD: if we're within 30 degrees, jump; NEW: if the mouse is above the thumbs up in the rendering
             if(/*Math.abs(shortAngleDist(o.platformerAngle + Math.PI, playerVelAngle)) < Math.PI / 6*/(window.dragging === true || (window.isExClient === true && p.ya < -0.01)) && p.pos.y - window.mouseY > p.sat.r + 50){
-                // p.forces.push([-Math.cos(o.platformerAngle) * o.jumpForce, -Math.sin (o.platformerAngle) * o.jumpForce, o.jumpFriction, 0, 0]);
-                setForce(p, o.jumpForceObj, -Math.cos(o.platformerAngle) * o.jumpForce * 2000, -Math.sin(o.platformerAngle) * o.jumpForce, 0, 0, o.jumpFriction, 0);
+                p.forces.push(-Math.cos(o.platformerAngle) * o.jumpForce, -Math.sin(o.platformerAngle) * o.jumpForce, o.jumpFriction);
                 o.jumpCooldown = o.maxJumpCooldown;
                 o.midairStoredJump = false;
                 o.justJumped = true;
@@ -2851,8 +2815,6 @@ window.createPlayer = () => {
     player.onSafe = false;
     player.touchingWall = false;
     player.stopForces = false;
-    player.requestForceId=()=>{return player.nextForceId++;}
-    player.nextForceId = 0;
     player.forces = [];
     player.id = undefined;
     player.dev = true; /*dev only for players[selfId]*/ player.god = false;

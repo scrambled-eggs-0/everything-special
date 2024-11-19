@@ -31,13 +31,15 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                 }
                 p.conveyorFriction = 0.8;
                 p.conveyorAngleRotateSpeed = 0;
-                p.conveyorForce = params.force / 10000 * 7.08 * 5 / 16.66 * 2;
+                p.conveyorForce = params.force / 10000 * 7.08 * 5 / 16.66 * 2 * 5/3;
 
                 if(params.x === 2000 && params.y === 11300/2){
                     p.conveyorForce /= 2;
                 } else if(params.x === 3200/2 && params.y === 12000/2){
                     p.conveyorForce /= 2;
                 }
+
+                if(special === 'poqt') p.conveyorForce *= 1.05;
                 return p;
             }
         },
@@ -841,6 +843,8 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                 } else {
                     p.canJumpMidair = false;
                 }
+
+                p.platformerForce *= 5/3;
                 
                 return p;
             }
@@ -1322,6 +1326,23 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                 },cr:(o)=>{
                     if(dyingTimer < 0) return;
 
+                    if(${special === 'poqt'}){
+                        window.renderBelowFunctions.push(() => {
+                            ctx.globalAlpha = dyingTimer / 30;
+                            ctx.lineWidth = 4;
+                            ctx.strokeStyle = 'black';
+                            ctx.fillStyle = '#107691';
+
+                            ctx.beginPath();
+                            ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.stroke();
+                            ctx.closePath();
+                            ctx.globalAlpha = 1;
+                        });
+                        return;
+                    }
+
                     ${special === 'posc' ? `
                     ctx.save();
                     ctx.beginPath();
@@ -1558,11 +1579,18 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                 w: params.bound.w * 2,
                 h: params.bound.h * 2
             };
-            params.flSize -= params.radius;
-            params.flSize *= 1.5;
-            params.flSize += params.radius * 1.2;
+            if(special !== 'poqt'){
+                params.flSize -= params.radius;
+                params.flSize *= 1.5;
+                params.flSize += params.radius * 1.2;
+            } else {
+                params.flSize *= 1.26;
+            }
+            
             counter++;
             if(window.isServer === true) return `\n`;
+            let alwaysOverrideAngle = undefined;
+            if(special !== 'povv' && params.flashlightDir !== undefined) alwaysOverrideAngle = params.flashlightDir;
             return `
             var xv${counter} = ${params.xv/33};
             var yv${counter} = ${params.yv/33};
@@ -1592,7 +1620,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
             base${counter} = obstacles[obstacles.length-1];
 
             {let overrideAngle=undefined;let angle=0;C(4,[],[1],{"r":${params.flSize*2}*2/3,boundPlayer:false,"innerRadius":0,"startSliceAngle":0,"endSliceAngle":0,"startSliceAngleRotateSpeed":0,"endSliceAngleRotateSpeed":0,"x":base${counter}.pos.x,"y":base${counter}.pos.y,sf:(o,p)=>{
-                angle = Math.atan2(yv${counter}, xv${counter});
+                angle = ${alwaysOverrideAngle !== undefined ? alwaysOverrideAngle : "Math.atan2(yv${counter}, xv${counter});"}
 
                 if(overrideAngle !== undefined) angle = overrideAngle;
 
@@ -1640,7 +1668,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                             ctx.lineTo(o.pos.x, o.pos.y);
                         })
                     }
-                } else {
+                } else if(${special !== 'poqt'}) {
                     if(o.pos.x < 18150){
                         overrideAngle = 0;
                     } else {
@@ -2575,7 +2603,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
             continue;
         }
 
-        if(special === 'povv' || special === 'posc'){
+        if(special === 'povv' || special === 'posc' || special === 'poqt'){
             if(o.type === 'door'){
                 o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
                 str += `window.morphsTriggered[${o.id}]=false;var x${o.id}=${o.x};C(1,[],[0],{y:${o.y},x:${o.x},w:${o.w},h:${o.h},

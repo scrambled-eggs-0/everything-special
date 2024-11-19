@@ -34,6 +34,8 @@ when decoupling rendering from simulation (interpolation) make sure to regenerat
 
 invisible maze but you have grapple with 0 force
 
+make plat arrow move speed sync with terminal falling speed
+
 Advanced music extra file that overrides play, pause, etc. Loads the youtube api behind the scenes (https://www.youtube.com/iframe_api)
 let player = new YT.Player('player', {
     height: '360',
@@ -113,7 +115,6 @@ tutorial
 
 New plan (17th-20th)
 - sync map system
-- fix networking bugs
 - win messages or some way to tell that players are 
 - import poqt (funky version)
 - import pohistory

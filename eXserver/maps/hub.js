@@ -130,7 +130,9 @@ C(1,[],[22],{h:200,w:200,y:4200,x:2800,mapName:'pos'});
 
 C(1,[],[22],{h:200,w:200,y:6600,x:6100,mapName:'povv'});
 
-C(1,[],[22],{h:100*2,w:100*2,y:2100*2+200,x:4650*2,mapName:'pospd'});
+C(1,[],[22],{h:200,w:200,y:4400,x:9300,mapName:'pospd'});
+
+C(1,[],[22],{h:200,w:200,y:4200,x:2200,mapName:'poqt'});
 
 var difficultyChangeTime, maxDifficultyChangeTime;
 difficultyChangeTime = maxDifficultyChangeTime = 1000;
