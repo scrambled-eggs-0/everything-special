@@ -72,8 +72,8 @@ function handleKey(e){
             if(msg === '/reset'){
                 window.changeMap('/maps/hub');
             }
-            else if(msg.slice(0,10) === '/changeMap'){
-                window.changeMap(`/maps/` + msg.slice(11).toLowerCase());
+            else if(msg.slice(0,6) === '/tpmap'){
+                window.changeMap(`/maps/` + msg.slice(7).toLowerCase());
             }
             else if(msg.slice(0,6) === '/scale'){
                 const num = parseFloat(msg.slice(7));

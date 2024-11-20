@@ -117,6 +117,7 @@ New plan (17th-20th)
 - sync map system
 - win messages or some way to tell that players are 
 - import poqt (funky version)
+    - music!
 - fix pohistory (down the list gets more optional)
     - z8 and z9
     - e1 render like e1, e2 like e2, ex like ex

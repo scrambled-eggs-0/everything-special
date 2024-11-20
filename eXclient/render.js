@@ -139,7 +139,7 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
             ctx.translate(canvas.w/2, canvas.h/2);
             ctx.rotate(-Math.PI/2-me.shipAngle);
             ctx.translate(-canvas.w/2, -canvas.h/2);
-            overRenderTiles = true;            
+            overRenderTiles = true;
         }
     }
 

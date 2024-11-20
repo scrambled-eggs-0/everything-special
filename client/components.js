@@ -178,6 +178,7 @@ function simulate(){
     }
 
     if(player.dead === true){
+        player.forces.length = 0;
         player.renderRadius = player.lastAliveRadius;
         for(let i = 0; i < obstacles.length; i++){
             // obstacle simulation
@@ -1330,14 +1331,13 @@ const effectMap = [
         p.pos.y -= Math.sin(o.platformerAngle) * distMovedOnPlatAngle;
 
         const touchingNormalThisFrame = p.touchingNormalIndexes.length !== 0 || (p.lastTouchingNormalIndexes[p.lastTouchingNormalIndexes.length-1] >= id && o.justJumped === false) || p.touchingWall === true;
-        o.midairStoredJump = o.midairStoredJump || touchingNormalThisFrame;
         o.justJumped = false;
 
         // checking if we were either intersecting with a normal last frame that's indexed after the obs or we are intersecting with a normal rn
         if(o.jumpCooldown <= 0 && (touchingNormalThisFrame === true || (o.canJumpMidair === true && o.midairStoredJump === true))){
+            o.midairStoredJump = o.midairStoredJump || touchingNormalThisFrame;
             o.canJump = true;
-            // OLD: if we're within 30 degrees, jump; NEW: if the mouse is above the thumbs up in the rendering
-            if(/*Math.abs(shortAngleDist(o.platformerAngle + Math.PI, playerVelAngle)) < Math.PI / 6*/(window.dragging === true || (window.isExClient === true && p.ya < -0.01)) && p.pos.y - window.mouseY > p.sat.r + 50){
+            if(Math.abs(shortAngleDist(o.platformerAngle + Math.PI, playerVelAngle)) < Math.PI / 2 && Math.sqrt(p.xv**2+p.yv**2)>.01){
                 p.forces.push(-Math.cos(o.platformerAngle) * o.jumpForce, -Math.sin(o.platformerAngle) * o.jumpForce, o.jumpFriction);
                 o.jumpCooldown = o.maxJumpCooldown;
                 o.midairStoredJump = false;
@@ -1360,7 +1360,7 @@ const effectMap = [
         // translate the player to the snapGrid until its like the snap grid is unrotated. Then we snap
         // by moduloing the x to the grid and then rotate back to get the final position.
         o.snapCooldown--;
-        
+
         if(o.snapCooldown <= 0 && ((o.toSnapX === true && Math.abs(p.xv) > 0.01) || (o.toSnapY === true && Math.abs(p.yv) > 0.01))){
             o.snapCooldown = o.maxSnapCooldown;
             let playerSnapAngle = Math.atan2(o.toSnapY === true ? p.yv : 0, o.toSnapX === true ? p.xv : 0);

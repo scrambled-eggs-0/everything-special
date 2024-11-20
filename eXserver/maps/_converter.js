@@ -840,6 +840,13 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                         p.jumpDecay = 0.92;
                         p.platformerFriction = 0.9;
                     }
+                } else if(special === 'poqt'){
+                    p.canJumpMidair = true;
+                    if(params.specialPOQTPlatformer === true){
+                        p.platformerFriction = 0.8;
+                        p.jumpForce *= 0.72;
+                        p.platformerForce *= 3;
+                    }
                 } else {
                     p.canJumpMidair = false;
                 }
@@ -1725,6 +1732,32 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
             //     },
             //     "inView": false
             // },
+        },
+        nokill: (params) => {
+            const bounds = {
+                x: params.bound.x * 2,
+                y: params.bound.y * 2,
+                w: params.bound.w * 2,
+                h: params.bound.h * 2
+            };
+            counter++;
+            return `
+            var xv${counter} = ${params.xv/12};
+            var yv${counter} = ${params.yv/12};
+            C(0,[3],[0],{r:${params.radius*2},y:${params.y*2},x:${params.x*2},boundPlayer:false,sf:(e)=>{
+            e.pos.y += yv${counter};
+            e.pos.x += xv${counter};
+            if ((e.pos.x - e.sat.r) < ${bounds.x} || e.pos.x + e.sat.r > ${bounds.x + bounds.w}) {
+                xv${counter} = xv${counter} * -1;
+                if(e.pos.x - e.sat.r < ${bounds.x}) e.pos.x = ${bounds.x} + e.sat.r;
+                else e.pos.x = -e.sat.r + ${bounds.x + bounds.w};
+            }
+            if ((e.pos.y - e.sat.r) < ${bounds.y} || e.pos.y + e.sat.r > ${bounds.y + bounds.h}) {
+                yv${counter} = yv${counter} * -1;
+                if(e.pos.y - e.sat.r < ${bounds.y}) e.pos.x = ${bounds.y} + e.sat.r;
+                else e.pos.y = -e.sat.r + ${bounds.y + bounds.h};
+            }
+            }});\n`
         }
     }
 
@@ -1778,7 +1811,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
 
     let str = '';
 
-    if(special === 'povv' && window.isServer !== true){
+    if((special === 'povv' || special === 'poqt') && window.isServer !== true){
         // parent and child ids
         const alreadyLoggedEnemy = {};
         for(let i = 0; i < enemies.length; i++){
@@ -1804,6 +1837,9 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                             child.pos.y = parentMiddleY + childOffsetY - child.dimensions.y/2;
                         }})
                     }`
+                }
+                if(special === 'poqt'){
+                    str += `\nobstacles[obstacles.length-1].isEnemy = true;`
                 }
             } else if(alreadyLoggedEnemy[enemies[i].type] === undefined){
                 alreadyLoggedEnemy[enemies[i].type] = true;
@@ -2072,19 +2108,20 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
             //     "inView": false
             // },
             continue;
-        } else if(o.type === 'morphmove'){
+        } else if(o.type === 'morphmove' || o.type === 'morphlavamove'){
             o.x = o.points[o.currentPoint][0]*2;
             o.y = o.points[o.currentPoint][1]*2;
             o.w *= 2; o.h *= 2;
-            str += `var morphTriggered${o.morphId} = false;var morphOffset${o.morphId} = Math.random() * Math.PI * 2;var lastMorphTriggered${o.morphId} = false; {let moveActive = false;let lastCurrentPoint = ${o.currentPoint};
-            C(1,[0],[0],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},
+            str += `var morphTriggered${o.morphId} = false;var morphOffset${o.morphId} = Math.random() * Math.PI * 2;{let lastMorphTriggered = false;let moveActive = false;let lastCurrentPoint = ${o.currentPoint};
+            C(1,[0],[${o.type === 'morphmove' ? 0:1}],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},${o.type ==='morphlavamove'?`boundPlayer:${o.collidable},`:''}
                 path: [${o.points.map(p => `[${p[0]*2},${p[1]*2},0]`)}],
                 currentPoint: ${o.currentPoint},
-                sf:(o) => {
-                    if(moveActive === false && morphTriggered${o.morphId} !== lastMorphTriggered${o.morphId}){
-                        console.log('triggered1');
+                sf:(o,p) => {
+                    o.morphMoveId = ${o.morphId};
+                    if((moveActive === false && morphTriggered${o.morphId} !== lastMorphTriggered && o.waitUntilTrue === false) || (moveActive === false && o.waitUntilTrue === true && morphTriggered${o.morphId} === false)){
+                        ${special === 'poqt' && o.x > 48000 && o.x < 51000 ? `morphsStillMoving${o.morphId}++;`: ''}
                         moveActive = true;
-                        lastMorphTriggered${o.morphId} = morphTriggered${o.morphId};
+                        lastMorphTriggered = morphTriggered${o.morphId};
 
                         for(let i = 0; i < o.path.length; i++){
                             o.path[i][2] = ${o.speed/30};
@@ -2098,7 +2135,23 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                     }
 
                     if(moveActive === true && lastCurrentPoint !== o.currentPoint) {
-                        lastMorphTriggered${o.morphId} = morphTriggered${o.morphId} = false;
+                        lastMorphTriggered = ${special === 'poqt' && o.x > 48000 && o.x < 51000 ? "" : `morphTriggered${o.morphId} =`} false;
+                        ${
+                            special === 'poqt' && o.x > 48000 && o.x < 51000 ? `o.waitUntilTrue=true;morphsStillMoving${o.morphId}--;
+                            if(morphsStillMoving${o.morphId} === 0) {
+                                morphTriggered${o.morphId}=false;
+                                for(let i = 0; i < obstacles.length; i++){
+                                    if(obstacles[i].morphMoveId === o.morphMoveId){
+                                        obstacles[i].waitUntilTrue = false;
+                                    }
+                                }
+
+                                if(p.pos.y > 19100 && p.pos.x > 48700 && p.pos.x < 50200){
+                                    p.pos.x = 48700;
+                                    p.pos.y = 19150; 
+                                }
+                            }
+                        ` : ""}
                         lastCurrentPoint = o.currentPoint;
                         moveActive = false;
                         o.pos.x = o.path[o.currentPoint][0];
@@ -2115,7 +2168,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                         o.timeRemain = Math.sqrt((o.pointOn[0] - o.pointTo[0])**2 + (o.pointOn[1] - o.pointTo[1])**2) / o.speed;
                     }
                 }
-            })};\n`;
+            });obstacles[obstacles.length-1].waitUntilTrue = false;};\n`;
             continue;
         } else if(o.type === 'morphbutton'){
             // {
@@ -2131,7 +2184,8 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
             //     "inView": false
             // },
             o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
-            str += `var morphTriggered${o.morphId} = false;
+            if(special === 'poqt' && o.x > 48000 && o.x < 51000) console.log('!');
+            str += `${special === 'poqt' && o.x > 48000 && o.x < 51000 ? `var morphsStillMoving${o.morphId}=0;`: ''}var morphTriggered${o.morphId} = false;
             C(1,[],[5],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},
                 cr:(e)=>{
                     ctx.globalAlpha = 0.8;
@@ -2213,6 +2267,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                     time--;
 
                     if(time < 0){
+                        ${special === 'poqt' && o.x > 48000 && o.x < 51000 ? `return;`: ""}
                         morphTriggered${o.morphId} = false;
                         time = maxTime;
                         timeActive = false;
@@ -2220,7 +2275,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                 },
                 ef:(e) => {
                     if(timeActive === true) return;
-                    morphTriggered${o.morphId} = true;    
+                    morphTriggered${o.morphId} = true;
                     timeActive = true;
                     time = maxTime;
                 }
@@ -2627,6 +2682,16 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
             }});\n`,
             counter++;
             continue;
+        } else if(special === 'poqt' && o.type === 'normal' && o.canJump === false && o.x > 46750/2 && o.x < 50350/2){
+            o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
+            str += `C(1,[],[3],{x:${o.x},y:${o.y},w:${o.w},h:${o.h},cr:(o)=>{
+                ctx.fillStyle = colors.tile;
+                ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y);
+            },ef:(p,res,o)=>{
+                p.pos.x += res.overlapV.x;
+                p.pos.y += res.overlapV.y;
+            }});\n`;
+            continue;
         }
 
         if(special === 'poqt' && o.type === 'invpu'){
@@ -2692,6 +2757,35 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                         window.morphsTriggered[${o.id}] = true;
                     }
                 }); var c = window.obstacles[window.obstacles.length-1]; window.linkButtons[${o.id}] = {pos: {x: c.pos.x, y: c.pos.y}, dimensions: {x: c.dimensions.x, y: c.dimensions.y}};\n`
+                continue;
+            } else if(o.type === 'gun'){
+                // o.state
+                o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
+                str += `C(1,[],[3],{x:${o.x},y:${o.y},w:${o.w},h:${o.h},cr:(o)=>{
+                    ctx.fillStyle = "${o.state === true ? '#bd8b0d' : '#6e7175'}";
+                    ctx.setLineDash([30, 80]);
+                    ctx.lineDashOffset = Math.sin(window.frames/60 * 0.6) * 350;
+                    ctx.strokeStyle = ctx.fillStyle;
+                    ctx.lineWidth = 4;
+                    ctx.lineCap = 'round';
+                    ctx.globalAlpha = 0.3;
+                    ctx.fillRect(
+                        o.pos.x,
+                        o.pos.y,
+                        o.dimensions.x,
+                        o.dimensions.y
+                    );
+                    ctx.globalAlpha = 1;
+                    ctx.strokeRect(
+                        o.pos.x + 4,
+                        o.pos.y + 4,
+                        o.dimensions.x - 8,
+                        o.dimensions.y - 8
+                    );
+                    ctx.setLineDash([]);
+                },ef:(p,res,o)=>{
+                    window.gunActive = ${o.state};
+                }});\n`;
                 continue;
             } else if(o.type === 'zone'){// TEMP PLEASE REMOVE
                 if(window.zones === undefined) window.zones = [];

@@ -7,9 +7,20 @@
 
         C(1,[],[0],{x:22400,y:0,w:4900,h:20000});
         C(1,[],[0],{x:50000,y:0,w:5000,h:20000});
+        C(1,[],[5],{x:39600,y:0,w:300,h:300,cr:()=>{}});
+        C(1,[],[5],{x:36900,y:0,w:300,h:300,cr:()=>{}});
+        C(1,[],[11],{x:44750,y:18400,w:300,h:400});
 
         // NEWPOQT Z2 only
         const obs = [
+            {
+                "x": 2175,
+                "y": 9500,
+                "w": 225,
+                "h": 575,
+                "renderAbove": false,
+                "type": "safe"
+            },
             {
                 "x": 12250,
                 "y": 0,
@@ -2792,7 +2803,7 @@
             },
             {
                 "x": 1600,
-                "y": 7975,
+                "y": 7960,
                 "w": 550,
                 "h": 0,
                 "type": "snap",
@@ -2966,7 +2977,7 @@
             {
                 "x": 1500,
                 "y": 9550,
-                "w": 625,
+                "w": 675,
                 "h": 450,
                 "type": "lava",
                 "canCollide": false,
@@ -4191,16 +4202,16 @@
                 "type": "block",
                 "inView": false
             },
-            {
-                "x": 6300,
-                "y": 6050,
-                "w": 650,
-                "h": 50,
-                "type": "invpu",
-                "amount": 0.63,
-                "maxAmount": 0.63,
-                "inView": false
-            },
+            // { // !xd2
+            //     "x": 6300,
+            //     "y": 6050,
+            //     "w": 650,
+            //     "h": 50,
+            //     "type": "invpu",
+            //     "amount": 0.63,
+            //     "maxAmount": 0.63,
+            //     "inView": false
+            // },
             {
                 "points": [
                     [
@@ -4267,8 +4278,8 @@
                 "w": 650,
                 "h": 50,
                 "type": "invpu",
-                "amount": 0.82,
-                "maxAmount": 0.82,
+                "amount": 0.41,
+                "maxAmount": 0.41,
                 "inView": false
             },
             {
@@ -5160,14 +5171,6 @@
                 "type": "normal",
                 "canJump": true,
                 "inView": false
-            },
-            {
-                "x": 2175,
-                "y": 9500,
-                "w": 225,
-                "h": 575,
-                "renderAbove": false,
-                "type": "safe"
             },
             {
                 "x": 3400,
@@ -8869,7 +8872,8 @@
                 "jumpHeight": 215,
                 "maxForce": 1000,
                 "variableJumpHeight": false,
-                "platformerFriction": 0.8
+                "platformerFriction": 0.8,
+                "specialPOQTPlatformer": true
             },
             {
                 "x": 22375,
@@ -9835,7 +9839,7 @@
                     "y": 2800
                 },
                 "direction": "down",
-                "jumpHeight": 140,
+                "jumpHeight": 105,// !tet
                 "maxForce": 1000,
                 "variableJumpHeight": false,
                 "platformerFriction": 0.8
@@ -27574,16 +27578,6 @@
                 "story": false
             },
             {
-                "x": 16450,
-                "y": 7650,
-                "w": 25,
-                "h": 25,
-                "size": 85,
-                "text": "Shoot {me().aliveEnemiesCustom} More",
-                "angle": 0,
-                "story": false
-            },
-            {
                 "x": 14825,
                 "y": 75,
                 "w": 25,
@@ -27735,6 +27729,45 @@
             }
         ]);
 
+        obs.push(...[[
+            {
+                "x": 2150,
+                "y": 7100,
+                "w": 150,
+                "h": 250,
+                "color": "#000000",
+                "type": "block",
+                "inView": false
+            },
+            {
+                "x": 2150,
+                "y": 7850,
+                "w": 300,
+                "h": 250,
+                "color": "#000000",
+                "type": "block",
+                "inView": true
+            },
+            {
+                "x": 2200,
+                "y": 8500,
+                "w": 150,
+                "h": 475,
+                "color": "#000000",
+                "type": "block",
+                "inView": false
+            },
+            {
+                "x": 2125,
+                "y": 9450,
+                "w": 300,
+                "h": 625,
+                "color": "#000000",
+                "type": "block",
+                "inView": false
+            }
+        ]])
+
         window.linkDoors = {};
         window.linkButtons = {};
         window.morphsTriggered = {};
@@ -27815,8 +27848,8 @@
             ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y);
         }})
 
-        // temporary tp connecting z1 and z3. Will make a z2 that you have to beat first (tetris iframe)
-        C(0,[],[12],{tpx:55150,tpy:14450,x:150,y:12250,r:150});
+        // temporary tp connecting z1 and z3. Prediction dodging replaced it.
+        // C(0,[],[12],{tpx:55150,tpy:14450,x:150,y:12250,r:150});
 
         // various gap-fillers
         C(0,[],[3],{cr:()=>{},x:55150,y:14450,r:1,ef:()=>{
@@ -27826,6 +27859,11 @@
         C(1,[],[0],{x:59400,y:14300,w:200,h:400});
         C(1,[],[0],{x:59400,y:15700,w:200,h:400});
         C(1,[],[0],{x:59450,y:19100,w:100,h:900});
+
+        C(1,[],[0],{x:80000,y:0,w:2000,h:20000});
+
+        // z3 (the second rythmn section) -> z4 (the reaction time sec)
+        C(1,[],[12],{tpx:30550,tpy:15050,x:79700,y:19900,w:100,h:100});
 
         // invincibility powerups
 
@@ -27872,8 +27910,1186 @@
             continue;
         }
         eval(str2);
+
+        for(let i = 0; i < window.obstacles.length; i++){
+            if(window.obstacles[i].boundPlayer === undefined)continue;
+
+            const oldEffect = window.obstacles[i].effect[0];
+            window.obstacles[i].effect[0] = (p, res, o, id) => {
+                oldEffect(p, res, o, id);
+                p.touchingNormalIndexes.push(id);
+            }
+        }
+
+        window.gunActive = false;
+        let deadEnemies = 0;
+        {
+            const enemies = obstacles.filter(o => o.isEnemy === true);
+            // gun
+            let bullets = [];
+            let maxCooldown = 20;
+            let cooldown = 0;
+            let speed = 12;
+            C(0,[],[3],{x:-1E9,y:0,cr:()=>{
+                if(window.gunActive === false) return;
+                // gun head on the player
+                ctx.fillStyle = '#bd8b0d';
+
+                const p = window.players[window.selfId];
+                const angle = Math.sqrt(p.yv**2 + p.xv**2) < 0.01 ? 0 : Math.atan2(p.yv, p.xv);
+                ctx.beginPath();
+                ctx.arc(
+                    p.pos.x,
+                    p.pos.y,
+                    p.renderRadius / 1.7,
+                    0,
+                    Math.PI * 2
+                );
+                ctx.fill();
+                ctx.translate(p.pos.x, p.pos.y);
+                ctx.rotate(angle - Math.PI/2);
+                ctx.fillRect(
+                    -p.renderRadius / 2.4,
+                    p.renderRadius / 2.4,
+                    p.renderRadius / 1.2,
+                    p.renderRadius / 1.25
+                );
+                ctx.rotate(-angle+Math.PI/2);
+                ctx.translate(-p.pos.x, -p.pos.y);
+
+                ctx.globalAlpha = 1;
+                for (let i = 0; i < bullets.length; i++) {
+                    let bpos = bullets[i];
+                    if (bullets[i].life < 30) {
+                        ctx.globalAlpha = bullets[i].life / 30;
+                    }
+                    ctx.beginPath();
+                    ctx.arc(
+                        bpos.x,
+                        bpos.y,
+                        bullets[i].radius,
+                        0,
+                        Math.PI * 2
+                    );
+                    ctx.fill();
+                    ctx.strokeStyle = 'black';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    ctx.closePath();
+                    ctx.globalAlpha = 1;
+                }
+            },sf:(o,p)=>{
+                if(window.gunActive === false){
+                    bullets.length = 0;
+                    return;
+                }
+                // simulate bullets
+                for(let i = 0; i < bullets.length; i++){
+                    bullets[i].x += bullets[i].xv;
+                    bullets[i].y += bullets[i].yv;
+                    bullets[i].life--;
+
+                    for(let j = 0; j < enemies.length; j++){
+                        if(enemies[j].sat.r === undefined) continue;
+                        // all enemies that im considering are circular,
+                        // generalize w/ bound when adding powerup fr
+                        let dist = Math.sqrt(
+                            (enemies[j].pos.x - bullets[i].x) ** 2 +
+                            (enemies[j].pos.y - bullets[i].y) ** 2
+                        );
+
+                        if(dist < enemies[j].sat.r + bullets[i].radius){
+                            if(enemies[j].deadTime === undefined) deadEnemies++;
+                            enemies[j].deadTime = 180;
+                            const ef = enemies[j].effect;
+                            enemies[j].effect = new Array(ef.length).fill(()=>{});
+                            enemies[j].cr = () => {
+                                enemies[j].deadTime--;
+                                if(enemies[j].deadTime <= 0) {delete enemies[j].cr;deadEnemies--;enemies[j].deadTime = undefined;enemies[j].effect = ef;}
+
+                                ctx.toFill = true;
+                                ctx.toStroke = false;
+                                ctx.lineWidth = 4; 
+                                ctx.beginPath();
+                                enemies[j].renderShape(enemies[j]);
+                                enemies[j].renderEffect[0](enemies[j]); 
+                                ctx.globalAlpha = (200 - enemies[j].deadTime) / 200;
+                                if(ctx.toFill === true) ctx.fill();
+                                if(ctx.toStroke === true) ctx.stroke();
+                                if(ctx.cleanUpFunction !== undefined) { ctx.cleanUpFunction(); ctx.cleanUpFunction = undefined; }
+                                ctx.closePath();
+                                ctx.globalAlpha = 1;
+                            }
+                        }
+                    }
+                }
+                bullets = bullets.filter(b => b.life >= 0);
+
+                if(input.shift === false) return;
+                cooldown--;
+
+                if(cooldown <= 0){
+                    cooldown += maxCooldown;
+
+                    const angle = Math.sqrt(p.yv**2 + p.xv**2) < 0.01 ? 0 : Math.atan2(p.yv, p.xv);
+                    bullets.push({
+                        x: p.pos.x,
+                        y: p.pos.y,
+                        radius: p.sat.r / 1.2,
+                        xv: Math.cos(angle) * speed,
+                        yv: Math.sin(angle) * speed,
+                        life: 180
+                    })
+                }
+            }})
+        }
+
+        // {
+        //     "x": 16450,
+        //     "y": 7650,
+        //     "w": 25,
+        //     "h": 25,
+        //     "size": 85,
+        //     "text": "Shoot {me().aliveEnemiesCustom} More",
+        //     "angle": 0,
+        //     "story": false
+        // },
+
+        // shoot door
+        {
+            let shootDoorOpen = false;
+            C(3,[],[20],{hex:"#FFFFFF", alpha: 1, x: 16450*2,y: 7650*2,fontSize: 170, text:`Shoot ${6 - deadEnemies} more!`,sf:(o,p)=>{
+                o.text = `Shoot ${6 - deadEnemies} more!`;
+                if(shootDoorOpen === true) o.text = "Door Unlocked!";
+                o.dimensions = window.generateDimensions(o);
+                // o.topLeft = window.generateTopLeftCoordinates(o);
+                o.pos.x = 16450*2 - o.dimensions.x / 2;
+                o.pos.y = 7650*2 - o.dimensions.y / 2;
+                if(p.pos.x <= 31000){
+                    shootDoorOpen = false;
+                } else if(deadEnemies === 6){
+                    shootDoorOpen = true;
+                }
+            }})
+
+            C(1,[],[0],{x:33000,y:13500,w:700,h:1000,sf:(o)=>{
+                if(shootDoorOpen === true){
+                    o.pos.x = -1E9;
+                } else {
+                    o.pos.x = 33000;
+                }
+            }})
+        }
+        
+        // flip screen
+        {
+            let collided = false; let lastCollided = false;
+            C(1,[],[3],{x:33200,y:3100,w:1600,h:1600,cr:()=>{},ef:()=>{
+                collided = true;
+                canvas.style.transform = "scale(-1,-1)";
+            },sf:()=>{
+                if(lastCollided === true && collided === false){
+                    canvas.style.transform = "";
+                }
+                lastCollided = collided;
+                collided = false;
+            }})
+        }
     }
 })();
+
+
+// prediction-dodging
+{
+    let lastW = canvas.w;
+    let lastH = canvas.h;
+    canvas.w = 3200;
+    canvas.h = 1800;
+
+    // OBSTACLE CLASSES
+    class Turret {
+        constructor (x,y,r,shootRadius,shootTime,shootSpeed,speedupMult){
+            this.x = x;
+            this.y = y;
+            this.radius = r;
+            this.shootRadius = shootRadius;
+            this.shootTimer = shootTime;
+            this.shootTime = shootTime;
+            this.shootSpeed = shootSpeed;
+            this.bullets = [];
+            this.type = 'turret';
+            this.speedUpMult = speedupMult;
+        }
+        render(){
+            ctx.lineWidth = 6 * 2;
+            ctx.strokeStyle = '#453232';
+            ctx.fillStyle = '#291f1f';
+            for(let bullet of this.bullets){
+                ctx.beginPath();
+                ctx.arc(bullet.x,bullet.y,bullet.radius,0,Math.PI*2);
+                ctx.fill();
+                ctx.stroke();
+                ctx.closePath();
+            }
+            ctx.strokeStyle = '#323645';
+            ctx.fillStyle = '#1f2229';
+            ctx.beginPath();
+            ctx.lineWidth = 4 * 2;
+            ctx.arc(this.x,this.y,this.radius,0,Math.PI*2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();
+        }
+        simulate(pl){
+            this.shootTimer --;
+            if(this.shootTimer < 0){
+                let angle = this.predictAngle(pl);
+                this.bullets.push(new Bullet(this.x,this.y,this.shootRadius,this.shootSpeed,angle));
+                this.shootTimer += this.shootTime;
+                this.shootTime *= this.speedUpMult;
+            }
+            this.bullets.forEach((b,i) => {
+                let toDestroy = b.simulate();
+                if(toDestroy){
+                    this.bullets.splice(i,1);
+                }
+            })
+        }
+        predictAngle(pl){
+            let possibleAngles = [];
+            for(let i = 0; i < Math.PI*2; i+=Math.PI/180){
+                possibleAngles.push({
+                    angle:i,
+                    x: this.x,
+                    y: this.y,
+                    radius: this.shootRadius,
+                    xv:Math.cos(i)*this.shootSpeed,
+                    yv:Math.sin(i)*this.shootSpeed
+                });
+            }
+            let futurepl = JSON.parse(JSON.stringify(pl));
+            for(let i = 0; i < 2000; i++){
+                // TODO: account for wall bounding
+                futurepl.x += futurepl.xv;
+                futurepl.y += futurepl.yv;
+                futurepl.xv *= 0.99;
+                futurepl.yv *= 0.99;
+                for(let shot of possibleAngles){
+                    shot.x += shot.xv;
+                    shot.y += shot.yv;
+                    if(intersectingCircleCircle(shot,futurepl)){
+                        return(shot.angle);
+                    }
+                }
+            }
+            return (Math.atan2(this.y-pl.y,this.x-pl.x)+Math.PI);
+        }
+    }
+    
+    class Bullet {
+        constructor(x,y,r,speed,angle){
+            this.x = x;
+            this.y = y;
+            this.radius = r;
+            this.xv = Math.cos(angle)*speed;
+            this.yv = Math.sin(angle)*speed;
+            this.type = 'bullet'
+        }
+        simulate(){
+            this.x += this.xv;
+            this.y += this.yv;
+            if(this.x + this.radius < 0){
+                return true;
+            } else if(this.x - this.radius > canvas.w){
+                return true;
+            }
+            if(this.y + this.radius < 0){
+                return true;
+            } else if(this.y - this.radius > canvas.h){
+                return true;
+            }
+        }
+    }
+    
+    class LaserSpawner {
+        constructor (spawnTime,speedupMult,warmUpTime,laserLife){
+            this.spawnTime = spawnTime;
+            this.laserLife = laserLife;
+            this.spawnTimer = spawnTime;
+            this.warmUpTime = warmUpTime;
+            this.lasers = [];
+            this.type = 'laserspawner';
+            this.speedUpMult = speedupMult;
+        }
+        render(){
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#323645';
+            ctx.fillStyle = '#1f2229';
+            ctx.lineWidth = 20 * 2;
+            ctx.globalAlpha = 0.5;
+            for(let laser of this.lasers){
+                ctx.globalAlpha = 0.5;
+                if(!laser.active){
+                    ctx.globalAlpha = 0.5*(1-laser.warmUpTime/this.warmUpTime);
+                    ctx.strokeStyle = '#323645';
+                } else {
+                    ctx.strokeStyle = '#453232';//'#291f20';
+                    if(laser.life < this.laserLife/5){
+                        ctx.globalAlpha = 0.5*(laser.life*5/this.laserLife);
+                    }
+                }
+                ctx.beginPath();
+                ctx.moveTo(laser.firstPoint.x,laser.firstPoint.y);
+                ctx.lineTo(laser.secondPoint.x,laser.secondPoint.y);
+                ctx.stroke();
+                ctx.closePath();
+            }
+            ctx.globalAlpha = 1;
+        }
+        simulate(pl){
+            this.spawnTimer --;
+            if(this.spawnTimer < 0){
+                let points = this.predictPoints(pl);
+                this.lasers.push(new Laser(points.firstPoint,points.secondPoint,this.warmUpTime,this.laserLife));
+                this.spawnTimer += this.spawnTime;
+                this.spawnTime *= this.speedUpMult;
+            }
+            this.lasers.forEach((l,i) => {
+                let toDestroy = l.simulate();
+                if(toDestroy){
+                    this.lasers.splice(i,1);
+                }
+            })
+        }
+        intersectingLineCircle(line,circle){
+            return lineCircleCollide([line.firstPoint.x,line.firstPoint.y],[line.secondPoint.x,line.secondPoint.y], circle, circle.radius);
+        }
+        predictPoints(pl){
+            let possibleLasers = [];
+            for(let i = 0; i < 250; i++){
+                possibleLasers.push({
+                    firstPoint: this.generateRandomWallPosition(),
+                    secondPoint: this.generateRandomWallPosition(),
+                });
+                while(possibleLasers[possibleLasers.length-1].firstPoint.x === possibleLasers[possibleLasers.length-1].secondPoint.x || possibleLasers[possibleLasers.length-1].firstPoint.y === possibleLasers[possibleLasers.length-1].secondPoint.y){
+                    possibleLasers[possibleLasers.length-1].firstPoint = this.generateRandomWallPosition();
+                }
+            }
+            let futurepl = JSON.parse(JSON.stringify(pl));
+            let futureWarmupTimer = JSON.parse(JSON.stringify(this.warmUpTime));
+            // TODO: later do this.warmuptimer--;
+            while(futureWarmupTimer > 0){
+                futurepl.x += futurepl.xv;
+                futurepl.y += futurepl.yv;
+                futurepl.xv *= 0.99;
+                futurepl.yv *= 0.99;
+                futureWarmupTimer--;
+            }
+            for(let laser of possibleLasers){
+                if(this.intersectingLineCircle(laser,futurepl)){
+                    return(laser);
+                }
+            }
+            return possibleLasers[0];
+        }
+        generateRandomWallPosition(){
+            let wall = Math.random()*4;
+            if(wall < 1){
+                return {
+                    x: Math.random()*canvas.w,
+                    y: 0
+                }
+            } else if(wall < 2){
+                return {
+                    x: Math.random()*canvas.w,
+                    y: canvas.h
+                }
+            } else if(wall < 3){
+                return {
+                    x: 0,
+                    y: Math.random()*canvas.h
+                }
+            } else {
+                return {
+                    x: canvas.w,
+                    y: Math.random()*canvas.h
+                }
+            }
+        }
+    }
+    
+    class Laser {
+        constructor(firstPoint, secondPoint, warmUpTime, life){
+            this.firstPoint = firstPoint;
+            this.secondPoint = secondPoint;
+            this.warmUpTime = warmUpTime;
+            this.life = life+warmUpTime;
+            this.type = 'laser';
+            this.active = false;
+        }
+        simulate(){
+            this.life--;
+            this.warmUpTime--;
+            if(this.warmUpTime < 0){
+                this.active = true;
+            }
+            if(this.life < 0){
+                return true;
+            }
+        }
+    }
+    
+    class NormalEnemySpawner {
+        constructor (spawnRadius,spawnTime,spawnSpeed,spawnLife,speedupMult,warmUpTime){
+            this.spawnRadius = spawnRadius;
+            this.spawnTime = spawnTime;
+            this.spawnSpeed = spawnSpeed;
+            this.spawnLife = spawnLife;
+            this.warmUpTime = warmUpTime;
+            this.enemies = [];
+            this.type = 'normalspawner';
+            this.speedUpMult = speedupMult;
+            this.spawnTimer = spawnTime;
+        }
+        render(){
+            ctx.lineWidth = 6 * 2;
+            ctx.strokeStyle = '#323645';
+            ctx.fillStyle = '#1f2229';
+            for(let enemy of this.enemies){
+                ctx.globalAlpha = 1;
+                if(!enemy.active){
+                    ctx.fillStyle = '#1f2229';
+                    ctx.strokeStyle = '#323645';
+                    ctx.globalAlpha = 1-enemy.warmUpTime/this.warmUpTime;
+                } else {
+                    ctx.strokeStyle = '#453232';
+                    ctx.fillStyle = '#291f1f';
+                    if(enemy.life < this.spawnLife/5){
+                        ctx.globalAlpha = enemy.life*5/this.spawnLife;
+                    }
+                }
+                ctx.beginPath();
+                ctx.arc(enemy.x,enemy.y,enemy.radius,0,Math.PI*2);
+                ctx.fill();
+                ctx.stroke();
+                ctx.closePath();
+            }
+            ctx.globalAlpha = 1;
+        }
+        simulate(pl){
+            this.spawnTimer--;
+            if(this.spawnTimer < 0){
+                let enemy = this.predictAngle(pl);
+                
+                this.enemies.push(new NormalEnemy(enemy.x,enemy.y,this.spawnRadius,this.spawnSpeed,this.warmUpTime,this.spawnLife,enemy.angle));
+                this.spawnTimer += this.spawnTime;
+                this.spawnTime *= this.speedUpMult;
+            }
+            this.enemies.forEach((e,i) => {
+                let toDestroy = e.simulate();
+                if(toDestroy){
+                    this.enemies.splice(i,1);
+                }
+            })
+        }
+        predictAngle(pl){
+            let possibleEnemies = [];
+            for(let i = 0; i < 1000; i++){
+                let angle = Math.random()*Math.PI*2;
+                const dims = {
+                    x: Math.random()*canvas.w,
+                    y: Math.random()*canvas.h,
+                }
+                possibleEnemies.push({
+                    angle: angle,
+                    x: dims.x,
+                    y: dims.y,
+                    radius: this.spawnRadius,
+                    xv:Math.cos(angle)*this.spawnSpeed,
+                    yv:Math.sin(angle)*this.spawnSpeed,
+                    originalx: dims.x,
+                    originaly: dims.y,
+                });
+            }
+            let futurepl = JSON.parse(JSON.stringify(pl));
+            let futureWarmupTimer = this.warmUpTime;
+            while(futureWarmupTimer > 0){
+                futurepl.x += futurepl.xv;
+                futurepl.y += futurepl.yv;
+                futurepl.xv *= 0.99;
+                futurepl.yv *= 0.99;
+                // will still be moving while warmuptimer is going; just wont collide
+                for(let e of possibleEnemies){
+                    e.x += e.xv;
+                    e.y += e.yv;
+                }
+                futureWarmupTimer--;
+            }
+            for(let i = 0; i < this.spawnLife; i++){
+                futurepl.x += futurepl.xv;
+                futurepl.y += futurepl.yv;
+                futurepl.xv *= 0.99;
+                futurepl.yv *= 0.99;
+                for(let e of possibleEnemies){
+                    e.x += e.xv;
+                    e.y += e.yv;
+                    if(intersectingCircleCircle(e,futurepl)){
+                        return({...e, x: e.originalx, y: e.originaly});
+                    }
+                }
+            }
+            return possibleEnemies[0];
+        }
+    }
+    
+    class NormalEnemy {
+        constructor(x,y,r,speed,warmUpTime,life,angle){
+            this.x = x;
+            this.y = y;
+            this.life = life+warmUpTime;
+            this.warmUpTime = warmUpTime;
+            this.radius = r;
+            this.xv = Math.cos(angle)*speed;
+            this.yv = Math.sin(angle)*speed;
+            this.type = 'normalenemy';
+            this.active = false;
+        }
+        simulate(){
+            this.warmUpTime--;
+            if(this.warmUpTime < 0){
+                this.active = true;
+            }
+            this.life --;
+            if(this.life < 0){
+                return true;
+            }
+            this.x += this.xv;
+            this.y += this.yv;
+            if(this.x - this.radius < 0){
+                this.xv *= -1;
+                this.x = this.radius;
+            } else if(this.x + this.radius > canvas.w){
+                this.xv *= -1;
+                this.x = canvas.w-this.radius;
+            }
+            if(this.y - this.radius < 0){
+                this.yv *= -1;
+                this.y = this.radius;
+            } else if(this.y + this.radius > canvas.h){
+                this.yv *= -1;
+                this.y = canvas.h-this.radius;
+            }
+        }
+    }
+    
+    class HomingEnemySpawner {
+        constructor (spawnRadius,spawnTime,spawnSpeed,spawnLife,speedupMult,warmUpTime,homingAngleIncrement){
+            this.spawnRadius = spawnRadius;
+            this.spawnTime = spawnTime;
+            this.spawnSpeed = spawnSpeed;
+            this.spawnLife = spawnLife;
+            this.warmUpTime = warmUpTime;
+            this.enemies = [];
+            this.type = 'homingspawner';
+            this.speedUpMult = speedupMult;
+            this.spawnTimer = spawnTime;
+            this.homingAngleIncrement = homingAngleIncrement
+        }
+        render(){
+            ctx.lineWidth = 6 * 2;
+            ctx.strokeStyle = '#454032';
+            ctx.fillStyle = '#29281f';
+            for(let enemy of this.enemies){
+                ctx.globalAlpha = 1;
+                if(!enemy.active){
+                    ctx.strokeStyle = '#454032';
+                    ctx.fillStyle = '#29281f';
+                    ctx.globalAlpha = 1-enemy.warmUpTime/this.warmUpTime;
+                } else {
+                    ctx.strokeStyle = '#453a32';
+                    ctx.fillStyle = '#291f1f';
+                    if(enemy.life < this.spawnLife/5){
+                        ctx.globalAlpha = enemy.life*5/this.spawnLife;
+                    }
+                }
+                ctx.beginPath();
+                ctx.arc(enemy.x,enemy.y,enemy.radius,0,Math.PI*2);
+                ctx.fill();
+                ctx.stroke();
+                ctx.closePath();
+            }
+            ctx.globalAlpha = 1;
+        }
+        simulate(pl){
+            this.spawnTimer--;
+            if(this.spawnTimer < 0){
+                let enemy = this.predictAngle(pl);
+                
+                this.enemies.push(new HomingEnemy(enemy.x,enemy.y,this.spawnRadius,this.spawnSpeed,this.warmUpTime,this.spawnLife,this.homingAngleIncrement,enemy.angle));
+                this.spawnTimer += this.spawnTime;
+                this.spawnTime *= this.speedUpMult;
+            }
+            this.enemies.forEach((e,i) => {
+                let toDestroy = e.simulate(pl);
+                if(toDestroy){
+                    this.enemies.splice(i,1);
+                }
+            })
+        }
+        predictAngle(pl){
+            let possibleEnemies = [];
+            for(let i = 0; i < 1000; i++){
+                let angle = Math.random()*Math.PI*2;
+                const dims = {
+                    x: Math.random()*canvas.w,
+                    y: Math.random()*canvas.h,
+                }
+                possibleEnemies.push({
+                    angle: angle,
+                    x: dims.x,
+                    y: dims.y,
+                    radius: this.spawnRadius,
+                    xv:Math.cos(angle)*this.spawnSpeed,
+                    yv:Math.sin(angle)*this.spawnSpeed,
+                    originalx: dims.x,
+                    originaly: dims.y,
+                });
+            }
+            let futurepl = JSON.parse(JSON.stringify(pl));
+            let futureWarmupTimer = this.warmUpTime;
+            while(futureWarmupTimer > 0){
+                futurepl.x += futurepl.xv;
+                futurepl.y += futurepl.yv;
+                futurepl.xv *= 0.99;
+                futurepl.yv *= 0.99;
+                // will still be moving while warmuptimer is going; just wont collide
+                for(let e of possibleEnemies){
+                    e.x += e.xv;
+                    e.y += e.yv;
+                }
+                futureWarmupTimer--;
+            }
+            for(let i = 0; i < this.spawnLife; i++){
+                futurepl.x += futurepl.xv;
+                futurepl.y += futurepl.yv;
+                futurepl.xv *= 0.99;
+                futurepl.yv *= 0.99;
+                for(let e of possibleEnemies){
+                    e.x += e.xv;
+                    e.y += e.yv;
+                    if(intersectingCircleCircle(e,futurepl)){
+                        return({...e, x: e.originalx, y: e.originaly});
+                    }
+                }
+            }
+            return possibleEnemies[0];
+        }
+    }
+    
+    class HomingEnemy {
+        constructor(x,y,r,speed,warmUpTime,life,angleIncrement,angle){
+            this.x = x;
+            this.y = y;
+            this.life = life+warmUpTime;
+            this.warmUpTime = warmUpTime;
+            this.radius = r;
+            this.xv = Math.cos(angle)*speed;
+            this.yv = Math.sin(angle)*speed;
+            this.speed = speed;
+            this.angle = Math.atan2(this.yv,this.xv);
+            this.type = 'homingenemy';
+            this.active = false;
+            this.angleIncrement = angleIncrement;
+        }
+        simulate(pl){
+            this.warmUpTime--;
+            if(this.warmUpTime < 0){
+                this.active = true;
+            }
+            this.life--;
+            if(this.life < 0){
+                return true;
+            }
+    
+            let futurepl = JSON.parse(JSON.stringify(pl));
+            for(let i = 0; i < 10; i++){
+                let dist = Math.sqrt((futurepl.x-this.x)**2+(futurepl.y-this.y)**2);
+                let time = dist/this.speed;
+                for(let s = 0; s < time; s++){
+                    futurepl.x += futurepl.xv;
+                    futurepl.y += futurepl.yv;
+                    futurepl.xv *= 0.99;
+                    futurepl.yv *= 0.99;
+                }
+            }
+            
+            var dX = futurepl.x - this.x;
+            var dY = futurepl.y - this.y;
+            this.targetAngle = Math.atan2(dY, dX);
+            var dif = this.targetAngle - this.angle;
+            var angleDif = Math.atan2(Math.sin(dif), Math.cos(dif));
+            if (Math.abs(angleDif) >= this.angleIncrement) {
+                if (angleDif < 0) {
+                    this.angle -= this.angleIncrement;
+                } else {
+                    this.angle += this.angleIncrement;
+                }
+            }
+            this.xv = Math.cos(this.angle)*this.speed;
+            this.yv = Math.sin(this.angle)*this.speed;
+            this.x += this.xv;
+            this.y += this.yv;
+            if(this.x - this.radius < 0){
+                this.xv *= -1;
+                this.x = this.radius;
+            } else if(this.x + this.radius > canvas.w){
+                this.xv *= -1;
+                this.x = canvas.w-this.radius;
+            }
+            if(this.y - this.radius < 0){
+                this.yv *= -1;
+                this.y = this.radius;
+            } else if(this.y + this.radius > canvas.h){
+                this.yv *= -1;
+                this.y = canvas.h-this.radius;
+            }
+            this.angle = Math.atan2(this.yv,this.xv);
+        }
+    }
+
+    // PHYSICS FUNCTIONS
+    function runCollision(pl, obstacles) {
+        pl.sat = new SAT.Circle(new SAT.Vector(pl.x, pl.y), pl.radius);
+        for (let o of obstacles) {
+            if (o.type === 'turret') {
+                boundplCircle(pl, o);
+                for (const bullet of o.bullets) {
+                    if (intersectingCircleCircle(bullet, pl)) {
+                        return true;
+                    }
+                }
+            } else if (o.type === 'laserspawner') {
+                for (const laser of o.lasers) {
+                    if (!laser.active) {
+                        continue;
+                    }
+                    if (o.intersectingLineCircle(laser, pl)) {
+                        return true;
+                    }
+                }
+            } else if (o.type.endsWith('spawner')) {
+                for (const enemy of o.enemies) {
+                    if (!enemy.active) {
+                        continue;
+                    }
+                    if (intersectingCircleCircle(enemy, pl)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
+    function intersectingCircleCircle(circle1, circle2) {
+        return Math.sqrt((circle2.x - circle1.x) ** 2 + (circle2.y - circle1.y) ** 2) < circle1.radius + circle2.radius;
+    }
+    
+    function boundplCircle(pl, circle) {
+        circle.sat = new SAT.Circle(new SAT.Vector(circle.x, circle.y), circle.radius);
+    
+        const response = new SAT.Response();
+        const collided = SAT.testCircleCircle(pl.sat, circle.sat, response);
+        if (collided) {
+            pl.x -= response.overlapV.x;
+            pl.y -= response.overlapV.y;
+        }
+    }
+    
+    function pointCircleCollide(po, pos, r) {
+        if (!Array.isArray(po)) {
+            return false;
+        }
+        const [x, y] = po;
+        return (x - pos.x) * (x - pos.x) + (y - pos.y) * (y - pos.y) <= r * r;
+    }
+    
+    const tmp = [0, 0]
+    
+    function lineCircleCollide(a, b, circle, radius, nearest) { // dont add nearest param when using dis fyunction
+    
+        if (pointCircleCollide(a, circle, radius)) {
+            if (nearest) {
+                nearest[0] = a[0]
+                nearest[1] = a[1]
+            }
+            return true
+        } if (pointCircleCollide(b, circle, radius)) {
+            if (nearest) {
+                nearest[0] = b[0]
+                nearest[1] = b[1]
+            }
+            return true
+        }
+    
+        let x1 = a[0],
+            y1 = a[1],
+            x2 = b[0],
+            y2 = b[1],
+            cx = circle.x,
+            cy = circle.y;
+    
+        let dx = x2 - x1
+        let dy = y2 - y1
+    
+        let lcx = cx - x1
+        let lcy = cy - y1
+        // projection
+        let dLen2 = dx * dx + dy * dy;
+        let px = dx
+        let py = dy
+        if (dLen2 > 0) {
+            let dp = (lcx * dx + lcy * dy) / dLen2
+            px *= dp
+            py *= dp
+        }
+    
+        if (!nearest)
+            nearest = tmp
+        nearest[0] = x1 + px
+        nearest[1] = y1 + py
+    
+        let pLen2 = px * px + py * py
+    
+        return pointCircleCollide(nearest, circle, radius)
+            && pLen2 <= dLen2 && (px * dx + py * dy) >= 0
+    }
+
+    // pl
+    class Player {
+        constructor(x,y,r,color,speed){
+            this.x = x;
+            this.y = y;
+            this.xv = 0;
+            this.yv = 0;
+            this.radius = r;
+            this.color = color;
+            this.speed = speed;
+        }
+        handleInput(input){
+            if(input.up){
+                this.yv-=this.speed;
+            }
+            if(input.down){
+                this.yv+=this.speed;
+            }
+            if(input.left){
+                this.xv-=this.speed;
+            }
+            if(input.right){
+                this.xv+=this.speed;
+            }
+        }
+        move(){
+            this.x += this.xv;
+            this.y += this.yv;
+            this.xv *= 0.99;
+            this.yv *= 0.99;
+            this.boundWalls();
+        }
+        boundWalls(){
+            if(this.x - this.radius < 0){
+                this.x = this.radius;
+                this.xv *= 0.9;
+            } else if(this.x + this.radius > canvas.w){
+                this.x = canvas.w-this.radius;
+                this.xv *= 0.9;
+            }
+            if(this.y - this.radius < 0){
+                this.y = this.radius;
+                this.yv *= 0.9;
+            } else if(this.y + this.radius > canvas.h){
+                this.y = canvas.h-this.radius;
+                this.yv *= 0.9;
+            }
+        }
+    }
+    let p = new Player(canvas.w * Math.random(), canvas.h * Math.random(), 40, 'red', .2);
+
+    // RENDER
+    function renderPredictionDodging(pl, obs) {
+        // ctx.fillStyle = 'black'
+        // ctx.fillRect(0, 0, canvas.w, canvas.h);
+        // ctx.fillStyle = pl.color;
+        // ctx.beginPath();
+        // ctx.arc(pl.x, pl.y, pl.radius, 0, Math.PI * 2);
+        // ctx.fill();
+        // ctx.closePath();
+        ctx.fillStyle = 'grey';
+        ctx.font = "56px Inter";
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        if (currentWaveTime > 0) {
+            ctx.fillText((currentWaveTime / 60).toFixed(2), canvas.w / 2, 10);
+        }
+        obs.forEach((o) => {
+            o.render();
+        })
+    }
+
+    // WAVES
+    let waves = [
+        {
+            obstacles: [
+                //x,y,r,shootRadius,shootTime,shootSpeed,speedupMult
+                new Turret(canvas.w / 2, canvas.h / 2, 120*1.5, 12*2, 50, 3, 0.96),
+                new Turret(20, 20, 80*2, 12*2, 100, 3, 0.96),
+                new Turret(canvas.w - 20, 20, 80*2, 12*2, 100, 3, 0.96),
+                new Turret(20, canvas.h - 20, 80*2, 12*2, 100, 3, 0.96),
+                new Turret(canvas.w - 20, canvas.h - 20, 80*2, 12*2, 100, 3, 0.96),
+            ],
+            time: 900,
+        },
+        {
+            obstacles: [
+                //spawnTime,speedupMult,warmUpTime,laserLife
+                new LaserSpawner(100, 0.94, 120, 100)
+            ],
+            time: 1100,
+        },
+        {
+            obstacles: [
+                //spawnRadius,spawnTime,spawnSpeed,spawnLife,speedupMult,warmUpTime
+                new NormalEnemySpawner(24*2, 80, 6*2, 300, 0.88, 200)
+            ],
+            time: 750,
+        },
+        {
+            obstacles: [
+                //spawnRadius,spawnTime,spawnSpeed,spawnLife,speedupMult,warmUpTime,homingAngleIncrement
+                new HomingEnemySpawner(32*2, 100, 3*2, 200, 0.97, 200, 0.06)
+            ],
+            time: 1200,
+        },
+        {
+            obstacles: [
+                //spawnTime,speedupMult,warmUpTime,laserLife
+                new LaserSpawner(200, 0.96, 150, 120),
+                //x,y,r,shootRadius,shootTime,shootSpeed,speedupMult
+                new Turret(canvas.w / 2, canvas.h / 2, 40*2, 12*2, 20, 3.2, 0.99),
+            ],
+            time: 1000,
+        },
+        {
+            obstacles: [
+                //x,y,r,shootRadius,shootTime,shootSpeed,speedupMult
+                new Turret(canvas.w / 2, canvas.h / 2, 60*2, 24*2, 2, 3, 1),
+            ],
+            time: 400,
+        },
+    ];
+    
+    let currentWave = -1;
+    let currentWaveTime = 0;
+
+    let won = false;
+    let obs = [];
+    
+    function runWaves() {
+        currentWaveTime--;
+        if (currentWaveTime <= 0) {
+            input.skip = false;
+            currentWave++;
+            if (currentWave >= waves.length) {
+                ctx.fillStyle = 'red';
+                ctx.font = "50px Inter";
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                window.players[window.selfId].pos.x = 55150;
+                window.players[window.selfId].pos.y = 14450;
+                won = true;
+                window.camera.numControlledBy = 0;
+
+                // ctx.fillText('You win! gg', canvas.w / 2, canvas.h / 3);
+                // if (!wincookieset) {
+                //     // communicating with parent as an iframe
+                //     window.top.postMessage('winpredictiondodging', '*');
+                //     wincookieset = true;
+                // }
+                return;
+            }
+            try {
+                currentWaveTime = waves[currentWave].time;
+            } catch (e) {
+                currentWaveTime = 1000;
+            }
+    
+            obs = [];
+            for (let o of waves[currentWave].obstacles) {
+                obs.push(o);
+            }
+        }
+    }
+
+    // MAIN FUNCTIONS
+    function simulatePlayer() {
+        p.move();
+        p.handleInput(input);
+    }
+    
+    function simulateObstacles() {
+        obs.forEach((o) => {
+            o.simulate(p);
+        })
+    }
+    
+    function gameOver() {
+        p = new Player(canvas.w * Math.random(), canvas.h * Math.random(), 20, 'red', .2);
+        obs = [];
+        currentWave = -1;
+        currentWaveTime = 0;
+        waves = [
+            {
+                obstacles: [
+                    //x,y,r,shootRadius,shootTime,shootSpeed,speedupMult
+                    new Turret(canvas.w / 2, canvas.h / 2, 120*1.5, 12*2, 50, 3, 0.96),
+                    new Turret(20, 20, 80*2, 12*2, 100, 3, 0.96),
+                    new Turret(canvas.w - 20, 20, 80*2, 12*2, 100, 3, 0.96),
+                    new Turret(20, canvas.h - 20, 80*2, 12*2, 100, 3, 0.96),
+                    new Turret(canvas.w - 20, canvas.h - 20, 80*2, 12*2, 100, 3, 0.96),
+                ],
+                time: 900,
+            },
+            {
+                obstacles: [
+                    //spawnTime,speedupMult,warmUpTime,laserLife
+                    new LaserSpawner(100, 0.94, 120, 100)
+                ],
+                time: 1100,
+            },
+            {
+                obstacles: [
+                    //spawnRadius,spawnTime,spawnSpeed,spawnLife,speedupMult,warmUpTime
+                    new NormalEnemySpawner(24*2, 80, 6*2, 300, 0.88, 200)
+                ],
+                time: 750,
+            },
+            {
+                obstacles: [
+                    //spawnRadius,spawnTime,spawnSpeed,spawnLife,speedupMult,warmUpTime,homingAngleIncrement
+                    new HomingEnemySpawner(32*2, 100, 3*2, 200, 0.97, 200, 0.046)
+                ],
+                time: 1200,
+            },
+            {
+                obstacles: [
+                    //spawnTime,speedupMult,warmUpTime,laserLife
+                    new LaserSpawner(200, 0.96, 150, 120),
+                    //x,y,r,shootRadius,shootTime,shootSpeed,speedupMult
+                    new Turret(canvas.w / 2, canvas.h / 2, 40*2, 12*2, 20, 3.2, 0.99),
+                ],
+                time: 1000,
+            },
+            {
+                obstacles: [
+                    //x,y,r,shootRadius,shootTime,shootSpeed,speedupMult
+                    new Turret(canvas.w / 2, canvas.h / 2, 60*2, 24*2, 2, 3, 1),
+                ],
+                time: 400,
+            },
+        ];
+    }
+
+    function runPredictionDodging(){
+        simulatePlayer();
+        runWaves();
+        simulateObstacles();
+        let dead = runCollision(p, obs);
+        if (dead === true) {
+            gameOver();
+        }
+    }
+
+    let init = false;
+
+    C(0,[],[3],{x:-1E9,y:0,r:1,sf:(o,realPlayer)=>{
+        if(won === true) return;
+        if(init === false){
+            if(realPlayer.pos.y >= 11900 && realPlayer.pos.y <= 12400 && realPlayer.pos.x < 500){
+                init = true;
+                colors.background = blendColor('#323645',"#000000",0.34);
+                colors.tile = blendColor('#1f2229',"#000000",0.34);
+            } else {
+                return;
+            }
+        }
+        // const topLeftX = p.pos.x - canvas.w/2;
+        // const topLeftY = p.pos.y - canvas.h/2;
+        runPredictionDodging();
+
+        window.camera.numControlledBy = 1;
+        window.camera.x = canvas.w/2;
+        window.camera.y = 12100 + canvas.h/2;
+
+        realPlayer.pos.x = p.x;
+        realPlayer.pos.y = p.y + 12100;
+        realPlayer.renderRadius = p.radius;
+    },cr:()=>{
+        if(init === false || won === true) return;
+        lastW = canvas.w;
+        lastH = canvas.h;
+        canvas.w = 3200;
+        canvas.h = 1800;
+        ctx.translate(0,12100);
+        // ctx.scale(8,8);
+        renderPredictionDodging(p, obs);
+        // ctx.scale(.25,.25);
+        ctx.translate(0,-12100);
+        canvas.w = lastW;
+        canvas.h = lastH;
+    }});
+    canvas.w = lastW;
+    canvas.h = lastH;
+
+    window.resizeFns.push(() => {
+        if(init === true && won === false) gameOver();
+    })
+}
+
+// Creating Rectangles
+let rect = [];
+window.createRect1 = () => {
+    const p = window.players[window.selfId];
+    rect[0] = Math.round(p.pos.x / 50) * 50;
+    rect[1] = Math.round(p.pos.y / 50) * 50;
+}
+
+window.createRect2 = () => {
+    const p = window.players[window.selfId];
+    rect[2] = Math.round(p.pos.x / 50) * 50;
+    rect[3] = Math.round(p.pos.y / 50) * 50;
+
+    let w = rect[2] - rect[0];
+    if(w < 0){
+        const tmp = rect[2];
+        rect[2] = rect[0];
+        rect[0] = tmp;
+        w *= -1;
+    }
+
+    let h = rect[3] - rect[1];
+    if(h < 0){
+        const tmp = rect[3];
+        rect[3] = rect[1];
+        rect[1] = tmp;
+    }
+
+    const str = `C(1,[],[0],x:${rect[0]},y:${rect[1]},w:${w},h:${h})`;
+
+    console.log(str);
+    eval(str);
+}
 
 // OLDPOQT
 /*
