@@ -3,6 +3,12 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
     const typeMap = {
         'normal': {
             type: [1,[],[0]],
+            customMap: (params) => {
+                if(special === 'poqt'){
+                    return {isNormal: true};
+                }
+                return {};
+            }
         },
         // 'trans': {
         //     type: [1,[],[20]],
@@ -843,9 +849,11 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                 } else if(special === 'poqt'){
                     p.canJumpMidair = true;
                     if(params.specialPOQTPlatformer === true){
-                        p.platformerFriction = 0.8;
-                        p.jumpForce *= 0.72;
-                        p.platformerForce *= 3;
+                        p.platformerFriction = 0.98;
+                        p.jumpForce *= 0.6;
+                        p.jumpDecay = 0.98;
+                        p.platformerForce *= 1.2;
+                        p.maxJumpCooldown = 24;
                     }
                 } else {
                     p.canJumpMidair = false;
@@ -2184,9 +2192,8 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
             //     "inView": false
             // },
             o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
-            if(special === 'poqt' && o.x > 48000 && o.x < 51000) console.log('!');
             str += `${special === 'poqt' && o.x > 48000 && o.x < 51000 ? `var morphsStillMoving${o.morphId}=0;`: ''}var morphTriggered${o.morphId} = false;
-            C(1,[],[5],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},
+            C(1,[],[${special === 'poqt' ? 3 : 5}],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},
                 cr:(e)=>{
                     ctx.globalAlpha = 0.8;
                     if (morphTriggered${o.morphId} === true) {
@@ -2228,7 +2235,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
         } else if(o.type === 'morphbuttontimed'){
             o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
             str += `var morphTriggered${o.morphId} = false;{let timeActive = false; let time=${o.timer*60};let maxTime = ${o.timer*60};
-            C(1,[],[5],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},
+            C(1,[],[${special === 'poqt' ? 3 : 5}],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},
                 cr:(e)=>{
                     ctx.globalAlpha = 0.8;
                     if (morphTriggered${o.morphId} === true) {

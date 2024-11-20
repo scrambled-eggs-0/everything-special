@@ -1195,7 +1195,7 @@ const initEffectMap = [
     }
 ]
 
-let freeVariable = -1, freeVariable2 = -1;;
+let freeVariable = -1;
 const effectMap = [
     /*bound*/
     (p, res, o, id) => {
