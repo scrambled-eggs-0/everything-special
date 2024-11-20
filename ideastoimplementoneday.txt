@@ -118,6 +118,8 @@ New plan (17th-20th)
 - win messages or some way to tell that players are 
 - import poqt (funky version)
     - music!
+    - finish polish!
+    - tetris
 - fix pohistory (down the list gets more optional)
     - z8 and z9
     - e1 render like e1, e2 like e2, ex like ex
@@ -130,6 +132,7 @@ New plan (17th-20th)
 - anticheat, load testing, security
 - make all maps C calls instead of generators
 - remove all TEMP
+- make winroom send back to hub (msg update)
 
 "tomorrow plan is to finish the new networking, players getting maps from other players, and all networking-related bugs"
 "then ill move onto PoH and then PoQT"
