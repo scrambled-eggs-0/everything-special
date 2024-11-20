@@ -31418,7 +31418,7 @@
                 // "y": 3300,
                 // "w": 2600,
                 // "h": 400,
-                x: 3300,y:3300,w:6600,h:6600,
+                x: 3300,y:3300,w:3450,h:3450,
                 "type": "vinette",
                 "ir": 0,
                 "or": 0.3 * 0.3,
@@ -37838,7 +37838,7 @@
             {
                 let scale = 1; let colliding = false; let lastColliding = false;
                 // custom obs that slowly zooms out, resets on death
-                C(1,[],[3],{x:6600,y:6600,w:13400,h:13400,cr:()=>{},ef:(p)=>{
+                C(1,[],[3],{x:6600,y:6600,w:6900,h:6600,cr:()=>{},ef:(p)=>{
                     if(p.pos.x > 8850 && p.pos.x < 11150 && p.pos.y < 11200 && p.pos.y > 8750) return; /*inside middle secrets*/
                     const t = (p.pos.y - 6600) / 6600;
                     scale = (1-t) * 1 + (t) * 0.15;

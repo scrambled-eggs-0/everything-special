@@ -12191,11 +12191,11 @@
         eval(str);
 
         // temp for poqt
-        spawnPosition.x = 3500;
-        spawnPosition.y = 4200;
+        // spawnPosition.x = 3500;
+        // spawnPosition.y = 4200;
     
-        // spawnPosition.x=5000;
-        // spawnPosition.y=5000;
+        spawnPosition.x=5000;
+        spawnPosition.y=5000;
         window.respawnPlayer();
         colors.background="#323645"; colors.tile="#1f2229";
 
