@@ -22,7 +22,8 @@ function initNonlinearTransform(vs, fs, uniformNames, uniformLambdas){
     placeholder.appendChild(glCanvas);
     
     window.resizeWebGl = () => {
-        window.resizeElements([glCanvas]);
+        glCanvas.width = window.innerWidth;
+        glCanvas.height = window.innerHeight;
         gl.viewport(0, 0, glCanvas.width, glCanvas.height);
     }
     window.resizeWebGl();
@@ -229,7 +230,7 @@ function unInitNonlinearTransform(){
 //     {
 //         // outColor = vec4(vTextureCoord.x, 0.0, 0.0, 1.0);
 //         outColor = texture(uSampler, vTextureCoord);//vec4(1, 0, 0.5, 1);
-// }`);
+// }`, ['uTime'], [() => {return window.frames * 1000 / 60}]);
 
 export default {initNonlinearTransform, unInitNonlinearTransform};
 

@@ -1927,15 +1927,15 @@
                     ]
                 }
             },
-            {
-                "x": 3350,
-                "y": 2150,
-                "w": 100,
-                "h": 100,
-                "type": "bounce",
-                "effect": 30,
-                "inView": true
-            },
+            // {
+            //     "x": 3350,
+            //     "y": 2150,
+            //     "w": 100,
+            //     "h": 100,
+            //     "type": "bounce",
+            //     "effect": 30,
+            //     "inView": true
+            // },
             {
                 "x": 3600,
                 "y": 2400,
@@ -5358,32 +5358,15 @@
                 "renderType": "poly",
                 "inView": true
             },
-            {
-                "x": 1600,
-                "y": 3450,
-                "w": 150,
-                "h": 150,
-                "type": "rotate-normal",
-                "angle": 11412.374999999789,
-                "rotateSpeed": 45,
-                "pivotX": 1600,
-                "pivotY": 3450,
-                "distToPivot": 0,
-                "canCollide": true,
-                "renderType": "rotating",
-                "cullingRadius": 106.06601717798213,
-                "unSim": 0,
-                "inView": true
-            },
-            {
-                "x": 2025,
-                "y": 2950,
-                "r": 25,
-                "type": "circle-lava",
-                "renderType": "circleR",
-                "radius": 25,
-                "inView": true
-            },
+            // {
+            //     "x": 2025,
+            //     "y": 2950,
+            //     "r": 25,
+            //     "type": "circle-lava",
+            //     "renderType": "circleR",
+            //     "radius": 25,
+            //     "inView": true
+            // },
             {
                 "x": 1850,
                 "y": 3300,
@@ -11059,17 +11042,17 @@
                 "canJump": true,
                 "inView": false
             },
-            {
-                "x": 2775,
-                "y": 925,
-                "w": 50,
-                "h": 50,
-                "type": "bbutton",
-                "id": 1,
-                "active": true,
-                "tempActive": false,
-                "inView": false
-            },
+            // {
+            //     "x": 2775,
+            //     "y": 925,
+            //     "w": 50,
+            //     "h": 50,
+            //     "type": "bbutton",
+            //     "id": 1,
+            //     "active": true,
+            //     "tempActive": false,
+            //     "inView": false
+            // },
             {
                 "x": 2650,
                 "y": 850,
@@ -11522,7 +11505,7 @@
                 "cullingRadius": 127.47548783981962,
                 "unSim": 186.14999999999503,
                 "inView": false
-            }
+            },
         ]
         const enemies = [
             {
@@ -11900,86 +11883,86 @@
                 "angle": 0,
                 "story": false
             },
-            {
-                "x": 2025,
-                "y": 2900,
-                "w": 25,
-                "h": 25,
-                "size": 30,
-                "text": "add a cool obs here",
-                "angle": 0,
-                "story": false
-            },
-            {
-                "x": 1625,
-                "y": 3325,
-                "w": 25,
-                "h": 25,
-                "size": 30,
-                "text": "add a cool obs here",
-                "angle": 0,
-                "story": false
-            },
-            {
-                "x": 3400,
-                "y": 2125,
-                "w": 25,
-                "h": 25,
-                "size": 30,
-                "text": "add a cool obs here",
-                "angle": 0,
-                "story": false
-            },
-            {
-                "x": 900,
-                "y": 2450,
-                "w": 25,
-                "h": 25,
-                "size": 30,
-                "text": "add a cool obs here",
-                "angle": 0,
-                "story": false
-            },
-            {
-                "x": 2725,
-                "y": 3850,
-                "w": 25,
-                "h": 25,
-                "size": 30,
-                "text": "add cool obs here",
-                "angle": 0,
-                "story": false
-            },
-            {
-                "x": 875,
-                "y": 4150,
-                "w": 25,
-                "h": 25,
-                "size": 30,
-                "text": "add a hella pretty nebula effect here (like the one on the account creation)",
-                "angle": 0,
-                "story": false
-            },
+            // {
+            //     "x": 2025,
+            //     "y": 2900,
+            //     "w": 25,
+            //     "h": 25,
+            //     "size": 30,
+            //     "text": "add a cool obs here",
+            //     "angle": 0,
+            //     "story": false
+            // },
+            // {
+            //     "x": 1625,
+            //     "y": 3325,
+            //     "w": 25,
+            //     "h": 25,
+            //     "size": 30,
+            //     "text": "add a cool obs here",
+            //     "angle": 0,
+            //     "story": false
+            // },
+            // {
+            //     "x": 3400,
+            //     "y": 2125,
+            //     "w": 25,
+            //     "h": 25,
+            //     "size": 30,
+            //     "text": "add a cool obs here",
+            //     "angle": 0,
+            //     "story": false
+            // },
+            // {
+            //     "x": 900,
+            //     "y": 2450,
+            //     "w": 25,
+            //     "h": 25,
+            //     "size": 30,
+            //     "text": "add a cool obs here",
+            //     "angle": 0,
+            //     "story": false
+            // },
+            // {
+            //     "x": 2725,
+            //     "y": 3850,
+            //     "w": 25,
+            //     "h": 25,
+            //     "size": 30,
+            //     "text": "add cool obs here",
+            //     "angle": 0,
+            //     "story": false
+            // },
+            // {
+            //     "x": 875,
+            //     "y": 4150,
+            //     "w": 25,
+            //     "h": 25,
+            //     "size": 30,
+            //     "text": "add a hella pretty nebula effect here (like the one on the account creation)",
+            //     "angle": 0,
+            //     "story": false
+            // },
             {
                 "x": 325,
                 "y": 2850,
                 "w": 25,
                 "h": 25,
                 "size": 30,
-                "text": "idk what to do here",
+                "text": "multiplayer pong",
                 "angle": 0,
                 "story": false
             },
-            {
-                "x": 325,
-                "y": 2900,
-                "w": 25,
-                "h": 25,
-                "size": 30,
-                "text": "maybe it's an rng test minigame?",
-                "angle": 0,
-                "story": false
-            },
+            // {
+            //     "x": 650/2,//675,
+            //     "y": 6200/2,//2925,
+            //     "w": 25,
+            //     "h": 25,
+            //     "size": 36,//30,
+            //     "text": "Draw Using Shift!",
+            //     "angle": 0,//90,
+            //     "story": false
+            // },
             {
                 "x": 2800,
                 "y": 800,
@@ -12106,7 +12089,7 @@
                 "h": 100,
                 "type": "portal",
                 "name": "Planet of Speed",
-                "acronym": "PoS",
+                "acronym": "PoSPD",
                 "difficulty": "Difficult",
                 "difficultyNumber": "0.6",
                 "musicPath": null,
@@ -12191,25 +12174,748 @@
         eval(str);
 
         // temp for poqt
-        spawnPosition.x = 5000;
-        spawnPosition.y = 5000;
+        // spawnPosition.x = 3500;
+        // spawnPosition.y = 4200;
     
-        // spawnPosition.x=5000;
-        // spawnPosition.y=5000;
+        spawnPosition.x=5000;
+        spawnPosition.y=5000;
         window.respawnPlayer();
         colors.background="#323645"; colors.tile="#1f2229";
 
-        C(0,[],[26],{
-            x: spawnPosition.x,
-            y: spawnPosition.y,
-            r: 50,
-            musicPath: 'https://www.youtube.com/watch?v=9DzYxEZpsLE'
-        });
+        // C(0,[],[26],{
+        //     x: spawnPosition.x,
+        //     y: spawnPosition.y,
+        //     r: 50,
+        //     musicPath: 'https://www.youtube.com/watch?v=9DzYxEZpsLE'
+        // });
 
         mapDimensions.x=10000;
         mapDimensions.y=10000;
-    }
 
+        // youtube video player
+        {
+            let createdYT = false;
+            const dimensions = {x:800,y:7400,w:1900,h:1800};
+            C(0,[],[3],{x:-1E9,y:0,r:1,sf:()=>{
+                if(createdYT === true) return; 
+                let cullingMinX = camera.x-canvas.w/2;
+                let cullingMaxX = camera.x+canvas.w/2;
+                let cullingMinY = camera.y-canvas.h/2;
+                let cullingMaxY = camera.y+canvas.h/2;
+                const o = {
+                    topLeft: {
+                        x: dimensions.x, y: dimensions.y
+                    },
+                    dimensions: {
+                        x: dimensions.w,
+                        y: dimensions.h
+                    }
+                }
+                if(o.topLeft.x > cullingMaxX || o.topLeft.x + o.dimensions.x < cullingMinX || o.topLeft.y > cullingMaxY || o.topLeft.y + o.dimensions.y < cullingMinY) return;
+
+                createdYT = true;
+
+                (async()=>{
+                
+                    const urls = ['https://www.youtube.com/watch?v=0Ogenr6hVDY', 'https://www.youtube.com/watch?v=at2f7-lPhT4', 'https://www.youtube.com/watch?v=IipVhYNTM5w'];// TODO: replace these last two with updated versions (reupload pre-trailer, all the planets that are really in the final game)
+                    const u = urls[Math.floor(Math.random() * urls.length)];
+                    await window.importYoutube();
+        
+                    const {iframe} = window.playYoutubeVideo(u, {width: dimensions.w, height: dimensions.h, volume: 0});
+                    C(1,[],[3],{...dimensions, cr:()=>{
+                        
+                        const {a,b,c,d,e,f} = ctx.getTransform();
+                        // according to docs, 
+                        // const x = 
+                        // if a point originally had coordinates (x,y) then after the
+                        // transformation it will have coordinates (ax+cy+e,bx+dy+f)
+                        const x = dimensions.x;
+                        const y = dimensions.y;
+                        const canvasDimensions = canvas.getBoundingClientRect();
+                        const left = (a*x + c*y + e) / canvas.width * canvasDimensions.width;
+                        const top = (b*x + d*y + f) / canvas.height * canvasDimensions.height;
+                        // same thing for w and h
+                        const w = dimensions.w; const h = dimensions.h;
+                        const width = (a*(x+w) + c*(y+h) + e) / canvas.width * canvasDimensions.width - left;
+                        const height = (b*(x+w) + d*(y+h) + f) / canvas.height * canvasDimensions.height - top;
+                        iframe.style.top = `${top}px`;
+                        iframe.style.left = `${left}px`;
+                        iframe.style.width = `${width}px`;
+                        iframe.style.height = `${height}px`;
+                    }});
+                })();
+            }});
+
+            // setting scale
+            let collided = false; let lastCollided = false;
+            C(1,[],[3],{x:0,y:6600,w:3500,h:3400,cr:()=>{},ef:(p,res,o)=>{
+                // if(p.pos.x > 2900 && p.pos.y < 7200) {window.changeCameraScale(1); return;}
+                window.changeCameraScale(.5);
+                collided = true;
+            },sf:()=>{
+                if(collided === false && lastCollided === true){
+                    window.changeCameraScale(1);
+                }
+                lastCollided = collided;
+                collided = false;
+            }})
+        }
+
+        // particles
+        {
+            let ps=[];
+            let pcol=false;
+            C(0,[],[3],{
+                x: 4050, y: 5900, r: 100,
+                cr:(o)=>{
+                    ps.push([
+                        o.pos.x,
+                        o.pos.y,
+                        Math.PI * Math.random() * 2,
+                        400,
+                        pcol === true ? 'yellow' : 'white'
+                    ]);
+                    //0.012,     2,             3,            0.4
+                    //spawnRate, particleSpeed, particleSize, particleLifespan
+                    for (let p = 0; p < ps.length; p++) {
+                        let speed = 8;
+                        speed *= ps[p][3] / 400;
+                        ps[p][0] += Math.cos(ps[p][2]) * speed;
+                        ps[p][1] += Math.sin(ps[p][2]) * speed;
+                        ps[p][3] -= 1000/60;
+                        if (ps[p][3] < 0) {
+                            ps.splice(p, 1);
+                        }
+                    }
+                    ctx.globalAlpha = 1;
+                    for (let p = 0; p < ps.length; p++) {
+                        ctx.fillStyle = ps[p][4];
+                        ctx.globalAlpha = ps[p][3] / 400;
+                        ctx.beginPath();
+                        ctx.arc(
+                            ps[p][0],
+                            ps[p][1],
+                            6,
+                            0,
+                            2 * Math.PI
+                        );
+                        ctx.fill();
+                        ctx.closePath();
+                    }
+                    pcol = false;
+                    ctx.globalAlpha = 1;
+                },
+                ef:()=>{
+                    pcol = true;
+                }
+            });
+        }
+
+        // nonlinear flag distort
+        {
+            let collided = false;
+            let distortionActive = false;
+            let importingDistortion = false;
+            let restoreDrawImgTo;
+            let tOffset;
+            C(1,[],[3],{x:1500,y:4700,w:600,h:600,cr:()=>{},ef:()=>{
+                collided = true;
+            },sf:()=>{
+                if(distortionActive === false && collided === true && importingDistortion === false){
+                    (async() => {
+                        importingDistortion = true;
+                        await window.initDistortion(`#version 300 es
+                            in highp vec4 pos;
+                            
+                            uniform float uTime;
+                            
+                            out highp vec2 vTextureCoord;
+                            
+                            void main()
+                            {
+                                gl_Position = pos;
+                                gl_Position.x += 0.1*sin(6.0*uTime + 3.0*pos.y);
+                                gl_Position.y += 0.2*sin(6.0*uTime - 6.0*pos.x);
+                            
+                                // texture coordinate is just pos but within 0-1 instead of -1 to 1.
+                                // So scale in that range.
+                                vTextureCoord = (pos.xy+1.)*0.5;
+                            }`,
+                            `#version 300 es
+                            in highp vec2 vTextureCoord;
+                            
+                            out highp vec4 outColor;
+                            
+                            uniform sampler2D uSampler;
+                            
+                            void main()
+                            {
+                                // outColor = vec4(vTextureCoord.x, 0.0, 0.0, 1.0);
+                                outColor = texture(uSampler, vTextureCoord);//vec4(1, 0, 0.5, 1);
+                        }`, ['uTime'], [() => {if(tOffset === undefined){tOffset = window.frames;} return (window.frames - tOffset) / 60;}]);
+                        restoreDrawImgTo = ctx.drawImage;
+                        ctx.drawImage = () => {};
+                        distortionActive = true;
+                        importingDistortion = false;
+                    })();
+                } else if(distortionActive === true && collided === false){
+                    if(restoreDrawImgTo !== undefined) {
+                        ctx.drawImage = restoreDrawImgTo;
+                        restoreDrawImgTo = undefined;
+                    }
+                    tOffset = undefined;
+                    window.unInitDistortion();
+                    distortionActive = false;
+                }
+                collided = false;
+            }})
+        }
+
+        // art canvas
+        {
+            const circles=[];
+            
+            C(1,[],[3],{x:100,y:4900,w:1100,h:1100,cr:(o)=>{
+                ctx.fillStyle = '#f0f0f0';
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.rect(o.pos.x,o.pos.y,o.dimensions.x,o.dimensions.y);
+                ctx.fill();
+                ctx.clip();
+                ctx.closePath();
+
+                ctx.fillStyle = 'black';
+
+                for(let i = 0; i < circles.length; i+=4){
+                    ctx.fillStyle = circles[i+3] === 0 ? '#0f0f0f' : '#f0f0f0';
+                    ctx.beginPath();
+                    ctx.arc(circles[i], circles[i+1], circles[i+2], 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.closePath();
+                }
+                
+                ctx.restore();
+            },ef:(p)=>{
+                circles.push(p.pos.x, p.pos.y, p.sat.r, 0);
+            }});
+
+            C(1,[],[3],{x:100,y:3700,w:1100,h:1100,cr:(o)=>{
+                ctx.fillStyle = '#0f0f0f';
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.rect(o.pos.x,o.pos.y,o.dimensions.x,o.dimensions.y);
+                ctx.fill();
+                ctx.clip();
+                ctx.closePath();
+
+                ctx.fillStyle = 'black';
+
+                for(let i = 0; i < circles.length; i+=4){
+                    ctx.fillStyle = circles[i+3] === 1 ? '#0f0f0f' : '#f0f0f0';
+                    ctx.beginPath();
+                    ctx.arc(circles[i], circles[i+1]-1200, circles[i+2], 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.closePath();
+                }
+                
+                ctx.restore();
+            },ef:(p)=>{
+                circles.push(p.pos.x, p.pos.y+1200, p.sat.r, 1);
+            }});
+
+            // tp and wall extension
+            C(1,[],[12],{x:100,y:3400,w:1100,h:200,tpx:5000,tpy:5000});
+            C(1,[],[0],{x:-100,y:3000,w:1500,h:300});
+        }
+
+        // how the tables have turned (SCRAPPED)
+
+        // let arcs = [];
+        // for(let i = 0; i < 25; i++){
+        //     arcs.push({
+        //         radius: Math.random() * 98 * 4,
+        //         startAngle: Math.random() * Math.PI * 2,
+        //         endAngle: Math.random() * Math.PI * 2,
+        //         startAngleRotateSpeed: 0.003,
+        //         endAngleRotateSpeed: 0.003 * (Math.random()*0.67+0.34),
+        //         thickness: (Math.random() ** 2) * 7 * 3 / 2,
+        //         thicknessOverTimeVariance: Math.random() * 0.3 * 4// sine wave
+        //     });
+        // }
+        // for(let i = 0; i < 4; i++){
+        //     C(4,[],[3],{
+        //         "r":400,"innerRadius":0,"startSliceAngle":i/4 * Math.PI * 2,
+        //         "endSliceAngle":(i+.8)/4 * Math.PI * 2,"startSliceAngleRotateSpeed":0.005 * 8,
+        //         "endSliceAngleRotateSpeed":0.005 * 8,"x":6800,"y":4400,
+        //         cr:(o) => {
+        //             // some arcs orbiting the center
+        //             ctx.save();
+        
+        //             ctx.fillStyle = blendColor('#000000','#0000FF', (Math.sin(window.time / 300)+1)/2 * 0.1);
+        //             ctx.globalAlpha = 0.32;
+                    
+        //             ctx.beginPath();
+        //             ctx.moveTo(o.pos.x + Math.cos(o.startSliceAngle) * o.innerRadius, o.pos.y + Math.sin(o.startSliceAngle) * o.innerRadius);
+        //             ctx.lineTo(o.pos.x + Math.cos(o.startSliceAngle) * o.sat.r, o.pos.y + Math.sin(o.startSliceAngle) * o.sat.r);
+        //             ctx.arc(o.pos.x, o.pos.y, o.sat.r, o.startSliceAngle, o.endSliceAngle);
+        //             ctx.lineTo(o.pos.x + Math.cos(o.endSliceAngle) * o.innerRadius, o.pos.y + Math.sin(o.endSliceAngle) * o.innerRadius);
+        //             ctx.fill();
+        //             ctx.clip();
+        //             ctx.closePath();
+        
+        //             ctx.strokeStyle = 'white';
+        //             ctx.globalAlpha = 1;
+        //             for(let i = 0; i < arcs.length; i++){
+        //                 const a = arcs[i];
+        //                 ctx.lineWidth = (a.thickness + Math.sin(window.frames / 60) * a.thicknessOverTimeVariance);
+        //                 ctx.beginPath();
+        //                 ctx.arc(o.pos.x, o.pos.y, a.radius, a.startAngle, a.endAngle);
+        //                 ctx.stroke();
+        //                 ctx.closePath();
+        
+        //                 a.startAngle += a.startAngleRotateSpeed * 1000 / 60;
+        //                 a.endAngle += a.endAngleRotateSpeed * 1000 / 60;
+        //             }
+        //             ctx.lineWidth = 5;
+        
+        //             ctx.restore();
+        //         },ef:(p,res,o)=>{
+        //             let angle = Math.atan2(p.pos.y - o.pos.y, p.pos.x - o.pos.x);
+        //             let magnitude = Math.sqrt((o.pos.x-p.pos.x)**2+(o.pos.y-p.pos.y)**2);
+        
+        //             angle += o.startSliceAngleRotateSpeed;
+        
+        //             p.pos.x = o.pos.x + Math.cos(angle) * magnitude;
+        //             p.pos.y = o.pos.y + Math.sin(angle) * magnitude;
+        //         }
+        //     })
+        // }
+
+        // those rotating doors you see at the malls
+        {
+            let angularVel=0;
+            let angleDelta;
+            for(let i = 0; i < 2; i++){
+                const w = (400*Math.sqrt(2) - 100) * 2;
+                const h = 100;
+                C(1,[1],[0],{"w":w,"h":h,"x":6800-w/2,"y":4400-h/2,"initialRotation":i === 0 ? Math.PI/4 : Math.PI*3/4,"rotateSpeed":0,"pivotX":6800,"pivotY":4400,ef:(p,res,o)=>{
+                    const overlapAngle = Math.atan2(res.overlapN.y, res.overlapN.x);
+                    const angle = o.rotation;
+            
+                    const relativeAngle = Math.atan2(p.pos.y - o.pivotY, p.pos.x - o.pivotX);
+            
+                    const magMult = Math.cos(relativeAngle - angle) * Math.cos(overlapAngle - angle + Math.PI/2);
+            
+                    // finding collision point
+                    const collisionPoint = [
+                        p.pos.x + Math.cos(overlapAngle) * (p.sat.r - res.overlap),
+                        p.pos.y + Math.sin(overlapAngle) * (p.sat.r - res.overlap),
+                    ]
+            
+                    const dist = Math.sqrt((collisionPoint[0]-o.pivotX)**2 + (collisionPoint[1]-o.pivotY)**2);
+    
+                    angularVel += magMult * res.overlap * dist / 10000000 / 6;
+                },sf:(o,p)=>{
+                    if(i === 0){
+                        o.sat.translate(o.pos.x-o.pivotX, o.pos.y-o.pivotY);
+                        o.sat.rotate(angleDelta);
+                        o.sat.translate(o.pivotX-o.pos.x, o.pivotY-o.pos.y);
+                        
+                        o.rotation += angleDelta;
+                        o.dimensions = generateDimensions(o);
+                        return;
+                    }
+                    angularVel += 0.0000038;
+
+                    function shortAngleDist(a0,a1) {
+                        const max = Math.PI*2;
+                        const da = (a1 - a0) % max;
+                        return 2*da % max - da;
+                    }
+                    
+                    function interpolateDirection(a0,a1,t) {
+                        return a0 + shortAngleDist(a0,a1)*t;
+                    }
+    
+                    angularVel *= 0.99;
+            
+                    angleDelta = angularVel * 16.66;
+            
+                    o.sat.translate(o.pos.x-o.pivotX, o.pos.y-o.pivotY);
+                    o.sat.rotate(angleDelta);
+                    o.sat.translate(o.pivotX-o.pos.x, o.pivotY-o.pos.y);
+                    
+                    o.rotation += angleDelta;
+                    o.dimensions = generateDimensions(o);
+                },cr:(o)=>{
+                    ctx.fillStyle = colors.tile;
+                    ctx.strokeStyle = '#f0f0f0';
+            
+                    ctx.beginPath();
+                    for(let i = 0; i < o.sat.points.length; i++){
+                        ctx.lineTo(o.pos.x + o.sat.points[i].x, o.pos.y + o.sat.points[i].y);
+                    }
+                    ctx.lineTo(o.pos.x + o.sat.points[0].x, o.pos.y + o.sat.points[0].y);
+                    ctx.fill();
+                    // ctx.stroke();
+                    ctx.closePath();
+            
+                    ctx.lineWidth = 4;
+                    ctx.beginPath();
+                    ctx.arc(o.pivotX, o.pivotY, 42, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.closePath();
+                }});
+                let o = obstacles.pop();
+                obstacles.unshift(o);
+            }
+        }
+
+        // tileColor matrix obs
+        // {
+        //     "x": 1600,
+        //     "y": 3450,
+        //     "w": 150,
+        //     "h": 150,
+        //     "type": "rotate-normal",
+        //     "angle": 11412.374999999789,
+        //     "rotateSpeed": 45,
+        //     "pivotX": 1600,
+        //     "pivotY": 3450,
+        //     "distToPivot": 0,
+        //     "canCollide": true,
+        //     "renderType": "rotating",
+        //     "cullingRadius": 106.06601717798213,
+        //     "unSim": 0,
+        //     "inView": true
+        // },
+
+        // {
+        //     x: params.x * 2 - params.w,
+        //     y: params.y * 2 - params.h,
+        //     initialRotation: params.angle * 180 / Math.PI,
+        //     rotateSpeed: params.rotateSpeed / 360 / 220 * 1.36 * 1000/60,
+        //     pivotX: params.pivotX * 2,
+        //     pivotY: params.pivotY * 2
+        // };
+        C(1,[1],[0],{x:1600*2-150,y:3450*2-150,w:150*2,h:150*2,initialRotation:2.39,rotateSpeed:0.01287879,pivotX:1600*2,pivotY:3450*2,cr:(o)=>{
+            let cullingMinX = camera.x-canvas.w/2;
+            let cullingMaxX = camera.x+canvas.w/2;
+            let cullingMinY = camera.y-canvas.h/2;
+            let cullingMaxY = camera.y+canvas.h/2;
+            if(o.topLeft.x > cullingMaxX || o.topLeft.x + o.dimensions.x < cullingMinX || o.topLeft.y > cullingMaxY || o.topLeft.y + o.dimensions.y < cullingMinY) return;
+
+            const vec = new SAT.Vector(0,0);
+            ctx.font = '1000 30px Inter';
+            ctx.textAlign = 'middle'; ctx.textBaseline = 'center';
+            // ctx.fillStyle = window.tileColor;
+
+            ctx.fillStyle = blendColor('#00ff41','#00ff41',0.5);
+            
+            let i = 0;
+            for(let x = 2950/*+Math.sin(window.frames/60)*20*/; x < 3450; x += 20){
+                for(let y = 6650/*+Math.cos(window.frames/60)*20*/; y < 7150; y += 20){
+                    vec.x = x; vec.y = y;
+                    if(SAT.pointInPolygon(vec, o.sat)){
+                        ctx.fillText(String.fromCharCode((i-Math.round(window.frames*0.6)) % 256),x,y);
+                    }
+                    i++;
+                }
+            }
+        }});
+
+        // pong
+
+        {
+            // conveyors
+            C(1,[],[13],{"w":600,"h":600,"conveyorForce":0.3,"conveyorAngle":180,"conveyorAngleRotateSpeed":0,"conveyorFriction":0.8,"x":4500,"y":7400});
+            C(1,[],[13],{"w":600,"h":600,"conveyorForce":0.3,"conveyorAngle":0,"conveyorAngleRotateSpeed":0,"conveyorFriction":0.8,"x":5100,"y":7400});
+
+            // C(1,[],[13],{"w":100,"h":100,"conveyorForce":0.3,"conveyorAngle":-90,"conveyorAngleRotateSpeed":0,"conveyorFriction":0.8,"x":7900,"y":3300});
+            // C(1,[],[13],{"w":100,"h":100,"conveyorForce":0.3,"conveyorAngle":90,"conveyorAngleRotateSpeed":0,"conveyorFriction":0.8,"x":7900,"y":3400});
+
+            // bounding circles
+            // C(1,[],[18],{"w":1200,"h":600,"sizeMult":1,"sizeChangePermanent":false,"x":4500,"y":7400});
+
+            C(1,[],[15],{x:4500,y:7400,w:1305,h:600,axisSpeedMultX:0,axisSpeedMultY:1,sf:(o)=>{
+                o.pos.x = 4400 + (Math.sin(window.frames / 100) * 100 + 100) % 100 - 5;
+            }});
+            obstacles.unshift(obstacles.pop());
+            // C(4,[],[15],{"r":100,"innerRadius":0,"startSliceAngle":Math.PI/2,"endSliceAngle":-Math.PI/2,"startSliceAngleRotateSpeed":0,"endSliceAngleRotateSpeed":0,"x":8100,"y":3400,axisSpeedMultX:0, axisSpeedMultY:1});
+            // C(4,[],[0],{"r":100,"innerRadius":0,"startSliceAngle":-Math.PI/2,"endSliceAngle":Math.PI/2,"startSliceAngleRotateSpeed":0,"endSliceAngleRotateSpeed":0,"x":8100,"y":3400});
+            
+            // C(4,[],[15],{"r":100,"innerRadius":0,"startSliceAngle":-Math.PI/2,"endSliceAngle":Math.PI/2,"startSliceAngleRotateSpeed":0,"endSliceAngleRotateSpeed":0,"x":7800,"y":3400,axisSpeedMultX:0, axisSpeedMultY:1});
+            // C(4,[],[0],{"r":100,"innerRadius":0,"startSliceAngle":Math.PI/2,"endSliceAngle":-Math.PI/2,"startSliceAngleRotateSpeed":0,"endSliceAngleRotateSpeed":0,"x":7800,"y":3400});
+
+            // fix camera to position
+            let scoreLeft=0;let scoreRight=0;let scoreObs;
+            {
+                function interpolate(s,e,t){return (1-t) * s + t*e;}
+                let lastCollided=false;let collided=false;let fadeOutTimer=-1;let interpScale;C(1,[],[3],{
+                x: 4500,y:7400,w:1200,h:600,
+                cr:() => {},
+                ef:()=>{
+                    if(lastCollided === false){
+                        interpScale = window.camera.scale;
+
+                        scoreObs.text = '0 - 0';
+                        scoreObs.alpha = 0;
+                        scoreLeft = scoreRight = 0;
+                    }
+
+                    fadeOutTimer = -1;
+                    window.camera.x = interpolate(window.camera.x, 5100, 0.1);
+                    window.camera.y = interpolate(window.camera.y, 7700, 0.1);
+
+                    scoreObs.alpha = interpolate(scoreObs.alpha, 1, 0.01);
+
+                    interpScale = interpolate(interpScale, 2, 0.01);
+                    changeCameraScale(interpScale);
+
+                    window.camera.numControlledBy = 1;
+
+                    collided = true;
+                },
+                sf:(o,p)=>{
+                    if(lastCollided === true && collided === false) {
+                        fadeOutTimer = 2000;
+                    }
+
+                    if(fadeOutTimer !== -1){
+                        fadeOutTimer -= 16.66;
+
+                        scoreObs.alpha = interpolate(scoreObs.alpha, 0, 0.03);
+
+                        const t = Math.max(0.1,1 - (fadeOutTimer / 2000) ** 2);
+
+                        window.camera.x = interpolate(window.camera.x, p.pos.x, t);
+                        window.camera.y = interpolate(window.camera.y, p.pos.y, t);
+
+                        interpScale = interpolate(interpScale, 1, 0.1);
+                        window.changeCameraScale(interpScale);
+
+                        if(fadeOutTimer <= 0) {
+                            scoreObs.text = '';
+                            window.changeCameraScale(1);
+                            window.camera.numControlledBy = 0;
+                            lastCameraX = lastCameraY = undefined;
+                            fadeOutTimer = -1;
+                        }
+                    }
+
+                    lastCollided = collided;
+                    collided = false;
+                }
+            })};
+
+            // ball
+            let pongPlayer;let pongBall;
+            
+            {
+                let ang = Math.random() * Math.PI * 2;
+                let mag = 0.3 * 3;
+                let xv = Math.cos(ang);
+                let yv = Math.sin(ang);
+                const bounds = [4500, 7400, 5700, 8000];
+                C(0,[],[3],{x: 5100, y: 7700, r: 49.5,collidable:false,sf:(e)=>{
+                    e.pos.y += yv * 1000/60 * mag;
+                    e.pos.x += xv * 1000/60 * mag;
+                    topX = e.pos.x; topY = e.pos.y;
+                    if ((e.pos.x - e.sat.r) < bounds[0] || e.pos.x + e.sat.r > bounds[2]) {
+                        xv = xv * -1;
+                        e.pos.x = Math.max(bounds[0] + e.sat.r, e.pos.x);
+                        e.pos.x = Math.min(bounds[2] - e.sat.r, e.pos.x);
+
+                        if(e.pos.x < 5250) scoreLeft++;
+                        else scoreRight++;
+
+                        if(scoreObs.text !== ''){
+                            scoreObs.text = scoreRight + ' - ' + scoreLeft;
+                            e.pos.x = 5100;
+                            e.pos.y = 7700;
+                        }
+                        mag = 0.3 * 3;
+                    }
+                    if ((e.pos.y - e.sat.r) < bounds[1] || e.pos.y + e.sat.r > bounds[3]) {
+                        yv = yv * -1;
+                        e.pos.y = Math.max(bounds[1] + e.sat.r, e.pos.y);
+                        e.pos.y = Math.min(bounds[3] - e.sat.r, e.pos.y);
+                    }
+
+                    if(pongPlayer !== undefined){
+                        mag *= 1.0003;
+                    } else {
+                        mag = 0.3 * 3;
+                    }
+                    
+
+                    if(pongPlayer !== undefined){
+                        const res = new SAT.Response();
+                        const col = SAT.testCircleCircle(e.sat, pongPlayer.sat, res);
+
+                        if(col === true){
+                            const angle = Math.atan2(e.pos.y - pongPlayer.pos.y, e.pos.x - pongPlayer.pos.x);
+
+                            e.pos.x -= res.overlapV.x;
+                            e.pos.y -= res.overlapV.y;
+
+                            xv = Math.cos(angle) * mag;
+                            yv = Math.sin(angle) * mag;
+                        }
+                    }
+                    
+                },ef:(p,res,o)=>{
+                    const angle = Math.atan2(o.pos.y - p.pos.y, o.pos.x - p.pos.x);
+
+                    o.pos.x -= res.overlapV.x;
+                    o.pos.y -= res.overlapV.y;
+
+                    xv = Math.cos(angle) * mag;
+                    yv = Math.sin(angle) * mag;
+                },cr:(o)=>{
+                    ctx.fillStyle = 'black';
+                    ctx.beginPath();
+                    ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.closePath();
+                }});
+            }
+            pongBall = obstacles[obstacles.length-1];
+
+            // cloning thing that makes a clone on the other side
+            {let collided=false;let lastCollided = false;let fadeOut=false;C(1,[],[3],{x: 4500, w: 1200, y: 7400, h: 600,cr: (o)=>{},
+            ef:()=>{
+                collided = true;
+
+                if(lastCollided === false){
+                    if(pongPlayer !== undefined){
+                        players[pongPlayer.id] = undefined;
+                        pongPlayer = undefined;
+                    }
+                    pongPlayer = window.createPlayer();
+                    pongPlayer.id = window.players.length;
+                    pongPlayer.name = 'Opponent';
+                    pongPlayer.pos = pongPlayer.sat.pos;
+                    pongPlayer.renderRadius = 0;
+                    window.players.push(pongPlayer);
+                    fadeOut = false;
+                }
+            },sf:(o,p)=>{
+                if(pongPlayer !== undefined){
+                    pongPlayer.pos.x = (o.pos.x+o.dimensions.x/2) - (p.pos.x - (o.pos.x+o.dimensions.x/2));
+                    // pongPlayer.pos.y = p.pos.y;
+                    function interpolate(s,e,t){return s * (1-t) + e*t};
+                    pongPlayer.pos.y = interpolate(pongPlayer.pos.y, pongBall.pos.y, 0.15);
+                    if(pongPlayer.pos.y < 7450) pongPlayer.pos.y = 7450;
+
+                    if(fadeOut === true){
+                        pongPlayer.renderRadius *= 0.9;
+                        if(pongPlayer.renderRadius < 5){
+                            fadeOut = false;
+                            players[pongPlayer.id] = undefined;
+                            pongPlayer = undefined;
+                        }
+                    } else {
+                        pongPlayer.sat.r = pongPlayer.renderRadius = (49.5) * 0.1 + 0.9 * pongPlayer.renderRadius; 
+                    }
+                }
+                if(lastCollided === true && collided === false){
+                    fadeOut = true;
+                }
+
+                lastCollided = collided;
+                collided = false;
+            }})};
+
+            // score text
+            C(3,[],[20],{hex:"#FFFFFF",alpha:1,x:5100,y:7700,fontSize: 82,text:'',cr:(o)=>{
+                ctx.fillStyle = 'white';
+                ctx.globalAlpha = o.alpha;
+                ctx.font = o.fontSize + "px Inter";
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(o.text, 5100, 7700);
+                ctx.globalAlpha = 1;
+            }});scoreObs = obstacles[obstacles.length-1];
+
+            // eliminating extra space at the right
+            C(1,[],[0],{x:5700,y:7300,w:400,h:800});
+        }
+
+        // pushbox button
+        {
+            let pbButtonActivated = false; let pbButtonSteppedOn = false;
+            C(1,[],[3],{
+                x: 5550, y: 1850, w: 100, h: 100,
+                cr: (o) => {
+                    ctx.globalAlpha = 0.8;
+                    if (pbButtonSteppedOn === true || pbButtonActivated === true) {
+                        ctx.globalAlpha = 0.3;
+                    }
+        
+                    ctx.fillStyle = 'white';
+                    if (pbButtonSteppedOn === true && pbButtonActivated === false) {ctx.fillStyle = blendColor('#FF0000','#FFFFFF',0.3); ctx.globalAlpha = 0.8;}
+                    else if(pbButtonActivated === true) {ctx.fillStyle = blendColor('#00FF00','#FFFFFF',0.5);}
+        
+                    // outside
+                    ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y);
+        
+                    // grey inside
+                    if(!pbButtonActivated) ctx.globalAlpha = 1;
+                    ctx.fillStyle = colors.tile;
+                    ctx.fillRect(
+                        o.pos.x + 12,
+                        o.pos.y + 12,
+                        o.dimensions.x - 24,
+                        o.dimensions.y - 24
+                    );
+        
+                    // rim
+                    ctx.globalAlpha = 0.5;
+                    ctx.lineWidth = 4;
+                    ctx.strokeStyle = 'white';
+                    ctx.strokeRect(
+                        o.pos.x + 20,
+                        o.pos.y + 20,
+                        o.dimensions.x - 40,
+                        o.dimensions.y - 40
+                    );
+                    ctx.globalAlpha = 1;
+        
+                    pbButtonSteppedOn = false;
+                },
+                // TODO
+                // sf: (o) => {
+                //     const res = new SAT.Response();
+                //     let collided = false;
+        
+                //     collided = SAT.testPolygonCircle(o.sat, pushCircle.sat, res);
+        
+                //     if(collided === false){
+                //         res.clear();
+        
+                //         collided = SAT.testPolygonPolygon(pushBox.sat, o.sat, res);
+                //     }
+        
+                //     if(collided === true && pbButtonActivated === false){
+                //         pbButtonActivated = true;
+                //         C(3,[],[20],{hex:'#FFFFFF',color:'white',x:9900,y:4450,fontSize: 48, text: 'pro', alpha: 1});
+                //         proTxt = obstacles[obstacles.length-1];
+                //         btnsPressed++;
+                //         if(btnsPressed === 3){
+                //             proTxt.pos.x = -100;
+                //             C(3,[],[20],{hex:'#FFFFFF',color:'white',x:9600,y:4550,fontSize: 48, text: 'super pro', alpha: 1})
+                //         }
+                //     }
+                // },
+                ef: (p,res,o) => {
+                    pbButtonSteppedOn = true;    
+                }
+            })
+        }
+    }
 })();
 
 ///               vvvvv 2021 vvvvv
