@@ -15659,11 +15659,11 @@ else require('./_converter.js');
         },
         {
             "x": 8625,
-            "y": 925,
+            "y": 927.5,
             "w": 25,
             "h": 25,
             "size": 30,
-            "text": "heart-wrenching",
+            "text": "tryhard",
             "angle": 0,
             "story": false
         },

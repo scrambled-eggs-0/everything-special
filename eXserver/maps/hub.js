@@ -12148,7 +12148,7 @@
                 "h": 100,
                 "type": "portal",
                 "name": "Planet of Prehistory",
-                "acronym": "PoP",
+                "acronym": "PoPH",
                 "difficulty": "Exhausting",
                 "difficultyNumber": "0.7",
                 "musicPath": null,
@@ -12175,8 +12175,8 @@
                 "w": 100,
                 "h": 100,
                 "type": "portal",
-                "name": "PoDC",
-                "acronym": "Planet of Difficulty Chart",
+                "name": "Planet of Difficulty Chart",
+                "acronym": "PoDC",
                 "difficulty": "Agonizing",
                 "difficultyNumber": "0.4",
                 "musicPath": null,
@@ -12191,8 +12191,8 @@
         eval(str);
 
         // temp for poqt
-        spawnPosition.x = 3500;
-        spawnPosition.y = 4200;
+        spawnPosition.x = 5000;
+        spawnPosition.y = 5000;
     
         // spawnPosition.x=5000;
         // spawnPosition.y=5000;

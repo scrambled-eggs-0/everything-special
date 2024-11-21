@@ -13,12 +13,164 @@ window.respawnPlayer();
 colors.background = '#ffffff';
 colors.tile = '#d4d4d4';
 
+var safeColor = "#c3c3c3";
+var safeTileColor = "#9e9e9e"
+
 C(0, [], [26], {
 	x: spawnPosition.x,
 	y: spawnPosition.y,
 	r: 50,
 	musicPath: 'https://www.youtube.com/watch?v=lgq0OdRIEao'
 });
+
+
+var areaColors = [
+	{ // 1.1
+		background: "#ffffff",
+		tile: "#d4d4d4",
+		safeColor: "#c3c3c3",
+		safeTileColor: "#9e9e9e"
+	},
+	{ // 1.2
+		background: "#ffffff",
+		tile: "#d4d4d4",
+		safeColor: "#c3c3c3",
+		safeTileColor: "#9e9e9e"
+	},
+	{ // 1.3
+		background: "#ffffff",
+		tile: "#d4d4d4",
+		safeColor: "#c3c3c3",
+		safeTileColor: "#9e9e9e"
+	},
+	{ // 1.4
+		background: "#ffffff",
+		tile: "#d4d4d4",
+		safeColor: "#c3c3c3",
+		safeTileColor: "#9e9e9e"
+	},
+	{ // 2.1
+		background: "#ffffff",
+		tile: "#d4d4d4",
+		safeColor: "#c3c3c3",
+		safeTileColor: "#9e9e9e"
+	},
+	{ // 2.2
+		background: "#ffffff",
+		tile: "#d4d4d4",
+		safeColor: "#c3c3c3",
+		safeTileColor: "#9e9e9e"
+	},
+	{ // 2.3
+		background: "#ffffff",
+		tile: "#d4d4d4",
+		safeColor: "#c3c3c3",
+		safeTileColor: "#9e9e9e"
+	},
+	{ // 2.4
+		background: "#ffffff",
+		tile: "#d4d4d4",
+		safeColor: "#c3c3c3",
+		safeTileColor: "#9e9e9e"
+	},
+	{ // 3.1
+		background: "#ffffff",
+		tile: "#d4d4d4",
+		safeColor: "#c3c3c3",
+		safeTileColor: "#9e9e9e"
+	},
+	{ // 3.2
+		background: "#ffffff",
+		tile: "#d4d4d4",
+		safeColor: "#c3c3c3",
+		safeTileColor: "#9e9e9e"
+	},
+	{ // 3.3
+		background: "#ffffff",
+		tile: "#d4d4d4",
+		safeColor: "#c3c3c3",
+		safeTileColor: "#9e9e9e"
+	},
+	{ // 3.4
+		background: "#ffffff",
+		tile: "#d4d4d4",
+		safeColor: "#c3c3c3",
+		safeTileColor: "#9e9e9e"
+	},
+	{ // 4.1, e2
+		background: "#ffffff",
+		tile: "#d4d4d4",
+		safeColor: "#c3c3c3",
+		safeTileColor: "#9e9e9e"
+	},
+	{ // 4.2, e2 accelerating aisle
+		background: "#ffe0fe",
+		tile: "#d0b8d1",
+		safeColor: "#bfa6be",
+		safeTileColor: "#917e91"
+	},
+	{ // 4.3, e2 tired tavern
+		background: "#ebd2ae",
+		tile: "#a69377",
+		safeColor: "#998870",
+		safeTileColor: "#7d6f5b"
+	},
+	{ // 4.4, e2 methodical
+		background: "#e8cfe4",
+		tile: "#d1bacd",
+		safeColor: "#baa6b7",
+		safeTileColor: "#a896a6"
+	},
+	{ //5.1, e2 monochrome
+		background: "#b3b3b3",
+		tile: "#919191",
+		safeColor: "#919191",
+		safeTileColor: "#6e6e6e"
+	},
+	{ //5.2, e2 insid invas
+		background: "#9de09d",
+		tile: "#89c489",
+		safeColor: "#7db57d",
+		safeTileColor: "#6d9e6d"
+	},
+	{ //5.3, e2 roving road
+		background: "#a9d6ba",
+		tile: "#8fb89e",
+		safeColor: "#81a68f",
+		safeTileColor: "#6b8a77"
+	},
+	{ //5.4, e2 absolute mess lmfao
+		background: "#d0cfff",
+		tile: "#b2b1de",
+		safeColor: "#9c9bc4",
+		safeTileColor: "#8a89ab"
+	},
+	{ //6.1 e2 scorching shaft hard
+		background: "#ffffff",
+		tile: "#2181c2",
+		safeColor: "#91a5b3",
+		safeTileColor: "#2777b0"
+	},
+	{ //6.2 e2 immoral inferno
+		background: "#faa4a2",
+		tile: "#e39391",
+		safeColor: "#c9817f",
+		safeTileColor: "#ad6d6c"
+	},
+	{ //6.3 e2 pentaognis
+		background: "#8abaff",
+		tile: "#78a4e3",
+		safeColor: "#6b94cf",
+		safeTileColor: "#5e83b8"
+	},
+	{ //6.4 e2 coliseum
+		background: "#ffffff",
+		tile: "#d7d9db",
+		safeColor: "#b6b7b8",
+		safeTileColor: "#9fa0a1"
+	},
+	
+]
 
 var areas = [
 	[{ //1.1
@@ -368,6 +520,9 @@ var areas = [
 		radius: 24,
 		speed: 7
 	}, {
+		extraobs: true,
+		forceCreate: `C(3,[],[20],{x:270700,y:-200,text:"These only kill if you're trying to move",fontSize: 80, hex: "#ffffff"});`
+	}, {
 		type: "normal",
 		count: 4,
 		radius: 18,
@@ -486,7 +641,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[200, 200, 0.5], [1200, 200, 0.5]],
+			path: [[200, 200, 0.5 * 18.18], [1200, 200, 0.5 * 18.18]],
 			currentPoint: 0
 		}
 	}, {
@@ -497,7 +652,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[200, 600, 0.5], [1200, 600, 0.5]],
+			path: [[200, 600, 0.5 * 18.18], [1200, 600, 0.5 * 18.18]],
 			currentPoint: 1
 		}
 	}, {
@@ -538,7 +693,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[1400, 200, 0.55], [1400, 1300, 0.55]],
+			path: [[1400, 200, 0.55 * 18.18], [1400, 1300, 0.55 * 18.18]],
 			currentPoint: 1
 		}
 	},  {
@@ -549,7 +704,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[1800, 200, 0.55], [1800, 1300, 0.55]],
+			path: [[1800, 200, 0.55 * 18.18], [1800, 1300, 0.55 * 18.18]],
 			currentPoint: 0
 		}
 	}, {
@@ -560,7 +715,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[2200, 200, 0.55], [2200, 1300, 0.55]],
+			path: [[2200, 200, 0.55 * 18.18], [2200, 1300, 0.55 * 18.18]],
 			currentPoint: 1
 		}
 	},  {
@@ -571,7 +726,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[2600, 200, 0.55], [2600, 1300, 0.55]],
+			path: [[2600, 200, 0.55 * 18.18], [2600, 1300, 0.55 * 18.18]],
 			currentPoint: 0
 		}
 	}, {
@@ -612,7 +767,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[5000, 150, 0.5], [6200, 150, 0.5]],
+			path: [[5000, 150, 0.5 * 18.18], [6200, 150, 0.5 * 18.18]],
 			currentPoint: 0
 		}
 	}, {
@@ -623,7 +778,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[5000, 450, 0.5], [6200, 450, 0.5]],
+			path: [[5000, 450, 0.5 * 18.18], [6200, 450, 0.5 * 18.18]],
 			currentPoint: 1
 		}
 	}, {
@@ -634,7 +789,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[5000, 750, 0.5], [6200, 750, 0.5]],
+			path: [[5000, 750, 0.5 * 18.18], [6200, 750, 0.5 * 18.18]],
 			currentPoint: 0
 		}
 	}, {
@@ -645,7 +800,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[5000, 1050, 0.5], [6200, 1050, 0.5]],
+			path: [[5000, 1050, 0.5 * 18.18], [6200, 1050, 0.5 * 18.18]],
 			currentPoint: 1
 		}
 	}, {
@@ -656,7 +811,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[5000, 1350, 0.5], [6200, 1350, 0.5]],
+			path: [[5000, 1350, 0.5 * 18.18], [6200, 1350, 0.5 * 18.18]],
 			currentPoint: 0
 		}
 	}, {
@@ -667,7 +822,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[5000, 150, 0.5], [5000, 1350, 0.5]],
+			path: [[5000, 150, 0.5 * 18.18], [5000, 1350, 0.5 * 18.18]],
 			currentPoint: 0
 		}
 	}, {
@@ -678,7 +833,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[5300, 150, 0.5], [5300, 1350, 0.5]],
+			path: [[5300, 150, 0.5 * 18.18], [5300, 1350, 0.5 * 18.18]],
 			currentPoint: 1
 		}
 	}, {
@@ -689,7 +844,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[5600, 150, 0.5], [5600, 1350, 0.5]],
+			path: [[5600, 150, 0.5 * 18.18], [5600, 1350, 0.5 * 18.18]],
 			currentPoint: 0
 		}
 	}, {
@@ -700,7 +855,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[5900, 150, 0.5], [5900, 1350, 0.5]],
+			path: [[5900, 150, 0.5 * 18.18], [5900, 1350, 0.5 * 18.18]],
 			currentPoint: 1
 		}
 	}, {
@@ -711,7 +866,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[6200, 150, 0.5], [6200, 1350, 0.5]],
+			path: [[6200, 150, 0.5 * 18.18], [6200, 1350, 0.5 * 18.18]],
 			currentPoint: 0
 		}
 	}, {
@@ -722,7 +877,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[7000, 150, 3], [7000, 1350, 3]],
+			path: [[7000, 150, 3 * 18.18], [7000, 1350, 3 * 18.18]],
 			currentPoint: 0
 		}
 	}, {
@@ -733,7 +888,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[7300, 150, 3], [7300, 1350, 3]],
+			path: [[7300, 150, 3 * 18.18], [7300, 1350, 3 * 18.18]],
 			currentPoint: 1
 		}
 	}, ],
@@ -757,7 +912,7 @@ var areas = [
 		type: 0,
 	}, {
 		extraobs: true,
-		forceCreate: `C(1,[],[17],{x:349900,y:200,w:3800,h:1100,timeTrapToShowTenth:false,timeTrapToKill:false,timeTrapRecoverySpeed:3,timeTrapMaxTime:12000,sf:(e)=>{
+		forceCreate: `C(1,[],[17],{x:349900,y:200,w:3800,h:1100,timeTrapToShowTenth:false,timeTrapToKill:false,timeTrapRecoverySpeed:3,timeTrapMaxTime:12,sf:(e)=>{
             if(e.timeTrapTime <= 0){
                 players[selfId].pos.x = 354260;
                 players[selfId].pos.y = 800;
@@ -1171,18 +1326,38 @@ var lastCollided = false;
 C(1, [], [3], {
 	cr: (o) => {}, // render as invisible
 	ef: (p, res, o) => {
-		window.changeCameraScale(1 / 1.8)
+		window.changeCameraScale(1 / 1.5)
 		collided = true;
 	},
 	sf: (o, p) => {
 		if (lastCollided === true && collided === false) {
-			window.changeCameraScale(1 / 1.8)
+			window.changeCameraScale(1 / 1.5)
 		}
 		lastCollided = collided;
 		collided = false;
 	}
 })
 
+
+
+//COLOR MANAGER
+
+C(0, [], [3], {
+	x: -1e9,
+	y: 0,
+	r: 1,
+	cr: (o) => {
+	},
+	sf: (o) => {
+		let area = Math.floor(((players[selfId].pos.x +  1000)) / 15000);
+		if (area >= 0 && areaColors[area]){ //godmode fix
+			colors.background = areaColors[area].background;
+			colors.tile = areaColors[area].tile;
+			safeColor = areaColors[area].safeColor;
+			safeTileColor = areaColors[area].safeTileColor;
+		}
+	}
+})
 
 
 //WOrld border
@@ -1272,12 +1447,12 @@ for (let i = 0; i < areas.length; i++) {
 		w: 1000,
 		h: 1500,
 		cr: (o) => {
-			ctx.fillStyle = "#c3c3c3";
+			ctx.fillStyle = safeColor;
 			ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y)
 
 			ctx.globalAlpha = 0.75;
 			ctx.lineWidth = 4.8;
-			ctx.strokeStyle = "#9e9e9e";
+			ctx.strokeStyle = safeTileColor;
 
 			for (let x = (o.pos.x); x < (o.pos.x + o.dimensions.x); x += window.tileSize) {
 				ctx.beginPath();
@@ -1304,12 +1479,12 @@ for (let i = 0; i < areas.length; i++) {
 		w: 1000,
 		h: 1500,
 		cr: (o) => {
-			ctx.fillStyle = "#c3c3c3";
+			ctx.fillStyle = safeColor;
 			ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y)
 
 			ctx.globalAlpha = 0.75;
 			ctx.lineWidth = 4.8;
-			ctx.strokeStyle = "#9e9e9e";
+			ctx.strokeStyle = safeTileColor;
 
 			for (let x = (o.pos.x); x < (o.pos.x + o.dimensions.x); x += window.tileSize) {
 				ctx.beginPath();
@@ -2271,7 +2446,7 @@ C(1, [], [19], {
 var firstTime = false;
 
 try{
-	var audio = new Audio("https://b9ab0f82-9e4a-416a-94aa-00f081025475-00-3fjhkg258babf.spock.replit.dev/Music.mp3");
+	var audio = new Audio("https://f-2f7z.onrender.com/Music.mp3");
 }
 catch(err){
 	var audio = {};
@@ -2286,6 +2461,8 @@ try{
 catch(err){
 	console.log("OK")
 }
+
+//TP TO BOSSFIGHT
 C(1, [], [3], {
 	x: 0,
 	y: 1000,
@@ -2319,7 +2496,7 @@ var bossFightPos = {
 };
 
 
-let bossSpawns = [{"time":3.2384011346651507,"lifeTime":7,"x":748.825705775138,"y":-300,"w":236.4429482142196,"h":50,"type":1,"vy":0.5353145639029153,"vx":0.020636748763295854,"simulate":[1,3],"initialRotation":0.6324878957882356,"rotateSpeed":0.002085268127243168,"boundPlayer":true},{"time":3.6316554215978636,"lifeTime":7,"x":2100,"y":408.4458359454675,"w":170.80541024648295,"h":50,"type":1,"vx":-0.5540898107856294,"vy":-0.005095804595753706,"simulate":[1,3],"initialRotation":2.328575980532795,"rotateSpeed":0.0020179544704163658,"boundPlayer":true},{"time":5.010264347706765,"lifeTime":7,"x":2100,"y":1423.0616838703506,"w":234.9746134219635,"h":50,"type":1,"vx":-0.6622000763891029,"vy":-0.06555372837545502,"simulate":[1,3],"initialRotation":2.3327038198910475,"rotateSpeed":0.0025995341946220244,"boundPlayer":true},{"time":6.600934433481664,"lifeTime":7,"x":2100,"y":626.4414203679478,"w":217.6370455060168,"h":50,"type":1,"vx":-0.6260486490063787,"vy":0.054624950529699845,"simulate":[1,3],"initialRotation":0.4116315036058159,"rotateSpeed":0.0038675105571306235,"boundPlayer":true},{"time":1.1504889453207485,"lifeTime":7,"x":2100,"y":1754.8882025611792,"w":231.30326653857745,"h":50,"type":1,"vx":-0.42749871698922715,"vy":0.026793084554020602,"simulate":[1,3],"initialRotation":1.5280827005726365,"rotateSpeed":0.0009523142966526992,"boundPlayer":true},{"time":3.040978840071701,"lifeTime":7,"x":1581.4018719991898,"y":-300,"w":188.3399868706071,"h":50,"type":1,"vy":0.5354420821273803,"vx":-0.14140745338221108,"simulate":[1,3],"initialRotation":1.4652926313504289,"rotateSpeed":0.0031407473926849255,"boundPlayer":true},{"time":3.4981198415415267,"lifeTime":7,"x":838.973513377256,"y":2100,"w":192.91608246339877,"h":50,"type":1,"vy":-0.36267169568246826,"vx":0.04210578821174682,"simulate":[1,3],"initialRotation":2.951980588942067,"rotateSpeed":0.002886644319190585,"boundPlayer":true},{"time":6.419034968497345,"lifeTime":7,"x":-300,"y":729.4305784054407,"w":211.11879212947804,"h":50,"type":1,"vx":0.41857399548805874,"vy":0.1528210142375819,"simulate":[1,3],"initialRotation":0.11523377009384106,"rotateSpeed":0.002117376081148241,"boundPlayer":true},{"time":6.5982290767901794,"lifeTime":7,"x":2100,"y":38.35169095624469,"w":165.46561052728686,"h":50,"type":1,"vx":-0.5279337847673167,"vy":-0.019973684988255164,"simulate":[1,3],"initialRotation":1.6571366896160176,"rotateSpeed":0.0030172201221135655,"boundPlayer":true},{"time":4.982648642066969,"lifeTime":7,"x":2100,"y":1143.5471181751532,"w":197.58272810071696,"h":50,"type":1,"vx":-0.5276930926416097,"vy":0.015855168403678233,"simulate":[1,3],"initialRotation":2.655574350166979,"rotateSpeed":0.0024007505421317524,"boundPlayer":true},{"time":1.9557073185628386,"lifeTime":7,"x":-300,"y":437.13283895666734,"w":197.8318363869992,"h":50,"type":1,"vx":0.595627805364826,"vy":-0.10116444011253799,"simulate":[1,3],"initialRotation":0.7673153000894143,"rotateSpeed":0.0017972772117224763,"boundPlayer":true},{"time":3.3865658673518464,"lifeTime":7,"x":1363.9007174406959,"y":2100,"w":151.12926137267792,"h":50,"type":1,"vy":-0.536410976127761,"vx":0.09184199068731139,"simulate":[1,3],"initialRotation":1.2592277495858453,"rotateSpeed":0.0032675301753805606,"boundPlayer":true},{"time":1.9630763065349757,"lifeTime":7,"x":544.6238408917008,"y":-300,"w":214.4982982810355,"h":50,"type":1,"vy":0.5614763621885,"vx":-0.11245051468209702,"simulate":[1,3],"initialRotation":1.3098944567703492,"rotateSpeed":0.0009179847122288933,"boundPlayer":true},{"time":4.983284736008789,"lifeTime":7,"x":1019.3021137903147,"y":2100,"w":193.38003626350974,"h":50,"type":1,"vy":-0.4626575929042881,"vx":-0.026222133463819575,"simulate":[1,3],"initialRotation":1.918544152527755,"rotateSpeed":0.0015722587465536782,"boundPlayer":true},{"time":5.13223880454217,"lifeTime":7,"x":466.22849005091547,"y":-300,"w":179.353057970379,"h":50,"type":1,"vy":0.6600771165261125,"vx":0.015158662330369665,"simulate":[1,3],"initialRotation":2.7820556794912084,"rotateSpeed":0.0016292738936853032,"boundPlayer":true},{"time":5.550910585150382,"lifeTime":7,"x":1530.5676118398376,"y":2100,"w":164.90015068623603,"h":50,"type":1,"vy":-0.6480552784596441,"vx":-0.14171229827813883,"simulate":[1,3],"initialRotation":2.1072704230544126,"rotateSpeed":0.003923723347438788,"boundPlayer":true},{"time":6.238959019265064,"lifeTime":7,"x":763.0727871042144,"y":-300,"w":242.73152580267194,"h":50,"type":1,"vy":0.4614731046421279,"vx":-0.14369703850055018,"simulate":[1,3],"initialRotation":2.667386268865734,"rotateSpeed":0.0008159260692458981,"boundPlayer":true},{"time":6.6770661786178165,"lifeTime":7,"x":849.071536360709,"y":-300,"w":174.53235283852337,"h":50,"type":1,"vy":0.6287477687796177,"vx":0.14311771370749912,"simulate":[1,3],"initialRotation":0.6943423344566935,"rotateSpeed":0.0018078625924364343,"boundPlayer":true},{"time":6.549136363413583,"lifeTime":7,"x":-300,"y":1174.4576145986089,"w":154.07428299645508,"h":50,"type":1,"vx":0.458467085555171,"vy":0.01693963623625505,"simulate":[1,3],"initialRotation":2.6593435191718995,"rotateSpeed":0.00025038875234934996,"boundPlayer":true},{"time":0.5600879362559049,"lifeTime":7,"x":2100,"y":597.7659420176598,"w":213.93608698143439,"h":50,"type":1,"vx":-0.5425924981008127,"vy":-0.1121656430960011,"simulate":[1,3],"initialRotation":0.5589055590199618,"rotateSpeed":0.0038111328922957126,"boundPlayer":true},{"time":4.678486898042745,"lifeTime":7,"x":1929.039136657979,"y":2100,"w":192.45604691516456,"h":50,"type":1,"vy":-0.546566614496851,"vx":-0.10396341493760837,"simulate":[1,3],"initialRotation":2.2109564478740933,"rotateSpeed":0.000042770160089919076,"boundPlayer":true},{"time":4.018067781318725,"lifeTime":7,"x":-300,"y":1070.6970742395656,"w":213.91262022680633,"h":50,"type":1,"vx":0.4946731455432398,"vy":0.10940178428449285,"simulate":[1,3],"initialRotation":2.377144764771813,"rotateSpeed":0.002191906261281904,"boundPlayer":true},{"time":3.417217804120713,"lifeTime":7,"x":735.0237068751139,"y":2100,"w":226.54499330749456,"h":50,"type":1,"vy":-0.3673228633870656,"vx":-0.06624934745639631,"simulate":[1,3],"initialRotation":1.9784137059220965,"rotateSpeed":0.0003236608372851375,"boundPlayer":true},{"time":3.2366192511100618,"lifeTime":7,"x":1127.7418185067095,"y":2100,"w":166.7646797419542,"h":50,"type":1,"vy":-0.45934573226526343,"vx":0.16020164047408483,"simulate":[1,3],"initialRotation":2.566343548821638,"rotateSpeed":0.0036658533824278257,"boundPlayer":true},{"time":6.57109992523791,"lifeTime":7,"x":1747.1803835649346,"y":-300,"w":201.21693349825568,"h":50,"type":1,"vy":0.5731294509944467,"vx":0.0517292265711044,"simulate":[1,3],"initialRotation":1.0610953278829283,"rotateSpeed":0.0008813656741997615,"boundPlayer":true},{"time":0.506766415864313,"lifeTime":7,"x":-300,"y":1184.1670861169464,"w":188.10638036790948,"h":50,"type":1,"vx":0.5303476802566418,"vy":-0.089876500854469,"simulate":[1,3],"initialRotation":0.611021351623574,"rotateSpeed":0.0010523582854114481,"boundPlayer":true},{"time":3.110561253633941,"lifeTime":7,"x":-300,"y":1327.591637237504,"w":175.1638865396373,"h":50,"type":1,"vx":0.3931261605940626,"vy":-0.1247479000294375,"simulate":[1,3],"initialRotation":1.5791245620561867,"rotateSpeed":0.0034905321596548074,"boundPlayer":true},{"time":2.280506808082984,"lifeTime":7,"x":2100,"y":1866.1295841803121,"w":185.00758223397264,"h":50,"type":1,"vx":-0.5365692444358621,"vy":-0.0509975904337565,"simulate":[1,3],"initialRotation":1.6082298662016046,"rotateSpeed":0.0021453501331095827,"boundPlayer":true},{"time":3.870980932721952,"lifeTime":7,"x":1456.9122052072344,"y":-300,"w":201.35337966888545,"h":50,"type":1,"vy":0.5258949465604748,"vx":0.008869512371682875,"simulate":[1,3],"initialRotation":3.0275689311331515,"rotateSpeed":0.0032498635051834875,"boundPlayer":true},
+var bossSpawns = [{"time":3.2384011346651507,"lifeTime":7,"x":748.825705775138,"y":-300,"w":236.4429482142196,"h":50,"type":1,"vy":0.5353145639029153,"vx":0.020636748763295854,"simulate":[1,3],"initialRotation":0.6324878957882356,"rotateSpeed":0.002085268127243168,"boundPlayer":true},{"time":3.6316554215978636,"lifeTime":7,"x":2100,"y":408.4458359454675,"w":170.80541024648295,"h":50,"type":1,"vx":-0.5540898107856294,"vy":-0.005095804595753706,"simulate":[1,3],"initialRotation":2.328575980532795,"rotateSpeed":0.0020179544704163658,"boundPlayer":true},{"time":5.010264347706765,"lifeTime":7,"x":2100,"y":1423.0616838703506,"w":234.9746134219635,"h":50,"type":1,"vx":-0.6622000763891029,"vy":-0.06555372837545502,"simulate":[1,3],"initialRotation":2.3327038198910475,"rotateSpeed":0.0025995341946220244,"boundPlayer":true},{"time":6.600934433481664,"lifeTime":7,"x":2100,"y":626.4414203679478,"w":217.6370455060168,"h":50,"type":1,"vx":-0.6260486490063787,"vy":0.054624950529699845,"simulate":[1,3],"initialRotation":0.4116315036058159,"rotateSpeed":0.0038675105571306235,"boundPlayer":true},{"time":1.1504889453207485,"lifeTime":7,"x":2100,"y":1754.8882025611792,"w":231.30326653857745,"h":50,"type":1,"vx":-0.42749871698922715,"vy":0.026793084554020602,"simulate":[1,3],"initialRotation":1.5280827005726365,"rotateSpeed":0.0009523142966526992,"boundPlayer":true},{"time":3.040978840071701,"lifeTime":7,"x":1581.4018719991898,"y":-300,"w":188.3399868706071,"h":50,"type":1,"vy":0.5354420821273803,"vx":-0.14140745338221108,"simulate":[1,3],"initialRotation":1.4652926313504289,"rotateSpeed":0.0031407473926849255,"boundPlayer":true},{"time":3.4981198415415267,"lifeTime":7,"x":838.973513377256,"y":2100,"w":192.91608246339877,"h":50,"type":1,"vy":-0.36267169568246826,"vx":0.04210578821174682,"simulate":[1,3],"initialRotation":2.951980588942067,"rotateSpeed":0.002886644319190585,"boundPlayer":true},{"time":6.419034968497345,"lifeTime":7,"x":-300,"y":729.4305784054407,"w":211.11879212947804,"h":50,"type":1,"vx":0.41857399548805874,"vy":0.1528210142375819,"simulate":[1,3],"initialRotation":0.11523377009384106,"rotateSpeed":0.002117376081148241,"boundPlayer":true},{"time":6.5982290767901794,"lifeTime":7,"x":2100,"y":38.35169095624469,"w":165.46561052728686,"h":50,"type":1,"vx":-0.5279337847673167,"vy":-0.019973684988255164,"simulate":[1,3],"initialRotation":1.6571366896160176,"rotateSpeed":0.0030172201221135655,"boundPlayer":true},{"time":4.982648642066969,"lifeTime":7,"x":2100,"y":1143.5471181751532,"w":197.58272810071696,"h":50,"type":1,"vx":-0.5276930926416097,"vy":0.015855168403678233,"simulate":[1,3],"initialRotation":2.655574350166979,"rotateSpeed":0.0024007505421317524,"boundPlayer":true},{"time":1.9557073185628386,"lifeTime":7,"x":-300,"y":437.13283895666734,"w":197.8318363869992,"h":50,"type":1,"vx":0.595627805364826,"vy":-0.10116444011253799,"simulate":[1,3],"initialRotation":0.7673153000894143,"rotateSpeed":0.0017972772117224763,"boundPlayer":true},{"time":3.3865658673518464,"lifeTime":7,"x":1363.9007174406959,"y":2100,"w":151.12926137267792,"h":50,"type":1,"vy":-0.536410976127761,"vx":0.09184199068731139,"simulate":[1,3],"initialRotation":1.2592277495858453,"rotateSpeed":0.0032675301753805606,"boundPlayer":true},{"time":1.9630763065349757,"lifeTime":7,"x":544.6238408917008,"y":-300,"w":214.4982982810355,"h":50,"type":1,"vy":0.5614763621885,"vx":-0.11245051468209702,"simulate":[1,3],"initialRotation":1.3098944567703492,"rotateSpeed":0.0009179847122288933,"boundPlayer":true},{"time":4.983284736008789,"lifeTime":7,"x":1019.3021137903147,"y":2100,"w":193.38003626350974,"h":50,"type":1,"vy":-0.4626575929042881,"vx":-0.026222133463819575,"simulate":[1,3],"initialRotation":1.918544152527755,"rotateSpeed":0.0015722587465536782,"boundPlayer":true},{"time":5.13223880454217,"lifeTime":7,"x":466.22849005091547,"y":-300,"w":179.353057970379,"h":50,"type":1,"vy":0.6600771165261125,"vx":0.015158662330369665,"simulate":[1,3],"initialRotation":2.7820556794912084,"rotateSpeed":0.0016292738936853032,"boundPlayer":true},{"time":5.550910585150382,"lifeTime":7,"x":1530.5676118398376,"y":2100,"w":164.90015068623603,"h":50,"type":1,"vy":-0.6480552784596441,"vx":-0.14171229827813883,"simulate":[1,3],"initialRotation":2.1072704230544126,"rotateSpeed":0.003923723347438788,"boundPlayer":true},{"time":6.238959019265064,"lifeTime":7,"x":763.0727871042144,"y":-300,"w":242.73152580267194,"h":50,"type":1,"vy":0.4614731046421279,"vx":-0.14369703850055018,"simulate":[1,3],"initialRotation":2.667386268865734,"rotateSpeed":0.0008159260692458981,"boundPlayer":true},{"time":6.6770661786178165,"lifeTime":7,"x":849.071536360709,"y":-300,"w":174.53235283852337,"h":50,"type":1,"vy":0.6287477687796177,"vx":0.14311771370749912,"simulate":[1,3],"initialRotation":0.6943423344566935,"rotateSpeed":0.0018078625924364343,"boundPlayer":true},{"time":6.549136363413583,"lifeTime":7,"x":-300,"y":1174.4576145986089,"w":154.07428299645508,"h":50,"type":1,"vx":0.458467085555171,"vy":0.01693963623625505,"simulate":[1,3],"initialRotation":2.6593435191718995,"rotateSpeed":0.00025038875234934996,"boundPlayer":true},{"time":0.5600879362559049,"lifeTime":7,"x":2100,"y":597.7659420176598,"w":213.93608698143439,"h":50,"type":1,"vx":-0.5425924981008127,"vy":-0.1121656430960011,"simulate":[1,3],"initialRotation":0.5589055590199618,"rotateSpeed":0.0038111328922957126,"boundPlayer":true},{"time":4.678486898042745,"lifeTime":7,"x":1929.039136657979,"y":2100,"w":192.45604691516456,"h":50,"type":1,"vy":-0.546566614496851,"vx":-0.10396341493760837,"simulate":[1,3],"initialRotation":2.2109564478740933,"rotateSpeed":0.000042770160089919076,"boundPlayer":true},{"time":4.018067781318725,"lifeTime":7,"x":-300,"y":1070.6970742395656,"w":213.91262022680633,"h":50,"type":1,"vx":0.4946731455432398,"vy":0.10940178428449285,"simulate":[1,3],"initialRotation":2.377144764771813,"rotateSpeed":0.002191906261281904,"boundPlayer":true},{"time":3.417217804120713,"lifeTime":7,"x":735.0237068751139,"y":2100,"w":226.54499330749456,"h":50,"type":1,"vy":-0.3673228633870656,"vx":-0.06624934745639631,"simulate":[1,3],"initialRotation":1.9784137059220965,"rotateSpeed":0.0003236608372851375,"boundPlayer":true},{"time":3.2366192511100618,"lifeTime":7,"x":1127.7418185067095,"y":2100,"w":166.7646797419542,"h":50,"type":1,"vy":-0.45934573226526343,"vx":0.16020164047408483,"simulate":[1,3],"initialRotation":2.566343548821638,"rotateSpeed":0.0036658533824278257,"boundPlayer":true},{"time":6.57109992523791,"lifeTime":7,"x":1747.1803835649346,"y":-300,"w":201.21693349825568,"h":50,"type":1,"vy":0.5731294509944467,"vx":0.0517292265711044,"simulate":[1,3],"initialRotation":1.0610953278829283,"rotateSpeed":0.0008813656741997615,"boundPlayer":true},{"time":0.506766415864313,"lifeTime":7,"x":-300,"y":1184.1670861169464,"w":188.10638036790948,"h":50,"type":1,"vx":0.5303476802566418,"vy":-0.089876500854469,"simulate":[1,3],"initialRotation":0.611021351623574,"rotateSpeed":0.0010523582854114481,"boundPlayer":true},{"time":3.110561253633941,"lifeTime":7,"x":-300,"y":1327.591637237504,"w":175.1638865396373,"h":50,"type":1,"vx":0.3931261605940626,"vy":-0.1247479000294375,"simulate":[1,3],"initialRotation":1.5791245620561867,"rotateSpeed":0.0034905321596548074,"boundPlayer":true},{"time":2.280506808082984,"lifeTime":7,"x":2100,"y":1866.1295841803121,"w":185.00758223397264,"h":50,"type":1,"vx":-0.5365692444358621,"vy":-0.0509975904337565,"simulate":[1,3],"initialRotation":1.6082298662016046,"rotateSpeed":0.0021453501331095827,"boundPlayer":true},{"time":3.870980932721952,"lifeTime":7,"x":1456.9122052072344,"y":-300,"w":201.35337966888545,"h":50,"type":1,"vy":0.5258949465604748,"vx":0.008869512371682875,"simulate":[1,3],"initialRotation":3.0275689311331515,"rotateSpeed":0.0032498635051834875,"boundPlayer":true},
 { //STAGE 2
 	"time": 9.2,
 	"lifeTime": 1,
@@ -2940,7 +3117,10 @@ let bossSpawns = [{"time":3.2384011346651507,"lifeTime":7,"x":748.825705775138,"
 	"speed": 8,
 	"spawn": [1000, 1000]
 }, 
-{"time":100.9,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":6.073745796940266,"spawn":[1000,1000]},{"time":100.8,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":5.8643062867009474,"spawn":[1000,1000]},{"time":100.7,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":5.654866776461628,"spawn":[1000,1000]},{"time":100.6,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":5.445427266222309,"spawn":[1000,1000]},{"time":100.5,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":5.235987755982989,"spawn":[1000,1000]},{"time":100.4,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":5.026548245743669,"spawn":[1000,1000]},{"time":100.3,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":4.81710873550435,"spawn":[1000,1000]},{"time":100.2,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":4.607669225265029,"spawn":[1000,1000]},{"time":100.1,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":4.39822971502571,"spawn":[1000,1000]},{"time":100,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":4.1887902047863905,"spawn":[1000,1000]},{"time":99.9,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":3.979350694547071,"spawn":[1000,1000]},{"time":99.8,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":3.7699111843077517,"spawn":[1000,1000]},{"time":99.7,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":3.560471674068432,"spawn":[1000,1000]},{"time":99.6,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":3.3510321638291125,"spawn":[1000,1000]},{"time":99.5,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":3.141592653589793,"spawn":[1000,1000]},{"time":99.4,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":2.9321531433504737,"spawn":[1000,1000]},{"time":99.3,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":2.7227136331111543,"spawn":[1000,1000]},{"time":99.2,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":2.5132741228718345,"spawn":[1000,1000]},{"time":99.1,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":2.3038346126325147,"spawn":[1000,1000]},{"time":99,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":2.0943951023931953,"spawn":[1000,1000]},{"time":98.9,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":1.8849555921538759,"spawn":[1000,1000]},{"time":98.8,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":1.6755160819145563,"spawn":[1000,1000]},{"time":98.7,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":1.4660765716752369,"spawn":[1000,1000]},{"time":98.6,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":1.2566370614359172,"spawn":[1000,1000]},{"time":98.5,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":1.0471975511965976,"spawn":[1000,1000]},{"time":98.4,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":0.8377580409572781,"spawn":[1000,1000]},{"time":98.3,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":0.6283185307179586,"spawn":[1000,1000]},{"time":98.2,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":0.41887902047863906,"spawn":[1000,1000]},{"time":98.1,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":0.20943951023931953,"spawn":[1000,1000]},{"time":98,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":0,"spawn":[1000,1000]},
+//Spin around
+{"time":100.88000001152,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":6.031857894892402,"spawn":[1000,1000]},{"time":100.76000001104,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":5.7805304826052195,"spawn":[1000,1000]},{"time":100.64000001056,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":5.529203070318036,"spawn":[1000,1000]},{"time":100.52000001008,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":5.277875658030852,"spawn":[1000,1000]},{"time":100.4000000096,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":5.026548245743669,"spawn":[1000,1000]},{"time":100.28000000912,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":4.775220833456485,"spawn":[1000,1000]},{"time":100.16000000864,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":4.523893421169302,"spawn":[1000,1000]},{"time":100.04000000816,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":4.272566008882119,"spawn":[1000,1000]},{"time":99.92000000768,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":4.0212385965949355,"spawn":[1000,1000]},{"time":99.8000000072,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":3.7699111843077517,"spawn":[1000,1000]},{"time":99.68000000672,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":3.518583772020569,"spawn":[1000,1000]},{"time":99.56000000624,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":3.267256359733385,"spawn":[1000,1000]},{"time":99.44000000576,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":3.015928947446201,"spawn":[1000,1000]},{"time":99.32000000528,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":2.764601535159018,"spawn":[1000,1000]},{"time":99.2000000048,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":2.5132741228718345,"spawn":[1000,1000]},{"time":99.08000000432,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":2.261946710584651,"spawn":[1000,1000]},{"time":98.96000000384,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":2.0106192982974678,"spawn":[1000,1000]},{"time":98.84000000336,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":1.7592918860102844,"spawn":[1000,1000]},{"time":98.72000000288,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":1.5079644737231006,"spawn":[1000,1000]},{"time":98.6000000024,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":1.2566370614359172,"spawn":[1000,1000]},{"time":98.48000000192,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":1.0053096491487339,"spawn":[1000,1000]},{"time":98.36000000144,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":0.7539822368615503,"spawn":[1000,1000]},{"time":98.24000000096,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":0.5026548245743669,"spawn":[1000,1000]},{"time":98.12000000048,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":0.25132741228718347,"spawn":[1000,1000]},{"time":98,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":0,"spawn":[1000,1000]},
+
+
 {"time":100.9,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-18.2212373908208,"spawn":[1000,1000]},{"time":100.8,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-17.59291886010284,"spawn":[1000,1000]},{"time":100.7,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-16.964600329384883,"spawn":[1000,1000]},{"time":100.6,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-16.336281798666924,"spawn":[1000,1000]},{"time":100.5,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-15.707963267948966,"spawn":[1000,1000]},{"time":100.4,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-15.079644737231007,"spawn":[1000,1000]},{"time":100.3,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-14.451326206513047,"spawn":[1000,1000]},{"time":100.2,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-13.823007675795091,"spawn":[1000,1000]},{"time":100.1,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-13.194689145077131,"spawn":[1000,1000]},{"time":100,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-12.566370614359172,"spawn":[1000,1000]},{"time":99.9,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-11.938052083641214,"spawn":[1000,1000]},{"time":99.8,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-11.309733552923255,"spawn":[1000,1000]},{"time":99.7,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-10.681415022205297,"spawn":[1000,1000]},{"time":99.6,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-10.053096491487338,"spawn":[1000,1000]},{"time":99.5,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-9.42477796076938,"spawn":[1000,1000]},{"time":99.4,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-8.79645943005142,"spawn":[1000,1000]},{"time":99.3,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-8.168140899333462,"spawn":[1000,1000]},{"time":99.2,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-7.5398223686155035,"spawn":[1000,1000]},{"time":99.1,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-6.911503837897546,"spawn":[1000,1000]},{"time":99,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-6.283185307179586,"spawn":[1000,1000]},{"time":98.9,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-5.654866776461628,"spawn":[1000,1000]},{"time":98.8,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-5.026548245743669,"spawn":[1000,1000]},{"time":98.7,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-4.39822971502571,"spawn":[1000,1000]},{"time":98.6,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-3.7699111843077517,"spawn":[1000,1000]},{"time":98.5,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-3.141592653589793,"spawn":[1000,1000]},{"time":98.4,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-2.5132741228718345,"spawn":[1000,1000]},{"time":98.3,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-1.8849555921538759,"spawn":[1000,1000]},{"time":98.2,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-1.2566370614359172,"spawn":[1000,1000]},{"time":98.1,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":-0.6283185307179586,"spawn":[1000,1000]},{"time":98,"lifeTime":-1,"enemy":true,"type":"normal","count":1,"radius":6,"speed":6,"spreadAngles":true,"baseAngle":0,"spawn":[1000,1000]},
 {
 	"time": 101,
@@ -3089,6 +3269,29 @@ let bossSpawns = [{"time":3.2384011346651507,"lifeTime":7,"x":748.825705775138,"
 	}
 },
 {
+	"time": 118,
+	"lifeTime": 4,
+	"x": 0,
+	"y": 0,
+	"w": 2000,
+	"h": 2000,
+	"type": 14,
+	"vx": 0,
+	"vy": 0,
+	"simulate": [3],
+	"extraParams": {
+		platformerForce: 3.6,
+		platformerAngle: 90,
+		platformerAngleRotateSpeed: 0,
+		platformerFriction: 0.875,
+		maxJumpCooldown: 30,
+		jumpForce: 55,
+		jumpDecay: 0.95,
+		cr: (o)=>{},
+	}
+},
+
+{
 	"time": 120,
 	"lifeTime": 4,
 	"x": 0,
@@ -3115,6 +3318,18 @@ let bossSpawns = [{"time":3.2384011346651507,"lifeTime":7,"x":748.825705775138,"
 	"w": 1500,
 	"h": 400,
 	"type": 0,
+	"vx": 0,
+	"vy": 0,
+	"simulate": [3],
+},
+{
+	"time": 118,
+	"lifeTime": 4,
+	"x": 1950,
+	"y": 0,
+	"w": 50,
+	"h": 2000,
+	"type": 6,
 	"vx": 0,
 	"vy": 0,
 	"simulate": [3],
@@ -3152,30 +3367,6 @@ let bossSpawns = [{"time":3.2384011346651507,"lifeTime":7,"x":748.825705775138,"
 	"vy": 0,
 	"simulate": [3],
 },
-
-{
-	"time": 118,
-	"lifeTime": 4,
-	"x": 0,
-	"y": 0,
-	"w": 2000,
-	"h": 2000,
-	"type": 14,
-	"vx": 0,
-	"vy": 0,
-	"simulate": [3],
-	"extraParams": {
-		platformerForce: 3.6,
-		platformerAngle: 90,
-		platformerAngleRotateSpeed: 0,
-		platformerFriction: 0.875,
-		maxJumpCooldown: 30,
-		jumpForce: 55,
-		jumpDecay: 0.95,
-		cr: (o)=>{},
-	}
-},
-
 
 //VIGNETTES
 	{
@@ -3735,7 +3926,7 @@ function spawnObs(data){
 			pivotY: 400 + 50/2,
 			boundPlayer: true
 			*/
-			obj.initialRotation = data.initialRotation;
+			obj.initialRotation = data.initialRotation * (Math.PI/180);
 			obj.rotateSpeed = data.rotateSpeed * 18.18;
 			obj.boundPlayer = data.boundPlayer;
 			if (data.pivotX){
@@ -3851,8 +4042,28 @@ C(1, [3], [3], {
 	w: 2000,
 	h: 2000,
 	cr: (o) => {
+		if (players[selfId].dead){
+			ctx.globalAlpha = o.timeDead / 120;
+			ctx.fillStyle = "#333333";
+			ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y);
+			ctx.globalAlpha = 1;
+		}
 	},
 	sf: (e) => {
+		if (e.timeDead > 120){
+			players[selfId].pos.x = 540250;
+			players[selfId].pos.y = 750;
+			players[selfId].dead = false;
+			players[selfId].renderRadius = 0;
+		}
+		
+		if (players[selfId].dead){
+			e.timeDead ++;
+		}
+		else{
+			e.timeDead = 0;
+		}
+
 		if (players[selfId].pos.y > 2500){
 			bossTime = audio.currentTime;
 		}
@@ -3909,3 +4120,21 @@ C(1, [], [0], {
 		ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y);
 	}
 })
+
+
+
+//Zone obstacles and checkpoints
+C(1, [], [9], {
+	x: 180250,
+	y: 50,
+	w: 700,
+	h: 1400
+});
+C(1, [], [9], {
+	x: 360250,
+	y: 50,
+	w: 700,
+	h: 1400
+});
+
+
