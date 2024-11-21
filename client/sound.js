@@ -52,6 +52,7 @@ window.playMusic = async (link, startTime=0) => {
     audioIframe.security = "restricted";
 
     audioIframe.style.position = "fixed";
+    audioIframe.classList.add('yt');
     audioIframe.id = videoId;
 
     // this is about 1ms...

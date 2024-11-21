@@ -546,6 +546,7 @@ function renderTextSpecials(o, cols){
 window.resizeFns = [];
 const gui = document.querySelector('.gui');
 function resize(){
+    window.changeCameraScale(1);
     const dpi = window.devicePixelRatio;
     gui.style.width = canvas.style.width = Math.ceil(window.innerWidth) + 'px';
     gui.style.height = canvas.style.height = Math.ceil(window.innerHeight) + 'px';
@@ -604,6 +605,25 @@ let noiseFns;
 window.importNoise = async() => {
     if(noiseFns !== undefined) return noiseFns;
     return noiseFns = (await import('./extras/noise.js')).default;
+}
+
+let importedYT = false;
+window.importYoutube = async() => {
+    if(importedYT === true) return;
+    const p1 = import('./extras/youtube.js');
+    const p2 = new Promise((res) => {
+        const s = document.createElement('script');
+        s.src = "https://www.youtube.com/iframe_api";
+        document.body.appendChild(s);
+
+        window.onYouTubeIframeAPIReady = () => {
+            res();
+        }
+    })
+
+    importedYT = true;
+
+    return Promise.all([p1, p2]);
 }
 
 window.unTaintCanvas = () => {
