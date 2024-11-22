@@ -8215,10 +8215,11 @@ if(window.importNoise !== undefined){
                                 ctx.textAlign = 'center';
                                 ctx.textBaseline = 'middle';
                                 ctx.fillStyle = 'white';
+                                const a = Math.PI/2 + Math.sin(window.frames / 42);
                                 ctx.translate(o.pos.x, o.pos.y);
-                                ctx.rotate(Math.PI/2);
+                                ctx.rotate(a);
                                 ctx.fillText(o.text, 0,0);
-                                ctx.rotate(-Math.PI/2);
+                                ctx.rotate(-a);
                                 ctx.translate(-o.pos.x, -o.pos.y);
                             }})
                             C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Feed The X.",sf:(o)=>{
@@ -8231,10 +8232,11 @@ if(window.importNoise !== undefined){
                                 ctx.textAlign = 'center';
                                 ctx.textBaseline = 'middle';
                                 ctx.fillStyle = 'white';
+                                const a = Math.PI/2 + Math.sin(window.frames / 42);
                                 ctx.translate(o.pos.x, o.pos.y);
-                                ctx.rotate(Math.PI/2);
+                                ctx.rotate(a);
                                 ctx.fillText(o.text, 0,0);
-                                ctx.rotate(-Math.PI/2);
+                                ctx.rotate(-a);
                                 ctx.translate(-o.pos.x, -o.pos.y);
                             }})
                             C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Feel the flame.",sf:(o)=>{
@@ -8247,10 +8249,11 @@ if(window.importNoise !== undefined){
                                 ctx.textAlign = 'center';
                                 ctx.textBaseline = 'middle';
                                 ctx.fillStyle = 'white';
+                                const a = Math.PI/2 + Math.sin(window.frames / 42);
                                 ctx.translate(o.pos.x, o.pos.y);
-                                ctx.rotate(Math.PI/2);
+                                ctx.rotate(a);
                                 ctx.fillText(o.text, 0,0);
-                                ctx.rotate(-Math.PI/2);
+                                ctx.rotate(-a);
                                 ctx.translate(-o.pos.x, -o.pos.y);
                             }})
                             C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Darkness Hold.",sf:(o)=>{
@@ -8264,9 +8267,11 @@ if(window.importNoise !== undefined){
                                 ctx.textBaseline = 'middle';
                                 ctx.fillStyle = 'white';
                                 ctx.translate(o.pos.x, o.pos.y);
-                                ctx.rotate(Math.PI/2);
+                                const a = Math.PI/2 + Math.sin(window.frames / 42);
+                                ctx.translate(o.pos.x, o.pos.y);
+                                ctx.rotate(a);
                                 ctx.fillText(o.text, 0,0);
-                                ctx.rotate(-Math.PI/2);
+                                ctx.rotate(-a);
                                 ctx.translate(-o.pos.x, -o.pos.y);
                             }})
                         }
