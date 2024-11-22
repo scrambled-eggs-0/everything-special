@@ -545,7 +545,9 @@ function renderTextSpecials(o, cols){
 // canvas resizing
 window.resizeFns = [];
 const gui = document.querySelector('.gui');
+let lastScale=1;
 function resize(){
+    lastScale = window.camera.scale;
     window.changeCameraScale(1);
     const dpi = window.devicePixelRatio;
     gui.style.width = canvas.style.width = Math.ceil(window.innerWidth) + 'px';
@@ -563,6 +565,7 @@ function resize(){
     for(let i = 0; i < window.resizeFns.length; i++){
         window.resizeFns[i]();
     }
+    window.changeCameraScale(lastScale);
 }
 
 window.changeCameraScale = (scale) => {

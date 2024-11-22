@@ -12216,7 +12216,6 @@
                 createdYT = true;
 
                 (async()=>{
-                
                     const urls = ['https://www.youtube.com/watch?v=0Ogenr6hVDY', 'https://www.youtube.com/watch?v=at2f7-lPhT4', 'https://www.youtube.com/watch?v=IipVhYNTM5w'];// TODO: replace these last two with updated versions (reupload pre-trailer, all the planets that are really in the final game)
                     const u = urls[Math.floor(Math.random() * urls.length)];
                     await window.importYoutube();
@@ -12247,18 +12246,41 @@
             }});
 
             // setting scale
-            let collided = false; let lastCollided = false;
-            C(1,[],[3],{x:0,y:6600,w:3500,h:3400,cr:()=>{},ef:(p,res,o)=>{
-                // if(p.pos.x > 2900 && p.pos.y < 7200) {window.changeCameraScale(1); return;}
-                window.changeCameraScale(.5);
-                collided = true;
-            },sf:()=>{
-                if(collided === false && lastCollided === true){
-                    window.changeCameraScale(1);
-                }
-                lastCollided = collided;
-                collided = false;
-            }})
+            {
+                let collided = false; let fadeOutTimer=null;let interpScale = 1;
+                C(1,[],[3],{x:0,y:6600,w:3500,h:3400,cr:()=>{},ef:(p,res,o)=>{
+                    collided = true;
+                    fadeOutTimer = 2000;
+                },sf:()=>{
+                    if(collided === true){
+                        interpScale = interpolate(interpScale, 0.5, 0.1);
+                        window.changeCameraScale(interpScale);
+                    } else {
+                        if(fadeOutTimer !== null){
+                            if(collided === false)fadeOutTimer -= 16.66;
+    
+                            interpScale = interpolate(interpScale, 1, 0.1);
+                            window.changeCameraScale(interpScale);
+    
+                            if(fadeOutTimer <= 0) {
+                                window.changeCameraScale(1);
+                                fadeOutTimer = null;
+                            }
+                        }
+                    }
+
+                    collided = false;
+                }})
+            }
+        }
+
+        // music
+        {
+            const links = [
+                'https://www.youtube.com/watch?v=9EHXqi0ez54',
+            ];
+
+            C(1,[],[26],{musicPath:links[Math.floor(Math.random() * links.length)],x:4800,y:4800,w:400,h:400});
         }
 
         // particles

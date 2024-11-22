@@ -325,6 +325,7 @@ var obs = [
 ]
 
 var dt = 1000 / 60;
+window.time = window.frames / 60;
 
 var mainSafeCollided=false;
 var thisFrameCol=false;
@@ -364,6 +365,7 @@ C(2,[],[11],{x:0,y:0,points:[
 ], sf:()=>{
     mainSafeCollided = thisFrameCol;
     thisFrameCol = false;
+    window.time = window.frames / 60;
 }, cr:(o)=>{
     ctx.beginPath();
     o.renderShape(o);
@@ -784,7 +786,7 @@ window.obsArr.push(...[
     "C(2,[],[18],{\"points\":[[10100,3500],[10150,3300],[10250,3300],[10300,3500]],\"sizeMult\":0.5,\"sizeChangePermanent\":false,\"x\":0,\"y\":0})",
     "C(0,[],[4],{\"r\":100,\"url\":\"https://images.pexels.com/photos/12043242/pexels-photo-12043242.jpeg\",\"x\":9000,\"y\":3400})",
     "C(4,[],[23],{\"r\":100,\"innerRadius\":0,\"startSliceAngle\":5.3197196411114005,\"endSliceAngle\":0.6615698517358614,\"endSliceAngleRotateSpeed\":-0.0021034335423010786,\"startSliceAngleRotateSpeed\":-0.000723994345467791,\"tornadoStrength\":7,\"x\":9300,\"y\":3700})",
-    "var tutorialMorphTriggered = false;\nC(1,[],[5],{h:200,w:200,y:2700,x:8900,\n    cr:(e)=>{\n        ctx.globalAlpha = 0.8;\n        if (tutorialMorphTriggered === true) {\n            ctx.globalAlpha = 0.3;\n        }\n\n        ctx.strokeStyle = ctx.fillStyle = 'white';\n\n        let topX = o.topLeft.x; let topY = o.topLeft.y;\n\n        ctx.fillRect(topX, topY, e.dimensions.x, e.dimensions.y);\n        ctx.globalAlpha *= 1 / 0.8;\n        ctx.strokeRect(topX, topY, e.dimensions.x, e.dimensions.y);\n\n        ctx.fillStyle = colors.tile;\n        ctx.fillRect(\n            topX + 15,\n            topY + 15,\n            e.dimensions.x - 30,\n            e.dimensions.y - 30\n        );\n\n        ctx.globalAlpha = 1;\n    },\n    ef:(e) => {\n        tutorialMorphTriggered = true;    \n    }\n});",
+    "var tutorialMorphTriggered = false;\nC(1,[],[5],{h:200,w:200,y:2700,x:8900,\n    cr:(e)=>{\n        ctx.globalAlpha = 0.8;\n        if (tutorialMorphTriggered === true) {\n            ctx.globalAlpha = 0.3;\n        }\n\n        ctx.strokeStyle = ctx.fillStyle = 'white';\n\n        let topX = e.topLeft.x; let topY = e.topLeft.y;\n\n        ctx.fillRect(topX, topY, e.dimensions.x, e.dimensions.y);\n        ctx.globalAlpha *= 1 / 0.8;\n        ctx.strokeRect(topX, topY, e.dimensions.x, e.dimensions.y);\n\n        ctx.fillStyle = colors.tile;\n        ctx.fillRect(\n            topX + 15,\n            topY + 15,\n            e.dimensions.x - 30,\n            e.dimensions.y - 30\n        );\n\n        ctx.globalAlpha = 1;\n    },\n    ef:(e) => {\n        tutorialMorphTriggered = true;    \n    }\n});",
     "var tutorialMorphTriggered = false;\nC(0,[],[0],{r:100,y:3100,x:8900,\n    cr:(e)=>{\n        if(tutorialMorphTriggered){\n            e.pos.x = -1E9;\n            return;\n        }\n        ctx.beginPath();\n        let middleX = e.topLeft.x; let middleY = e.topLeft.y;\n        middleX += e.dimensions.x / 2;\n        middleY += e.dimensions.y / 2;\n        ctx.translate(middleX, middleY);\n        ctx.fillStyle = colors.tile;\n        for(let i = 0; i < 100; i++){\n            const t = Math.PI * 2 * i / 100;\n            const a = Math.sin(window.time / 1000) * 8;\n\n            let x = Math.cos(t) * 100 * (Math.cos(8*t + a) / 8 + 0.9);\n            let y = Math.sin(t) * 100 * (Math.sin(8*t + a) / 8 + 0.9);\n\n            if(i === 0){\n                ctx.moveTo(x,y);\n            } else {\n                ctx.lineTo(x,y);\n            }\n        }\n        ctx.fill();\n        ctx.closePath();\n        ctx.translate(-middleX, -middleY);\n    }\n});",
     "C(2,[1],[0],{\"points\":[[9500,3850],[9500,3750],[9700,3700],[9700,3900]],\"x\":0,\"y\":0,\"initialRotation\":0,\"rotateSpeed\":0.001,\"pivotX\":9600,\"pivotY\":3800})",
     "C(0,[],[5],{\"r\":100,\"x\":9100,\"y\":2500})",
@@ -824,7 +826,7 @@ window.obsArr.push(...[
         tpx: 9600, tpy: 3100
     })`,
     "C(2,[],[18],{\"points\":[[10600,3300],[10550,3500],[10450,3500],[10400,3300]],\"sizeMult\":1.2,\"sizeChangePermanent\":true,\"x\":0,\"y\":0})",
-    "C(1,[],[28],{h:200,w:200,y:2700,x:8600,changeGrappleStateTo: true, grappleRange: 488, grappleForce: 0.08, grappleFric: 0.99});",
+    "C(1,[],[28],{h:200,w:200,y:2700,x:8600,changeGrappleStateTo: true, grappleRange: 488, grappleForce: 0.008, grappleFric: 0.99});",
     "C(0,[],[28],{h:70.71*2,w:70.71*2,y:3100,x:8600,r:100,changeGrappleStateTo: false, grappleRange: 488, grappleForce: 0.08, grappleFric: 0.99});",
     `C(1,[],[29],{"w":200,"h":200,"changeDeathTimerStateTo":true,"drainAmountWhileStandingOn":0,"deathTime":10,"x":10300,"y":2400})`,
     `C(0,[],[29],{"r":100,"changeDeathTimerStateTo":false,"drainAmountWhileStandingOn":0,"deathTime":10,"x":10200,"y":2200})`,
@@ -1571,7 +1573,7 @@ window.obsArr.push(...[
         collidingSC = true;
     },sf:()=>{
         if(collidingSC === false && lastCollidingSC === true){
-            changeCameraScale(0.5);
+            changeCameraScale(1);
         }
         lastCollidingSC = collidingSC;
         collidingSC = false;
@@ -1581,7 +1583,7 @@ window.obsArr.push(...[
     // idea: perlin noise obs, obs that setTransforms when you stand on it (skew along middle of canvas y axis, symmetrical on the top and bottom)
 
     // maybe make circle?
-    `var tOffset = 0;var lastPcollided=false;var Pcollided = false;var noiseFns;var importedNois=false;C(1,[],[3],{x:11000,y:3300,w:200,h:200,cr:(o)=>{
+    `var lastTransform2;var tOffset = 0;var lastPcollided=false;var Pcollided = false;var noiseFns;var importedNois=false;C(1,[],[3],{x:11000,y:3300,w:200,h:200,cr:(o)=>{
         if(importedNois===false) {
             (async()=>{
                 noiseFns = await window.importNoise();
@@ -1602,16 +1604,18 @@ window.obsArr.push(...[
         ctx.globalAlpha = 1;
     },ef:()=>{
         if(lastPcollided === false){
-            tOffset = (Date.now() / 290) % (Math.PI) * (-1) 
+            tOffset = (Date.now() / 290) % (Math.PI) * (-1);
+            lastTransform2 = ctx.getTransform();
         }
         Pcollided = true;
         
-        const mag = Math.sin(Date.now()/290 + tOffset)/3;
-        ctx.setTransform(0.5+0.5*mag,0,0,0.5,0,0);    
+        const mag = Math.sin(Date.now()/290 + tOffset)/3 * 2;
+        ctx.setTransform(lastTransform2.a+0.5*mag,0,0,lastTransform2.d,0,0);    
         ctx.translate(-canvas.w/2*mag,0);
     },sf:()=>{
         if(lastPcollided === true && Pcollided === false){
-            ctx.setTransform(0.5,0,0,0.5,0,0);
+            // ctx.setTransform(1,0,0,1,0,0);
+            ctx.setTransform(lastTransform2);
         }
         lastPcollided = Pcollided;
         Pcollided = false;    
@@ -1623,7 +1627,7 @@ window.obsArr.push(...[
         ctx.strokeRect(-1000/2,-1000/2,canvas.w+1000,canvas.h+1000);
     }`,
 
-    `var tOffset2 = 0;var lastPcollided2=false;var Pcollided2 = false;C(1,[],[3],{x:10800,y:3000,w:200,h:200,cr:(o)=>{
+    `var lastTransform;var tOffset2 = 0;var lastPcollided2=false;var Pcollided2 = false;C(1,[],[3],{x:10800,y:3000,w:200,h:200,cr:(o)=>{
         if(importedNois===false) {
             (async()=>{
                 noiseFns = await window.importNoise();
@@ -1644,16 +1648,18 @@ window.obsArr.push(...[
         ctx.globalAlpha = 1;
     },ef:()=>{
         if(lastPcollided2 === false){
-            tOffset = (Date.now() / 600) % (Math.PI) * (-1) 
+            tOffset = (Date.now() / 600) % (Math.PI) * (-1);
+            lastTransform = ctx.getTransform();
         }
         Pcollided2 = true;
         // TODO: fill black rect on all sides of canvas
-        const mag = Math.sin(Date.now()/600 + tOffset)/3;
-        ctx.setTransform(0.5,0,mag,0.5,0,0);    
+        const mag = Math.sin(Date.now()/600 + tOffset)/3 * 2;
+        ctx.setTransform(lastTransform.a,0,0.5*mag,lastTransform.d,0,0);
         ctx.translate(-canvas.w/2*mag,0);
     },sf:()=>{
         if(lastPcollided2 === true && Pcollided2 === false){
-            ctx.setTransform(0.5,0,0,0.5,0,0);
+            // ctx.setTransform(1,0,0,1,0,0);
+            ctx.setTransform(lastTransform);
         }
         lastPcollided2 = Pcollided2;
         Pcollided2 = false;    
@@ -2009,7 +2015,7 @@ window.obsArr.push(...[
         "shipTurnSpeed": 0.0031415926535897934,
         "changeGrappleStateTo": true,
         "grappleRange": 488,
-        "grappleForce": 0.01,
+        "grappleForce": 0.001,
         "grappleFric": 0.4,
         "changeDeathTimerStateTo": true,
         "drainAmountWhileStandingOn": 0,
@@ -2208,7 +2214,7 @@ window.obsArr.push(...[
         }
     })`,
 
-    `C(1,[],[14],{"w":200,h:200,"platformerForce":0.1,"platformerAngle":90,"platformerAngleRotateSpeed":0,"platformerFriction":0.875,"maxJumpCooldown":30,"jumpForce":0.1,"jumpDecay":0.95,"x":11000,"y":3900})`,
+    `C(1,[],[14],{"w":200,h:200,"platformerForce":0.1,"platformerAngle":90,"platformerAngleRotateSpeed":0,"platformerFriction":0.875,"maxJumpCooldown":30,"jumpForce":0.3,"jumpDecay":0.95,"x":11000,"y":3900})`,
 
     // C(3,[],[20],{x:8700,y:2200,fontSize:28,text:"Digdig diamond that looks like a normal",hex:'#FFFFFF',alpha:1})
 
@@ -2800,12 +2806,14 @@ window.obsArr.push(...[
             ctx.closePath();
         },
         ef:(p) => {
-            p.friction = -0.01 / 16.66;
+            p.friction = 0.993;
+            p.axisSpeedMultX = 0.01;
+            p.axisSpeedMultY = 0.01;
             collided = true;
         },
         sf:(o,p) => {
             if(collided === false && lastCollided === true){
-                p.friction = -0.91629073187 / 16.66;
+                p.friction = 0.4;
                 p.xv = p.yv = 0;
             }    
 
@@ -3872,6 +3880,8 @@ window.obsArr.push(...[
             zs[i].x = o.pos.x + Math.sin(zs[i].xangle) * 18;
             zs[i].y -= 0.1 * dt;
 
+            ctx.font = '62px Inter';
+
             ctx.fillText('z', zs[i].x, zs[i].y);
             if(zs[i].alpha < 0) zs[i].dead = true;
         }
@@ -4381,12 +4391,12 @@ window.obsArr.push(...[
                 window.camera.x = interpolate(window.camera.x, p.pos.x, t);
                 window.camera.y = interpolate(window.camera.y, p.pos.y, t);
 
-                interpScale = interpolate(interpScale, 0.5, Math.pow(0.1, dt / 16));
+                interpScale = interpolate(interpScale, 1, Math.pow(0.1, dt / 16));
                 changeCameraScale(interpScale);
 
                 if(fadeOutTimer <= 0) {
                     scoreObs.text = '';
-                    changeCameraScale(0.5);
+                    changeCameraScale(1);
                     window.camera.numControlledBy = 0;
                     lastCameraX = lastCameraY = undefined;
                     fadeOutTimer = -1;
@@ -5762,7 +5772,7 @@ for(let i = 0; i < 5; i++){
     window.obsArr.push(`C(0,[1],[2],{
         x: 8900, y: 1900, r: 10*40/25,
         "bounciness": 2, decay: 0.985,
-        "initialRotation": ${i / 5 * 360},
+        "initialRotation": ${i / 5 * Math.PI * 2},
         "rotateSpeed": 0.0023,
         "pivotX": 9000,
         "pivotY": 1900,
@@ -5836,7 +5846,7 @@ for(let i = 0; i < 4; i++){
             let angle = Math.atan2(p.pos.y - o.pos.y, p.pos.x - o.pos.x);
             let magnitude = Math.sqrt((o.pos.x-p.pos.x)**2+(o.pos.y-p.pos.y)**2);
 
-            angle += o.startSliceAngleRotateSpeed * dt;
+            angle += o.startSliceAngleRotateSpeed;
 
             p.pos.x = o.pos.x + Math.cos(angle) * magnitude;
             p.pos.y = o.pos.y + Math.sin(angle) * magnitude;
@@ -7992,7 +8002,10 @@ if(window.importNoise !== undefined){
             camera.updateProjectionMatrix();
         
             renderer.setSize(1600, 900);
-            window.resizeElements([renderer.domElement]);
+
+            renderer.domElement.style.width = window.innerWidth + "px";
+            renderer.domElement.style.height = window.innerHeight + "px";
+            // window.resizeElements([renderer.domElement]);
         }
 
         webglResize();
@@ -8019,7 +8032,7 @@ if(window.importNoise !== undefined){
             }
             let scaleMult = canvas2?._scaleMult ?? 1;
             canvas2.style.transform = `scale(${
-                Math.min(window.innerWidth / width, window.innerHeight / height) *
+                Math.max(window.innerWidth / width, window.innerHeight / height) *
                 scaleMult
             })`;
             canvas2.style.left = `${(window.innerWidth - width) / 2}px`;
@@ -8027,6 +8040,10 @@ if(window.importNoise !== undefined){
 
             canvas2.w = canvas2.width;
             canvas2.h = canvas2.height;
+
+            
+            // canvas2.w = canvas2.width = window.innerWidth;
+            // canvas2.h = canvas2.height = window.innerHeight;
         };
 
         canvas2resize();
@@ -8198,7 +8215,11 @@ if(window.importNoise !== undefined){
                                 ctx.textAlign = 'center';
                                 ctx.textBaseline = 'middle';
                                 ctx.fillStyle = 'white';
-                                ctx.fillText(o.text, o.pos.x, o.pos.y);
+                                ctx.translate(o.pos.x, o.pos.y);
+                                ctx.rotate(Math.PI/2);
+                                ctx.fillText(o.text, 0,0);
+                                ctx.rotate(-Math.PI/2);
+                                ctx.translate(-o.pos.x, -o.pos.y);
                             }})
                             C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Feed The X.",sf:(o)=>{
                                 const angle = window.time * rotateSpeed * -1 + Math.PI;
@@ -8210,7 +8231,11 @@ if(window.importNoise !== undefined){
                                 ctx.textAlign = 'center';
                                 ctx.textBaseline = 'middle';
                                 ctx.fillStyle = 'white';
-                                ctx.fillText(o.text, o.pos.x, o.pos.y);
+                                ctx.translate(o.pos.x, o.pos.y);
+                                ctx.rotate(Math.PI/2);
+                                ctx.fillText(o.text, 0,0);
+                                ctx.rotate(-Math.PI/2);
+                                ctx.translate(-o.pos.x, -o.pos.y);
                             }})
                             C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Feel the flame.",sf:(o)=>{
                                 const angle = window.time * rotateSpeed + Math.PI/2;
@@ -8222,7 +8247,11 @@ if(window.importNoise !== undefined){
                                 ctx.textAlign = 'center';
                                 ctx.textBaseline = 'middle';
                                 ctx.fillStyle = 'white';
-                                ctx.fillText(o.text, o.pos.x, o.pos.y);
+                                ctx.translate(o.pos.x, o.pos.y);
+                                ctx.rotate(Math.PI/2);
+                                ctx.fillText(o.text, 0,0);
+                                ctx.rotate(-Math.PI/2);
+                                ctx.translate(-o.pos.x, -o.pos.y);
                             }})
                             C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Darkness Hold.",sf:(o)=>{
                                 const angle = window.time * rotateSpeed * -1;
@@ -8234,7 +8263,11 @@ if(window.importNoise !== undefined){
                                 ctx.textAlign = 'center';
                                 ctx.textBaseline = 'middle';
                                 ctx.fillStyle = 'white';
-                                ctx.fillText(o.text, o.pos.x, o.pos.y);
+                                ctx.translate(o.pos.x, o.pos.y);
+                                ctx.rotate(Math.PI/2);
+                                ctx.fillText(o.text, 0,0);
+                                ctx.rotate(-Math.PI/2);
+                                ctx.translate(-o.pos.x, -o.pos.y);
                             }})
                         }
 
@@ -8686,6 +8719,10 @@ if(window.importNoise !== undefined){
             px=vx=ax=gx=0;
             let wScale, hScale;
             renderCanvas2anim = () => {
+                if(t < ts.wait3){
+                    players[selfId].pos.x = 9600;
+                    players[selfId].pos.y = 3100;
+                }
                 // c.fillStyle = blendColor('#2c3036', '#000000', 0.62);
                 // c.fillRect(0,0,w,h);
                 c.clearRect(0,0,w,h);
@@ -8787,7 +8824,7 @@ if(window.importNoise !== undefined){
                     c.globalAlpha = Math.min(1,interpolateBetween(0, 4, ts.zoomCamera, ts.obsIn)) * Math.min(1,interpolateBetween(4, 0, ts.zoomCamera, ts.obsIn));
                     c.shadowBlur = 10;
                     c.shadowColor = 'white';
-                    c.fillText("Everything is made out of obstacles.", w/2, 50 + 50/3);
+                    c.fillText("Everything is made out of obstacles.", w/2, /*50 + 50/3*/ h/4);
                     c.globalAlpha = 1;
                     c.shadowBlur = 0;
                 } else if(t > ts.wait1 && t < ts.blurAndObsCenter){
@@ -8821,6 +8858,21 @@ if(window.importNoise !== undefined){
                             eval(obsArr[i]);
                         }
                         eval(str);
+
+                        for(let i = 0; i < obstacles.length; i++){
+                            if(obstacles[i].rotateSpeed !== undefined){
+                                obstacles[i].rotateSpeed *= 1000 / 60;
+                            }
+                            if(obstacles[i].startSliceAngleRotateSpeed !== undefined){
+                                obstacles[i].startSliceAngleRotateSpeed *= 1000 / 60;
+                                obstacles[i].endSliceAngleRotateSpeed *= 1000 / 60;
+                            }
+                            if(obstacles[i].path !== undefined){
+                                for(let j = 0; j < obstacles[i].path.length; j++){
+                                    obstacles[i].path[j][2] *= 1000 / 60
+                                }
+                            }
+                        }
                         
                         // tutorial text obs. Two texts fade:
                         // top: "Welcome. WASD or Arrow Keys to move" 9600 2800

@@ -137,6 +137,22 @@ New plan (17th-20th)
 - make winroom send back to hub (msg update)
 - fix rotating text culling being broken - not bounding boxes cuz they're already regenerated
     - might be something with initialRotation in general?
+    - fix bug cannot read undefined reading pos sometimes bricking the game (i think fetch req msgs out of order bug)
 
-"tomorrow plan is to finish the new networking, players getting maps from other players, and all networking-related bugs"
-"then ill move onto PoH and then PoQT"
+if i have time make 
+
+animation for poph that starts with e1 text and ends with eX, or zoom out and vinette fades in if i have time
+
+- add animation
+- finish the actual map
+- add a checkpoint to zone 9... cuz u havent made zone 9 yet i can't . just search for the checkpoint effect type and u will find the place i made checkpoints lol
+- add zone obs (not necessary) 
+
+
+- add a credits section to the lobby idk put zerotix there or smth lmao would be funny as shit (dont actually idk)
+- a way to see stats from portal instead of instant teleporting
+- win msg shows if solo or not
+- discord bot to link disc account to evades x account, allowing for completion roles being given (like, completing hardcore gives u the hardcore role)
+- discord bot announces wins in the planet wins channel (otherwise hide it from view)
+
+- discord server minor adjustments like bad language in rules, font should be inter or soulmaze, etc.

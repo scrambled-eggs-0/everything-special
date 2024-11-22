@@ -13,7 +13,7 @@ import uWS from 'uWebSockets.js';
 
 // map data
 import MapFunctions from './maps.js';
-const {defaultMapName, addToMap, removeFromMap, mapExists} = MapFunctions;
+const {defaultMapName, addToMap, removeFromMap, mapExists, tutorialMapName} = MapFunctions;
 
 // player class
 import Player from './player.js';
@@ -277,7 +277,7 @@ app.get("/tutorial", (res, req) => {
     if(ws === undefined) return;
 
     // send tutorial map
-    changeMap(ws.me, 'tutorial', res);
+    changeMap(ws.me, tutorialMapName, res);
 
     ws.close();
 });

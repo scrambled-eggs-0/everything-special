@@ -39,6 +39,7 @@ function initWS() {
     ws.onclose = () => {
         console.log('Websocket closed.');// Attempting to reconnect...
         // TODO: reconnection.
+        window.send = () => {};
     }
 }
 
@@ -87,6 +88,7 @@ const messageMap = [
         const u32 = new Uint32Array(data.buffer);
         window.authId = u32[1];
 
+        // TEMP
         const username = localStorage.getItem('username');
         const password = localStorage.getItem('password');
         if(username === null || password === null){

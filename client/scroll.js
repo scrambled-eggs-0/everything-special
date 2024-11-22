@@ -159,8 +159,12 @@ window.removeScript = function removeScript(){
     stopMusic();
 }
 
+window.resetFns = [];
 window.resetGame = () => {
-    window.obstacles.length = window.mouseUpFunctions.length = window.mouseDownFunctions.length = window.mouseMoveFunctions.length = window.resizeFns.length = 0;
+    for(let i = 0; i < window.resetFns.length; i++){
+        window.resetFns[i]();
+    }
+    window.resetFns.length = window.obstacles.length = window.mouseUpFunctions.length = window.mouseDownFunctions.length = window.mouseMoveFunctions.length = window.resizeFns.length = 0;
     if(window.environment !== 'editor') {window.respawnPlayer(); /*player.renderRadius = player.sat.r;*/ }
     else {window.infiniteLoop = false;}
     for(let key in window.defaultColors) { window.colors[key] = window.defaultColors[key]; }
