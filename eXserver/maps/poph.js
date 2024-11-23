@@ -16,13 +16,29 @@ colors.tile = '#d4d4d4';
 var safeColor = "#c3c3c3";
 var safeTileColor = "#9e9e9e"
 
-C(0, [], [26], {
-	x: spawnPosition.x,
-	y: spawnPosition.y,
-	r: 50,
+C(1, [], [26], {
+	x: 0,
+	y: 0,
+	w: 174800,
+	h: 1500,
 	musicPath: 'https://www.youtube.com/watch?v=lgq0OdRIEao'
 });
 
+C(1, [], [26], {
+	x: 180200,
+	y: 0,
+	w: 354800 - 180200,
+	h: 1500,
+	musicPath: 'https://www.youtube.com/watch?v=ZGxAlvDkD1w'
+});
+
+C(1, [], [26], {
+	x: 360200,
+	y: 0,
+	w: 2000,
+	h: 1500,
+	musicPath: 'https://www.youtube.com/watch?v=vE5uEesakTU'
+});
 
 var areaColors = [
 	{ // 1.1
@@ -169,7 +185,87 @@ var areaColors = [
 		safeColor: "#b6b7b8",
 		safeTileColor: "#9fa0a1"
 	},
-	
+	{// 7.1 soft eX colors (omni level 2)
+		"tile": "#1f2129",
+		"background": "#303645",
+		safeColor: blendColor("#303645","#FFFFFF",0.1),
+		safeTileColor: blendColor("#1f2129","#FFFFFF",0.1)
+	},
+	{// 7.2 dark eX colors (omni level 1)
+		"tile": "#0d0d0d",
+		"background": "#383838",
+		safeColor: blendColor("#383838","#FFFFFF",0.1),
+		safeTileColor: blendColor("#0d0d0d","#FFFFFF",0.1)
+	},
+	{// 7.3 omni platformer level (i think it fix cuz conveyor is kinda like a platformer)
+		"tile": "#9c381a",
+		"background": "#cc6142",
+		safeColor: blendColor("#cc6142","#FFFFFF",0.1),
+		safeTileColor: blendColor("#9c381a","#FFFFFF",0.1)
+	},
+	// tp level - im just doing whatever omni tutorial color scheme i feel like at this point
+	{
+		"tile": "#24304a",
+		"background": "#3b5e8a",
+		safeColor: blendColor("#3b5e8a","#FFFFFF",0.1),
+		safeTileColor: blendColor("#24304a","#FFFFFF",0.1)
+	},
+	// calam cavern
+	{
+		"background": "#3d362a",
+		"tile": blendColor("#3d362a","#000000",0.1),
+		safeColor: blendColor("#3d362a","#FFFFFF",0.1),
+		safeTileColor: blendColor(blendColor("#3d362a","#000000",0.1),"#FFFFFF",0.1),
+	},
+	{
+		"background": "#3d362a",
+		"tile": blendColor("#3d362a","#000000",0.1),
+		safeColor: blendColor("#3d362a","#FFFFFF",0.1),
+		safeTileColor: blendColor(blendColor("#3d362a","#000000",0.1),"#FFFFFF",0.1),
+	},
+	// green jungle biome 11-20
+	{
+		"background": "#1d691d",
+		"tile": blendColor("#1d691d","#000000",0.1),
+		safeColor: blendColor("#1d691d","#FFFFFF",0.1),
+		safeTileColor: blendColor(blendColor("#1d691d","#000000",0.1),"#FFFFFF",0.1),
+	},
+	// ocean biome 21-30
+	{
+		"background": "#7bc2e0",
+		"tile": blendColor("#7bc2e0","#000000",0.1),
+		safeColor: blendColor("#7bc2e0","#FFFFFF",0.1),
+		safeTileColor: blendColor(blendColor("#7bc2e0","#000000",0.1),"#FFFFFF",0.1),
+	},
+	// z9 start
+	// purple final boss biome idk
+	{
+		"background": "#720aa6",
+		"tile": blendColor("#720aa6","#000000",0.1),
+		safeColor: blendColor("#720aa6","#FFFFFF",0.1),
+		safeTileColor: blendColor(blendColor("#720aa6","#000000",0.1),"#FFFFFF",0.1),
+	},
+	// platformer and turnings, a little darker
+	{
+		"background": "#640892",
+		"tile": blendColor("#640892","#000000",0.1),
+		safeColor: blendColor("#640892","#FFFFFF",0.1),
+		safeTileColor: blendColor(blendColor("#640892","#000000",0.1),"#FFFFFF",0.1),
+	},
+	// all enemies, bring it halfway back to normal
+	{
+		"background": "#b183c8",
+		"tile": blendColor("#b183c8","#000000",0.1),
+		safeColor: blendColor("#b183c8","#FFFFFF",0.1),
+		safeTileColor: blendColor(blendColor("#b183c8","#000000",0.1),"#FFFFFF",0.1),
+	},
+	// final boss prep, back to white.
+	{
+		background: "#ffffff",
+		tile: "#d4d4d4",
+		safeColor: "#c3c3c3",
+		safeTileColor: "#9e9e9e"
+	},
 ]
 
 var areas = [
@@ -522,7 +618,33 @@ var areas = [
 	}, {
 		extraobs: true,
 		forceCreate: `C(3,[],[20],{x:270700,y:-200,text:"These only kill if you're trying to move",fontSize: 80, hex: "#ffffff"});`
-	}, {
+	}, /*{
+		extraobs: true,
+		forceCreate: `C(0,[],[3],{x:270000,y:0,r:49.5*1.1,sf:(o,p)=>{
+			if(p.pos.x > 270000 && p.pos.y < 280000){
+				o.pos.x = p.pos.x; 
+				o.pos.y = p.pos.y;
+			}
+		},cr:(o)=>{
+			const p = window.players[window.selfId];
+			if(!(p.pos.x > 270000 && p.pos.y < 280000)) return;
+			if(input.left || input.right || input.up || input.down){
+				ctx.fillStyle = 'white';
+				ctx.font = "56px Inter";
+				ctx.textAlign = 'center';
+				ctx.textBaseline = 'middle';
+				ctx.fillText("!", p.pos.x, p.pos.y - p.sat.r - 50);
+
+				ctx.fillStyle = 'red';
+			} else {
+				ctx.fillStyle = 'green';
+			} 
+			ctx.beginPath();
+			ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+			ctx.fill();
+			ctx.closePath();
+		}});`
+	},*/ {
 		type: "normal",
 		count: 4,
 		radius: 18,
@@ -912,7 +1034,7 @@ var areas = [
 		type: 0,
 	}, {
 		extraobs: true,
-		forceCreate: `C(1,[],[17],{x:349900,y:200,w:3800,h:1100,timeTrapToShowTenth:false,timeTrapToKill:false,timeTrapRecoverySpeed:3,timeTrapMaxTime:12,sf:(e)=>{
+		forceCreate: `C(1,[],[17],{x:349900,y:200,w:3800,h:1100,timeTrapToShowTenth:false,timeTrapToKill:false,timeTrapRecoverySpeed:3,timeTrapMaxTime:12*60,sf:(e)=>{
             if(e.timeTrapTime <= 0){
                 players[selfId].pos.x = 354260;
                 players[selfId].pos.y = 800;
@@ -946,8 +1068,31 @@ var areas = [
 
 
 
-
-	[{ //7.1
+	[/*{
+		extraobs: true,
+		forceCreate: `C(1,[],[17],{x:361500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
+	},{
+		extraobs: true,
+		forceCreate: `C(1,[],[17],{x:362500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
+	},{
+		extraobs: true,
+		forceCreate: `C(1,[],[17],{x:363500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
+	},{
+		extraobs: true,
+		forceCreate: `C(1,[],[17],{x:364500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
+	},{
+		extraobs: true,
+		forceCreate: `C(1,[],[17],{x:365500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
+	},{
+		extraobs: true,
+		forceCreate: `C(1,[],[17],{x:366500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
+	},{
+		extraobs: true,
+		forceCreate: `C(1,[],[17],{x:367500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
+	},{
+		extraobs: true,
+		forceCreate: `C(1,[],[17],{x:368500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
+	},*/{ //7.1
 		extraobs: true,
 		x: 500,
 		y: 0,
@@ -956,7 +1101,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[500, 0, 0.25], [500, 1300, 0.25]],
+			path: [[500, 0, 0.25*1000/60], [500, 1300, 0.25*1000/60]],
 			currentPoint: 0
 		}
 	}, { 
@@ -968,7 +1113,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[1500, 0, 0.25], [1500, 1300, 0.25]],
+			path: [[1500, 0, 0.25*1000/60], [1500, 1300, 0.25*1000/60]],
 			currentPoint: 1
 		}
 	}, {
@@ -980,7 +1125,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[2500, 0, 0.25], [2500, 1300, 0.25]],
+			path: [[2500, 0, 0.25*1000/60], [2500, 1300, 0.25*1000/60]],
 			currentPoint: 0
 		}
 	}, { 
@@ -992,7 +1137,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[3500, 0, 0.25], [3500, 1300, 0.25]],
+			path: [[3500, 0, 0.25*1000/60], [3500, 1300, 0.25*1000/60]],
 			currentPoint: 1
 		}
 	}, {
@@ -1004,7 +1149,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[4500, 0, 0.25], [4500, 1300, 0.25]],
+			path: [[4500, 0, 0.25*1000/60], [4500, 1300, 0.25*1000/60]],
 			currentPoint: 0
 		}
 	}, { 
@@ -1016,7 +1161,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[5500, 0, 0.25], [5500, 1300, 0.25]],
+			path: [[5500, 0, 0.25*1000/60], [5500, 1300, 0.25*1000/60]],
 			currentPoint: 1
 		}
 	}, {
@@ -1028,7 +1173,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[6500, 0, 0.25], [6500, 1300, 0.25]],
+			path: [[6500, 0, 0.25*1000/60], [6500, 1300, 0.25*1000/60]],
 			currentPoint: 0
 		}
 	}, { 
@@ -1040,7 +1185,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[7500, 0, 0.25], [7500, 1300, 0.25]],
+			path: [[7500, 0, 0.25*1000/60], [7500, 1300, 0.25*1000/60]],
 			currentPoint: 1
 		}
 	}, {
@@ -1124,7 +1269,7 @@ var areas = [
 		type: 11,
 		simulateType: [0],
 		extraParams: {
-			path: [[500, 0, 0.25], [500, 1300, 0.25]],
+			path: [[500, 0, 0.25*1000/60], [500, 1300, 0.25*1000/60]],
 			currentPoint: 0
 		}
 	}, { 
@@ -1136,7 +1281,7 @@ var areas = [
 		type: 11,
 		simulateType: [0],
 		extraParams: {
-			path: [[1500, 0, 0.25], [1500, 1300, 0.25]],
+			path: [[1500, 0, 0.25*1000/60], [1500, 1300, 0.25*1000/60]],
 			currentPoint: 1
 		}
 	}, {
@@ -1148,7 +1293,7 @@ var areas = [
 		type: 11,
 		simulateType: [0],
 		extraParams: {
-			path: [[2500, 0, 0.25], [2500, 1300, 0.25]],
+			path: [[2500, 0, 0.25*1000/60], [2500, 1300, 0.25*1000/60]],
 			currentPoint: 0
 		}
 	}, { 
@@ -1160,7 +1305,7 @@ var areas = [
 		type: 11,
 		simulateType: [0],
 		extraParams: {
-			path: [[3500, 0, 0.25], [3500, 1300, 0.25]],
+			path: [[3500, 0, 0.25*1000/60], [3500, 1300, 0.25*1000/60]],
 			currentPoint: 1
 		}
 	}, {
@@ -1172,7 +1317,7 @@ var areas = [
 		type: 11,
 		simulateType: [0],
 		extraParams: {
-			path: [[4500, 0, 0.25], [4500, 1300, 0.25]],
+			path: [[4500, 0, 0.25*1000/60], [4500, 1300, 0.25*1000/60]],
 			currentPoint: 0
 		}
 	}, { 
@@ -1184,7 +1329,7 @@ var areas = [
 		type: 11,
 		simulateType: [0],
 		extraParams: {
-			path: [[5500, 0, 0.25], [5500, 1300, 0.25]],
+			path: [[5500, 0, 0.25*1000/60], [5500, 1300, 0.25*1000/60]],
 			currentPoint: 1
 		}
 	}, {
@@ -1196,7 +1341,7 @@ var areas = [
 		type: 11,
 		simulateType: [0],
 		extraParams: {
-			path: [[6500, 0, 0.25], [6500, 1300, 0.25]],
+			path: [[6500, 0, 0.25*1000/60], [6500, 1300, 0.25*1000/60]],
 			currentPoint: 0
 		}
 	}, { 
@@ -1208,7 +1353,7 @@ var areas = [
 		type: 11,
 		simulateType: [0],
 		extraParams: {
-			path: [[7500, 0, 0.25], [7500, 1300, 0.25]],
+			path: [[7500, 0, 0.25*1000/60], [7500, 1300, 0.25*1000/60]],
 			currentPoint: 1
 		}
 	}, {
@@ -1250,7 +1395,7 @@ var areas = [
 		type: 13,
 		extraParams: {
 			conveyorAngle: 90,
-			conveyorForce: 0.3,
+			conveyorForce: 0.3 * 5/3,
 			conveyorAngleRotateSpeed: 0,
 			conveyorFriction: 0.8
 		}
@@ -1277,14 +1422,26 @@ var areas = [
 	}],
 	[{  //7.4
 		extraobs: true,
-		forceCreate: `C(1,[],[0],{x:406000,y:0,w:8000,h:100,ef:(e)=>{
+		forceCreate: `C(1,[],[3],{x:406000,y:0,w:8000,h:100,ef:(e)=>{
                 players[selfId].pos.y = 1350;
-        },});`
+        },cr:(o)=>{
+			ctx.fillStyle = '#38ab30';
+			ctx.beginPath();
+			ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y);
+			ctx.fill();
+			ctx.closePath();
+		}});`
 	}, {  //7.4
 		extraobs: true,
-		forceCreate: `C(1,[],[0],{x:406000,y:1400,w:8000,h:100,ef:(e)=>{
+		forceCreate: `C(1,[],[3],{x:406000,y:1400,w:8000,h:100,ef:(e)=>{
                 players[selfId].pos.y = 150;
-        },});`
+        },cr:(o)=>{
+			ctx.fillStyle = '#38ab30';
+			ctx.beginPath();
+			ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y);
+			ctx.fill();
+			ctx.closePath();
+		}});`
 	}, { 
 		extraobs: true,
 		x: 0,
@@ -1294,7 +1451,7 @@ var areas = [
 		type: 1,
 		simulateType: [0],
 		extraParams: {
-			path: [[0, 0, 0.5], [0, 1400, 0.5]],
+			path: [[0, 0, 0.5*1000/60], [0, 1400, 0.5*1000/60]],
 			currentPoint: 0
 		}
 	}, {
@@ -1308,11 +1465,483 @@ var areas = [
 		radius: 36,
 		speed: 6
 	}],
+	[// 8.1 - checkpoint and calamatous cavern intro. Colors change and there are poly-lavas on the sides that close in. Vinette also progressively gets darker
+		// {
+		// 	type: "normal",
+		// 	count: 26,
+		// 	radius: 38,
+		// 	speed: 3
+		// }, {
+		// 	type: "homing",
+		// 	count: 24,
+		// 	radius: 14,
+		// 	speed: 4
+		// 	}, {
+		// 	type: "slower",
+		// 	count: 8,
+		// 	radius: 12,
+		// 	speed: 2
+		// },
+		{
+			type: "slower",
+			count: 16,
+			radius: 12,
+			speed: 4
+		}, {
+			type: "homing",
+			count: 32,
+			radius: 24,
+			speed: 3
+		}, {
+			type: "wall",
+			count: 12,
+			radius: 24,
+			speed: 4
+		},
+		{
+			extraobs: true,
+			forceCreate: `C(2,[],[1],{x:0,y:0,boundPlayer:false,points:[[421000,0],[429000,0],[429000,600]]});`
+		},
+		{
+			extraobs: true,
+			forceCreate: `C(2,[],[1],{x:0,y:0,boundPlayer:false,points:[[429000,1500],[421000,1500],[429000,900]]});`
+		},
+		// {
+		// 	type: "slower",
+		// 	count: 18,
+		// 	radius: 12,
+		// 	speed: 4
+		// }, {
+		// 	type: "homing",
+		// 	count: 67,
+		// 	radius: 24,
+		// 	speed: 3
+		// }, {
+		// 	type: "wall",
+		// 	count: 12,
+		// 	radius: 24,
+		// 	speed: 4
+		// }, {
+		// 	type: "creeper",
+		// 	count: 2,
+		// 	radius: 62,
+		// 	speed: 12
+		// },
+	],
+	[// 8.2 - cc z10 w/ homing and soldier enemies
+		{
+			type: "wall",
+			count: 42,
+			radius: 24,
+			speed: 8
+		},
+		{
+			type: "immune",
+			count: 19,
+			radius: 26,
+			speed: 6
+		}, 
+		{
+			type: "homing",
+			count: 19,
+			radius: 26,
+			speed: 6
+		}, {
+			type: "creeper",
+			count: 2,
+			radius: 62,
+			speed: 12
+		}
+	],
+	[// 8.3 - cc z20 w/ pulsing enemies
+		{
+			type: "snake",
+			count: 22,
+			radius: 18,
+			speed: 4
+		}, {
+			type: "oscillating",
+			count: 22,
+			radius: 18,
+			speed: 3.2
+		}, {
+			type: "slower",
+			count: 22,
+			radius: 24,
+			speed: 6
+		}
+	],
+	[// 8.4 - cc z30 w/ fading enemies 
+		{
+			type: "liquid",
+			count: 9,
+			radius: 18,
+			speed: 2
+		}, {
+			type: "warp",
+			count: 20,
+			radius: 20,
+			speed: 6
+		}, {
+			type: "icicle",
+			count: 16,
+			radius: 16,
+			speed: 6
+		}, {
+			type: "dasher",
+			count: 18,
+			radius: 18,
+			speed: 6
+		}, {
+			type: "freezing",
+			count: 2,
+			radius: 24,
+			speed: 9
+		}
+	],
+	// 9.1 - internal vinette effect
+	[
+		{
+			type: "normal",
+			count: 128,
+			radius: 12,
+			speed: 2.8 * 2
+		}
+	],
+	// 9.2 - platformers on both sides, turning enemies
+	[
+		// {
+		// 	extraobs: true,
+		// 	forceCreate: `C(0,[],[3],{cr:()=>{ctx.shadowBlur = 10; ctx.shadowColor = "red";},x:-1E9,y:0,r:1})`
+		// },
+		{ 
+			extraobs: true,
+			x: 0,
+			y: 0,
+			w: 8000,
+			h: 750,
+			type: 14,
+			extraParams: {
+				platformerAngle: -90,
+				platformerForce: 6,
+				platformerAngleRotateSpeed: 0,
+				platformerFriction: 0.9,
+				jumpForce: 70,
+				jumpDecay: 0.98,
+				maxJumpCooldown: 25
+			}
+		},
+		{ 
+			extraobs: true,
+			x: 0,
+			y: 750,
+			w: 8000,
+			h: 750,
+			type: 14,
+			extraParams: {
+				platformerAngle: 90,
+				platformerForce: 6,
+				platformerAngleRotateSpeed: 0,
+				platformerFriction: 0.9,
+				jumpForce: 70,
+				jumpDecay: 0.98,
+				maxJumpCooldown: 25
+			}
+		},
+		{
+			type: "turning",
+			count: 34,
+			radius: 26,
+			speed: 2.8
+		},
+		// {
+		// 	extraobs: true,
+		// 	forceCreate: `C(0,[],[3],{cr:()=>{ctx.shadowBlur = 0;},x:-1E9,y:0,r:1})`
+		// },
+	],
+	// 9.3 - all enemies
+	[
+		{
+			type: "turning",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "liquid",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "warp",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "icicle",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "dasher",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "freezing",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "wall",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "immune",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "homing",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "creeper",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "snake",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "oscillating",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "slower",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "normal",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "pentagon",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "killmoving",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "tpotherside",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "outofbounds",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "tired",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "stop",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "rain",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "blackhole",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "push",
+			count: 3,
+			radius: 22,
+			speed: 3
+		},
+		{
+			type: "tornado",
+			count: 3,
+			radius: 22,
+			speed: 3
+		}
+	],
 	
+	// 9.4 - room with boss effects like lasers, get ready..., tp at the end -> make sure to give players 1s of inv btw
+	[
+		{// idea: spawn lasers that dissapear after some time. Do this by generating a random angle + pos within the arena
+			extraobs: true,
+			forceCreate: `
+			const reusableIndexes = [];
+			let maxTimer = 10;
+			let timer = maxTimer;
+			C(0,[],[3],{x:-1E9,y:0,sf:(o,p)=>{
+				if(p.pos.x < 525000) return;
+				timer--;
+				if(timer <= 0){
+					timer += maxTimer;
+
+					let index;
+					const angle = Math.random() * Math.PI * 2;
+					const middleX = 526_000 + Math.random() * 8_000;
+					const middleY = Math.random() * 1500;
+					const w = (canvas.w + canvas.h + 10_000) * 5;
+					const h = 50;
+					const maxPreviewTime = 60;
+					let previewTime = maxPreviewTime;
+					let previewDead = false;
+					// first spawn preview
+					C(1,[1],[3],{x:middleX-w/2,y:middleY-h/2,w,h,initialRotation:angle,rotateSpeed:0,pivotX:middleX,pivotY:middleY,cr:(o)=>{
+						ctx.fillStyle = 'orange';
+						ctx.globalAlpha = Math.min(1,1 - previewTime / maxPreviewTime);
+						ctx.beginPath();
+						for(let i = 0; i < o.sat.points.length; i++){
+							ctx.lineTo(o.pos.x + o.sat.points[i].x, o.pos.y + o.sat.points[i].y);
+						}
+						ctx.lineTo(o.pos.x + o.sat.points[0].x, o.pos.y + o.sat.points[0].y);
+						ctx.fill();
+						ctx.closePath();
+						ctx.globalAlpha = 1;
+					},sf:()=>{
+						previewTime--;
+
+						if(previewTime < 0 && previewDead === false){
+							previewDead = true;
+							let aliveTime = 50;
+							C(1,[1],[1],{boundPlayer:true,x:middleX-w/2,y:middleY-h/2,w,h,initialRotation:angle,rotateSpeed:0,pivotX:middleX,pivotY:middleY,sf:(o)=>{
+								aliveTime--;
+								if(aliveTime < 0){
+									reusableIndexes.push(index);
+									o.pos.x = -1E9;
+								}
+							}});
+							obstacles[index] = obstacles.pop();
+						}
+					}})
+
+					if(reusableIndexes.length === 0){
+						index = obstacles.length-1;	
+					} else {
+						index = reusableIndexes.pop(); 
+						obstacles[index] = obstacles.pop();
+					}
+				}	
+			}});`
+		},
+		// invisible safes that prevent deaths on the safeszones
+		{
+			extraobs: true,
+			forceCreate: `C(1,[],[11],{x:525200,y:0,w:800,h:1500,cr:()=>{}})`
+		},
+		{
+			extraobs: true,
+			forceCreate: `C(1,[],[11],{x:534000,y:0,w:800,h:1500,cr:()=>{}})`
+		},
+	]
+
+	// z 8 and 9 are 8 zones
+	// 8.4 - cc z30 w/ fade effect
+	// 9.1 - cc z33 w/ light vinette
+	// 9.2 - cc z40 w/ dark vinette and red fade when enemies get near
+	// 9.3 - all enemies and effects from cc combined into one
+
+	// area effects:
+
+	// area 0-9: 
+	// vinette, vinetteholes around all enemies
+
+	// area 10-20:
+	// 
+	// ctx.globalAlpha = (area-10)/10*0.4;
+	// arc o.sat.r * (1 + (window.frames/6)%3);
+
+	// area 21-30: ctx.globalAlpha = 1-Math.sqrt((enemies[i].renderX + playerOffset.x-640)/1280);
+	// ctx.globalAlpha = 1 - Math.sqrt((e.pos.x - p.pos.x) / canvas.w)
+
+	// area 31-40:
+	// const grd = ctx.createRadialGradient(o.pos.x,o.pos.y, o.sat.r, o.pos.x, o.pos.y , o.sat.r*1.5+20);
+	// // TODO: interpolate this
+	// if(Math.sqrt((enemies[i].renderX + playerOffset.x - 640)**2+(enemies[i].renderY + playerOffset.y - 360)**2) < enemies[i].radius + 100){
+	// 	grd.addColorStop(0, "rgb(255,0,0)");
+	// } else {
+	// 	grd.addColorStop(0, "rgba(" +(area-30)/10*255+ "," +(area-30)/10*255+ "," +(area-30)/10*255+ ",1)");
+	// }
+	
+	// grd.addColorStop(1, "rgba(" +(area-30)/10*255+ "," +(area-30)/10*255+ "," +(area-30)/10*255+ ",0)");
+	// ctx.fillStyle = grd;
+	// ctx.fillRect(0,0,1280, 720);
+	// ctx.fillStyle = "rgba(0,0,0,0.3)"
+
+	/*
+		if(world == "Calamatous Cavern"){
+          if(area <= 10){
+            ctx.fillStyle = "rgba(255,255,255,"+area/10*0.5+")";
+            ctx.arc(enemies[i].renderX + playerOffset.x, enemies[i].renderY + playerOffset.y, enemies[i].radius*1.5, 0, 6.28318531);
+            ctx.fill();
+          } else if(area <= 20){
+            ctx.globalAlpha = (area-10)/10*0.4;
+            ctx.arc(enemies[i].renderX + playerOffset.x, enemies[i].renderY + playerOffset.y, enemies[i].radius * (1 + (Date.now()/100)%3), 0, 6.28318531);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+          } else if(area <= 30){
+            ctx.globalAlpha = 1;
+          } else if(area <= 41){
+            var grd = ctx.createRadialGradient(enemies[i].renderX + playerOffset.x,enemies[i].renderY + playerOffset.y, enemies[i].radius, enemies[i].renderX + playerOffset.x, enemies[i].renderY + playerOffset.y,enemies[i].radius*1.5+20);
+            if(Math.sqrt((enemies[i].renderX + playerOffset.x - 640)**2+(enemies[i].renderY + playerOffset.y - 360)**2) < enemies[i].radius + 100){
+              grd.addColorStop(0, "rgb(255,0,0)");
+            } else {
+              grd.addColorStop(0, "rgba(" +(area-30)/10*255+ "," +(area-30)/10*255+ "," +(area-30)/10*255+ ",1)");
+            }
+            
+            grd.addColorStop(1, "rgba(" +(area-30)/10*255+ "," +(area-30)/10*255+ "," +(area-30)/10*255+ ",0)");
+            ctx.fillStyle = grd;
+            ctx.fillRect(0,0,1280, 720);
+            ctx.fillStyle = "rgba(0,0,0,0.3)"
+            //fill a reverse vinette around all enemies (so it will b like avoid darkness & evil idk)
+          } 
+        }
+	*/
 ];
-
-
-
 
 function shortAngleDist(a0, a1) {
 	const max = Math.PI * 2;
@@ -1426,8 +2055,6 @@ function warpAround(rect, lengthT) {
 
 for (let i = 0; i < areas.length; i++) {
 	let bound = [1000 + i * 15000, 0, 8000, 1500];
-
-
 
 	C(1, [], [0], {
 		x: i * 15000 + 10000,
@@ -1709,16 +2336,60 @@ for (let i = 0; i < areas.length; i++) {
 							}
 						}
 					})
+				} else if (data.type == "immune") {
+					// same thing as normal lol but with different render
+					C(0, [3], [1], {
+						r: r,
+						x,
+						y,
+						cr: (o) => {
+							ctx.fillStyle = "black";
+							ctx.strokeStyle = "#000000";
+							ctx.beginPath();
+							ctx.arc(o.pos.x, o.pos.y, o.dimensions.x / 2, 0, Math.PI * 2)
+							ctx.fill();
+							ctx.stroke();
+							ctx.closePath();
+						},
+						sf: (e) => {
+							e.pos.y += vy * dt;
+							e.pos.x += vx * dt;
+
+							if ((e.pos.x - e.sat.r) < bound[0] || e.pos.x + e.sat.r > bound[0] + bound[2]) {
+								vx *= -1;
+								if ((e.pos.x - e.sat.r) < bound[0]) {
+									e.pos.x = bound[0] + e.sat.r;
+								}
+								if (e.pos.x + e.sat.r > bound[0] + bound[2]) {
+									e.pos.x = bound[0] + bound[2] - e.sat.r;
+								}
+							}
+							if ((e.pos.y - e.sat.r) < bound[1] || e.pos.y + e.sat.r > bound[1] + bound[3]) {
+								vy *= -1
+								if ((e.pos.y - e.sat.r) < bound[1]) {
+									e.pos.y = bound[1] + e.sat.r;
+								}
+								if (e.pos.y + e.sat.r > bound[1] + bound[3]) {
+									e.pos.y = bound[1] + bound[3] - e.sat.r;
+								}
+							}
+						}
+					})
 				} else if (data.type == "pentagon") {
 					let points = [];
 					for(let i = 5; i--; i>0){
 						points[i] = [bound[0] + Math.cos(i * Math.PI * 2/5) * r, bound[1] + Math.sin(i * Math.PI * 2/5) * r];
 					}
 
-					C(2, [3], [1], {
+					let rotateSpeed = (Math.random()*2-1) * 0.03;
+					C(2, [1], [1], {
 						points: points,
 						x: x - bound[0],
 						y: y - bound[1],
+						initialRotation: 0,
+						pivotX: 0,
+						pivotY: 0,
+						rotateSpeed: 0,
 						sf: (e) => {
 							e.pos.y += vy * dt;
 							e.pos.x += vx * dt;
@@ -1741,6 +2412,12 @@ for (let i = 0; i < areas.length; i++) {
 									e.pos.y = bound[3] - r;
 								}
 							}
+
+							e.rotateSpeed = rotateSpeed;
+							e.topLeft = generateTopLeftCoordinates(e);
+							e.dimensions = generateDimensions(e);
+							e.pivotX = e.topLeft.x + e.dimensions.x/2;
+							e.pivotY = e.topLeft.y + e.dimensions.y/2;
 						}
 					})
 				} else if (data.type == "killmoving") {
@@ -1749,13 +2426,21 @@ for (let i = 0; i < areas.length; i++) {
 						x,
 						y,
 						cr: (o) => {
+							// if(input.up || input.down || input.left || input.right){
+							// 	ctx.fillStyle = "#939393";
+							// } else {
+							// 	ctx.fillStyle = "#67adc9";
+							// 	// ctx.globalAlpha = 0.5;
+							// }
 							ctx.fillStyle = "#67adc9";
+							
 							ctx.strokeStyle = "#000000";
 							ctx.beginPath();
 							ctx.arc(o.pos.x, o.pos.y, o.dimensions.x / 2, 0, Math.PI * 2)
 							ctx.fill();
 							ctx.stroke();
 							ctx.closePath();
+							ctx.globalAlpha = 1;
 						},
 						sf: (e) => {
 							e.pos.y += vy * dt;
@@ -2332,6 +3017,438 @@ for (let i = 0; i < areas.length; i++) {
 							}
 						}
 					})
+				} else if (data.type === 'slower'){
+					let aura = 160 * 3;
+					let mainObs;
+					// aura and render
+					C(0, [], [1], {
+						r: r,
+						x,
+						y,
+						cr: (o) => {
+							ctx.fillStyle = "rgb(200,0,0)";
+							ctx.strokeStyle = "#000000";
+							ctx.globalAlpha = 0.18;
+
+							ctx.beginPath();
+							ctx.arc(o.pos.x, o.pos.y, aura, 0, Math.PI * 2)
+							ctx.fill();
+							ctx.closePath();
+
+							ctx.globalAlpha = 1;
+
+							ctx.beginPath();
+							ctx.arc(o.pos.x, o.pos.y, o.dimensions.x / 2, 0, Math.PI * 2)
+							ctx.fill();
+							ctx.stroke();
+							ctx.closePath();
+						},
+						sf: (e) => {
+							e.pos.y += vy * dt;
+							e.pos.x += vx * dt;
+
+							if ((e.pos.x - e.sat.r) < bound[0] || e.pos.x + e.sat.r > bound[0] + bound[2]) {
+								vx *= -1;
+								if ((e.pos.x - e.sat.r) < bound[0]) {
+									e.pos.x = bound[0] + e.sat.r;
+								}
+								if (e.pos.x + e.sat.r > bound[0] + bound[2]) {
+									e.pos.x = bound[0] + bound[2] - e.sat.r;
+								}
+							}
+							if ((e.pos.y - e.sat.r) < bound[1] || e.pos.y + e.sat.r > bound[1] + bound[3]) {
+								vy *= -1
+								if ((e.pos.y - e.sat.r) < bound[1]) {
+									e.pos.y = bound[1] + e.sat.r;
+								}
+								if (e.pos.y + e.sat.r > bound[1] + bound[3]) {
+									e.pos.y = bound[1] + bound[3] - e.sat.r;
+								}
+							}
+						}
+					});
+					mainObs = obstacles[obstacles.length-1];
+					// aura collision effect
+					C(0, [], [3], {
+						r: aura,
+						x,
+						y,
+						cr: (o) => {},
+						sf: (e) => {
+							e.pos.x = mainObs.pos.x;
+							e.pos.y = mainObs.pos.y;
+						},
+						ef: (p,res,o) => {
+							p.axisSpeedMultX *= .7;
+							p.axisSpeedMultY *= .7;
+						}
+					});
+				} else if (data.type === 'freezing'){
+					let aura = 160 * 1.5;
+					let mainObs;
+					// aura and render
+					C(0, [], [1], {
+						r: r,
+						x,
+						y,
+						cr: (o) => {
+							ctx.fillStyle = "#64c1b9";
+							ctx.strokeStyle = "#000000";
+							ctx.globalAlpha *= 0.42;// *= for 30 effect. Don't use this enemy elswhere without making modifications!
+
+							ctx.beginPath();
+							ctx.arc(o.pos.x, o.pos.y, aura, 0, Math.PI * 2)
+							ctx.fill();
+							ctx.closePath();
+
+							ctx.globalAlpha = 1;
+
+							ctx.beginPath();
+							ctx.arc(o.pos.x, o.pos.y, o.dimensions.x / 2, 0, Math.PI * 2)
+							ctx.fill();
+							ctx.stroke();
+							ctx.closePath();
+						},
+						sf: (e) => {
+							e.pos.y += vy * dt;
+							e.pos.x += vx * dt;
+
+							if ((e.pos.x - e.sat.r) < bound[0] || e.pos.x + e.sat.r > bound[0] + bound[2]) {
+								vx *= -1;
+								if ((e.pos.x - e.sat.r) < bound[0]) {
+									e.pos.x = bound[0] + e.sat.r;
+								}
+								if (e.pos.x + e.sat.r > bound[0] + bound[2]) {
+									e.pos.x = bound[0] + bound[2] - e.sat.r;
+								}
+							}
+							if ((e.pos.y - e.sat.r) < bound[1] || e.pos.y + e.sat.r > bound[1] + bound[3]) {
+								vy *= -1
+								if ((e.pos.y - e.sat.r) < bound[1]) {
+									e.pos.y = bound[1] + e.sat.r;
+								}
+								if (e.pos.y + e.sat.r > bound[1] + bound[3]) {
+									e.pos.y = bound[1] + bound[3] - e.sat.r;
+								}
+							}
+						}
+					});
+					mainObs = obstacles[obstacles.length-1];
+					// aura collision effect
+					C(0, [], [3], {
+						r: aura,
+						x,
+						y,
+						cr: (o) => {},
+						sf: (e) => {
+							e.pos.x = mainObs.pos.x;
+							e.pos.y = mainObs.pos.y;
+						},
+						ef: (p,res,o) => {
+							p.axisSpeedMultX *= .3;
+							p.axisSpeedMultY *= .3;
+						}
+					});
+				} else if(data.type === 'creeper'){
+					let stop=0, onWall=false;
+					let mag = Math.sqrt(vx ** 2 + vy ** 2);
+					C(0, [], [1], {
+						r: r,
+						x,
+						y,
+						cr: (o) => {
+							ctx.fillStyle = "#874617";
+							ctx.strokeStyle = "#000000";
+							ctx.beginPath();
+							ctx.arc(o.pos.x, o.pos.y, o.dimensions.x / 2, 0, Math.PI * 2)
+							ctx.fill();
+							ctx.stroke();
+							ctx.closePath();
+						},
+						sf: (e,p) => {
+							const o = e;
+							if(onWall === true){
+								stop--;
+								if (stop < 0 && p.dead === false && Math.sqrt((o.pos.x - p.pos.x) ** 2 + (o.pos.y - p.pos.y) ** 2) < 1000) {
+									angle = Math.atan2(p.pos.y - o.pos.y,p.pos.x - o.pos.x);
+									vx = Math.cos(angle) * mag;
+									vy = Math.sin(angle) * mag;
+									onWall = false;
+								}
+							}
+							
+							e.pos.y += vy * dt;
+							e.pos.x += vx * dt;
+
+							if ((e.pos.x - e.sat.r) < bound[0] || e.pos.x + e.sat.r > bound[0] + bound[2]) {
+								if ((e.pos.x - e.sat.r) < bound[0]) {
+									e.pos.x = bound[0] + e.sat.r;
+								}
+								if (e.pos.x + e.sat.r > bound[0] + bound[2]) {
+									e.pos.x = bound[0] + bound[2] - e.sat.r;
+								}
+								vx = vy = 0;
+								stop = 120;
+								onWall = true;
+							}
+							if ((e.pos.y - e.sat.r) < bound[1] || e.pos.y + e.sat.r > bound[1] + bound[3]) {
+								if ((e.pos.y - e.sat.r) < bound[1]) {
+									e.pos.y = bound[1] + e.sat.r;
+								}
+								if (e.pos.y + e.sat.r > bound[1] + bound[3]) {
+									e.pos.y = bound[1] + bound[3] - e.sat.r;
+								}
+								stop = 120;
+								onWall = true;
+								vx = vy = 0;
+							}
+						}
+					});
+				} else if(data.type === "snake"){
+					let dir = 1; let timer = 400;
+
+					C(0, [], [1], {
+						r: r,
+						x,
+						y,
+						cr: (o) => {
+							ctx.fillStyle = "#3ab077";
+							ctx.strokeStyle = "#000000";
+
+							ctx.beginPath();
+							ctx.arc(o.pos.x, o.pos.y, o.dimensions.x / 2, 0, Math.PI * 2)
+							ctx.fill();
+							ctx.stroke();
+							ctx.closePath();
+						},
+						sf: (e) => {
+							timer -= 1000/60;
+							if (timer < 0) {
+								timer = 400;
+								dir *= -1;
+							}
+
+							angle = Math.atan2(vy, vx);
+							angle += (data.speed + 6) / 100 * dir * 1000/60 / 30;
+							vx = Math.cos(angle);
+							vy = Math.sin(angle);
+
+							e.pos.y += vy * dt;
+							e.pos.x += vx * dt;
+
+							if ((e.pos.x - e.sat.r) < bound[0] || e.pos.x + e.sat.r > bound[0] + bound[2]) {
+								vx *= -1;
+								if ((e.pos.x - e.sat.r) < bound[0]) {
+									e.pos.x = bound[0] + e.sat.r;
+								}
+								if (e.pos.x + e.sat.r > bound[0] + bound[2]) {
+									e.pos.x = bound[0] + bound[2] - e.sat.r;
+								}
+							}
+							if ((e.pos.y - e.sat.r) < bound[1] || e.pos.y + e.sat.r > bound[1] + bound[3]) {
+								vy *= -1;
+								if ((e.pos.y - e.sat.r) < bound[1]) {
+									e.pos.y = bound[1] + e.sat.r;
+								}
+								if (e.pos.y + e.sat.r > bound[1] + bound[3]) {
+									e.pos.y = bound[1] + bound[3] - e.sat.r;
+								}
+							}
+						}
+					});
+				} else if(data.type === 'oscillating'){
+					let timer = 0;
+					C(0, [], [1], {
+						r: r,
+						x,
+						y,
+						cr: (o) => {
+							ctx.fillStyle = "#869e0f";
+							ctx.strokeStyle = "#000000";
+
+							ctx.beginPath();
+							ctx.arc(o.pos.x, o.pos.y, o.dimensions.x / 2, 0, Math.PI * 2)
+							ctx.fill();
+							ctx.stroke();
+							ctx.closePath();
+						},
+						sf: (e) => {
+							timer++;
+							if (timer % 50 == 0) {
+								vx *= -1;
+								vy *= -1;
+							}
+
+							e.pos.y += vy * dt;
+							e.pos.x += vx * dt;
+
+							if ((e.pos.x - e.sat.r) < bound[0] || e.pos.x + e.sat.r > bound[0] + bound[2]) {
+								vx *= -1;
+								if ((e.pos.x - e.sat.r) < bound[0]) {
+									e.pos.x = bound[0] + e.sat.r;
+								}
+								if (e.pos.x + e.sat.r > bound[0] + bound[2]) {
+									e.pos.x = bound[0] + bound[2] - e.sat.r;
+								}
+							}
+							if ((e.pos.y - e.sat.r) < bound[1] || e.pos.y + e.sat.r > bound[1] + bound[3]) {
+								vy *= -1;
+								if ((e.pos.y - e.sat.r) < bound[1]) {
+									e.pos.y = bound[1] + e.sat.r;
+								}
+								if (e.pos.y + e.sat.r > bound[1] + bound[3]) {
+									e.pos.y = bound[1] + bound[3] - e.sat.r;
+								}
+							}
+						}
+					});
+				} else if(data.type === "icicle"){
+					const mag = Math.sqrt(vy**2+vx**2);
+					vy = mag * (Math.random() < 0.5 ? -1 : 1);
+					vx = 0;
+					let timer = 0;
+					let onWall = false;
+					C(0, [], [1], {
+						r: r,
+						x,
+						y,
+						cr: (o) => {
+							ctx.fillStyle = "#adf8ff";
+							ctx.strokeStyle = "#000000";
+
+							ctx.beginPath();
+							ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2)
+							ctx.fill();
+							ctx.stroke();
+							ctx.closePath();
+						},
+						sf: (e) => {
+							if(onWall === true){
+								timer--;
+								if(timer <= 0){
+									onWall = false;
+								}
+								return;
+							}
+
+							e.pos.y += vy * dt;
+							e.pos.x += vx * dt;
+
+							if ((e.pos.x - e.sat.r) < bound[0] || e.pos.x + e.sat.r > bound[0] + bound[2]) {
+								vx *= -1;
+								if ((e.pos.x - e.sat.r) < bound[0]) {
+									e.pos.x = bound[0] + e.sat.r;
+								}
+								if (e.pos.x + e.sat.r > bound[0] + bound[2]) {
+									e.pos.x = bound[0] + bound[2] - e.sat.r;
+								}
+								onWall = true;
+								timer = 120;
+							}
+							if ((e.pos.y - e.sat.r) < bound[1] || e.pos.y + e.sat.r > bound[1] + bound[3]) {
+								vy *= -1;
+								if ((e.pos.y - e.sat.r) < bound[1]) {
+									e.pos.y = bound[1] + e.sat.r;
+								}
+								if (e.pos.y + e.sat.r > bound[1] + bound[3]) {
+									e.pos.y = bound[1] + bound[3] - e.sat.r;
+								}
+								onWall = true;
+								timer = 120;
+							}
+						}
+					});
+				} else if(data.type === "liquid"){
+					let min = 600 ** 2;
+					C(0, [], [1], {
+						r: r,
+						x,
+						y,
+						cr: (o) => {
+							ctx.fillStyle = "#6789ef";
+							ctx.strokeStyle = "#000000";
+
+							ctx.beginPath();
+							ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2)
+							ctx.fill();
+							ctx.stroke();
+							ctx.closePath();
+						},
+						sf: (e,p) => {
+							const o = e;
+							if((p.pos.x - o.pos.x) ** 2 + (p.pos.y - o.pos.y) ** 2 < min){
+								e.pos.y += vy * dt * 5;
+								e.pos.x += vx * dt * 5;
+							} else {
+								e.pos.y += vy * dt;
+								e.pos.x += vx * dt;
+							}
+
+							if ((e.pos.x - e.sat.r) < bound[0] || e.pos.x + e.sat.r > bound[0] + bound[2]) {
+								vx *= -1;
+								if ((e.pos.x - e.sat.r) < bound[0]) {
+									e.pos.x = bound[0] + e.sat.r;
+								}
+								if (e.pos.x + e.sat.r > bound[0] + bound[2]) {
+									e.pos.x = bound[0] + bound[2] - e.sat.r;
+								}
+							}
+							if ((e.pos.y - e.sat.r) < bound[1] || e.pos.y + e.sat.r > bound[1] + bound[3]) {
+								vy *= -1;
+								if ((e.pos.y - e.sat.r) < bound[1]) {
+									e.pos.y = bound[1] + e.sat.r;
+								}
+								if (e.pos.y + e.sat.r > bound[1] + bound[3]) {
+									e.pos.y = bound[1] + bound[3] - e.sat.r;
+								}
+							}
+						}
+					});
+				} else if(data.type === "turning"){
+					let turnDir = data.speed / 150 / 30 * 1000 / 60;
+					C(0, [3], [1], {
+						r: r,
+						x,
+						y,
+						cr: (o) => {
+							ctx.fillStyle = "#364359";
+							ctx.strokeStyle = "#000000";
+							ctx.beginPath();
+							ctx.arc(o.pos.x, o.pos.y, o.dimensions.x / 2, 0, Math.PI * 2)
+							ctx.fill();
+							ctx.stroke();
+							ctx.closePath();
+						},
+						sf: (e) => {
+							angle = Math.atan2(vy, vx) + turnDir;
+							vx = Math.cos(angle);
+							vy = Math.sin(angle);
+
+							e.pos.y += vy * dt;
+							e.pos.x += vx * dt;
+
+							if ((e.pos.x - e.sat.r) < bound[0] || e.pos.x + e.sat.r > bound[0] + bound[2]) {
+								vx *= -1;
+								if ((e.pos.x - e.sat.r) < bound[0]) {
+									e.pos.x = bound[0] + e.sat.r;
+								}
+								if (e.pos.x + e.sat.r > bound[0] + bound[2]) {
+									e.pos.x = bound[0] + bound[2] - e.sat.r;
+								}
+								turnDir *= -1;
+							}
+							if ((e.pos.y - e.sat.r) < bound[1] || e.pos.y + e.sat.r > bound[1] + bound[3]) {
+								vy *= -1;
+								if ((e.pos.y - e.sat.r) < bound[1]) {
+									e.pos.y = bound[1] + e.sat.r;
+								}
+								if (e.pos.y + e.sat.r > bound[1] + bound[3]) {
+									e.pos.y = bound[1] + bound[3] - e.sat.r;
+								}
+								turnDir *= -1;
+							}
+						}
+					})
 				}
 			}
 		}
@@ -2347,11 +3464,12 @@ for (let i = 0; i < areas.length; i++) {
 			tpy: 750,
 			cr: (o) => {
 				ctx.fillStyle = "#fff46c";
+				ctx.strokeStyle = "#e0cb03";
+
 				ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y)
 
 				ctx.globalAlpha = 0.75;
 				ctx.lineWidth = 4.8;
-				ctx.strokeStyle = "#e0cb03";
 
 				for (let x = (o.pos.x); x < (o.pos.x + o.dimensions.x); x += window.tileSize) {
 					ctx.beginPath();
@@ -2381,12 +3499,18 @@ for (let i = 0; i < areas.length; i++) {
 		tpx: i * 15000 + 15250,
 		tpy: 750,
 		cr: (o) => {
-			ctx.fillStyle = "#fff46c";
+			if(i === areas.length-1){
+				ctx.fillStyle = `hsl(${window.frames*1000/60/12},50%,50%)`;
+				ctx.strokeStyle = `hsl(${window.frames*1000/60/12},50%,42%)`;
+			} else {
+				ctx.fillStyle = "#fff46c";
+				ctx.strokeStyle = "#e0cb03";
+			}
+
 			ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y)
 
 			ctx.globalAlpha = 0.75;
 			ctx.lineWidth = 4.8;
-			ctx.strokeStyle = "#e0cb03";
 
 			for (let x = (o.pos.x); x < (o.pos.x + o.dimensions.x); x += window.tileSize) {
 				ctx.beginPath();
@@ -2410,11 +3534,162 @@ for (let i = 0; i < areas.length; i++) {
 }
 
 
-
+// regular vignette
 C(1, [], [24], {
 	x: 0,
 	y: 0,
-	w: 1111111,
+	w: 420000,
+	h: 1800,
+	innerR: 0,
+	innerG: 0,
+	innerB: 0,
+	innerSize: 0.1,
+	outerR: 0,
+	outerG: 0,
+	outerB: 0,
+	outerSize: 0.6,
+	innerOpacity: 0,
+	outerOpacity: 0
+})
+
+// calam cavern vignette
+C(1, [], [24], {
+	x: 420200,
+	y: 0,
+	w: 24600,
+	h: 1800,
+	innerR: 0,
+	innerG: 0,
+	innerB: 0,
+	innerSize: 0.1,
+	outerR: 0,
+	outerG: 0,
+	outerB: 0,
+	outerSize: 0.6,
+	innerOpacity: 0,
+	outerOpacity: 0,
+	sf:(o,p)=>{
+		const t = Math.max(0,Math.min(1,(p.pos.x - 420200) / (429000 - 420200)));
+		o.outerSize = 0.6 * (1-t) + 0.1 * t;
+		o.outerOpacity = 0 * (1-t) + 1 * t;
+	}
+});
+
+// also lets put holes in the vignette
+for(let i = 0; i < obstacles.length; i++){
+	if(obstacles[i].pos.x < 420200 || obstacles[i].pos.x > 444800 || obstacles[i].sat.r === undefined || obstacles[i].cr === undefined) continue;
+
+	const oldCR = obstacles[i].cr;
+	obstacles[i].cr = (o) => {
+		oldCR(o);
+
+		const p = window.players[window.selfId];
+
+		if(p.pos.x < 420200 || p.pos.x > 444800) return;
+		window.colors.vignette.holeFunctions.push(() => {
+			ctx.moveTo(o.pos.x,o.pos.y);
+			ctx.arc(o.pos.x,o.pos.y,o.sat.r * 1.5,0,Math.PI*2);
+		})
+	}
+}
+
+// pulse effect
+for(let i = 0; i < obstacles.length; i++){
+	if(obstacles[i].pos.x < 450200 || obstacles[i].pos.x > 459800 || obstacles[i].sat.r === undefined || obstacles[i].cr === undefined) continue;
+
+	const oldCR = obstacles[i].cr;
+	obstacles[i].cr = (o) => {
+		oldCR(o);
+
+		const p = window.players[window.selfId];
+
+		if(p.pos.x < 450200 || p.pos.x > 459800 || o.sat.r > 400) return;
+		ctx.globalAlpha = 5/10*0.4;
+		ctx.beginPath();
+		ctx.arc(o.pos.x, o.pos.y, o.sat.r * (1 + (window.frames/12)%3), 0, Math.PI * 2);
+		ctx.fill();
+		ctx.closePath();
+		ctx.globalAlpha = 1;
+	}
+}
+
+// alpha at edges effeect
+for(let i = 0; i < obstacles.length; i++){
+	if(obstacles[i].pos.x < 465150 || obstacles[i].pos.x > 474850 || obstacles[i].sat.r === undefined || obstacles[i].cr === undefined) continue;
+
+	const oldCR = obstacles[i].cr;
+	obstacles[i].cr = (o) => {
+		const p = window.players[window.selfId];
+		const d = (o.pos.x - p.pos.x) / (canvas.w/2);
+		if(d > 0) ctx.globalAlpha = 1 - Math.min(1,d);
+		else ctx.globalAlpha = 1 - Math.min(1,-d);
+		oldCR(o);
+		ctx.globalAlpha = 1;
+	}
+}
+
+// inner vinette effect w/ distance check
+for(let i = 0; i < obstacles.length; i++){
+	if(obstacles[i].pos.x < 480200 || obstacles[i].pos.x > 490000 || obstacles[i].sat.r === undefined || obstacles[i].cr === undefined) continue;
+
+	obstacles[i].cr = (o) => {
+		const p = window.players[window.selfId];
+		if(p.pos.x < 480200 || p.pos.x > 490000) return;
+		const d = Math.sqrt((p.pos.x - o.pos.x) ** 2 + (p.pos.y - o.pos.y) ** 2);
+		
+		const grd = ctx.createRadialGradient(o.pos.x,o.pos.y, o.sat.r, o.pos.x, o.pos.y , o.sat.r*1.5+20);
+		const t = Math.min(1,d / 400);
+
+		const interpolate = (s,e,t) => { return (1-t) * s + t*e; };
+		const r = interpolate(255, 0, t);
+		const g = 0;
+		const b = 0;
+
+		grd.addColorStop(1,`rgba(${r},${g},${b},0)`);
+		grd.addColorStop(0,`rgba(${r},${g},${b},1)`);
+
+		ctx.fillStyle = grd;
+
+		ctx.beginPath();
+		ctx.arc(o.pos.x, o.pos.y, o.sat.r * 1.5 + 21, 0, Math.PI * 2);
+		ctx.fill();
+		ctx.closePath();
+	}
+}
+
+// inner vinette effect but its all red
+for(let i = 0; i < obstacles.length; i++){
+	if(obstacles[i].pos.x < 495200 || obstacles[i].pos.x > 504800 || obstacles[i].sat.r === undefined || obstacles[i].cr === undefined) continue;
+
+	obstacles[i].cr = (o) => {
+		const p = window.players[window.selfId];
+		if(p.pos.x < 495200 || p.pos.x > 504800) return;
+
+		const grd = ctx.createRadialGradient(o.pos.x,o.pos.y, o.sat.r, o.pos.x, o.pos.y , o.sat.r*1.5+20);
+		const t = (Math.sin(window.frames * 0.05)+1)/2;
+
+		const interpolate = (s,e,t) => { return (1-t) * s + t*e; };
+		const r = interpolate(255, 0, t);
+		const g = 0;
+		const b = 0;
+
+		grd.addColorStop(1,`rgba(${r},${g},${b},0)`);
+		grd.addColorStop(0,`rgba(${r},${g},${b},1)`);
+
+		ctx.fillStyle = grd;
+
+		ctx.beginPath();
+		ctx.arc(o.pos.x, o.pos.y, o.sat.r * 1.5 + 21, 0, Math.PI * 2);
+		ctx.fill();
+		ctx.closePath();
+	}
+}
+
+// back to regular
+C(1, [], [24], {
+	x: 450200,
+	y: 0,
+	w: 420000,
 	h: 1800,
 	innerR: 0,
 	innerG: 0,
@@ -2463,11 +3738,12 @@ catch(err){
 }
 
 //TP TO BOSSFIGHT
-C(1, [], [3], {
-	x: 0,
-	y: 1000,
-	w: 500,
-	h: 500,
+var giveInv = false;
+C(1, [], [3,11], {
+	x: 540000,
+	y: 0,
+	w: 10000,
+	h: 1600,
 	cr: (o) => {
 		ctx.fillStyle = "green";
 		ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y)
@@ -2478,6 +3754,7 @@ C(1, [], [3], {
 
 			window.stopMusic();
 		}
+		giveInv = true;
 		if (audioLoaded){
 			audio.play();
 			e.pos.x = 1000;
@@ -2485,6 +3762,46 @@ C(1, [], [3], {
 		}
 	},
 })
+
+// INCINVIBILITY OBS
+{
+	const maxInv = 60;// one second
+	let inv = 0;
+	C(0,[],[11],{x:-1E9,y:0,r:100,sf:(o,p)=>{
+		if(giveInv === true){
+			inv = maxInv;
+			giveInv = false;
+		}
+
+		if(inv <= 0 || bossTime > 118){
+			o.pos.x = -1E9;
+			return;
+		} else {
+			o.pos.x = p.pos.x;
+			o.pos.y = p.pos.y;
+		}
+
+		window.tickFns.push(() => {
+			if(p.dead === true){
+				inv--;
+			}
+			p.dead = false;
+		})
+
+		o.sat.r = p.sat.r + inv/2;
+	},cr:(o)=>{
+		ctx.beginPath();
+		ctx.fillStyle = 'rgba(140,140,140,.25)';
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+		ctx.fill();
+		ctx.stroke();
+		ctx.closePath();
+	},ef:(p)=>{
+		p.timeTrapOverrideSafe = true;
+	}})
+} 
 
 
 //BOSSFIGHT MANAGER!!!!

@@ -11606,14 +11606,14 @@
                 "canJump": true,
                 "inView": false
             },
-            {
-                "x": 2900,
-                "y": 350,
-                "radius": 150,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": true
-            },
+            // {
+            //     "x": 2900,
+            //     "y": 350,
+            //     "radius": 150,
+            //     "type": "circle-normal",
+            //     "renderType": "circle",
+            //     "inView": true
+            // },
             {
                 "x": 10900/2,
                 "y": 2700/2,

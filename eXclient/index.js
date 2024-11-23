@@ -21,6 +21,7 @@ import '../eXserver/maps/_metadata.js';
 
 // joining game
 const gui = window.gui = document.querySelector('.gui');
+window.mapPath = '';
 window.username = '';
 window.authId = -1;
 

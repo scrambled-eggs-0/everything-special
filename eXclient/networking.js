@@ -56,6 +56,7 @@ window.changeMap = function changeMap(url=`/maps/hub`, method='GET', headers=new
         if(prevScript !== null) prevScript.remove();
 
         window.resetGame();
+        window.mapPath = url;
         window.players.length = window.obstacles.length = 0;
         const s = document.createElement('script');
         s.id = "gameScript";

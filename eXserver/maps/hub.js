@@ -12173,9 +12173,9 @@
         
         eval(str);
 
-        // temp for poqt
-        // spawnPosition.x = 3500;
-        // spawnPosition.y = 4200;
+        // temp for poph
+        // spawnPosition.x = 2200;
+        // spawnPosition.y = 3800;
     
         spawnPosition.x=5000;
         spawnPosition.y=5000;
@@ -12242,6 +12242,9 @@
                         iframe.style.width = `${width}px`;
                         iframe.style.height = `${height}px`;
                     }});
+                    window.resetFns.push(() => {
+                        iframe.remove();
+                    })
                 })();
             }});
 

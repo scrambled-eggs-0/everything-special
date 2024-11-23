@@ -1246,7 +1246,8 @@ const effectMap = [
         } else if(window.won !== true){
             window.won = true;
             if(window.isExClient === true){
-                window.changeMap('/maps/winroom');
+                if(window.mapPath === '/maps/winroom') window.changeMap('/maps/hub');
+                else window.changeMap('/maps/winroom');
             } else {
                 // scroll
                 toScroll = true;
