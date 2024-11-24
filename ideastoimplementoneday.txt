@@ -116,28 +116,28 @@ tutorial
         - "is the unexpected." [shader morphs from normal to flag warp to oval to lens distort - winpad at the top and you have to reach it and then page refreshes and you get put in the hub]
 
 New plan (17th-20th)
-- sync map system
+- sync map system 🥙
 - win messages or some way to tell that players are 
 - import poqt (funky version)
     - music!
     - finish polish!
     - tetris
 - fix pohistory (down the list gets more optional)
-    - z8 and z9
-    - e1 render like e1, e2 like e2, ex like ex
+    - z8 and z9 🥙
+    - e1 render like e1, e2 like e2, ex like ex 🥙
     - redo some of the eX levels
     - e1 -> eX text animation at the start?
 - fix pospd
-    - make the normal section consistent
-    - make platformer use the old route, add coin below so that player knows to fall off to not hit their head between jumps
-- fix tutorial (w/ dynamic res, no dt)
+    - make the normal section consistent 🥙
+    - make platformer use the old route, add coin below so that player knows to fall off to not hit their head between jumps 🥙
+- fix tutorial (w/ dynamic res, no dt) 🥙
 - anticheat, load testing, security
 - make all maps C calls instead of generators
 - remove all TEMP
-- make winroom send back to hub (msg update)
-- fix rotating text culling being broken - not bounding boxes cuz they're already regenerated
+- make winroom send back to hub (msg update) 🥙
+- fix rotating text culling being broken - not bounding boxes cuz they're already regenerated 🥙
     - might be something with initialRotation in general?
-    - fix bug cannot read undefined reading pos sometimes bricking the game (i think fetch req msgs out of order bug)
+    - fix bug cannot read undefined reading pos sometimes bricking the game (i think fetch req msgs out of order bug) 🥙?
 
 if i have time make 
 

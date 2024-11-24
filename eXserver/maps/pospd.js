@@ -7566,7 +7566,7 @@
                     "y": 3000
                 },
                 "direction": "down",
-                "jumpHeight": 240,
+                "jumpHeight": 200,
                 "maxForce": 1000,
                 "variableJumpHeight": false,
                 "platformerFriction": 0.8,
@@ -42254,6 +42254,37 @@
         });
 
         C(0,[],[5],{x:15750,y:11450,r:50});
+
+        C(1,[],[15],{cr:()=>{},x:7900,y:1100,w:100,h:100,axisSpeedMultX: 1, axisSpeedMultY: 0});
+
+        {
+            const interpolate = (s,e,t) => {return (1-t) * s + t * e};
+            let alpha = 0;
+            let collided = false;
+            C(1,[],[11],{x:8400,y:300,w:300,h:200,cr:(o)=>{
+                ctx.globalAlpha = alpha;
+                ctx.fillStyle = 'rgba(140,140,140,.25)';
+                ctx.strokeStyle = 'black';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.rect(o.topLeft.x, o.topLeft.y, o.dimensions.x, o.dimensions.y);
+                ctx.fill();
+                ctx.stroke();
+                ctx.closePath();
+                ctx.globalAlpha = 1;
+            },ef:()=>{collided = true;}, sf:()=>{
+                if(collided === true) alpha = interpolate(alpha, 1, 0.1);
+                else alpha = interpolate(alpha, 0, 0.1);
+                collided = false;
+            }})
+        }
+        // {
+        //     "x": 4200,
+        //     "y": 150,
+        //     "w": 150,
+        //     "h": 100,
+        //     "renderAbove": false
+        // },
     }
 })();
 

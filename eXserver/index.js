@@ -77,9 +77,17 @@ global.app = uWS.App().ws('/*', {
 });
 
 // following functions are routes - they serve code (html, css, js) files to the client when the initial http request is made
-app.get('/', (res, req) => {
-    res.end(fs.readFileSync('z_dev/index.html'));
-});
+
+if(global.env === 'dev'){
+    app.get('/', (res, req) => {
+        res.end(fs.readFileSync('z_dist/index.html'));
+    });
+} else {
+    app.get('/', (res, req) => {
+        res.end(fs.readFileSync('z_dev/index.html'));
+    });
+}
+
 
 app.get("/:filename", (res, req) => {
     const path = 'z_dev' + req.getUrl();

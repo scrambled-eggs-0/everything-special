@@ -35841,7 +35841,7 @@
         // z3 (the second rythmn section) -> z4 (the reaction time sec)
         C(1,[],[12],{tpx:30550,tpy:15050,x:79700,y:19900,w:100,h:100});
         // z9 -> z10 (final z)
-        C(1,[],[12],{x:47900,y:8000,w:100,h:100,tpx:82050,tpy:50})
+        C(1,[],[12],{x:47900,y:8000,w:100,h:100,tpx:82050,tpy:1000})
 
         // invincibility powerups
 
@@ -36572,6 +36572,9 @@
                 }
             }})
         }
+
+        // z2 music
+        C(1,[],[26],{x:0,w:3200,y:12100,h:1800,musicPath:"https://www.youtube.com/watch?v=-afCVTd3OXs"});
 
         // code used to generate
 
@@ -37413,6 +37416,7 @@
             o.render();
         })
     }
+    C(1,[],[5],{x:31800,y:7050,w:100,h:100});
 
     // WAVES
     let waves = [
@@ -37472,7 +37476,13 @@
     let won = false;
     let obs = [];
     
+    window.win = () => {
+        currentWave = waves.length;
+        currentWaveTime = -1;
+    }
+    let hasReleased = false;
     function runWaves() {
+        if(won === true) return;
         currentWaveTime--;
         if (currentWaveTime <= 0) {
             input.skip = false;
@@ -37522,7 +37532,7 @@
     }
     
     function gameOver() {
-        p = new Player(canvas.w * Math.random(), canvas.h * Math.random(), 20, 'red', .2);
+        p = new Player(canvas.w * Math.random(), canvas.h * Math.random(), 40, 'red', .2);
         obs = [];
         currentWave = -1;
         currentWaveTime = 0;
@@ -37591,7 +37601,7 @@
     let init = false;
 
     C(0,[],[3],{x:-1E9,y:0,r:1,sf:(o,realPlayer)=>{
-        if(won === true) return;
+        if(won === true) {return;}
         if(init === false){
             if(realPlayer.pos.y >= 11900 && realPlayer.pos.y <= 12400 && realPlayer.pos.x < 500){
                 init = true;
@@ -37605,13 +37615,15 @@
         // const topLeftY = p.pos.y - canvas.h/2;
         runPredictionDodging();
 
-        window.camera.numControlledBy = 1;
-        window.camera.x = canvas.w/2;
-        window.camera.y = 12100 + canvas.h/2;
+        if(won === false){
+            window.camera.numControlledBy = 1;
+            window.camera.x = canvas.w/2;
+            window.camera.y = 12100 + canvas.h/2;
 
-        realPlayer.pos.x = p.x;
-        realPlayer.pos.y = p.y + 12100;
-        realPlayer.renderRadius = p.radius;
+            realPlayer.pos.x = p.x;
+            realPlayer.pos.y = p.y + 12100;
+            realPlayer.renderRadius = p.radius;
+        }
     },cr:()=>{
         if(init === false || won === true) return;
         lastW = canvas.w;

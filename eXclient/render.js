@@ -527,18 +527,18 @@ function renderTextSpecials(o, cols){
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.font = `${o.fontSize}px Inter`;
-    ctx.translate(o.sat.points[0].x + o.sat.pos.x, o.sat.points[0].y + o.sat.pos.y);
+    ctx.translate(o.topLeft.x+o.dimensions.x/2, o.topLeft.y+o.dimensions.y/2);
     if(o.rotation !== undefined) ctx.rotate(o.rotation);
     if(ctx.globalAlpha < 0.5) ctx.globalAlpha = 0.5;
-    if(ctx.toFill === true) ctx.fillText(o.text, o.dimensions.x/2 - o.wOffset, o.dimensions.y/2 - o.hOffset);
-    if(ctx.toStroke === true) ctx.strokeText(o.text, o.dimensions.x/2 - o.wOffset, o.dimensions.y/2 - o.hOffset);
+    if(ctx.toFill === true) ctx.fillText(o.text, 0, 0);
+    if(ctx.toStroke === true) ctx.strokeText(o.text, 0, 0);
     else if(ctx.toFill === false) {
         ctx.globalAlpha = 1;
         ctx.fillStyle = cols.tile;
-        ctx.fillText(o.text, o.dimensions.x/2 - o.wOffset, o.dimensions.y/2 - o.hOffset);
+        ctx.fillText(o.text, 0, 0);
     }
     if(o.rotation !== undefined) ctx.rotate(-o.rotation);
-    ctx.translate(-o.sat.points[0].x - o.sat.pos.x, -o.sat.points[0].y - o.sat.pos.y);
+    ctx.translate(-o.topLeft.x-o.dimensions.x/2, -o.topLeft.y-o.dimensions.y/2);
     ctx.globalAlpha = Math.min(0.5, lastGA);
 }
 

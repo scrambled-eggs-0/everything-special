@@ -58,18 +58,22 @@ if(global.env === 'dev'){
 
 const compiler = webpack(webpackSettings);
 
-// watch for changes and compile if there are any
-compiler.watch(
-    {aggregateTimeout: 300},
-    (err, stats) => {
-        // send msg to all clients telling them to reload. Might want a more sophisticated setup later?
-        if(err != null) console.log('webpack error! ', err);
-        if(stats.hasErrors() === true) console.log('fatal webpack error!!', stats.toJson().errors)
-        const buf = new Uint8Array(1);
-        buf[0] = 1;// type 1 - reload
+if(global.env === 'build') {
+    console.log('Built Successfully.');
+} else {
+    // watch for changes and compile if there are any
+    compiler.watch(
+        {aggregateTimeout: 300},
+        (err, stats) => {
+            // send msg to all clients telling them to reload. Might want a more sophisticated setup later?
+            if(err != null) console.log('webpack error! ', err);
+            if(stats.hasErrors() === true) console.log('fatal webpack error!!', stats.toJson().errors)
+            const buf = new Uint8Array(1);
+            buf[0] = 1;// type 1 - reload
 
-        for(let id in global.clients){
-            send(global.clients[id].me, buf);
+            for(let id in global.clients){
+                send(global.clients[id].me, buf);
+            }
         }
-    }
-);
+    );
+}

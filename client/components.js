@@ -549,18 +549,28 @@ function generateDimensions(o){
         }
     }
     
-    if(o.isText === true){
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.font = `${o.fontSize}px Inter`;
-        const dimensions = ctx.measureText(o.text);
-        o.wOffset = (dimensions.actualBoundingBoxRight - dimensions.actualBoundingBoxLeft) / 2;
-        o.hOffset = (dimensions.actualBoundingBoxDescent - dimensions.actualBoundingBoxAscent) / 2; // *0.75?
-        return {
-            x: dimensions.actualBoundingBoxRight + dimensions.actualBoundingBoxLeft,
-            y: dimensions.actualBoundingBoxDescent + dimensions.actualBoundingBoxAscent,
-        }
-    }
+    // if(o.isText === true){
+    //     ctx.textAlign = 'center';
+    //     ctx.textBaseline = 'middle';
+    //     ctx.font = `${o.fontSize}px Inter`;
+    //     const dimensions = ctx.measureText(o.text);
+    //     o.wOffset = (dimensions.actualBoundingBoxRight - dimensions.actualBoundingBoxLeft) / 2;
+    //     o.hOffset = (dimensions.actualBoundingBoxDescent - dimensions.actualBoundingBoxAscent) / 2; // *0.75?
+    //     // if(o.rotation === undefined){
+    //         // return {
+    //         //     x: dimensions.actualBoundingBoxRight + dimensions.actualBoundingBoxLeft,
+    //         //     y: dimensions.actualBoundingBoxDescent + dimensions.actualBoundingBoxAscent,
+    //         // }
+    //     // }
+    //     // const x = dimensions.actualBoundingBoxRight + dimensions.actualBoundingBoxLeft;
+    //     // const y = dimensions.actualBoundingBoxDescent + dimensions.actualBoundingBoxAscent;
+
+    //     // const c = Math.cos(o.rotation); const s = Math.sin(o.rotation);
+    //     // return {
+    //     //     x: x * c + y * s,
+    //     //     y: x * s + y * c
+    //     // }
+    // }
     
     let top, right, bottom, left;
     bottom = right = -Infinity;
@@ -1338,7 +1348,7 @@ const effectMap = [
         if(o.jumpCooldown <= 0 && (touchingNormalThisFrame === true || (o.canJumpMidair === true && o.midairStoredJump === true))){
             o.midairStoredJump = o.midairStoredJump || touchingNormalThisFrame;
             o.canJump = true;
-            if(Math.abs(shortAngleDist(o.platformerAngle + Math.PI, playerVelAngle)) < Math.PI / 2 && Math.sqrt(p.xv**2+p.yv**2)>.01){
+            if(Math.abs(shortAngleDist(o.platformerAngle + Math.PI, playerVelAngle)) < Math.PI * 0.48 && -Math.sqrt(p.xv**2+p.yv**2)*Math.cos(angleBetween)>.1){
                 p.forces.push(-Math.cos(o.platformerAngle) * o.jumpForce, -Math.sin(o.platformerAngle) * o.jumpForce, o.jumpFriction);
                 o.jumpCooldown = o.maxJumpCooldown;
                 o.midairStoredJump = false;

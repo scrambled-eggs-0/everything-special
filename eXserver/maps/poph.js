@@ -16,14 +16,8 @@ colors.tile = '#d4d4d4';
 var safeColor = "#c3c3c3";
 var safeTileColor = "#9e9e9e"
 
-C(1, [], [26], {
-	x: 0,
-	y: 0,
-	w: 174800,
-	h: 1500,
-	musicPath: 'https://www.youtube.com/watch?v=lgq0OdRIEao'
-});
-
+// Musics!
+// first music is created after animation
 C(1, [], [26], {
 	x: 180200,
 	y: 0,
@@ -5455,3 +5449,102 @@ C(1, [], [9], {
 });
 
 
+// Evades 1 - Evades X that plays at the beginning
+{
+	function smootherStep(t){
+		return t * t * t * (t * (t * 6. - 15.) + 10.);
+	}
+
+	function interpolateBetween(startPos, endPos, startT, endT){
+		if(t < startT) return startPos;
+		else if(t > endT) return endPos;
+	
+		const ratio = (t - startT) / (endT - startT);
+	
+		return interpolate(startPos, endPos, smootherStep(ratio));
+	}
+
+	const interpolate = (s,e,t) => {return (1-t) * s + t * e;}
+
+	let textYOff = 0;
+	const ts = {
+		"wait3": 1070 - 1170,
+		"e2in": 1370 - 1170,
+		"wait4": 1380 - 1170,
+		"e3e4in": 1480 - 1170,
+		"wait5": 1490 - 1170,
+		"eXin": 1590 - 1170,
+		"end": 1640 - 1170
+	}
+
+	C(1, [], [26], {
+		x: 0,
+		y: 0,
+		w: 174800,
+		h: 1500,
+		musicPath: 'https://www.youtube.com/watch?v=SsYCPtOaTKw'
+	});
+	const unveilObs = obstacles[obstacles.length-1];
+
+	let t = -60;
+	let w = canvas.width;
+	let h = canvas.height;
+	let ended = false;
+	C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
+		if(t > ts.end) {
+			if(ended === false){
+				unveilObs.pos.x = -1E9;
+				ended = true;
+				C(1, [], [26], {
+					x: 0,
+					y: 0,
+					w: 174800,
+					h: 1500,
+					musicPath: 'https://www.youtube.com/watch?v=lgq0OdRIEao'
+				});
+			}
+			return;
+		}
+		w = canvas.width;
+		h = canvas.height;
+		const transform = ctx.getTransform();
+		ctx.setTransform(1,0,0,1,0,0);
+		// ctx.translate(camera.x-canvas.w/2, camera.y-canvas.h/2);
+		ctx.fillStyle = 'black';
+		ctx.fillRect(0,0,w,h);
+		if(t > ts.wait5){
+			textYOff = interpolateBetween(5/2*h, 8*h+h/2, ts.wait5, ts.eXin);
+		}
+		else if(t > ts.wait4){
+			textYOff = interpolateBetween(h/2, 5/2*h, ts.wait4, ts.e3e4in);
+		}
+		else if(t > ts.wait3){
+			textYOff = interpolateBetween(-h/2, h/2, ts.wait3, ts.e2in);
+		}
+
+		for(let i = 1; i <= 10; i++){
+			let localOffset = -(i-2)*h;
+			ctx.fillStyle = 'white';
+			ctx.font = `${180}px Inter`;
+			ctx.textAlign = 'center';
+			ctx.textBaseline = 'middle';
+
+			const y = textYOff + localOffset;
+
+			ctx.globalAlpha = smootherStep(1 - Math.min(1,Math.abs(y - h / 2) / (h/2)));
+			if(i === 10) {ctx.shadowColor = 'white'; ctx.shadowBlur = 22;}
+			ctx.fillText(`Evades ${i===10?'X':i}`, w/2, y);
+			ctx.globalAlpha = 1;
+		}
+		ctx.shadowBlur = 0;
+
+		// ctx.translate(-camera.x+canvas.w/2, -camera.y+canvas.h/2);
+		t++;
+		ctx.setTransform(transform);
+
+		for(let i = 0; i < window.players.length; i++){
+			if(window.players[i] === undefined) continue;
+			window.players[i].renderRadius = 0;
+		}
+	}})
+}

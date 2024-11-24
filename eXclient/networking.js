@@ -23,6 +23,7 @@ function initWS() {
             return;
         }
         const decoded = new Uint8Array(data.data);
+        if(messageMap[decoded[0]] === undefined) console.log(decoded);
         messageMap[decoded[0]](decoded);
     });
 
@@ -62,9 +63,9 @@ window.changeMap = function changeMap(url=`/maps/hub`, method='GET', headers=new
         s.id = "gameScript";
         s.text = levelData;
         document.body.appendChild(s);
-
+        
         for(let i = 0; i < players.length; i++){
-            if(players[i] === undefined) {window.players[i] = undefined; continue;}
+            if(players[i] === undefined || players[i] === null) {window.players[i] = undefined; continue;}
             const playerData = players[i];
             const p = createPlayerFromData(playerData);
             window.players[i] = p;

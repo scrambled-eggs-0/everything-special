@@ -172,6 +172,7 @@ window.resetGame = () => {
     window.mouseDownFunctions.push(() => {
         if(player.dead === true) window.respawnPlayer();
     })
+    window.changeCameraScale(1);
     if(window.addSideMenuEvtListeners !== undefined) window.addSideMenuEvtListeners(nextFileName);
     window.spawnPosition.x = 100;
     window.spawnPosition.y = 1500;
