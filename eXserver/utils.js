@@ -3,9 +3,8 @@ global.window = {SAT};
 
 import ip from "ip";
 const i = {p: ip.address()};
-const prodIps = ["149.28.46.65"];
+const prodIps = ["207.148.14.118"];
 global.env = prodIps.includes(i.p) ? 'prod' : 'dev';
-console.log({env: global.env});
 delete i.p;
 
 const encoder = new TextEncoder();
