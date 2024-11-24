@@ -43,7 +43,8 @@ global.app = uWS.App().ws('/*', {
             mapName: '',
             player: new Player(),
             dev: true,
-            accountData: undefined
+            accountData: undefined,
+            mapRequestFor: undefined
         }
 
         do {
@@ -267,6 +268,19 @@ app.get("/maps/:filename", (res, req) => {
         return;
     }
 
+    if(global.maps[mapName] !== undefined){
+        const otherClient = global.maps[mapName].getRandomClient();
+        if(otherClient !== undefined){
+            const buf = new Uint8Array(1);
+            buf[0] = 16; // request map
+            send(otherClient, buf);
+            otherClient.mapRequestFor = authId;
+            setTimeout(() => {
+                if(otherClient.mapRequestFor === authId) otherClient.mapRequestFor = undefined;
+            }, 2000)
+        }
+    }
+    
     changeMap(ws.me, mapName, res);
 });
 
@@ -311,6 +325,19 @@ app.post("/join",async (res, req) => {
 
     ws.accountData = account;
     ws.me.player.name = username;
+
+    if(global.maps[global.defaultMapName] !== undefined){
+        const otherClient = global.maps[global.defaultMapName].getRandomClient();
+        if(otherClient !== undefined){
+            const buf = new Uint8Array(1);
+            buf[0] = 16; // request map
+            send(otherClient, buf);
+            otherClient.mapRequestFor = authId;
+            setTimeout(() => {
+                if(otherClient.mapRequestFor === authId) otherClient.mapRequestFor = undefined;
+            }, 2000)
+        }
+    }
     
     // send default map
     changeMap(ws.me, global.defaultMapName, res);
@@ -428,6 +455,15 @@ const messageMap = [
         u16[1] = me.player.id;
         global.maps[me.mapName].broadcast(data);
     },
+    // 16 - unused
+    () => {},
+    // 17 - map request fulfilled
+    (data, me) => {
+        if(me.mapRequestFor === undefined || global.clients[me.mapRequestFor] === undefined) return;
+        send(global.clients[me.mapRequestFor].me, data);
+        console.log('recieved map response. Sending to', me.mapRequestFor);
+        delete me.mapRequestFor;
+    }
 ]
 
 global.send = (client, msg) => {

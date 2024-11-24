@@ -5,7 +5,7 @@ import Utils from '../client/utils.js';
 const {decodeText} = Utils;
 
 const HOST = location.origin.replace(/^http/, 'ws');
-let ws, nextMsgFlag, gameStarted = false;
+let ws, nextMsgFlag, iv, gameStarted = false;
 
 const messageQueue = [];
 window.send = (data) => {
@@ -45,7 +45,10 @@ function initWS() {
 
 initWS();
 
+window.syncObs = [];
+let mapEntryTime = 0;
 window.changeMap = function changeMap(url=`/maps/hub`, method='GET', headers=new Headers()){
+    mapEntryTime = window.frames;
     headers.append('id', window.authId);
     fetch(location.origin + url, {method, headers}).then(async (d) => {
         const levelData = await d.text();
@@ -79,6 +82,28 @@ window.changeMap = function changeMap(url=`/maps/hub`, method='GET', headers=new
         } else {
             window.respawnPlayer();
         }
+
+        iv = setInterval(() => {
+            if(obstacles.length === 0) return;
+
+            clearInterval(iv);
+
+            // push all obstacles to syncObs that have more than 1 simulate but not a custom simulate so that we can use it for requests later
+            if(simulateToSync === undefined) generateFnToIndexMaps();
+
+            let fn;
+            mainLoop: for(let i = 0; i < obstacles.length; i++){
+                if(obstacles[i].simulate.length === 0) continue;
+                for(let j = obstacles[i].simulate.length-1; j >= 0; j--){
+                    // if we have a custom simulate
+                    fn = simulateToSync.get(obstacles[i].simulate[j]) ?? idleEffectToSync.get(obstacles[i].simulate[j]);
+                    if(fn === undefined) continue mainLoop;
+                    // if we have 0 rotate speed obviously dont need to add
+                    if(fn(obstacles[i]) === undefined) continue mainLoop;
+                }
+                window.syncObs.push(obstacles[i]);
+            }
+        }, 1)
     })
 }
 
@@ -235,7 +260,80 @@ const messageMap = [
 
         window.players[id].dead = data[1] === 1;
     },
+    // 16 - map request
+    (data) => {
+        // generate function maps that map simulate functions to pack functions
+        if(simulateToSync === undefined) generateFnToIndexMaps();
+
+        // syncObs are guaranteed to not have a custom simulate
+        let pack = [], len=0;
+        for(let i = 0; i < window.syncObs.length; i++){
+            len = pack.length;
+            pack[len] = {};
+            for(let j = 0; j < window.syncObs[i].simulate.length; j++){
+                const simulateData = (simulateToSync.get(window.syncObs[i].simulate[j]) ?? idleEffectToSync.get(window.syncObs[i].simulate[j]))(window.syncObs[i]);
+                if(simulateData === undefined) continue;
+                for(let key in simulateData){
+                    pack[len][key] = simulateData[key];
+                }
+            }
+        }
+
+        const buf = msgpackr.pack(pack);
+
+        console.log(buf);
+
+        // First byte is 220 always, so replace it with 0 and reconstruct when client recieves.
+        buf[0] = 17;
+        send(buf);
+    },
+    // 17 - map response
+    (data) => {
+        setTimeout(() => {
+            data[0] = 220;
+            let updateObs;
+            try {
+                updateObs = msgpackr.unpack(data);
+            } catch(e){
+                return;
+            }
+
+            console.log('map response!', updateObs);
+
+            if(Array.isArray(updateObs) === false) return;
+            for(let i = 0; i < updateObs.length; i++){
+                if(typeof updateObs[i] !== 'object') return;
+                for(let key in updateObs[i]){
+                    if(window.syncObs[i] === undefined) break;
+                    if(typeof window.syncObs[i][key] !== typeof updateObs[i][key] && window.syncObs[i][key] !== undefined) return;
+                    window.syncObs[i][key] = updateObs[i][key];
+                }
+            }
+
+            const ticksToSimulate = Math.round((window.frames - mapEntryTime) / 2);
+            if(ticksToSimulate > 2000) return;
+            window.accum += window.FRAME_TIME * ticksToSimulate;
+
+            console.log(ticksToSimulate);
+        }, 200)
+    }
 ]
+
+let simulateToSync, idleEffectToSync;
+function generateFnToIndexMaps(){
+    simulateToSync = new Map(); idleEffectToSync = new Map();
+    for(let i = 0; i < window.simulateMap.length; i++){
+        if(window.simulateSyncKeys[i] !== undefined){
+            simulateToSync.set(window.simulateMap[i], window.simulateSyncKeys[i]);
+        }
+    }
+
+    for(let i = 0; i < window.idleEffectMap.length; i++){
+        if(window.idleEffectSyncKeys[i] !== undefined){
+            idleEffectToSync.set(window.idleEffectMap[i], window.idleEffectSyncKeys[i]);
+        }
+    }
+}
 
 function createPlayerFromData(data){
     const p = window.createPlayer();

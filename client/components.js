@@ -50,7 +50,7 @@ function create(shape, simulates, effects, params){
     e.dimensions = generateDimensions(e);
     e.topLeft = generateTopLeftCoordinates(e);
     for(let i = 0; i < simulates.length; i++){
-        e.simulate.push(simulateMap[simulates[i]]);
+        e.simulate.push(window.simulateMap[simulates[i]]);
         initSimulateMap[simulates[i]](e, params);
         for(let key in window.simulateConstraintsMap[simulates[i]]){
             // [min, max, mustBeInt, customValidator(e)]
@@ -63,7 +63,7 @@ function create(shape, simulates, effects, params){
     for(let i = 0; i < effects.length; i++){
         e.effect.push(effectMap[effects[i]]);
         initEffectMap[effects[i]](e, params);
-        if(idleEffectMap[effects[i]] !== undefined) e.simulate.push(idleEffectMap[effects[i]]);
+        if(window.idleEffectMap[effects[i]] !== undefined) e.simulate.push(window.idleEffectMap[effects[i]]);
         for(let key in window.effectConstraintsMap[effects[i]]){
             // [min, max, mustBeInt, customValidator(e)]
             const c = window.effectConstraintsMap[effects[i]][key];
@@ -735,12 +735,13 @@ const initSimulateMap = [
         o.rotation = 0;
         if(init.initialRotation !== 0 && init.initialRotation !== undefined){
             o.rotateSpeed = init.initialRotation;
-            simulateMap[1](o);
+            window.simulateMap[1](o);
         }
         o.rotateSpeed = init.rotateSpeed;
     },
     // /*grow*/
     (o, init) => {
+        // TODO: sync initialGrowth like rotation
         o.growSpeed = init.growSpeed;
         o.shrinkSpeed = init.shrinkSpeed;
         o.maxGrowth = init.maxGrowth;
@@ -769,7 +770,59 @@ const initSimulateMap = [
     }
 ]
 
-const simulateMap = [
+window.simulateSyncKeys = [
+    /*pathMove*/
+    (o) => {
+        return {
+            x: o.pos.x,
+            y: o.pos.y,
+            currentPoint: o.currentPoint
+        }
+    },
+    // /*rotate*/
+    (o, init) => {
+        return {
+            initialRotation: o.initialRotation
+        }
+    },
+    // /*grow*/
+    undefined,
+    // /*custom*/
+    undefined,
+    // /*id*/
+    undefined,
+    // /*rotateHoming*/
+    undefined,
+]
+
+window.applySimulateSyncKeys = [
+    /*pathMove*/
+    (o, init) => {
+        if(Number.isFinite(init.x + init.y + init.currentPoint) === false) return;
+        init.path = o.path;
+        initSimulateMap[0](o, init);
+        o.pos.x = init.x;
+        o.pos.y = init.y;
+    },
+    // /*rotate*/
+    (o, init) => {
+        if(Number.isFinite(init.initialRotation) === false) return;
+        init.pivotX = o.pivotX;
+        init.pivotY = o.pivotY;
+        init.rotateSpeed = o.rotateSpeed;
+        initSimulateMap[1](o, init);
+    },
+    // /*grow*/
+    undefined,
+    // /*custom*/
+    undefined,
+    // /*id*/
+    undefined,
+    // /*rotateHoming*/
+    undefined,
+]
+
+window.simulateMap = [
     /*pathMove*/
     (o) => {
         o.pos.x += o.xv;
@@ -898,7 +951,7 @@ const simulateMap = [
 
             if(Math.abs(minSpokeAngularDist) < o.homingRotateSpeed) o.rotateSpeed = minSpokeAngularDist;
             else o.rotateSpeed = Math.sign(minSpokeAngularDist) * o.homingRotateSpeed;
-            simulateMap[1](o);
+            window.simulateMap[1](o);
             return;
         }
 
@@ -918,13 +971,9 @@ const simulateMap = [
         if(Math.abs(minSpokeAngularDist) < o.homingRotateSpeed) o.rotateSpeed = minSpokeAngularDist;
         else o.rotateSpeed = Math.sign(minSpokeAngularDist) * o.homingRotateSpeed;
 
-        simulateMap[1](o);
+        window.simulateMap[1](o);
     }
 ]
-
-// ---
-
-// ---
 
 function shortAngleDist(a0,a1) {
     let da = (a1 - a0) % TAU;
@@ -1588,7 +1637,7 @@ const effectMap = [
     }
 ]
 
-const idleEffectMap = [
+window.idleEffectMap = [
     // 'bound',
     undefined,
     // 'kill',
@@ -1687,6 +1736,156 @@ const idleEffectMap = [
         o.pos.x += freeVariable * Math.cos(o.pushAngle);
         o.pos.y += freeVariable * Math.sin(o.pushAngle);
     },
+    // changeMusic
+    undefined,
+    // changeShip
+    undefined,
+    // changeGrapple
+    undefined,
+    // changeDeathTimer
+    undefined,
+]
+
+window.idleEffectSyncKeys = [
+    // 'bound',
+    undefined,
+    // 'kill',
+    undefined,
+    // 'bounce',
+    undefined,
+    // 'custom'
+    undefined,
+    // 'customImage'
+    undefined,
+    // 'stopForces',
+    undefined,
+    // 'winpad',
+    undefined,
+    // 'coin',
+    undefined,
+    // 'coindoor',
+    undefined,
+    // 'checkpoint',
+    undefined,
+    // 'breakable',
+    undefined,
+    // 'safe',
+    undefined,
+    // 'tp',
+    undefined,
+    // 'conveyor',
+    (o) => {
+        if(o.conveyorAngleRotateSpeed === 0) return undefined;
+        return {
+            conveyorAngle: o.conveyorAngle
+        }
+    },
+    // 'platformer',
+    (o) => {
+        if(o.platformerAngleRotateSpeed === 0) return undefined;
+        return {
+            platformerAngle: o.platformerAngle
+        }
+    },
+    // 'restrictAxis',
+    undefined,
+    // 'snapGrid',
+    (o) => {
+        if(o.snapAngleRotateSpeed === 0) return undefined;
+        return {
+            snapAngle: o.snapAngle
+        }
+    },
+    // 'timeTrap'
+    undefined,
+    // 'changeSize'
+    undefined,
+    // 'changeSpeed'
+    undefined,
+    // 'solidColor'
+    undefined,
+    // 'decoration'
+    undefined,
+    // 'changeMap'
+    undefined,
+    // 'tornado'
+    undefined,
+    // 'changeVignette'
+    undefined,
+    // 'pushable'
+    undefined,
+    // changeMusic
+    undefined,
+    // changeShip
+    undefined,
+    // changeGrapple
+    undefined,
+    // changeDeathTimer
+    undefined,
+]
+
+window.applyIdleEffectSyncKeys = [
+    // 'bound',
+    undefined,
+    // 'kill',
+    undefined,
+    // 'bounce',
+    undefined,
+    // 'custom'
+    undefined,
+    // 'customImage'
+    undefined,
+    // 'stopForces',
+    undefined,
+    // 'winpad',
+    undefined,
+    // 'coin',
+    undefined,
+    // 'coindoor',
+    undefined,
+    // 'checkpoint',
+    undefined,
+    // 'breakable',
+    undefined,
+    // 'safe',
+    undefined,
+    // 'tp',
+    undefined,
+    // 'conveyor',
+    (o) => {
+        if(Number.isFinite(o.conveyorAngle) === false) return;
+        o.conveyorAngle = conveyorAngle;
+    },
+    // 'platformer',
+    (o) => {
+        if(Number.isFinite(o.platformerAngle) === false) return;
+        o.platformerAngle = platformerAngle;
+    },
+    // 'restrictAxis',
+    undefined,
+    // 'snapGrid',
+    (o) => {
+        if(Number.isFinite(o.snapAngle) === false) return;
+        o.snapAngle = snapAngle;
+    },
+    // 'timeTrap'
+    undefined,
+    // 'changeSize'
+    undefined,
+    // 'changeSpeed'
+    undefined,
+    // 'solidColor'
+    undefined,
+    // 'decoration'
+    undefined,
+    // 'changeMap'
+    undefined,
+    // 'tornado'
+    undefined,
+    // 'changeVignette'
+    undefined,
+    // 'pushable'
+    undefined,
     // changeMusic
     undefined,
     // changeShip

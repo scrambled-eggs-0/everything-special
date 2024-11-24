@@ -86,7 +86,7 @@ const u8 = new Uint8Array(buf4);
 const u16 = new Uint16Array(buf4);
 function removeFromMap(me, isConnected=true){
     global.maps[me.mapName].removePlayer(me.player);
-    if(isConnected === true) global.maps[me.mapName].removeClient(me);
+    global.maps[me.mapName].removeClient(me, isConnected);
 
     if(global.maps[me.mapName].players.length === 0) delete global.maps[me.mapName];
     else {
@@ -102,6 +102,8 @@ class Map {
     constructor(name){
         this.players = [];
 
+        this.clients = [];
+
         this.reusablePlayerIds = [];
 
         this.name = name;
@@ -116,16 +118,22 @@ class Map {
         this.reusablePlayerIds.push(p.id);
     }
     addClient(me){
+        this.clients.push(me);
         me.ws.subscribe(this.name);
     }
-    removeClient(me){
-        me.ws.unsubscribe(this.name);
+    removeClient(me, isConnected){
+        this.clients = this.clients.filter(c => c !== me);
+        if(isConnected === true) me.ws.unsubscribe(this.name);
     }
     getInitDataForPlayer(p){
         return [this.players, p.id];
     }
     broadcast(msg){
         global.app.publish(this.name, msg, true, false);
+    }
+    getRandomClient(){
+        if(this.clients.length === 0) return undefined;
+        return this.clients[Math.floor(Math.random() * this.clients.length)];
     }
 }
 

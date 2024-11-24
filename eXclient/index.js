@@ -34,22 +34,22 @@ window.startGame = () => {
 }
 
 // gameloop
-let lastTime, accum, now;
-lastTime = accum = now = 0;
+let lastTime, now;
+lastTime = window.accum = now = 0;
 window.frames = 0;
-const FRAME_TIME = 1000 / 60;
+window.FRAME_TIME = 1000 / 60;
 function run(){
     requestAnimationFrame(run);
 
     now = performance.now();
-    accum += now - lastTime;
+    window.accum += now - lastTime;
     lastTime = now;
 
     // TODO: Get the map from another player
-    if(accum > 2000) accum = 0;
+    if(window.accum > 2000) window.accum = 0;
 
-    while(accum >= 0){
-        accum -= FRAME_TIME;
+    while(window.accum >= 0){
+        window.accum -= window.FRAME_TIME;
         simulate();
     }
 
