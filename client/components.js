@@ -1086,6 +1086,7 @@ const initEffectMap = [
         o.jumpForceObj = {playerForceId: undefined};
 
         o.touchingPlatformer = false;
+        o.canJump = false;
     },
     /*restrictAxis*/
     (o, params) => {
@@ -2189,7 +2190,7 @@ const renderEffectMap = [
             ctx.strokeStyle = o.axisSpeedMultX < 0 ? 'red' : (o.axisSpeedMultX > 1 ? '#c5c500' : 'white');
 
             ctx.beginPath();
-            for(let x = -o.dimensions.x/2; x <= o.dimensions.x/2; x += 50){
+            for(let x = -o.dimensions.x/2; x <= o.dimensions.x/2; x += 100){
                 ctx.moveTo(x,-o.dimensions.y/2);
                 ctx.lineTo(x,o.dimensions.y/2);
             }
@@ -2200,7 +2201,7 @@ const renderEffectMap = [
             ctx.strokeStyle = o.axisSpeedMultY < 0 ? 'red' : (o.axisSpeedMultY > 1 ? '#c5c500' : 'white');
 
             ctx.beginPath();
-            for(let y = -o.dimensions.y/2; y <= o.dimensions.y/2; y += 50){
+            for(let y = -o.dimensions.y/2; y <= o.dimensions.y/2; y += 100){
                 ctx.moveTo(-o.dimensions.x/2,y);
                 ctx.lineTo(o.dimensions.x/2,y);
             }

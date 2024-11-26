@@ -513,6 +513,19 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
     //     }
     // }
 
+    if(window.disconnected === true){
+        let txt = 'Disconected From Server.'.split('');
+        for(let i = 0; i < txt.length; i++) {if(Math.random() < 0.03) txt[i] = '#';}
+        txt = txt.join('');
+        ctx.font = '81px Inter';
+        ctx.fillStyle = '#00ff41';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(txt, canvas.w - 30, canvas.h - 50);
+        ctx.font = '28px Inter';
+        ctx.fillText('You may still play the current map but cannot win or leave.', canvas.w - 30, canvas.h - 18);
+    }
+
     if(window.distortionsActive === true) window.renderGl();
 }
 

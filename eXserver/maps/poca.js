@@ -7,6 +7,10 @@
     
         const obs = [
             {
+                type:'stopPlatJump',
+                x:3300,y:1200,w:2150,h:10,
+            },
+            {
                 "x": 4300,
                 "y": 1150,
                 "w": 50,
@@ -19,6 +23,10 @@
                 },
                 "direction": "down",
                 "inView": false
+            },
+            {
+                type:'stopPlatJump',
+                x:3300,y:1200,w:2150,h:10,
             },
             {
                 "x": 4350,
@@ -13068,7 +13076,7 @@
             // },
         ];
     
-        const str = convertOldExMap(obs, enemies, safes, texts, counter);
+        const str = convertOldExMap(obs, enemies, safes, texts, counter, 'poca');
         
         eval(str);
     

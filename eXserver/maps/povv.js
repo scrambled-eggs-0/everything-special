@@ -37780,7 +37780,7 @@
                         ctx.moveTo(o.pos.x, o.pos.y);
                         o.renderShape(o);
                     })
-                }         
+                }
             }
         }
 
@@ -37790,6 +37790,11 @@
             r: 50,
             musicPath: 'https://www.youtube.com/watch?v=q9LqCb8WnSw'
         });
+
+        C(1,[],[3],{x:16900,y:19200,w:2000,h:0,cr:()=>{},ef:(p)=>{
+            p.axisSpeedMultY = 0;
+            p.touchingNormalIndexes.length = 0;
+        }})
 
         if(window.isServer !== true){
             const ids = [1809, 1793, 1806, 1791];

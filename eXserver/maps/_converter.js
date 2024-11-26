@@ -1457,7 +1457,8 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                 h: params.bound.h * 2
             };
             counter++;
-            const maxSwitchTime = params.switchTime*60; 
+            const maxSwitchTime = special === 'poca' ? params.switchTime*60*2.5 : params.switchTime*60; 
+            
             return `
             var xv${counter} = ${params.xv/42*4};
             var yv${counter} = ${params.yv/42*4};
@@ -1631,7 +1632,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
             counter++;
             if(window.isServer === true) return `\n`;
             let alwaysOverrideAngle = undefined;
-            if(special !== 'povv' && params.flashlightDir !== undefined) alwaysOverrideAngle = params.flashlightDir;
+            if(special !== 'povv' && special !== 'poca' && params.flashlightDir !== undefined) alwaysOverrideAngle = params.flashlightDir;
             return `
             var xv${counter} = ${params.xv/33};
             var yv${counter} = ${params.yv/33};
@@ -2689,6 +2690,15 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
             }});\n`,
             counter++;
             continue;
+        } else if(o.type === 'stopPlatJump' && special === 'poca'){
+            o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
+            str += `C(1,[],[3],{x:${o.x},y:${o.y},w:${o.w},h:${o.h},cr:()=>{},ef:(p)=>{
+                p.touchingNormalIndexes.length = 0;
+                p.lastTouchingNormalIndexes.length = 0;
+                obstacles[140].canJump = false;
+                obstacles[140].midairStoredJump = false;
+            }})\n`;
+            continue;
         } else if(special === 'poqt' && o.type === 'normal' && o.canJump === false && o.x > 46750/2 && o.x < 50350/2){
             o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
             str += `C(1,[],[3],{x:${o.x},y:${o.y},w:${o.w},h:${o.h},cr:(o)=>{
@@ -2709,6 +2719,73 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
         }
 
         if(special === 'povv' || special === 'posc' || special === 'poqt'){
+            if(special === 'poqt' && o.x < 2000 && o.y < 1200 && (o.type === 'door' || o.type === 'button')){
+                if(o.type === 'door'){
+                    o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
+                    let resetX = o.x;
+                    str += `window.morphsTriggered[${o.id}]=false;var x${o.id}=${o.x};C(1,[],[0],{y:${o.y},x:${o.x},w:${o.w},h:${o.h},
+                        cr:(o)=>{
+                            ctx.beginPath();
+                            ctx.rect(x${o.id}, o.pos.y, o.dimensions.x, o.dimensions.y);// 5 and -10
+    
+                            ctx.globalAlpha = 1;
+                            if(window.morphsTriggered[${o.id}] === true){
+                                o.pos.x = -1E9;
+                                ctx.globalAlpha = 0.3;
+                            } else {
+                                o.pos.x = ${resetX};
+                            }
+                            ctx.fillStyle = '#787878';
+    
+                            ctx.fill();
+    
+                            ctx.strokeStyle = 'rgb(0, 0, 0)';
+                            ctx.lineWidth = 8;
+                            ctx.globalAlpha = window.morphsTriggered[${o.id}] === true ? 0.5 : 1;
+    
+                            ctx.stroke();
+                            ctx.closePath();
+                            ctx.globalAlpha = 1;// maybe a light effect like mirror?
+                        }
+                    }); var c = window.obstacles[window.obstacles.length-1]; window.linkDoors[${o.id}] = {pos: {x: c.pos.x, y: c.pos.y}, dimensions: {x: c.dimensions.x, y: c.dimensions.y}};\n`;
+                    continue;
+                } else {
+                    o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
+                    str += `window.morphsTriggered[${o.id}]=false;C(1,[],[3],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},
+                        cr:(e)=>{
+                            ctx.globalAlpha = 0.8;
+                            if (window.morphsTriggered[${o.id}] === true) {
+                                ctx.globalAlpha = 0.3;
+                            }
+    
+                            ctx.strokeStyle = ctx.fillStyle = 'white';
+    
+                            ctx.fillRect(e.topLeft.x, e.topLeft.y, e.dimensions.x, e.dimensions.y);
+                            ctx.globalAlpha *= 1 / 0.8;
+                            ctx.strokeRect(e.topLeft.x, e.topLeft.y, e.dimensions.x, e.dimensions.y);
+    
+                            ctx.fillStyle = colors.tile;
+                            ctx.fillRect(
+                                e.topLeft.x + 15,
+                                e.topLeft.y + 15,
+                                e.dimensions.x - 30,
+                                e.dimensions.y - 30
+                            );
+    
+                            ctx.globalAlpha = 1;
+                        },
+                        ef:(e) => {
+                            window.morphsTriggered[${o.id}] = true;
+                        },
+                        sf:(o,p)=>{
+                            if(p.pos.x < 250 && p.pos.y < 450){
+                                window.morphsTriggered[${o.id}]=false;
+                            }    
+                        }
+                    }); var c = window.obstacles[window.obstacles.length-1]; window.linkButtons[${o.id}] = {pos: {x: c.pos.x, y: c.pos.y}, dimensions: {x: c.dimensions.x, y: c.dimensions.y}};\n`
+                }
+                continue;
+            }
             if(o.type === 'door'){
                 o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
                 str += `window.morphsTriggered[${o.id}]=false;var x${o.id}=${o.x};C(1,[],[0],{y:${o.y},x:${o.x},w:${o.w},h:${o.h},

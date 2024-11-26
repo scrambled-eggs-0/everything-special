@@ -808,10 +808,10 @@ window.obsArr.push(...[
 // // LAYER 2.5 
 window.obsArr.push(...[
     `C(2,[],[10],{"points":[[9500,2700],[9600,2600],[9700,2700],[9600,2800]],"maxStrength":60,"regenTime":100,"healSpeed":1,"x":0,"y":0})`,
-    `C(0,[2],[1],{"r":100,"boundPlayer":false,"x":8700,"y":3400,"growSpeed":0.0006,"shrinkSpeed":0.0006,"maxGrowth":1,"minGrowth":0.5,"startGrowth":1,"toStartGrowing":true})`,
+    `C(0,[2],[1],{"r":100,"boundPlayer":false,"x":8700,"y":3400,"growSpeed":0.0006*1000/60,"shrinkSpeed":0.0006*1000/60,"maxGrowth":1,"minGrowth":0.5,"startGrowth":1,"toStartGrowing":true})`,
     `C(2,[],[19],{"points":[[8900,3600],[9100,3600],[9000,3800]],"speedMult":2.5,"speedChangePermanent":false,"x":0,"y":0})`,
     `C(0,[],[15],{"r":100,"axisSpeedMultX":-1,"axisSpeedMultY":-1,"x":10200,"y":3700})`,
-    `C(0,[2],[1],{"r":100,"boundPlayer":false,"x":8700,"y":3400,"growSpeed":0.0006,"shrinkSpeed":0.0006,"maxGrowth":1,"minGrowth":0.5,"startGrowth":1,"toStartGrowing":true})`,
+    `C(0,[2],[1],{"r":100,"boundPlayer":false,"x":8700,"y":3400,"growSpeed":0.0006*1000/60,"shrinkSpeed":0.0006*1000/60,"maxGrowth":1,"minGrowth":0.5,"startGrowth":1,"toStartGrowing":true})`,
     `C(0,[0],[16],{
         x: 10500, y: 2800, r: 100,
         snapDistanceX: 100, snapDistanceY: 100,
@@ -9483,14 +9483,112 @@ if(window.isServer !== true){
     C(1,[],[26],{x:0,y:0,w:1E6,h:1E6,musicPath:'https://www.youtube.com/watch?v=dHID5Yv-Z0s'});
     musicObs = obstacles[obstacles.length-1];
 }
+setTimeout(() => {
+    {let textX, textY;
+    let textAngle = Math.random() * Math.PI * 2;
+    let textXV = Math.cos(textAngle) * 16;
+    let textYV = Math.sin(textAngle) * 16;
+    C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
+        const p = window.players[window.selfId];
+        if(p.dead === true){
+            if(textX === undefined){
+                textX = canvas.w/2;
+                textY = canvas.h/2;
+            }
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.save();
+            ctx.translate((camera.x-canvas.w/2), (camera.y-canvas.h/2));
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = 'white';
+            ctx.font = "68px Inter";
 
-C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
-    const p = window.players[window.selfId];
-    if(p.dead === true){
-        ctx.save();
-        ctx.translate(-camera.x+canvas.w/2, -camera.y+canvas.h/2);
-        ctx.font = "42px Inter";
-        ctx.fillText("R To Respawn", 0, canvas.h/2);
-        ctx.restore();
-    }
-}})
+            const dimensions = ctx.measureText("Press R To Respawn!");
+            const w = dimensions.actualBoundingBoxRight + dimensions.actualBoundingBoxLeft;
+            const h = dimensions.actualBoundingBoxDescent + dimensions.actualBoundingBoxAscent;
+
+            textX += textXV;
+            textY += textYV;
+
+            if(textX-w/2 < 0 || textX+w/2 > canvas.w) textXV *= -1;
+            if(textY-h/2 < 0 || textY+h/2 > canvas.h) textYV *= -1;
+
+            ctx.fillText("Press R To Respawn!", textX, textY);// canvas.w/2, canvas.h * (0.5 + Math.sin(window.frames/60)*0.02+0.4)
+            ctx.restore();
+        } else {
+            textX = textY = undefined;
+        }
+    }});}
+
+    {let textX, textY;
+    let textAngle = Math.random() * Math.PI * 2;
+    let textXV = Math.cos(textAngle) * 16;
+    let textYV = Math.sin(textAngle) * 16;
+    C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
+        const p = window.players[window.selfId];
+        if(p.dead === true){
+            if(textX === undefined){
+                textX = canvas.w/2;
+                textY = canvas.h/2;
+            }
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.save();
+            ctx.translate((camera.x-canvas.w/2), (camera.y-canvas.h/2));
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = 'white';
+            ctx.font = "68px Inter";
+
+            const dimensions = ctx.measureText("Press R To Respawn!");
+            const w = dimensions.actualBoundingBoxRight + dimensions.actualBoundingBoxLeft;
+            const h = dimensions.actualBoundingBoxDescent + dimensions.actualBoundingBoxAscent;
+
+            textX += textXV;
+            textY += textYV;
+
+            if(textX-w/2 < 0 || textX+w/2 > canvas.w) textXV *= -1;
+            if(textY-h/2 < 0 || textY+h/2 > canvas.h) textYV *= -1;
+
+            ctx.fillText("Press R To Respawn!", textX, textY);// canvas.w/2, canvas.h * (0.5 + Math.sin(window.frames/60)*0.02+0.4)
+            ctx.restore();
+        } else {
+            textX = textY = undefined;
+        }
+    }});}
+
+    {let textX, textY;
+    let textAngle = Math.random() * Math.PI * 2;
+    let textXV = Math.cos(textAngle) * 16;
+    let textYV = Math.sin(textAngle) * 16;
+    C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
+        const p = window.players[window.selfId];
+        if(p.dead === true){
+            if(textX === undefined){
+                textX = canvas.w/2;
+                textY = canvas.h/2;
+            }
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.save();
+            ctx.translate((camera.x-canvas.w/2), (camera.y-canvas.h/2));
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = 'white';
+            ctx.font = "68px Inter";
+
+            const dimensions = ctx.measureText("Press R To Respawn!");
+            const w = dimensions.actualBoundingBoxRight + dimensions.actualBoundingBoxLeft;
+            const h = dimensions.actualBoundingBoxDescent + dimensions.actualBoundingBoxAscent;
+
+            textX += textXV;
+            textY += textYV;
+
+            if(textX-w/2 < 0 || textX+w/2 > canvas.w) textXV *= -1;
+            if(textY-h/2 < 0 || textY+h/2 > canvas.h) textYV *= -1;
+
+            ctx.fillText("Press R To Respawn!", textX, textY);// canvas.w/2, canvas.h * (0.5 + Math.sin(window.frames/60)*0.02+0.4)
+            ctx.restore();
+        } else {
+            textX = textY = undefined;
+        }
+    }});}
+}, 1000)

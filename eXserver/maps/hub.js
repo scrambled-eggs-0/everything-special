@@ -13092,6 +13092,22 @@
             const x = 4300;
             const portalSize = 200;
             C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
+                let cullingMinX = camera.x-canvas.w/2;
+                let cullingMaxX = camera.x+canvas.w/2;
+                let cullingMinY = camera.y-canvas.h/2;
+                let cullingMaxY = camera.y+canvas.h/2;
+
+                const o = {
+                    topLeft: {
+                        x, y: 0
+                    },
+                    dimensions: {
+                        x: 1000,
+                        y: 4300
+                    }
+                }
+                if(o.topLeft.x > cullingMaxX || o.topLeft.x + o.dimensions.x < cullingMinX || o.topLeft.y > cullingMaxY || o.topLeft.y + o.dimensions.y < cullingMinY) return;
+
                 const p = window.players[window.selfId];
                 ctx.globalAlpha = 0.33 + Math.max(0, 4300 - p.pos.y) / 4300 * .035;// + Math.sin(window.frames / 60) * 0.1;
 

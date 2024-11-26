@@ -6,7 +6,7 @@ const {decodeText} = Utils;
 
 const HOST = location.origin.replace(/^http/, 'ws');
 let ws, nextMsgFlag, gameStarted = false;
-
+window.disconnected = false;
 const messageQueue = [];
 window.send = (data) => {
     messageQueue.push(data);
@@ -38,6 +38,7 @@ function initWS() {
     }
 
     ws.onclose = () => {
+        if(window.username !== null) window.disconnected = true;
         console.log('Websocket closed.');// Attempting to reconnect...
         // TODO: reconnection.
         window.send = () => {};

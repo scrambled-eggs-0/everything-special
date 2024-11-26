@@ -5361,7 +5361,7 @@ C(1, [3], [3], {
 		}
 	},
 	sf: (e) => {
-		if (e.timeDead > 120){
+		if (e.timeDead > 120 && players[selfId].pos.y > 5000){
 			players[selfId].pos.x = 540250;
 			players[selfId].pos.y = 750;
 			players[selfId].dead = false;
