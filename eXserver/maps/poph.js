@@ -5264,7 +5264,7 @@ function spawnObs(data){
 			}
 			
 			obj.pivotX = goalObj.pivotX + (10000 - goalObj.x);
-			obj.pivotY = goalObj.pivotY + (5000 - goalObj.y);
+			obj.pivotY = goalObj.pivotY + (10000 - goalObj.y);
 		}
 
 		obj.vx = data.vx;
