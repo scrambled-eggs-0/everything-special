@@ -6,7 +6,11 @@
         let counter = 8000;
 
         C(1,[],[19],{x:18500,y:14050,w:400,h:50,speedMult:1/3,speedChangePermanent:false});
-        C(1,[],[15],{x:9400,y:17700,w:100,h:200,axpsSpeedMultX: 0, axisSpeedMultY:0})
+        C(1,[],[15],{x:9400,y:17700,w:100,h:200,axisSpeedMultX: 0, axisSpeedMultY:0})
+
+        C(1,[],[13],{x:9750,y:17700,w:100,h:200,conveyorForce:1,conveyorAngle:180,conveyorAngleRotateSpeed:0,conveyorFriction:0.1})
+
+        C(1,[],[12],{x:11950,y:17700,w:750,h:350,tpx:12450,tpy:18350});
     
         const obs = [
             {

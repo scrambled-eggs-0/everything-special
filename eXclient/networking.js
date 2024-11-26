@@ -91,7 +91,7 @@ const messageMap = [
         window.authId = u32[1];
 
         // TEMP
-        const username = localStorage.getItem('username');
+        const username = window.username = localStorage.getItem('username');
         const password = localStorage.getItem('password');
         if(username === null || password === null){
             // get tutorial

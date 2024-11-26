@@ -13104,7 +13104,6 @@
                     const {r,g,b} = difficultyColorsRgb[i];
 
                     const a = 1 - Math.min(1,Math.abs(p.pos.y - y) / 800);
-                    console.log(`rgba(${r},${g},${b},${a})`);
                     grad.addColorStop(t, `rgba(${r},${g},${b},${a})`);
 
                     yPositions.push(y);
