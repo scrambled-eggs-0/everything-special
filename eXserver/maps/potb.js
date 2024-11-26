@@ -1,5 +1,13 @@
 if(window.isServer !== true){
 
+var or = window.render; window.render = (...params) => {
+    or(...params);
+    const p = window.players[window.selfId];
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 1000;
+    ctx.strokeRect(-1000/2,-1000/2,canvas.w+1000,canvas.h+1000);
+}
+
 var counter = 10000;// add 1000 for every new map so color changers dont conflict
 
 var obs = [
@@ -738,7 +746,7 @@ function createRawFromText(txt){
 //     boundPlayer: true,
 //     restAngles: [0, Math.PI],
 //     toRest: true,
-//     homingRotateSpeed: 0.01,
+//     homingRotateSpeed: 0.01*1000/60,
 //     detectionRadius: 100,
 //     spokeAngles: [0, Math.PI],
 //     pivotX: 10100,
@@ -775,10 +783,9 @@ window.obsArr.push(...[
     "C(0,[],[2],{\"r\":100,\"bounciness\":1,\"decay\":0.98,\"x\":9900,\"y\":2800})",
     "C(1,[],[0],{\"w\":200,\"h\":200,\"x\":9200,\"y\":3300})",
     "C(4,[],[12],{\"r\":100,\"innerRadius\":40.64241808749951,\"startSliceAngle\":0.30379966049688445,\"endSliceAngle\":1.0130537215644402,\"endSliceAngleRotateSpeed\":0.004801857239320743,\"startSliceAngleRotateSpeed\":-0.0004234700543029213,\"tpx\":9600,\"tpy\":3100,\"x\":9900,\"y\":3400})",
-    "C(1,[],[16],{\"w\":200,\"h\":200,\"toSnapX\":true,\"toSnapY\":true,\"snapDistanceX\":100,\"snapDistanceY\":100,\"snapCooldown\":676,\"snapAngle\":0,\"snapAngleRotateSpeed\":-0.023,\"x\":9500,\"y\":3400})",
+    "C(1,[],[16],{\"w\":200,\"h\":200,\"toSnapX\":true,\"toSnapY\":true,\"snapDistanceX\":100,\"snapDistanceY\":100,\"snapCooldown\":676*60/1000,\"snapAngle\":0,\"snapAngleRotateSpeed\":-0.023*1000/60,\"x\":9500,\"y\":3400})",
     "C(0,[],[7],{\"r\":100,\"coinAmount\":3,\"color\":\"#d6d611\",\"x\":9200,\"y\":3100})",
     "C(4,[],[8],{\"r\":100,\"innerRadius\":80,\"startSliceAngle\":0.38006924183255364,\"endSliceAngle\":5.781138491161774,\"startSliceAngleRotateSpeed\":0,\"endSliceAngleRotateSpeed\":0,\"coindoorCoinAmount\":3,\"coinDoorColor\":\"#d6d611\",\"x\":10000,\"y\":3100})",
-    "C(2,[],[10],{\"points\":[[9500,2700],[9600,2800],[9700,2700],[9600,2600]],\"maxStrength\":1000,\"regenTime\":600,\"healSpeed\":0.6,\"x\":0,\"y\":0})",
     "C(0,[],[13],{\"r\":100,\"conveyorForce\":0.3,\"conveyorAngle\":90,\"conveyorAngleRotateSpeed\":0,\"conveyorFriction\":0.8,\"x\":9400,\"y\":2500})",
     "C(4,[],[15],{\"r\":100,\"innerRadius\":15.551755296935532,\"startSliceAngle\":0.5554132385054658,\"endSliceAngle\":5.067483808732879,\"endSliceAngleRotateSpeed\":0.0031502474922624635,\"startSliceAngleRotateSpeed\":0.0001404600416380597,\"axisSpeedMultX\":0,\"axisSpeedMultY\":1,\"x\":9800,\"y\":2500})",
     "C(1,[],[27],{\"w\":200,\"h\":200,\"changeShipStateTo\":true,\"initialShipAngle\":-Math.PI/2,\"shipTurnSpeed\":0.0031415926535897934,\"x\":10100,\"y\":2700})",
@@ -790,9 +797,9 @@ window.obsArr.push(...[
     "var tutorialMorphTriggered = false;\nC(0,[],[0],{r:100,y:3100,x:8900,\n    cr:(e)=>{\n        if(tutorialMorphTriggered){\n            e.pos.x = -1E9;\n            return;\n        }\n        ctx.beginPath();\n        let middleX = e.topLeft.x; let middleY = e.topLeft.y;\n        middleX += e.dimensions.x / 2;\n        middleY += e.dimensions.y / 2;\n        ctx.translate(middleX, middleY);\n        ctx.fillStyle = colors.tile;\n        for(let i = 0; i < 100; i++){\n            const t = Math.PI * 2 * i / 100;\n            const a = Math.sin(window.time / 1000) * 8;\n\n            let x = Math.cos(t) * 100 * (Math.cos(8*t + a) / 8 + 0.9);\n            let y = Math.sin(t) * 100 * (Math.sin(8*t + a) / 8 + 0.9);\n\n            if(i === 0){\n                ctx.moveTo(x,y);\n            } else {\n                ctx.lineTo(x,y);\n            }\n        }\n        ctx.fill();\n        ctx.closePath();\n        ctx.translate(-middleX, -middleY);\n    }\n});",
     "C(2,[1],[0],{\"points\":[[9500,3850],[9500,3750],[9700,3700],[9700,3900]],\"x\":0,\"y\":0,\"initialRotation\":0,\"rotateSpeed\":0.001,\"pivotX\":9600,\"pivotY\":3800})",
     "C(0,[],[5],{\"r\":100,\"x\":9100,\"y\":2500})",
-    "C(1,[5],[1],{h:60,w:200,y:2500-30,x:10000,\n    boundPlayer: true,\n    restAngles: [0, Math.PI],\n    toRest: true,\n    homingRotateSpeed: 0.0007,\n    detectionRadius: 150,\n    spokeAngles: [0, Math.PI],\n    pivotX: 10100,\n    pivotY: 2500\n});",
+    "C(1,[5],[1],{h:60,w:200,y:2500-30,x:10000,\n    boundPlayer: true,\n    restAngles: [0, Math.PI],\n    toRest: true,\n    homingRotateSpeed: 0.0007*1000/60,\n    detectionRadius: 150,\n    spokeAngles: [0, Math.PI],\n    pivotX: 10100,\n    pivotY: 2500\n});",
     "C(0,[],[0],{x:10100,y:2500,r:59,cr:(e)=>{\n    ctx.fillStyle = window.colors.tile;\n    ctx.beginPath();\n    ctx.arc(e.pos.x, e.pos.y, e.sat.r, 0, Math.PI * 2);\n    ctx.fill();\n    ctx.closePath();\n\n    ctx.strokeStyle = 'red';\n    ctx.lineWidth = 15;\n    ctx.beginPath();\n    ctx.arc(\n        e.pos.x,\n        e.pos.y,\n        Math.max(e.sat.r - 30, 0),\n        0,\n        Math.PI * 2\n    );\n    ctx.stroke();\n    ctx.closePath();\n}});",
-    "C(1,[],[17],{\"w\":200,\"h\":200,\"timeTrapMaxTime\":1000,\"timeTrapRecoverySpeed\":3,\"timeTrapToKill\":true,\"timeTrapToShowTenth\":true,\"x\":9200,\"y\":2100})",
+    "C(1,[],[17],{\"w\":200,\"h\":200,\"timeTrapMaxTime\":60,\"timeTrapRecoverySpeed\":3,\"timeTrapToKill\":true,\"timeTrapToShowTenth\":true,\"x\":9200,\"y\":2100})",
     // "C(0,[],[26],{\"r\":100,\"musicPath\":\"https://www.youtube.com/watch?v=LlXqegSTUr0\",\"x\":9600,\"y\":3100})", // what we did in the desert is goated asf
     "C(4,[],[9],{\"r\":100,\"innerRadius\":0,\"startSliceAngle\":0,\"endSliceAngle\":Math.PI*3/2,\"endSliceAngleRotateSpeed\":-0.001,\"startSliceAngleRotateSpeed\":-0.001,\"checkpointOffsetX\":0,\"checkpointOffsetY\":0,\"x\":9600,\"y\":2200})",
     "C(2,[],[25],{\"points\":[[10000,2100],[10000,2300],[9800,2200]],\"pushAngle\":0,\"maxPushDistance\":100,\"idlePushBackSpeed\":0.25,\"positiveDirectionOnly\":false,\"pushConversionRatio\":0.8,\"x\":0,\"y\":0})"
@@ -800,6 +807,7 @@ window.obsArr.push(...[
 
 // // LAYER 2.5 
 window.obsArr.push(...[
+    `C(2,[],[10],{"points":[[9500,2700],[9600,2600],[9700,2700],[9600,2800]],"maxStrength":60,"regenTime":100,"healSpeed":1,"x":0,"y":0})`,
     `C(0,[2],[1],{"r":100,"boundPlayer":false,"x":8700,"y":3400,"growSpeed":0.0006,"shrinkSpeed":0.0006,"maxGrowth":1,"minGrowth":0.5,"startGrowth":1,"toStartGrowing":true})`,
     `C(2,[],[19],{"points":[[8900,3600],[9100,3600],[9000,3800]],"speedMult":2.5,"speedChangePermanent":false,"x":0,"y":0})`,
     `C(0,[],[15],{"r":100,"axisSpeedMultX":-1,"axisSpeedMultY":-1,"x":10200,"y":3700})`,
@@ -811,9 +819,9 @@ window.obsArr.push(...[
         toSnapY: true,
         snapDistanceX: 100,
         snapDistanceY: 100,
-        snapCooldown: 800,
+        snapCooldown: 800*60/1000,
         snapAngle: 0, snapAngleRotateSpeed: 0,
-        currentPoint: 0,
+        currentPoint: 1,
         path: [[0,0,0.3],[100,300,0.3]]
     })`,
     `C(1,[1],[12],{
@@ -1285,7 +1293,7 @@ window.obsArr.push(...[
 
             ctx.strokeStyle = '#969696';
             ctx.setLineDash([50, 70]);
-            ctx.lineDashOffset = -window.time / 10;
+            ctx.lineDashOffset = -window.frames / 10 * 1000 / 60;
             ctx.lineWidth = 5;
             ctx.globalAlpha = 0.8;
 
@@ -1619,13 +1627,7 @@ window.obsArr.push(...[
         }
         lastPcollided = Pcollided;
         Pcollided = false;    
-    }}); var oldRender = window.render; window.render = (...params) => {
-        oldRender(...params);
-        const p = window.players[window.selfId];
-        ctx.strokeStyle = 'black';
-        ctx.lineWidth = 1000;
-        ctx.strokeRect(-1000/2,-1000/2,canvas.w+1000,canvas.h+1000);
-    }`,
+    }});`,
 
     `var lastTransform;var tOffset2 = 0;var lastPcollided2=false;var Pcollided2 = false;C(1,[],[3],{x:10800,y:3000,w:200,h:200,cr:(o)=>{
         if(importedNois===false) {
@@ -2025,7 +2027,7 @@ window.obsArr.push(...[
 
     `C(2,[],[17],{
         x:0,y:0,points:[[10400,2200],[10600,2100],[10600,2300]],
-        "timeTrapMaxTime":1000,"timeTrapRecoverySpeed":1.65,"timeTrapToKill":false,"timeTrapToShowTenth":false,
+        "timeTrapMaxTime":60,"timeTrapRecoverySpeed":1.65,"timeTrapToKill":false,"timeTrapToShowTenth":false,
         sf:(o,p)=>{
             if(o.timeTrapTime <= 0){
                 p.pos.x = 10200;
@@ -2224,7 +2226,7 @@ window.obsArr.push(...[
         boundPlayer: true,
         restAngles: [Math.PI/3, Math.PI, Math.PI*5/3],
         toRest: true,
-        homingRotateSpeed: 0.0021,
+        homingRotateSpeed: 0.0021 * 1000 / 60,
         detectionRadius: 150,
         spokeAngles: [0, Math.PI*2/3, Math.PI*4/3],
         pivotX: 10700,
@@ -2363,19 +2365,7 @@ window.obsArr.push(...[
 
         angle = Math.atan2(res.overlapV.y, res.overlapV.x);
 
-        function addForce(p, o, xv, yv, xa, ya, vfric, afric){
-            if(p.forces[o.playerForceId] === undefined) {
-                o.playerForceId = p.forces.length;
-                p.forces[o.playerForceId] = [xv, yv, xa, ya, vfric, afric];
-            } else {
-                p.forces[o.playerForceId][0] += xv;
-                p.forces[o.playerForceId][1] += yv;
-                p.forces[o.playerForceId][2] += xa;
-                p.forces[o.playerForceId][3] += ya;
-            }
-        }
-
-        addForce(p, o, 0, 0, Math.cos(angle) * 3 * dt, Math.sin(angle) * 3 * dt, -0.1, -0.1);
+        p.forces.push(Math.cos(angle) * 3 * dt * 3.4, Math.sin(angle) * 3 * dt * 3.4, 0.4)
     }})`,
 
     // normal-boostd
@@ -2408,7 +2398,7 @@ window.obsArr.push(...[
     // 9900 1900 speed and size timetrap (should render as a gradient)
     `{let lastCollided = false;let c=false;C(4,[],[3,17],{
         "r":100,"x":9900,"y":1900,innerRadius: 30, startSliceAngle: Math.PI/6 - Math.PI/2, endSliceAngle: -Math.PI/6 - Math.PI/2, startSliceAngleRotateSpeed:0, endSliceAngleRotateSpeed: 0,
-        "timeTrapMaxTime":4000,"timeTrapRecoverySpeed":3,"timeTrapToKill":false,"timeTrapToShowTenth":true,
+        "timeTrapMaxTime":240,"timeTrapRecoverySpeed":3,"timeTrapToKill":false,"timeTrapToShowTenth":true,
         cr:(o)=>{
             let middleX = o.topLeft.x + o.dimensions.x/2;
             let middleY = o.topLeft.y + o.dimensions.y/2;
@@ -2416,7 +2406,7 @@ window.obsArr.push(...[
             // changeSpeed '#eba500'
             // changeSize (<1) '#1c1852'
 
-            const ga = 0.1 + (0.25 + 0.28) / 2 * (4000 - o.timeTrapTime) / 4000;
+            const ga = 0.1 + (0.25 + 0.28) / 2 * (240 - o.timeTrapTime) / 240;
             const fs = blendColor('#eba500', '#1c1852', (Math.sin(window.time / 1000) + 1) / 2);
 
             let grd = ctx.createRadialGradient(middleX, middleY, 0, middleX, middleY, Math.min(100, (o.dimensions.x + o.dimensions.y)/5));
@@ -2452,7 +2442,7 @@ window.obsArr.push(...[
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
-            ctx.fillText(Math.round(o.timeTrapTime/1000 * 10) / 10, middleX, middleY);
+            ctx.fillText(Math.round(o.timeTrapTime/60 * 10) / 10, middleX, middleY);
 
             ctx.globalAlpha = 1;
         },
@@ -2944,6 +2934,7 @@ window.obsArr.push(...[
 
     // top - octahedron
     `window.numGemsCollected=0;{let fadeTextOffset;const fadeInTime=400;const stayTime=600;const fadeOutTime=400;let fadeText='';let fadeTimer=-1;let collided=false;let particles=[];C(2,[],[3],{"x":0,"y":0,points:[[9600-43*2,1400],[9600,1400-61*2],[9600+43*2,1400],[9600,1400+61*2]],cr:(o)=>{
+        if(window.stopRenderingGems === true) return;
         let offsetX = 0;
         let offsetY = crystalOffset - 1700;
         let offsetAngle = Math.atan2(offsetY, offsetX) + crystalRotation + Math.PI;
@@ -3148,6 +3139,7 @@ window.obsArr.push(...[
 
     // right - cube
     `{let fadeTextOffset;const fadeInTime=400;const stayTime=600;const fadeOutTime=400;let fadeText='';let fadeTimer=-1;let collided=false;let particles=[];C(1,[],[3],{"x":11200,"y":3000,w:200,h:200,cr:(o)=>{
+        if(window.stopRenderingGems === true) return;
         let offsetX = 0;
         let offsetY = crystalOffset - 1700;
         let offsetAngle = Math.atan2(offsetY, offsetX) + crystalRotation + Math.PI*3/2;
@@ -3383,6 +3375,7 @@ window.obsArr.push(...[
 
     // bottom - tetrahedron
     `window.numGemsCollected=0;{let fadeTextOffset;const fadeInTime=400;const stayTime=600;const fadeOutTime=400;let fadeText='';let fadeTimer=-1;let collided=false;let particles=[];C(2,[],[3],{"x":0,"y":0,points:[[9600,4650],[9750,4900],[9450,4900]],cr:(o)=>{
+        if(window.stopRenderingGems === true) return;
         let offsetX = 0;
         let offsetY = crystalOffset - 1700;
         let offsetAngle = Math.atan2(offsetY, offsetX) + crystalRotation;
@@ -3604,6 +3597,7 @@ window.obsArr.push(...[
 
     // left - circle w/ radial lines
     `{let fadeTextOffset;const fadeInTime=400;const stayTime=600;const fadeOutTime=400;let fadeText='';let fadeTimer=-1;let collided=false;let particles=[];C(0,[],[3],{"x":7900,"y":3100,r:100,cr:(o)=>{
+        if(window.stopRenderingGems === true) return;
         let offsetX = 0;
         let offsetY = crystalOffset - 1700;
         let offsetAngle = Math.atan2(offsetY, offsetX) + crystalRotation + Math.PI/2;
@@ -5580,19 +5574,8 @@ for(let i = 0; i < 10; i++){
 
             if(lastColliding === true && colliding === false){
                 const p = window.players[window.selfId];
-                function addForce(p, o, xv, yv, xa, ya, vfric, afric){
-                    if(p.forces[o.playerForceId] === undefined) {
-                        o.playerForceId = p.forces.length;
-                        p.forces[o.playerForceId] = [xv, yv, xa, ya, vfric, afric];
-                    } else {
-                        p.forces[o.playerForceId][0] += xv;
-                        p.forces[o.playerForceId][1] += yv;
-                        p.forces[o.playerForceId][2] += xa;
-                        p.forces[o.playerForceId][3] += ya;
-                    }
-                }
 
-                addForce(p, o, 0, 0, 0, -ropeOffset/10, -0.1, -0.1);
+                p.forces.push(0, -ropeOffset, 0.4);
             }
 
             lastColliding = colliding;
@@ -7823,7 +7806,6 @@ if(window.importNoise !== undefined){
             oldRender(...params);
             ctx.fillStyle = 'black';
             ctx.fillRect(0,0,canvas.w,canvas.h);
-            document.body.style.backgroundColor = 'black';
         }
         
         const THREE = await import("https://cdn.skypack.dev/pin/three@v0.129.0-XYKMzgCzb23GRdwfqj2I/mode=imports,min/optimized/three.js");
@@ -7998,10 +7980,10 @@ if(window.importNoise !== undefined){
         let removedRendererDOMel = false;
 
         const webglResize = () => {
-            camera.aspect = 1600 / 900;
+            camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
         
-            renderer.setSize(1600, 900);
+            renderer.setSize(window.innerWidth, window.innerHeight);
 
             renderer.domElement.style.width = window.innerWidth + "px";
             renderer.domElement.style.height = window.innerHeight + "px";
@@ -8266,7 +8248,6 @@ if(window.importNoise !== undefined){
                                 ctx.textAlign = 'center';
                                 ctx.textBaseline = 'middle';
                                 ctx.fillStyle = 'white';
-                                ctx.translate(o.pos.x, o.pos.y);
                                 const a = Math.PI/2 + Math.sin(window.frames / 42);
                                 ctx.translate(o.pos.x, o.pos.y);
                                 ctx.rotate(a);
@@ -8278,14 +8259,15 @@ if(window.importNoise !== undefined){
 
                         alreadyInnittedCone = true;
                         renderer.domElement.remove();
-                        // removedRendererDOMel = true;
-                        window.resizeFns = window.resizeFns.filter(f => f !== webglResize);
+                        removedRendererDOMel = true;
+                        // window.resizeFns = window.resizeFns.filter(f => f !== webglResize);
 
                         // creating a new canvas
 
                         // CONE DISTORTION
                         (async()=>{
                             obstacles = obstacles.filter(o => o.img === undefined && o.deathTime === undefined);
+                            window.stopRenderingGems = true;
                             window.unTaintCanvas();
                             await window.initDistortion(`#version 300 es
                                 in highp vec4 pos;
@@ -8439,8 +8421,8 @@ if(window.importNoise !== undefined){
                 } else if(state === 'fadeOut'){
                     c.globalAlpha = interpolateBetween(1, 0, stateStartTime, stateEndTime);
                 }
-                if(curText === 5) {c.globalAlpha = ctx.globalAlpha = Math.random();c.globalAlpha}
-                c.fillText(texts[curText], canvas2.w/2, canvas2.h/2);
+                if(curText === 5) {c.globalAlpha = ctx.globalAlpha = Math.random();}
+                c.fillText(texts[curText], canvas2.w/2, canvas2.h/2, curText === 5 ? undefined : canvas.w);
 
                 c.globalAlpha = 1;
             // } else if(animState === 'entrance') {
@@ -8876,6 +8858,7 @@ if(window.importNoise !== undefined){
                                 for(let j = 0; j < obstacles[i].path.length; j++){
                                     obstacles[i].path[j][2] *= 1000 / 60
                                 }
+                                obstacles[i].speed = obstacles[i].pointOn[2];
                             }
                         }
                         
@@ -9500,3 +9483,14 @@ if(window.isServer !== true){
     C(1,[],[26],{x:0,y:0,w:1E6,h:1E6,musicPath:'https://www.youtube.com/watch?v=dHID5Yv-Z0s'});
     musicObs = obstacles[obstacles.length-1];
 }
+
+C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
+    const p = window.players[window.selfId];
+    if(p.dead === true){
+        ctx.save();
+        ctx.translate(-camera.x+canvas.w/2, -camera.y+canvas.h/2);
+        ctx.font = "42px Inter";
+        ctx.fillText("R To Respawn", 0, canvas.h/2);
+        ctx.restore();
+    }
+}})

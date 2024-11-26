@@ -124,8 +124,6 @@ const fullscreen = {
 
 let opaqIndex, len, lastPlayerX, lastPlayerY, lastPlayerRadius, diagonalStartOffset, diagonalDist, overRenderTiles = false, lastGA, j = false, lastNLDX = 0, lastNLDY = 0, cullingMinX=0, cullingMaxX=0, cullingMinY=0, cullingMaxY=0, canvSum=0;
 window.render = (os=window.obstacles, cols=window.colors, players=window.players) => {
-    document.body.style.backgroundColor = cols.tile;
-
     overRenderTiles = false;
     if(window.selfId !== undefined){
         const me = players[window.selfId];
@@ -639,6 +637,7 @@ window.unTaintCanvas = () => {
     canvas.remove();
 
     canvas = window.canvas = newCanvas;
+    canvas.id = "canvas";
     ctx = window.ctx = canvas.getContext('2d');
     resize();
 
