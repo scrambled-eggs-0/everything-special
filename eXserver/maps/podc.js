@@ -15918,7 +15918,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2125,
@@ -15927,7 +15927,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11375,
@@ -15936,7 +15936,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11375,
@@ -15945,7 +15945,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11450,
@@ -15954,7 +15954,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11875,
@@ -15963,7 +15963,7 @@ else require('./_converter.js');
             "h": 125,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11800,
@@ -15972,7 +15972,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6000,
@@ -15984,7 +15984,7 @@ else require('./_converter.js');
             "maxTime": 2.5,
             "cdmult": 3,
             "trapType": "death",
-            "inView": false
+            "inView": true
         },
         {
             "x": 2450,
@@ -15993,38 +15993,7 @@ else require('./_converter.js');
             "h": 300,
             "type": "size",
             "size": 10,
-            "inView": false
-        },
-        {
-            "x": 2175,
-            "y": 608.75,
-            "w": 50,
-            "h": 50,
-            "type": "lavamove",
-            "points": [
-                [
-                    2175,
-                    550
-                ],
-                [
-                    2175,
-                    725
-                ]
-            ],
-            "speed": 150,
-            "currentPoint": 1,
-            "collidable": true,
-            "pointOn": {
-                "x": 2175,
-                "y": 725
-            },
-            "pointTo": {
-                "x": 2175,
-                "y": 550
-            },
-            "xv": 9.184850993605149e-15,
-            "yv": -150,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9850,
@@ -16033,7 +16002,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9550,
@@ -16042,10 +16011,10 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 9732.5,
+            "x": 9677.5,
             "y": 800,
             "w": 100,
             "h": 100,
@@ -16073,10 +16042,10 @@ else require('./_converter.js');
             },
             "xv": 300,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 9732.5,
+            "x": 9677.5,
             "y": 1100,
             "w": 100,
             "h": 100,
@@ -16104,7 +16073,7 @@ else require('./_converter.js');
             },
             "xv": 300,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9875,
@@ -16113,7 +16082,7 @@ else require('./_converter.js');
             "h": 125,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 4800,
@@ -16150,7 +16119,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3250,
@@ -16159,7 +16128,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3200,
@@ -16168,7 +16137,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3325,
@@ -16177,7 +16146,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 20400,
@@ -16191,7 +16160,7 @@ else require('./_converter.js');
                 "y": -15000
             },
             "direction": "up",
-            "inView": false
+            "inView": true
         },
         {
             "x": 19500,
@@ -16200,7 +16169,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13300,
@@ -16214,7 +16183,7 @@ else require('./_converter.js');
                 "y": 0
             },
             "direction": "right",
-            "inView": false
+            "inView": true
         },
         {
             "x": 14600,
@@ -16224,7 +16193,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#4f2222",
             "tileColor": "#a34d4d",
-            "inView": false
+            "inView": true
         },
         {
             "x": 8750,
@@ -16237,7 +16206,7 @@ else require('./_converter.js');
             },
             "type": "check",
             "collected": false,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12800,
@@ -16246,7 +16215,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 501,
@@ -16255,7 +16224,7 @@ else require('./_converter.js');
             "h": 75,
             "color": "#bd0000",
             "type": "block",
-            "inView": false
+            "inView": true
         },
         {
             "x": 550,
@@ -16264,7 +16233,7 @@ else require('./_converter.js');
             "h": 100,
             "color": "#bd0000",
             "type": "block",
-            "inView": false
+            "inView": true
         },
         {
             "x": 575,
@@ -16273,7 +16242,7 @@ else require('./_converter.js');
             "h": 50,
             "color": "#bd0000",
             "type": "block",
-            "inView": false
+            "inView": true
         },
         {
             "x": 11800,
@@ -16282,7 +16251,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "speed",
             "speedInc": 0.25,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11575,
@@ -16290,7 +16259,7 @@ else require('./_converter.js');
             "w": 200,
             "h": 25,
             "type": "rotate-lava",
-            "angle": 1.5,
+            "angle": 12188.250000004122,
             "rotateSpeed": 90,
             "pivotX": 11575,
             "pivotY": 1325,
@@ -16298,8 +16267,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 100.77822185373186,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 11575,
@@ -16307,7 +16276,7 @@ else require('./_converter.js');
             "w": 350,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 28.5,
+            "angle": -12158.250000004122,
             "rotateSpeed": -90,
             "pivotX": 11575,
             "pivotY": 1325,
@@ -16315,8 +16284,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 176.7766952966369,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 11400,
@@ -16325,7 +16294,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11575,
@@ -16334,7 +16303,7 @@ else require('./_converter.js');
             "type": "circle-lava",
             "renderType": "circleR",
             "radius": 25,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12100,
@@ -16343,7 +16312,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 0,
@@ -16435,7 +16404,7 @@ else require('./_converter.js');
                     }
                 ]
             },
-            "inView": false
+            "inView": true
         },
         {
             "x": 10850,
@@ -16444,7 +16413,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10500,
@@ -16452,7 +16421,7 @@ else require('./_converter.js');
             "w": 300,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 0.75,
+            "angle": 6094.12500000084,
             "rotateSpeed": 45,
             "pivotX": 10500,
             "pivotY": 1075,
@@ -16460,8 +16429,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 152.0690632574555,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 12450,
@@ -16474,7 +16443,7 @@ else require('./_converter.js');
             },
             "type": "check",
             "collected": false,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10850,
@@ -16484,7 +16453,7 @@ else require('./_converter.js');
             "type": "trans",
             "collide": false,
             "opaq": 0.2,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10850,
@@ -16493,7 +16462,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10725,
@@ -16509,7 +16478,7 @@ else require('./_converter.js');
                 "g": 0,
                 "b": 0
             },
-            "inView": false
+            "inView": true
         },
         {
             "x": 10725,
@@ -16521,7 +16490,7 @@ else require('./_converter.js');
             "maxTime": 8,
             "cdmult": 3,
             "trapType": "death",
-            "inView": false
+            "inView": true
         },
         {
             "points": [
@@ -16546,7 +16515,7 @@ else require('./_converter.js');
                 "bottom": 350
             },
             "renderType": "poly",
-            "inView": false
+            "inView": true
         },
         {
             "points": [
@@ -16575,7 +16544,7 @@ else require('./_converter.js');
                 "bottom": 275
             },
             "renderType": "poly",
-            "inView": false
+            "inView": true
         },
         {
             "x": 11400,
@@ -16584,7 +16553,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11425,
@@ -16593,7 +16562,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11450,
@@ -16602,7 +16571,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11500,
@@ -16611,7 +16580,7 @@ else require('./_converter.js');
             "h": 43.75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11575,
@@ -16620,7 +16589,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11525,
@@ -16629,7 +16598,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11625,
@@ -16638,7 +16607,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11600,
@@ -16647,7 +16616,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11725,
@@ -16656,7 +16625,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11825,
@@ -16665,7 +16634,7 @@ else require('./_converter.js');
             "h": 125,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11800,
@@ -16674,7 +16643,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11675,
@@ -16683,7 +16652,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11625,
@@ -16692,7 +16661,7 @@ else require('./_converter.js');
             "h": 300,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11650,
@@ -16733,7 +16702,7 @@ else require('./_converter.js');
             "toRotate": false,
             "rotateSpeed": 0,
             "renderType": "circle",
-            "inView": false
+            "inView": true
         },
         {
             "x": 11650,
@@ -16774,15 +16743,15 @@ else require('./_converter.js');
             "toRotate": false,
             "rotateSpeed": 0,
             "renderType": "circle",
-            "inView": false
+            "inView": true
         },
         {
-            "x": 12199.982866248778,
-            "y": 601.3088474153936,
+            "x": 12180.954697465633,
+            "y": 560.7341534560741,
             "w": 100,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 1.5,
+            "angle": 12188.250000000207,
             "rotateSpeed": 90,
             "pivotX": 12150,
             "pivotY": 600,
@@ -16790,16 +16759,16 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 105.90169943749474,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
-            "x": 12123.875071764203,
-            "y": 642.6320082177047,
+            "x": 12168.527871875325,
+            "y": 646.440477643663,
             "w": 100,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 121.5,
+            "angle": 12308.250000000207,
             "rotateSpeed": 90,
             "pivotX": 12150,
             "pivotY": 600,
@@ -16807,16 +16776,16 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 105.90169943749474,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
-            "x": 12126.142061987019,
-            "y": 556.0591443669017,
+            "x": 12100.517430659042,
+            "y": 592.8253689002635,
             "w": 100,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 241.5,
+            "angle": 12428.250000000207,
             "rotateSpeed": 90,
             "pivotX": 12150,
             "pivotY": 600,
@@ -16824,8 +16793,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 105.90169943749474,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 11350,
@@ -16835,10 +16804,10 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#4f2222",
             "tileColor": "#a34d4d",
-            "inView": false
+            "inView": true
         },
         {
-            "x": 11624.166666665677,
+            "x": 11752.499999990147,
             "y": 950,
             "w": 50,
             "h": 51,
@@ -16866,11 +16835,11 @@ else require('./_converter.js');
             },
             "xv": -700,
             "yv": 8.572527594031473e-14,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11725,
-            "y": 591.25,
+            "y": 563.75,
             "w": 75,
             "h": 25,
             "type": "lavamove",
@@ -16897,11 +16866,11 @@ else require('./_converter.js');
             },
             "xv": 9.184850993605149e-15,
             "yv": 150,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11725,
-            "y": 691.25,
+            "y": 663.75,
             "w": 75,
             "h": 25,
             "type": "lavamove",
@@ -16928,11 +16897,11 @@ else require('./_converter.js');
             },
             "xv": 9.184850993605149e-15,
             "yv": 150,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10150,
-            "y": -41.25,
+            "y": -13.75,
             "w": 50,
             "h": 25,
             "type": "lavamove",
@@ -16959,7 +16928,7 @@ else require('./_converter.js');
             },
             "xv": 9.184850993605149e-15,
             "yv": -150,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10325,
@@ -16969,7 +16938,7 @@ else require('./_converter.js');
             "type": "lava-oval",
             "canCollide": true,
             "renderType": "oval",
-            "inView": false
+            "inView": true
         },
         {
             "x": 10150,
@@ -16978,7 +16947,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11150,
@@ -16988,7 +16957,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#a13636",
             "tileColor": "#dc5050",
-            "inView": false
+            "inView": true
         },
         {
             "x": 10000,
@@ -17001,7 +16970,7 @@ else require('./_converter.js');
             },
             "type": "check",
             "collected": false,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9875,
@@ -17010,7 +16979,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9625,
@@ -17019,7 +16988,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 8750,
@@ -17029,7 +16998,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#a15636",
             "tileColor": "#dc8150",
-            "inView": false
+            "inView": true
         },
         {
             "x": 9100,
@@ -17038,7 +17007,7 @@ else require('./_converter.js');
             "h": 250,
             "type": "size",
             "size": 22,
-            "inView": false
+            "inView": true
         },
         {
             "x": 8900,
@@ -17047,7 +17016,7 @@ else require('./_converter.js');
             "h": 450,
             "type": "size",
             "size": 4,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9075,
@@ -17055,7 +17024,7 @@ else require('./_converter.js');
             "w": 100,
             "h": 25,
             "type": "rotate-lava",
-            "angle": 55.916666666666664,
+            "angle": 454350.87499997363,
             "rotateSpeed": 3355,
             "pivotX": 9075,
             "pivotY": 575,
@@ -17063,8 +17032,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 51.53882032022076,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 9100,
@@ -17073,7 +17042,7 @@ else require('./_converter.js');
             "h": 300,
             "type": "size",
             "size": 4,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5150,
@@ -17085,7 +17054,7 @@ else require('./_converter.js');
             "maxTime": 7,
             "cdmult": 3,
             "trapType": "death",
-            "inView": false
+            "inView": true
         },
         {
             "x": 3000,
@@ -17098,7 +17067,7 @@ else require('./_converter.js');
             },
             "type": "check",
             "collected": false,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2850,
@@ -17107,7 +17076,7 @@ else require('./_converter.js');
             "type": "circle-lava",
             "renderType": "circleR",
             "radius": 75,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2975,
@@ -17116,7 +17085,7 @@ else require('./_converter.js');
             "type": "circle-lava",
             "renderType": "circleR",
             "radius": 50,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1300,
@@ -17125,7 +17094,7 @@ else require('./_converter.js');
             "h": 75,
             "color": "#c31818",
             "type": "block",
-            "inView": false
+            "inView": true
         },
         {
             "x": 1325,
@@ -17134,7 +17103,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1175,
@@ -17143,7 +17112,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 0,
@@ -17152,7 +17121,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 250,
@@ -17161,7 +17130,7 @@ else require('./_converter.js');
             "h": 250,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 250,
@@ -17170,7 +17139,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 175,
@@ -17179,7 +17148,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 0,
@@ -17188,7 +17157,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3.061616997868383e-15,
@@ -17197,7 +17166,7 @@ else require('./_converter.js');
             "h": 300,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 0,
@@ -17206,7 +17175,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 300,
@@ -17215,7 +17184,7 @@ else require('./_converter.js');
             "h": 500,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 250,
@@ -17224,7 +17193,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 250,
@@ -17233,7 +17202,7 @@ else require('./_converter.js');
             "type": "circle-lava",
             "renderType": "circleR",
             "radius": 125,
-            "inView": false
+            "inView": true
         },
         {
             "x": 0,
@@ -17242,7 +17211,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 25,
@@ -17251,7 +17220,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 225,
@@ -17260,7 +17229,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 450,
@@ -17269,7 +17238,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 500,
@@ -17278,7 +17247,7 @@ else require('./_converter.js');
             "h": 225,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 475,
@@ -17287,7 +17256,7 @@ else require('./_converter.js');
             "h": 225,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 550,
@@ -17296,10 +17265,10 @@ else require('./_converter.js');
             "h": 300,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 389.16666666669073,
+            "x": 457.50000000024136,
             "y": 250,
             "w": 25,
             "h": 125,
@@ -17327,7 +17296,7 @@ else require('./_converter.js');
             },
             "xv": -100,
             "yv": 1.2246467991473532e-14,
-            "inView": false
+            "inView": true
         },
         {
             "x": 425,
@@ -17336,7 +17305,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 300,
@@ -17345,7 +17314,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 500,
@@ -17354,7 +17323,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 700,
@@ -17363,7 +17332,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 650,
@@ -17372,7 +17341,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 575,
@@ -17381,7 +17350,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 750,
@@ -17390,7 +17359,7 @@ else require('./_converter.js');
             "h": 375,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 675,
@@ -17398,7 +17367,7 @@ else require('./_converter.js');
             "w": 200,
             "h": 25,
             "type": "rotate-normal",
-            "angle": 183.7499999999999,
+            "angle": 6094.125000001893,
             "rotateSpeed": 45,
             "pivotX": 675,
             "pivotY": 550,
@@ -17406,8 +17375,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 100.77822185373186,
-            "unSim": 9.5250000000001,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 775,
@@ -17416,7 +17385,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 750,
@@ -17425,7 +17394,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 650,
@@ -17434,7 +17403,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 550,
@@ -17443,7 +17412,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 625,
@@ -17452,7 +17421,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 675,
@@ -17461,7 +17430,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 750,
@@ -17470,7 +17439,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 750,
@@ -17479,7 +17448,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 0,
@@ -17488,7 +17457,90 @@ else require('./_converter.js');
             "h": 500,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "sat": {
+                "pos": {
+                    "x": 0,
+                    "y": 1000
+                },
+                "angle": 0,
+                "offset": {
+                    "x": 0,
+                    "y": 0
+                },
+                "calcPoints": [
+                    {
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "x": 4250,
+                        "y": 0
+                    },
+                    {
+                        "x": 4250,
+                        "y": 500
+                    },
+                    {
+                        "x": 0,
+                        "y": 500
+                    }
+                ],
+                "edges": [
+                    {
+                        "x": 4250,
+                        "y": 0
+                    },
+                    {
+                        "x": 0,
+                        "y": 500
+                    },
+                    {
+                        "x": -4250,
+                        "y": 0
+                    },
+                    {
+                        "x": 0,
+                        "y": -500
+                    }
+                ],
+                "normals": [
+                    {
+                        "x": 0,
+                        "y": -1
+                    },
+                    {
+                        "x": 1,
+                        "y": 0
+                    },
+                    {
+                        "x": 0,
+                        "y": 1
+                    },
+                    {
+                        "x": -1,
+                        "y": 0
+                    }
+                ],
+                "points": [
+                    {
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "x": 4250,
+                        "y": 0
+                    },
+                    {
+                        "x": 4250,
+                        "y": 500
+                    },
+                    {
+                        "x": 0,
+                        "y": 500
+                    }
+                ]
+            },
+            "inView": true
         },
         {
             "x": 1000,
@@ -17497,7 +17549,7 @@ else require('./_converter.js');
             "h": 950,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2000,
@@ -17506,7 +17558,7 @@ else require('./_converter.js');
             "h": 950,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3000,
@@ -17515,7 +17567,7 @@ else require('./_converter.js');
             "h": 950,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 4000,
@@ -17524,7 +17576,7 @@ else require('./_converter.js');
             "h": 650,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 800,
@@ -17533,7 +17585,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 900,
@@ -17541,7 +17593,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 25,
             "type": "rotate-lava",
-            "angle": -255.99999999999983,
+            "angle": -8125.500000002515,
             "rotateSpeed": -60,
             "pivotX": 900,
             "pivotY": 650,
@@ -17549,8 +17601,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 76.03453162872775,
-            "unSim": 9.341666666666777,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 900,
@@ -17559,7 +17611,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 800,
@@ -17568,7 +17620,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 950,
@@ -17577,7 +17629,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 850,
@@ -17586,7 +17638,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1050,
@@ -17595,7 +17647,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1000,
@@ -17605,7 +17657,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#4d8977",
             "tileColor": "#82c4b0",
-            "inView": false
+            "inView": true
         },
         {
             "x": 1175,
@@ -17614,7 +17666,7 @@ else require('./_converter.js');
             "type": "circle-lava",
             "renderType": "circleR",
             "radius": 75,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1050,
@@ -17623,7 +17675,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1050,
@@ -17632,7 +17684,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1300,
@@ -17641,7 +17693,7 @@ else require('./_converter.js');
             "h": 225,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1350,
@@ -17649,7 +17701,7 @@ else require('./_converter.js');
             "w": 200,
             "h": 25,
             "type": "rotate-lava",
-            "angle": -342.99999999999983,
+            "angle": -8125.500000002252,
             "rotateSpeed": -60,
             "pivotX": 1350,
             "pivotY": 425,
@@ -17657,8 +17709,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 100.77822185373186,
-            "unSim": 7.891666666666849,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 1450,
@@ -17667,7 +17719,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1150,
@@ -17676,7 +17728,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1050,
@@ -17685,7 +17737,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1300,
@@ -17694,11 +17746,11 @@ else require('./_converter.js');
             "h": 350,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1050,
-            "y": 852.5833333333952,
+            "y": 920.2499999993842,
             "w": 125,
             "h": 50,
             "type": "lavamove",
@@ -17713,50 +17765,50 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 70,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
                 "x": 1050,
-                "y": 600
+                "y": 950
             },
             "pointTo": {
                 "x": 1050,
-                "y": 950
-            },
-            "xv": 4.2862637970157365e-15,
-            "yv": 70,
-            "inView": false
-        },
-        {
-            "x": 1175,
-            "y": 697.4166666666048,
-            "w": 125,
-            "h": 50,
-            "type": "lavamove",
-            "points": [
-                [
-                    1175,
-                    950
-                ],
-                [
-                    1175,
-                    600
-                ]
-            ],
-            "speed": 70,
-            "currentPoint": 0,
-            "collidable": true,
-            "pointOn": {
-                "x": 1175,
-                "y": 950
-            },
-            "pointTo": {
-                "x": 1175,
                 "y": 600
             },
             "xv": 4.2862637970157365e-15,
             "yv": -70,
-            "inView": false
+            "inView": true
+        },
+        {
+            "x": 1175,
+            "y": 629.7500000006158,
+            "w": 125,
+            "h": 50,
+            "type": "lavamove",
+            "points": [
+                [
+                    1175,
+                    950
+                ],
+                [
+                    1175,
+                    600
+                ]
+            ],
+            "speed": 70,
+            "currentPoint": 1,
+            "collidable": true,
+            "pointOn": {
+                "x": 1175,
+                "y": 600
+            },
+            "pointTo": {
+                "x": 1175,
+                "y": 950
+            },
+            "xv": 4.2862637970157365e-15,
+            "yv": 70,
+            "inView": true
         },
         {
             "x": 1500,
@@ -17765,7 +17817,7 @@ else require('./_converter.js');
             "h": 500,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "points": [
@@ -17794,7 +17846,7 @@ else require('./_converter.js');
                 "bottom": 850
             },
             "renderType": "poly",
-            "inView": false
+            "inView": true
         },
         {
             "points": [
@@ -17823,7 +17875,7 @@ else require('./_converter.js');
                 "bottom": 725
             },
             "renderType": "poly",
-            "inView": false
+            "inView": true
         },
         {
             "x": 1500,
@@ -17832,7 +17884,7 @@ else require('./_converter.js');
             "h": 300,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1475,
@@ -17841,7 +17893,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1400,
@@ -17850,11 +17902,11 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 1600,
-            "y": 60.83333333326829,
+            "x": 1500,
+            "y": 57.500000000633946,
             "w": 100,
             "h": 100,
             "type": "lavamove",
@@ -17877,19 +17929,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 100,
-            "currentPoint": 1,
+            "currentPoint": 3,
             "collidable": true,
             "pointOn": {
-                "x": 1600,
-                "y": 0
-            },
-            "pointTo": {
-                "x": 1600,
+                "x": 1500,
                 "y": 100
             },
+            "pointTo": {
+                "x": 1500,
+                "y": 0
+            },
             "xv": 6.123233995736766e-15,
-            "yv": 100,
-            "inView": false
+            "yv": -100,
+            "inView": true
         },
         {
             "x": 1700,
@@ -17898,11 +17950,11 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1800,
-            "y": 160.8333333333341,
+            "y": 257.4999999999933,
             "w": 100,
             "h": 100,
             "type": "lavamove",
@@ -17917,19 +17969,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 100,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
                 "x": 1800,
-                "y": 0
+                "y": 300
             },
             "pointTo": {
                 "x": 1800,
-                "y": 300
+                "y": 0
             },
             "xv": 6.123233995736766e-15,
-            "yv": 100,
-            "inView": false
+            "yv": -100,
+            "inView": true
         },
         {
             "x": 1900,
@@ -17938,11 +17990,11 @@ else require('./_converter.js');
             "h": 200,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1550,
-            "y": 639.1666666666124,
+            "y": 542.5000000005383,
             "w": 100,
             "h": 50,
             "type": "lavamove",
@@ -17957,19 +18009,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 100,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
                 "x": 1550,
-                "y": 650
+                "y": 500
             },
             "pointTo": {
                 "x": 1550,
-                "y": 500
+                "y": 650
             },
             "xv": 6.123233995736766e-15,
-            "yv": -100,
-            "inView": false
+            "yv": 100,
+            "inView": true
         },
         {
             "x": 1750,
@@ -17978,7 +18030,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1875,
@@ -17987,7 +18039,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1650,
@@ -17996,7 +18048,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1550,
@@ -18005,7 +18057,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1650,
@@ -18014,7 +18066,7 @@ else require('./_converter.js');
             "h": 125,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1675,
@@ -18023,7 +18075,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1775,
@@ -18032,7 +18084,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1750,
@@ -18041,7 +18093,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1900,
@@ -18050,7 +18102,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1925,
@@ -18059,7 +18111,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12800,
@@ -18069,7 +18121,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#4d6c89",
             "tileColor": "#828dc4",
-            "inView": false
+            "inView": true
         },
         {
             "x": 2050,
@@ -18078,7 +18130,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "lava",
             "canCollide": false,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2400,
@@ -18087,7 +18139,7 @@ else require('./_converter.js');
             "h": 950,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2275,
@@ -18095,15 +18147,15 @@ else require('./_converter.js');
             "w": 50,
             "h": 200,
             "type": "rotatingsafe",
-            "angle": -635.9999999999994,
+            "angle": -12188.250000003052,
             "rotateSpeed": -90,
             "pivotX": 2275,
             "pivotY": 900,
             "distToPivot": 0,
             "canCollide": true,
             "cullingRadius": 103.07764064044152,
-            "unSim": 6.5416666666667815,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 2325,
@@ -18112,10 +18164,10 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 2291.25,
+            "x": 2136.25,
             "y": 450,
             "w": 50,
             "h": 100,
@@ -18131,19 +18183,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
-                "x": 2050,
-                "y": 450
-            },
-            "pointTo": {
                 "x": 2350,
                 "y": 450
             },
-            "xv": 150,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 2050,
+                "y": 450
+            },
+            "xv": -150,
+            "yv": 1.8369701987210297e-14,
+            "inView": true
         },
         {
             "x": 2050,
@@ -18152,7 +18204,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2325,
@@ -18161,7 +18213,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2200,
@@ -18170,7 +18222,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2225,
@@ -18178,7 +18230,7 @@ else require('./_converter.js');
             "w": 350,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 667.4999999999987,
+            "angle": 12188.250000002448,
             "rotateSpeed": 90,
             "pivotX": 2225,
             "pivotY": 175,
@@ -18186,8 +18238,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 176.7766952966369,
-            "unSim": 6.191666666666764,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 2050,
@@ -18196,7 +18248,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2050,
@@ -18205,7 +18257,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2225,
@@ -18214,7 +18266,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2050,
@@ -18223,7 +18275,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2287.5,
@@ -18232,7 +18284,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2175,
@@ -18241,7 +18293,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2125,
@@ -18250,7 +18302,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2125,
@@ -18259,7 +18311,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2375,
@@ -18268,7 +18320,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2375,
@@ -18277,7 +18329,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2525,
@@ -18285,7 +18337,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 150,
             "type": "rotate-lava",
-            "angle": 687.0000000000086,
+            "angle": 12188.25000000242,
             "rotateSpeed": 90,
             "pivotX": 2525,
             "pivotY": 225,
@@ -18293,8 +18345,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 106.06601717798213,
-            "unSim": 5.975000000000087,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 2675,
@@ -18302,7 +18354,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 150,
             "type": "rotate-lava",
-            "angle": -699.0000000000105,
+            "angle": -12188.25000000235,
             "rotateSpeed": -90,
             "pivotX": 2675,
             "pivotY": 75,
@@ -18310,8 +18362,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 106.06601717798213,
-            "unSim": 5.841666666666747,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 2750,
@@ -18320,7 +18372,7 @@ else require('./_converter.js');
             "h": 400,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2650,
@@ -18329,7 +18381,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2650,
@@ -18338,7 +18390,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2450,
@@ -18347,7 +18399,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2550,
@@ -18356,10 +18408,10 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 2691.25,
+            "x": 2536.25,
             "y": 450,
             "w": 50,
             "h": 100,
@@ -18375,22 +18427,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
-                "x": 2450,
-                "y": 450
-            },
-            "pointTo": {
                 "x": 2750,
                 "y": 450
             },
-            "xv": 150,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 2450,
+                "y": 450
+            },
+            "xv": -150,
+            "yv": 1.8369701987210297e-14,
+            "inView": true
         },
         {
-            "x": 2508.75,
+            "x": 2663.75,
             "y": 550,
             "w": 50,
             "h": 100,
@@ -18406,19 +18458,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
-                "x": 2750,
-                "y": 550
-            },
-            "pointTo": {
                 "x": 2450,
                 "y": 550
             },
-            "xv": -150,
-            "yv": 1.8369701987210297e-14,
-            "inView": false
+            "pointTo": {
+                "x": 2750,
+                "y": 550
+            },
+            "xv": 150,
+            "yv": 0,
+            "inView": true
         },
         {
             "x": 2800,
@@ -18427,10 +18479,10 @@ else require('./_converter.js');
             "h": 250,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 2691.25,
+            "x": 2536.25,
             "y": 650,
             "w": 50,
             "h": 100,
@@ -18446,22 +18498,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
-                "x": 2450,
-                "y": 650
-            },
-            "pointTo": {
                 "x": 2750,
                 "y": 650
             },
-            "xv": 150,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 2450,
+                "y": 650
+            },
+            "xv": -150,
+            "yv": 1.8369701987210297e-14,
+            "inView": true
         },
         {
-            "x": 2508.75,
+            "x": 2663.75,
             "y": 750,
             "w": 50,
             "h": 100,
@@ -18477,22 +18529,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
-                "x": 2750,
-                "y": 750
-            },
-            "pointTo": {
                 "x": 2450,
                 "y": 750
             },
-            "xv": -150,
-            "yv": 1.8369701987210297e-14,
-            "inView": false
+            "pointTo": {
+                "x": 2750,
+                "y": 750
+            },
+            "xv": 150,
+            "yv": 0,
+            "inView": true
         },
         {
-            "x": 2691.25,
+            "x": 2536.25,
             "y": 850,
             "w": 50,
             "h": 100,
@@ -18508,19 +18560,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
-                "x": 2450,
-                "y": 850
-            },
-            "pointTo": {
                 "x": 2750,
                 "y": 850
             },
-            "xv": 150,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 2450,
+                "y": 850
+            },
+            "xv": -150,
+            "yv": 1.8369701987210297e-14,
+            "inView": true
         },
         {
             "x": 2450,
@@ -18529,7 +18581,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2800,
@@ -18538,7 +18590,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2475,
@@ -18547,7 +18599,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "coin",
             "collected": false,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2800,
@@ -18557,7 +18609,7 @@ else require('./_converter.js');
             "type": "coindoor",
             "coins": 1,
             "currentCoins": 1,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2950,
@@ -18566,7 +18618,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "coin",
             "collected": false,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2900,
@@ -18575,7 +18627,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2850,
@@ -18584,7 +18636,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2925,
@@ -18593,7 +18645,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2850,
@@ -18602,7 +18654,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2925,
@@ -18610,7 +18662,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 25,
             "type": "rotate-lava",
-            "angle": 956.0000000000143,
+            "angle": 16251.0000000031,
             "rotateSpeed": 120,
             "pivotX": 2925,
             "pivotY": 87.5,
@@ -18618,8 +18670,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 76.03453162872775,
-            "unSim": 5.641666666666737,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 3050,
@@ -18628,7 +18680,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3050,
@@ -18638,11 +18690,11 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#333286",
             "tileColor": "#7351d2",
-            "inView": false
+            "inView": true
         },
         {
             "x": 3200,
-            "y": 167,
+            "y": 51,
             "w": 150,
             "h": 25,
             "type": "lavamove",
@@ -18657,19 +18709,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 120,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
                 "x": 3200,
-                "y": 225
+                "y": 0
             },
             "pointTo": {
                 "x": 3200,
-                "y": 0
+                "y": 225
             },
             "xv": 7.34788079488412e-15,
-            "yv": -120,
-            "inView": false
+            "yv": 120,
+            "inView": true
         },
         {
             "x": 3350,
@@ -18678,7 +18730,7 @@ else require('./_converter.js');
             "h": 250,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3200,
@@ -18687,11 +18739,11 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3200,
-            "y": 358,
+            "y": 474,
             "w": 150,
             "h": 25,
             "type": "lavamove",
@@ -18706,19 +18758,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 120,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
                 "x": 3200,
-                "y": 300
+                "y": 525
             },
             "pointTo": {
                 "x": 3200,
-                "y": 525
+                "y": 300
             },
             "xv": 7.34788079488412e-15,
-            "yv": 120,
-            "inView": false
+            "yv": -120,
+            "inView": true
         },
         {
             "x": 3050,
@@ -18727,7 +18779,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3400,
@@ -18736,7 +18788,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3500,
@@ -18745,7 +18797,7 @@ else require('./_converter.js');
             "h": 250,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3150,
@@ -18754,7 +18806,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3050,
@@ -18763,7 +18815,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3125,
@@ -18772,7 +18824,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3050,
@@ -18781,7 +18833,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3450,
@@ -18790,7 +18842,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3450,
@@ -18799,7 +18851,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3475,
@@ -18808,7 +18860,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3050,
@@ -18817,7 +18869,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3150,
@@ -18826,7 +18878,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3050,
@@ -18835,7 +18887,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3050,
@@ -18844,7 +18896,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3275,
@@ -18852,7 +18904,7 @@ else require('./_converter.js');
             "w": 125,
             "h": 12.5,
             "type": "rotate-lava",
-            "angle": 1488.0000000000146,
+            "angle": 24376.50000000457,
             "rotateSpeed": 180,
             "pivotX": 3275,
             "pivotY": 675,
@@ -18860,8 +18912,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 62.81172263200556,
-            "unSim": 5.341666666666722,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 3425,
@@ -18869,7 +18921,7 @@ else require('./_converter.js');
             "w": 125,
             "h": 12.5,
             "type": "rotate-lava",
-            "angle": -1512.0000000000196,
+            "angle": -24376.50000000453,
             "rotateSpeed": -180,
             "pivotX": 3425,
             "pivotY": 675,
@@ -18877,8 +18929,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 62.81172263200556,
-            "unSim": 5.208333333333382,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 3500,
@@ -18887,7 +18939,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3550,
@@ -18896,7 +18948,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3600,
@@ -18905,7 +18957,7 @@ else require('./_converter.js');
             "h": 300,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3050,
@@ -18914,7 +18966,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "lava",
             "canCollide": false,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3475,
@@ -18922,15 +18974,15 @@ else require('./_converter.js');
             "w": 150,
             "h": 50,
             "type": "rotatingsafe",
-            "angle": 636.0000000000111,
+            "angle": 12188.250000002912,
             "rotateSpeed": 90,
             "pivotX": 3475,
             "pivotY": 900,
             "distToPivot": 0,
             "canCollide": true,
             "cullingRadius": 79.05694150420949,
-            "unSim": 6.5416666666667815,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 3300,
@@ -18938,15 +18990,15 @@ else require('./_converter.js');
             "w": 150,
             "h": 50,
             "type": "rotatingsafe",
-            "angle": -1272.000000000018,
+            "angle": -24376.500000005843,
             "rotateSpeed": -180,
             "pivotX": 3300,
             "pivotY": 900,
             "distToPivot": 0,
             "canCollide": true,
             "cullingRadius": 79.05694150420949,
-            "unSim": 6.5416666666667815,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 3125,
@@ -18954,15 +19006,15 @@ else require('./_converter.js');
             "w": 150,
             "h": 50,
             "type": "rotatingsafe",
-            "angle": 636.0000000000069,
+            "angle": 12188.250000003052,
             "rotateSpeed": 90,
             "pivotX": 3125,
             "pivotY": 900,
             "distToPivot": 0,
             "canCollide": true,
             "cullingRadius": 79.05694150420949,
-            "unSim": 6.5416666666667815,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 3050,
@@ -18971,7 +19023,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "coin",
             "collected": false,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3600,
@@ -18981,7 +19033,7 @@ else require('./_converter.js');
             "type": "coindoor",
             "coins": 3,
             "currentCoins": 3,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3800,
@@ -18990,10 +19042,10 @@ else require('./_converter.js');
             "h": 950,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 3697.416666666419,
+            "x": 3670.2499999975366,
             "y": 750,
             "w": 25,
             "h": 100,
@@ -19021,10 +19073,10 @@ else require('./_converter.js');
             },
             "xv": -70,
             "yv": 8.572527594031473e-15,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 3727.583333333581,
+            "x": 3754.7500000024634,
             "y": 650,
             "w": 25,
             "h": 100,
@@ -19052,10 +19104,10 @@ else require('./_converter.js');
             },
             "xv": 70,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 3697.416666666419,
+            "x": 3670.2499999975366,
             "y": 550,
             "w": 25,
             "h": 100,
@@ -19083,7 +19135,7 @@ else require('./_converter.js');
             },
             "xv": -70,
             "yv": 8.572527594031473e-15,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3650,
@@ -19092,7 +19144,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3750,
@@ -19101,7 +19153,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3550,
@@ -19110,7 +19162,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3675,
@@ -19118,7 +19170,7 @@ else require('./_converter.js');
             "w": 250,
             "h": 100,
             "type": "rotate-lava",
-            "angle": -651.8750000000099,
+            "angle": -10156.875000001844,
             "rotateSpeed": -75,
             "pivotX": 3675,
             "pivotY": 300,
@@ -19126,8 +19178,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 134.6291201783626,
-            "unSim": 4.916666666666701,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 3625,
@@ -19136,7 +19188,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3762.5,
@@ -19145,7 +19197,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3475,
@@ -19154,7 +19206,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3625,
@@ -19163,7 +19215,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3500,
@@ -19172,7 +19224,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3625,
@@ -19181,7 +19233,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3750,
@@ -19190,7 +19242,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3400,
@@ -19199,7 +19251,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3400,
@@ -19208,7 +19260,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3425,
@@ -19217,7 +19269,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3925,
@@ -19225,7 +19277,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 12.5,
             "type": "rotate-lava",
-            "angle": -1417.3333333333433,
+            "angle": -21668.00000000217,
             "rotateSpeed": -160,
             "pivotX": 3925,
             "pivotY": 150,
@@ -19233,8 +19285,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 75.25996611745185,
-            "unSim": 4.750000000000026,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 3925,
@@ -19242,7 +19294,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 12.5,
             "type": "rotate-lava",
-            "angle": 1417.3333333333433,
+            "angle": 21668.00000000217,
             "rotateSpeed": 160,
             "pivotX": 3925,
             "pivotY": 250,
@@ -19250,8 +19302,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 75.25996611745185,
-            "unSim": 4.750000000000026,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 3925,
@@ -19259,7 +19311,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 12.5,
             "type": "rotate-lava",
-            "angle": -1417.3333333333433,
+            "angle": -21668.00000000217,
             "rotateSpeed": -160,
             "pivotX": 3925,
             "pivotY": 350,
@@ -19267,11 +19319,11 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 75.25996611745185,
-            "unSim": 4.750000000000026,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
-            "x": 3879.375,
+            "x": 3856.875,
             "y": 500,
             "w": 62.5,
             "h": 100,
@@ -19287,62 +19339,62 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 75,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
+                "x": 3850,
+                "y": 500
+            },
+            "pointTo": {
                 "x": 3937.5,
                 "y": 500
             },
-            "pointTo": {
-                "x": 3850,
-                "y": 500
-            },
-            "xv": -75,
-            "yv": 9.184850993605149e-15,
-            "inView": false
-        },
-        {
-            "x": 3891.25,
-            "y": 700,
-            "w": 50,
-            "h": 50,
-            "type": "lavamove",
-            "points": [
-                [
-                    3850,
-                    700
-                ],
-                [
-                    3950,
-                    700
-                ],
-                [
-                    3950,
-                    800
-                ],
-                [
-                    3850,
-                    800
-                ]
-            ],
-            "speed": 150,
-            "currentPoint": 0,
-            "collidable": true,
-            "pointOn": {
-                "x": 3850,
-                "y": 700
-            },
-            "pointTo": {
-                "x": 3950,
-                "y": 700
-            },
-            "xv": 150,
+            "xv": 75,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 3908.75,
-            "y": 800,
+            "x": 3850,
+            "y": 786.25,
+            "w": 50,
+            "h": 50,
+            "type": "lavamove",
+            "points": [
+                [
+                    3850,
+                    700
+                ],
+                [
+                    3950,
+                    700
+                ],
+                [
+                    3950,
+                    800
+                ],
+                [
+                    3850,
+                    800
+                ]
+            ],
+            "speed": 150,
+            "currentPoint": 3,
+            "collidable": true,
+            "pointOn": {
+                "x": 3850,
+                "y": 800
+            },
+            "pointTo": {
+                "x": 3850,
+                "y": 700
+            },
+            "xv": 9.184850993605149e-15,
+            "yv": -150,
+            "inView": true
+        },
+        {
+            "x": 3950,
+            "y": 713.75,
             "w": 50,
             "h": 50,
             "type": "lavamove",
@@ -19365,19 +19417,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 0,
+            "currentPoint": 3,
             "collidable": true,
             "pointOn": {
                 "x": 3950,
-                "y": 800
+                "y": 700
             },
             "pointTo": {
-                "x": 3850,
+                "x": 3950,
                 "y": 800
             },
-            "xv": -150,
-            "yv": 1.8369701987210297e-14,
-            "inView": false
+            "xv": 9.184850993605149e-15,
+            "yv": 150,
+            "inView": true
         },
         {
             "x": 3900,
@@ -19386,7 +19438,7 @@ else require('./_converter.js');
             "h": 87.5,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3937.5,
@@ -19394,7 +19446,7 @@ else require('./_converter.js');
             "w": 175,
             "h": 25,
             "type": "rotate-lava",
-            "angle": 1.6666666666666667,
+            "angle": 13542.500000004295,
             "rotateSpeed": 100,
             "pivotX": 3937.5,
             "pivotY": 1037.5,
@@ -19402,8 +19454,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 88.38834764831844,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 4025,
@@ -19413,7 +19465,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#6e4893",
             "tileColor": "#9978c9",
-            "inView": false
+            "inView": true
         },
         {
             "x": 4012.5,
@@ -19422,7 +19474,7 @@ else require('./_converter.js');
             "h": 300,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2850,
@@ -19432,7 +19484,7 @@ else require('./_converter.js');
             "type": "coindoor",
             "coins": 2,
             "currentCoins": 2,
-            "inView": false
+            "inView": true
         },
         {
             "x": 4150,
@@ -19440,7 +19492,7 @@ else require('./_converter.js');
             "w": 175,
             "h": 25,
             "type": "rotate-lava",
-            "angle": -1361.250000000024,
+            "angle": -20313.750000005337,
             "rotateSpeed": -150,
             "pivotX": 4150,
             "pivotY": 900,
@@ -19448,8 +19500,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 88.38834764831844,
-            "unSim": 4.533333333333348,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 4225,
@@ -19458,7 +19510,7 @@ else require('./_converter.js');
             "h": 37.5,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 4225,
@@ -19494,7 +19546,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 4125,
@@ -19503,7 +19555,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 4200,
@@ -19512,7 +19564,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 4050,
@@ -19525,7 +19577,7 @@ else require('./_converter.js');
         },
         {
             "x": 4150,
-            "y": 521.6666666666107,
+            "y": 584.9999999994392,
             "w": 50,
             "h": 25,
             "type": "lavamove",
@@ -19552,7 +19604,7 @@ else require('./_converter.js');
             },
             "xv": 1.2246467991473532e-14,
             "yv": 200,
-            "inView": false
+            "inView": true
         },
         {
             "x": 4300,
@@ -19573,7 +19625,7 @@ else require('./_converter.js');
             "inView": true
         },
         {
-            "x": 4227.333333332981,
+            "x": 4217.9999999964575,
             "y": 350,
             "w": 50,
             "h": 100,
@@ -19604,7 +19656,7 @@ else require('./_converter.js');
             "inView": true
         },
         {
-            "x": 4195.333333332974,
+            "x": 4213.99999999645,
             "y": 250,
             "w": 50,
             "h": 100,
@@ -19632,7 +19684,7 @@ else require('./_converter.js');
             },
             "xv": -320,
             "yv": 3.9188697572715304e-14,
-            "inView": false
+            "inView": true
         },
         {
             "x": 4100,
@@ -19644,7 +19696,7 @@ else require('./_converter.js');
             "inView": true
         },
         {
-            "x": 4224.25,
+            "x": 4114.75,
             "y": 0,
             "w": 50,
             "h": 100,
@@ -19675,7 +19727,7 @@ else require('./_converter.js');
             "inView": true
         },
         {
-            "x": 4100.5,
+            "x": 4173.5,
             "y": 100,
             "w": 50,
             "h": 100,
@@ -19703,7 +19755,7 @@ else require('./_converter.js');
             },
             "xv": -180,
             "yv": 2.2043642384652358e-14,
-            "inView": false
+            "inView": true
         },
         {
             "x": 4550,
@@ -19738,7 +19790,7 @@ else require('./_converter.js');
             "w": 200,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 4626.833333333414,
+            "angle": 46044.500000011285,
             "rotateSpeed": 340,
             "pivotX": 4500,
             "pivotY": 200,
@@ -19755,7 +19807,7 @@ else require('./_converter.js');
             "w": 200,
             "h": 50,
             "type": "rotate-lava",
-            "angle": -4626.833333333414,
+            "angle": -46044.50000001127,
             "rotateSpeed": -340,
             "pivotX": 4550,
             "pivotY": 500,
@@ -19795,7 +19847,7 @@ else require('./_converter.js');
         },
         {
             "x": 4350,
-            "y": 751.5625,
+            "y": 807.8125,
             "w": 100,
             "h": 50,
             "type": "lavamove",
@@ -19810,23 +19862,23 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 187.5,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
                 "x": 4350,
-                "y": 700
+                "y": 950
             },
             "pointTo": {
                 "x": 4350,
-                "y": 950
+                "y": 700
             },
             "xv": 1.1481063742006436e-14,
-            "yv": 187.5,
+            "yv": -187.5,
             "inView": true
         },
         {
             "x": 4450,
-            "y": 858.75,
+            "y": 813.75,
             "w": 100,
             "h": 100,
             "type": "lavamove",
@@ -19841,18 +19893,18 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
                 "x": 4450,
-                "y": 900
+                "y": 700
             },
             "pointTo": {
                 "x": 4450,
-                "y": 700
+                "y": 900
             },
             "xv": 9.184850993605149e-15,
-            "yv": -150,
+            "yv": 150,
             "inView": true
         },
         {
@@ -19871,7 +19923,7 @@ else require('./_converter.js');
             "h": 500,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 4450,
@@ -19880,7 +19932,7 @@ else require('./_converter.js');
             "h": 350,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 4650,
@@ -19888,7 +19940,7 @@ else require('./_converter.js');
             "w": 200,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 6,
+            "angle": 48753.00000001649,
             "rotateSpeed": 360,
             "pivotX": 4650,
             "pivotY": 1125,
@@ -19896,8 +19948,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 103.07764064044152,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 4850,
@@ -19906,10 +19958,10 @@ else require('./_converter.js');
             "h": 550,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 4760.833333332838,
+            "x": 4742.499999995073,
             "y": 850,
             "w": 100,
             "h": 100,
@@ -19950,7 +20002,7 @@ else require('./_converter.js');
         },
         {
             "x": 4800,
-            "y": 663.4166666666048,
+            "y": 572.2499999993842,
             "w": 100,
             "h": 100,
             "type": "lavamove",
@@ -19981,7 +20033,7 @@ else require('./_converter.js');
         },
         {
             "x": 4700,
-            "y": 463.416666666681,
+            "y": 372.2500000001349,
             "w": 100,
             "h": 100,
             "type": "lavamove",
@@ -20012,7 +20064,7 @@ else require('./_converter.js');
         },
         {
             "x": 4800,
-            "y": 263.41666666667203,
+            "y": 172.25000000006233,
             "w": 100,
             "h": 100,
             "type": "lavamove",
@@ -20056,7 +20108,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 25,
             "type": "rotate-lava",
-            "angle": 816.5000000000109,
+            "angle": 8125.499999999874,
             "rotateSpeed": 60,
             "pivotX": 4825,
             "pivotY": 12.5,
@@ -20092,7 +20144,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 4450,
@@ -20101,7 +20153,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5100,
@@ -20149,7 +20201,7 @@ else require('./_converter.js');
             "inView": true
         },
         {
-            "x": 5235.583333332838,
+            "x": 5169.250000004927,
             "y": 200,
             "w": 25,
             "h": 100,
@@ -20165,22 +20217,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 190,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
-                "x": 5150,
-                "y": 200
-            },
-            "pointTo": {
                 "x": 5275,
                 "y": 200
             },
-            "xv": 190,
-            "yv": 0,
+            "pointTo": {
+                "x": 5150,
+                "y": 200
+            },
+            "xv": -190,
+            "yv": 2.326828918379971e-14,
             "inView": true
         },
         {
-            "x": 5189.416666667162,
+            "x": 5255.749999995073,
             "y": 100,
             "w": 25,
             "h": 100,
@@ -20196,22 +20248,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 190,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
-                "x": 5275,
-                "y": 100
-            },
-            "pointTo": {
                 "x": 5150,
                 "y": 100
             },
-            "xv": -190,
-            "yv": 2.326828918379971e-14,
+            "pointTo": {
+                "x": 5275,
+                "y": 100
+            },
+            "xv": 190,
+            "yv": 0,
             "inView": true
         },
         {
-            "x": 5447.916666666914,
+            "x": 5393.7500000024675,
             "y": 100,
             "w": 100,
             "h": 100,
@@ -20250,7 +20302,7 @@ else require('./_converter.js');
             "inView": true
         },
         {
-            "x": 5647.916666666914,
+            "x": 5593.7500000024675,
             "y": 100,
             "w": 100,
             "h": 100,
@@ -20289,7 +20341,7 @@ else require('./_converter.js');
             "inView": true
         },
         {
-            "x": 5647.916666666914,
+            "x": 5593.7500000024675,
             "y": 300,
             "w": 100,
             "h": 100,
@@ -20328,7 +20380,7 @@ else require('./_converter.js');
             "inView": true
         },
         {
-            "x": 5447.916666666914,
+            "x": 5393.7500000024675,
             "y": 300,
             "w": 100,
             "h": 100,
@@ -20450,11 +20502,11 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5200,
-            "y": 889.1666666666048,
+            "y": 907.4999999993842,
             "w": 100,
             "h": 50,
             "type": "lavamove",
@@ -20499,7 +20551,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5150,
@@ -20508,7 +20560,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5150,
@@ -20517,7 +20569,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5150,
@@ -20562,7 +20614,7 @@ else require('./_converter.js');
             "h": 250,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5375,
@@ -20571,7 +20623,7 @@ else require('./_converter.js');
             "h": 350,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5150,
@@ -20580,7 +20632,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5300,
@@ -20589,7 +20641,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5500,
@@ -20598,7 +20650,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5475,
@@ -20607,7 +20659,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5400,
@@ -20616,7 +20668,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5525,
@@ -20625,7 +20677,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5550,
@@ -20634,7 +20686,7 @@ else require('./_converter.js');
             "h": 500,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5525,
@@ -20643,7 +20695,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5400,
@@ -20669,7 +20721,7 @@ else require('./_converter.js');
             "w": 250,
             "h": 50,
             "type": "rotate-lava",
-            "angle": -3,
+            "angle": -24376.499999999498,
             "rotateSpeed": -180,
             "pivotX": 5725,
             "pivotY": 1075,
@@ -20677,8 +20729,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 127.47548783981962,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 5725,
@@ -20686,7 +20738,7 @@ else require('./_converter.js');
             "w": 250,
             "h": 25,
             "type": "rotate-lava",
-            "angle": 3,
+            "angle": 24376.500000006166,
             "rotateSpeed": 180,
             "pivotX": 5725,
             "pivotY": 1200,
@@ -20694,8 +20746,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 125.62344526401112,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 5850,
@@ -20704,7 +20756,7 @@ else require('./_converter.js');
             "h": 400,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5725,
@@ -20712,7 +20764,7 @@ else require('./_converter.js');
             "w": 250,
             "h": 50,
             "type": "rotate-lava",
-            "angle": -3,
+            "angle": -24376.500000006166,
             "rotateSpeed": -180,
             "pivotX": 5725,
             "pivotY": 1325,
@@ -20720,8 +20772,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 127.47548783981962,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 5850,
@@ -20730,7 +20782,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5750,
@@ -20739,7 +20791,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5600,
@@ -20748,7 +20800,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5700,
@@ -20757,10 +20809,10 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 5978.333333332838,
+            "x": 6014.999999995073,
             "y": 1200,
             "w": 100,
             "h": 100,
@@ -20788,10 +20840,10 @@ else require('./_converter.js');
             },
             "xv": -200,
             "yv": 2.4492935982947064e-14,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 5978.333333332838,
+            "x": 6014.999999995073,
             "y": 1000,
             "w": 100,
             "h": 100,
@@ -20819,7 +20871,7 @@ else require('./_converter.js');
             },
             "xv": -200,
             "yv": 2.4492935982947064e-14,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6200,
@@ -20828,10 +20880,10 @@ else require('./_converter.js');
             "h": 1000,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 5978.333333332838,
+            "x": 6014.999999995073,
             "y": 800,
             "w": 100,
             "h": 100,
@@ -20859,7 +20911,7 @@ else require('./_converter.js');
             },
             "xv": -200,
             "yv": 2.4492935982947064e-14,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5900,
@@ -20873,7 +20925,7 @@ else require('./_converter.js');
                 "y": 0
             },
             "direction": "right",
-            "inView": false
+            "inView": true
         },
         {
             "x": 5900,
@@ -20887,7 +20939,7 @@ else require('./_converter.js');
                 "y": 0
             },
             "direction": "left",
-            "inView": false
+            "inView": true
         },
         {
             "x": 5900,
@@ -20901,7 +20953,7 @@ else require('./_converter.js');
                 "y": 0
             },
             "direction": "left",
-            "inView": false
+            "inView": true
         },
         {
             "x": 6000,
@@ -20910,7 +20962,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5850,
@@ -20924,7 +20976,7 @@ else require('./_converter.js');
                 "y": 0
             },
             "direction": "right",
-            "inView": false
+            "inView": true
         },
         {
             "x": 5975,
@@ -20933,7 +20985,7 @@ else require('./_converter.js');
             "h": 400,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5950,
@@ -20942,7 +20994,7 @@ else require('./_converter.js');
             "h": 175,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5950,
@@ -20951,7 +21003,7 @@ else require('./_converter.js');
             "h": 125,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5950,
@@ -20960,7 +21012,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "bounce",
             "effect": 60,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6000,
@@ -20969,7 +21021,7 @@ else require('./_converter.js');
             "h": 28,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6100,
@@ -20978,7 +21030,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6194,
@@ -20987,7 +21039,7 @@ else require('./_converter.js');
             "h": 30,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6400,
@@ -20996,7 +21048,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6300,
@@ -21005,7 +21057,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6400,
@@ -21014,7 +21066,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6525,
@@ -21022,7 +21074,7 @@ else require('./_converter.js');
             "w": 350,
             "h": 50,
             "type": "rotate-lava",
-            "angle": -1.25,
+            "angle": -10156.874999999769,
             "rotateSpeed": -75,
             "pivotX": 6525,
             "pivotY": 175,
@@ -21030,8 +21082,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 176.7766952966369,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 6500,
@@ -21040,7 +21092,7 @@ else require('./_converter.js');
             "h": 350,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6475,
@@ -21048,7 +21100,7 @@ else require('./_converter.js');
             "w": 375,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 0.75,
+            "angle": 6094.124999999909,
             "rotateSpeed": 45,
             "pivotX": 6475,
             "pivotY": 550,
@@ -21056,8 +21108,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 189.15932438026945,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 6450,
@@ -21066,7 +21118,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6550,
@@ -21075,7 +21127,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6500,
@@ -21084,7 +21136,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6625,
@@ -21093,7 +21145,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6500,
@@ -21102,7 +21154,7 @@ else require('./_converter.js');
             "h": 125,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6550,
@@ -21111,7 +21163,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6650,
@@ -21120,7 +21172,7 @@ else require('./_converter.js');
             "h": 125,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6350,
@@ -21129,7 +21181,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6350,
@@ -21138,7 +21190,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6300,
@@ -21147,7 +21199,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6650,
@@ -21156,7 +21208,7 @@ else require('./_converter.js');
             "h": 225,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6500,
@@ -21165,7 +21217,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6450,
@@ -21174,7 +21226,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6500,
@@ -21183,7 +21235,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6550,
@@ -21192,7 +21244,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6550,
@@ -21201,7 +21253,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6700,
@@ -21210,7 +21262,7 @@ else require('./_converter.js');
             "h": 400,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6350,
@@ -21219,7 +21271,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6350,
@@ -21228,7 +21280,7 @@ else require('./_converter.js');
             "h": 650,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6300,
@@ -21237,7 +21289,7 @@ else require('./_converter.js');
             "h": 650,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6750,
@@ -21246,7 +21298,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6750,
@@ -21255,7 +21307,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6750,
@@ -21264,7 +21316,7 @@ else require('./_converter.js');
             "h": 775,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6750,
@@ -21273,7 +21325,7 @@ else require('./_converter.js');
             "h": 625,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6300,
@@ -21287,7 +21339,7 @@ else require('./_converter.js');
                 "y": 0
             },
             "direction": "right",
-            "inView": false
+            "inView": true
         },
         {
             "x": 6375,
@@ -21297,7 +21349,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#a15636",
             "tileColor": "#dc8150",
-            "inView": false
+            "inView": true
         },
         {
             "x": 8750,
@@ -21306,7 +21358,7 @@ else require('./_converter.js');
             "h": 650,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 8800,
@@ -21315,7 +21367,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 8850,
@@ -21324,7 +21376,7 @@ else require('./_converter.js');
             "h": 1050,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 0,
@@ -21334,7 +21386,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#55894d",
             "tileColor": "#8bc482",
-            "inView": false
+            "inView": true
         },
         {
             "x": 750,
@@ -21343,7 +21395,7 @@ else require('./_converter.js');
             "h": 125,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3250,
@@ -21352,7 +21404,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 4237.5,
@@ -21387,7 +21439,7 @@ else require('./_converter.js');
             "w": 25,
             "h": 125,
             "type": "rotate-lava",
-            "angle": 5443.333333333314,
+            "angle": 54170.00000000729,
             "rotateSpeed": 400,
             "pivotX": 5025,
             "pivotY": 175,
@@ -21400,7 +21452,7 @@ else require('./_converter.js');
         },
         {
             "x": 8750,
-            "y": 571.875,
+            "y": 659.375,
             "w": 50,
             "h": 25,
             "type": "lavamove",
@@ -21415,23 +21467,23 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 375,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
                 "x": 8750,
-                "y": 725
+                "y": 500
             },
             "pointTo": {
                 "x": 8750,
-                "y": 500
+                "y": 725
             },
             "xv": 2.2962127484012872e-14,
-            "yv": -375,
-            "inView": false
+            "yv": 375,
+            "inView": true
         },
         {
             "x": 8825,
-            "y": 653.125,
+            "y": 565.625,
             "w": 25,
             "h": 25,
             "type": "lavamove",
@@ -21446,19 +21498,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 375,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
                 "x": 8825,
-                "y": 500
+                "y": 725
             },
             "pointTo": {
                 "x": 8825,
-                "y": 725
+                "y": 500
             },
             "xv": 2.2962127484012872e-14,
-            "yv": 375,
-            "inView": false
+            "yv": -375,
+            "inView": true
         },
         {
             "x": 8825,
@@ -21467,7 +21519,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 8825,
@@ -21476,11 +21528,11 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 8900,
-            "y": 165.4166666661743,
+            "x": 8833.750000004891,
+            "y": 300,
             "w": 150,
             "h": 150,
             "type": "lavamove",
@@ -21503,19 +21555,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 550,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 8900,
+                "x": 8750,
                 "y": 300
             },
             "pointTo": {
                 "x": 8900,
-                "y": 150
+                "y": 300
             },
-            "xv": 3.3677786976552216e-14,
-            "yv": -550,
-            "inView": false
+            "xv": 550,
+            "yv": 0,
+            "inView": true
         },
         {
             "x": 8900,
@@ -21524,7 +21576,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9050,
@@ -21533,7 +21585,7 @@ else require('./_converter.js');
             "h": 350,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 8825,
@@ -21542,10 +21594,10 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 8881.666666665677,
+            "x": 8995.000000009853,
             "y": 50,
             "w": 25,
             "h": 50,
@@ -21561,23 +21613,23 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 400,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 9075,
-                "y": 50
-            },
-            "pointTo": {
                 "x": 8825,
                 "y": 50
             },
-            "xv": -400,
-            "yv": 4.898587196589413e-14,
-            "inView": false
+            "pointTo": {
+                "x": 9075,
+                "y": 50
+            },
+            "xv": 400,
+            "yv": 0,
+            "inView": true
         },
         {
-            "x": 9018.333333334323,
-            "y": 0,
+            "x": 8904.999999990147,
+            "y": 2.0818995586707903e-14,
             "w": 25,
             "h": 50,
             "type": "lavamove",
@@ -21592,19 +21644,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 400,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 8825,
-                "y": 0
-            },
-            "pointTo": {
                 "x": 9075,
                 "y": 0
             },
-            "xv": 400,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 8825,
+                "y": 0
+            },
+            "xv": -400,
+            "yv": 4.898587196589413e-14,
+            "inView": true
         },
         {
             "x": 9100,
@@ -21613,7 +21665,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9150,
@@ -21622,7 +21674,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9200,
@@ -21631,7 +21683,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9150,
@@ -21639,7 +21691,7 @@ else require('./_converter.js');
             "w": 100,
             "h": 100,
             "type": "rotate-lava",
-            "angle": -3,
+            "angle": -24376.500000000095,
             "rotateSpeed": -180,
             "pivotX": 9150,
             "pivotY": 300,
@@ -21647,8 +21699,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 70.71067811865476,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 9250,
@@ -21656,7 +21708,7 @@ else require('./_converter.js');
             "w": 100,
             "h": 100,
             "type": "rotate-lava",
-            "angle": 3,
+            "angle": 24376.500000000113,
             "rotateSpeed": 180,
             "pivotX": 9250,
             "pivotY": 200,
@@ -21664,8 +21716,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 70.71067811865476,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 9300,
@@ -21674,7 +21726,7 @@ else require('./_converter.js');
             "h": 350,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9250,
@@ -21682,7 +21734,7 @@ else require('./_converter.js');
             "w": 100,
             "h": 100,
             "type": "rotate-lava",
-            "angle": 3,
+            "angle": 24376.500000000116,
             "rotateSpeed": 180,
             "pivotX": 9250,
             "pivotY": 400,
@@ -21690,8 +21742,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 70.71067811865476,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 9200,
@@ -21700,7 +21752,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9262.5,
@@ -21708,7 +21760,7 @@ else require('./_converter.js');
             "w": 100,
             "h": 100,
             "type": "rotate-lava",
-            "angle": 55.916666666666664,
+            "angle": 454350.87499997404,
             "rotateSpeed": 3355,
             "pivotX": 9262.5,
             "pivotY": 550,
@@ -21716,8 +21768,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 70.71067811865476,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 9075,
@@ -21725,7 +21777,7 @@ else require('./_converter.js');
             "w": 100,
             "h": 100,
             "type": "rotate-lava",
-            "angle": 55.916666666666664,
+            "angle": 454350.8749999737,
             "rotateSpeed": 3355,
             "pivotX": 9075,
             "pivotY": 650,
@@ -21733,8 +21785,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 70.71067811865476,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 8900,
@@ -21743,7 +21795,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 8900,
@@ -21752,7 +21804,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 8900,
@@ -21761,7 +21813,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9300,
@@ -21770,7 +21822,7 @@ else require('./_converter.js');
             "h": 250,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9270,
@@ -21778,7 +21830,7 @@ else require('./_converter.js');
             "w": 100,
             "h": 25,
             "type": "rotate-lava",
-            "angle": 55.916666666666664,
+            "angle": 454350.8749999744,
             "rotateSpeed": 3355,
             "pivotX": 9270,
             "pivotY": 625,
@@ -21786,8 +21838,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 51.53882032022076,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 9225,
@@ -21796,7 +21848,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9300,
@@ -21805,7 +21857,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 8950,
@@ -21814,10 +21866,10 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 8937.083333334323,
+            "x": 8901.250000009853,
             "y": 750,
             "w": 100,
             "h": 100,
@@ -21845,10 +21897,10 @@ else require('./_converter.js');
             },
             "xv": -350,
             "yv": 4.2862637970157365e-14,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 9037.916666665677,
+            "x": 9073.749999990147,
             "y": 850,
             "w": 100,
             "h": 100,
@@ -21880,10 +21932,10 @@ else require('./_converter.js');
             },
             "xv": 350,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 9062.916666665677,
+            "x": 9098.749999990147,
             "y": 1000,
             "w": 100,
             "h": 100,
@@ -21911,10 +21963,10 @@ else require('./_converter.js');
             },
             "xv": 350,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 8937.083333334323,
+            "x": 8901.250000009853,
             "y": 1000,
             "w": 100,
             "h": 100,
@@ -21942,7 +21994,7 @@ else require('./_converter.js');
             },
             "xv": -350,
             "yv": 4.2862637970157365e-14,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9200,
@@ -21951,7 +22003,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 8900,
@@ -21960,7 +22012,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 8912.5,
@@ -21969,7 +22021,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9150,
@@ -21978,7 +22030,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9200,
@@ -21987,7 +22039,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9250,
@@ -21996,7 +22048,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9450,
@@ -22005,7 +22057,7 @@ else require('./_converter.js');
             "h": 450,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 8950,
@@ -22014,10 +22066,10 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 8982.5,
+            "x": 9272.5,
             "y": 1150,
             "w": 50,
             "h": 100,
@@ -22033,22 +22085,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 300,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
-                "x": 8900,
-                "y": 1150
-            },
-            "pointTo": {
                 "x": 9400,
                 "y": 1150
             },
-            "xv": 300,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 8900,
+                "y": 1150
+            },
+            "xv": -300,
+            "yv": 3.6739403974420595e-14,
+            "inView": true
         },
         {
-            "x": 9317.5,
+            "x": 9027.5,
             "y": 1200,
             "w": 50,
             "h": 100,
@@ -22064,19 +22116,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 300,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
-                "x": 9400,
-                "y": 1200
-            },
-            "pointTo": {
                 "x": 8900,
                 "y": 1200
             },
-            "xv": -300,
-            "yv": 3.6739403974420595e-14,
-            "inView": false
+            "pointTo": {
+                "x": 9400,
+                "y": 1200
+            },
+            "xv": 300,
+            "yv": 0,
+            "inView": true
         },
         {
             "x": 9250,
@@ -22085,7 +22137,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9050,
@@ -22094,7 +22146,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9100,
@@ -22103,7 +22155,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9175,
@@ -22112,7 +22164,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 8900,
@@ -22121,7 +22173,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9375,
@@ -22130,10 +22182,10 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 9374.166666665677,
+            "x": 9102.499999990147,
             "y": 1350,
             "w": 50,
             "h": 75,
@@ -22161,10 +22213,10 @@ else require('./_converter.js');
             },
             "xv": -700,
             "yv": 8.572527594031473e-14,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 8925.833333334323,
+            "x": 9197.500000009853,
             "y": 1425,
             "w": 50,
             "h": 75,
@@ -22192,7 +22244,7 @@ else require('./_converter.js');
             },
             "xv": 700,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9200,
@@ -22201,7 +22253,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9350,
@@ -22210,7 +22262,7 @@ else require('./_converter.js');
             "h": 850,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9450,
@@ -22223,7 +22275,7 @@ else require('./_converter.js');
             },
             "type": "check",
             "collected": false,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10050,
@@ -22232,7 +22284,7 @@ else require('./_converter.js');
             "h": 1400,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9775,
@@ -22273,7 +22325,7 @@ else require('./_converter.js');
             "toRotate": false,
             "rotateSpeed": 0,
             "renderType": "circle",
-            "inView": false
+            "inView": true
         },
         {
             "x": 9775,
@@ -22314,7 +22366,7 @@ else require('./_converter.js');
             "toRotate": false,
             "rotateSpeed": 0,
             "renderType": "circle",
-            "inView": false
+            "inView": true
         },
         {
             "x": 9950,
@@ -22323,7 +22375,7 @@ else require('./_converter.js');
             "h": 400,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9550,
@@ -22332,7 +22384,7 @@ else require('./_converter.js');
             "h": 525,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9575,
@@ -22341,7 +22393,7 @@ else require('./_converter.js');
             "h": 125,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9625,
@@ -22350,7 +22402,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9725,
@@ -22359,7 +22411,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9775,
@@ -22367,7 +22419,7 @@ else require('./_converter.js');
             "w": 350,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 4.5,
+            "angle": 36564.75000000026,
             "rotateSpeed": 270,
             "pivotX": 9775,
             "pivotY": 225,
@@ -22375,8 +22427,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 176.7766952966369,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 9725,
@@ -22385,7 +22437,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10000,
@@ -22395,7 +22447,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#a13636",
             "tileColor": "#dc5050",
-            "inView": false
+            "inView": true
         },
         {
             "x": 11150,
@@ -22404,11 +22456,11 @@ else require('./_converter.js');
             "h": 500,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 10508.75,
-            "y": 1.1174902042219585e-14,
+            "x": 10536.25,
+            "y": 7.807123344564369e-15,
             "w": 50,
             "h": 100,
             "type": "lavamove",
@@ -22435,7 +22487,7 @@ else require('./_converter.js');
             },
             "xv": -150,
             "yv": 1.8369701987210297e-14,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10575,
@@ -22444,7 +22496,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10650,
@@ -22453,7 +22505,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10675,
@@ -22462,7 +22514,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10125,
@@ -22471,11 +22523,11 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10500,
-            "y": 158.75,
+            "y": 186.25,
             "w": 100,
             "h": 50,
             "type": "lavamove",
@@ -22502,7 +22554,7 @@ else require('./_converter.js');
             },
             "xv": 9.184850993605149e-15,
             "yv": -150,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10450,
@@ -22511,7 +22563,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10600,
@@ -22520,7 +22572,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10625,
@@ -22529,7 +22581,7 @@ else require('./_converter.js');
             "h": 300,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10450,
@@ -22538,7 +22590,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10150,
@@ -22547,11 +22599,11 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10275,
-            "y": 233.75,
+            "y": 261.25,
             "w": 50,
             "h": 25,
             "type": "lavamove",
@@ -22578,11 +22630,11 @@ else require('./_converter.js');
             },
             "xv": 9.184850993605149e-15,
             "yv": -150,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10275,
-            "y": 292.5,
+            "y": 302.5,
             "w": 50,
             "h": 25,
             "type": "lavamove",
@@ -22597,23 +22649,23 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 300,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
                 "x": 10275,
-                "y": 325
+                "y": 175
             },
             "pointTo": {
                 "x": 10275,
-                "y": 175
+                "y": 325
             },
             "xv": 1.8369701987210297e-14,
-            "yv": -300,
-            "inView": false
+            "yv": 300,
+            "inView": true
         },
         {
             "x": 10350,
-            "y": 266.25,
+            "y": 238.75,
             "w": 50,
             "h": 25,
             "type": "lavamove",
@@ -22640,7 +22692,7 @@ else require('./_converter.js');
             },
             "xv": 9.184850993605149e-15,
             "yv": 150,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10150,
@@ -22649,7 +22701,7 @@ else require('./_converter.js');
             "h": 175,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10425,
@@ -22658,7 +22710,7 @@ else require('./_converter.js');
             "h": 175,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10275,
@@ -22667,7 +22719,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10362.5,
@@ -22676,7 +22728,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10300,
@@ -22685,7 +22737,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10325,
@@ -22694,7 +22746,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10300,
@@ -22703,11 +22755,11 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10200,
-            "y": 491.25,
+            "y": 536.25,
             "w": 450,
             "h": 50,
             "type": "move",
@@ -22722,23 +22774,23 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "alongWith": false,
             "pointOn": {
                 "x": 10200,
-                "y": 450
+                "y": 550
             },
             "pointTo": {
                 "x": 10200,
-                "y": 550
+                "y": 450
             },
             "xv": 9.184850993605149e-15,
-            "yv": 150,
-            "inView": false
+            "yv": -150,
+            "inView": true
         },
         {
             "x": 10200,
-            "y": 591.25,
+            "y": 636.25,
             "w": 450,
             "h": 50,
             "type": "move",
@@ -22753,19 +22805,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "alongWith": false,
             "pointOn": {
                 "x": 10200,
-                "y": 550
+                "y": 650
             },
             "pointTo": {
                 "x": 10200,
-                "y": 650
+                "y": 550
             },
             "xv": 9.184850993605149e-15,
-            "yv": 150,
-            "inView": false
+            "yv": -150,
+            "inView": true
         },
         {
             "x": 11400,
@@ -22774,7 +22826,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10300,
@@ -22783,7 +22835,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10150,
@@ -22792,7 +22844,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10325,
@@ -22801,7 +22853,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10400,
@@ -22810,7 +22862,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10475,
@@ -22819,7 +22871,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10550,
@@ -22828,7 +22880,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10350,
@@ -22837,7 +22889,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10450,
@@ -22846,7 +22898,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10425,
@@ -22855,7 +22907,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10525,
@@ -22864,7 +22916,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10375,
@@ -22873,7 +22925,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10250,
@@ -22882,7 +22934,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10225,
@@ -22891,7 +22943,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10200,
@@ -22900,7 +22952,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10175,
@@ -22909,7 +22961,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10150,
@@ -22918,7 +22970,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10150,
@@ -22927,7 +22979,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10650,
@@ -22936,7 +22988,7 @@ else require('./_converter.js');
             "h": 125,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12000,
@@ -22945,7 +22997,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10675,
@@ -22954,7 +23006,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10700,
@@ -22963,7 +23015,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10725,
@@ -22972,7 +23024,7 @@ else require('./_converter.js');
             "h": 137.5,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10500,
@@ -22981,10 +23033,10 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 11447.916666665677,
+            "x": 11706.250000009853,
             "y": 750,
             "w": 50,
             "h": 150,
@@ -23000,22 +23052,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 250,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "alongWith": false,
             "pointOn": {
-                "x": 11850,
-                "y": 750
-            },
-            "pointTo": {
                 "x": 11350,
                 "y": 750
             },
-            "xv": -250,
-            "yv": 3.061616997868383e-14,
-            "inView": false
+            "pointTo": {
+                "x": 11850,
+                "y": 750
+            },
+            "xv": 250,
+            "yv": 0,
+            "inView": true
         },
         {
-            "x": 11597.916666665677,
+            "x": 11856.250000009853,
             "y": 750,
             "w": 50,
             "h": 150,
@@ -23031,19 +23083,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 250,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "alongWith": false,
             "pointOn": {
-                "x": 12000,
-                "y": 750
-            },
-            "pointTo": {
                 "x": 11500,
                 "y": 750
             },
-            "xv": -250,
-            "yv": 3.061616997868383e-14,
-            "inView": false
+            "pointTo": {
+                "x": 12000,
+                "y": 750
+            },
+            "xv": 250,
+            "yv": 0,
+            "inView": true
         },
         {
             "x": 11500,
@@ -23052,7 +23104,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12050,
@@ -23061,7 +23113,7 @@ else require('./_converter.js');
             "h": 250,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11875,
@@ -23070,7 +23122,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11850,
@@ -23079,7 +23131,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11750,
@@ -23088,7 +23140,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11750,
@@ -23097,7 +23149,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11675,
@@ -23106,7 +23158,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11575,
@@ -23115,7 +23167,7 @@ else require('./_converter.js');
             "h": 93.75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11400,
@@ -23124,7 +23176,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11400,
@@ -23133,7 +23185,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11475,
@@ -23142,7 +23194,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11400,
@@ -23151,7 +23203,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11150,
@@ -23160,7 +23212,7 @@ else require('./_converter.js');
             "h": 450,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11150,
@@ -23169,7 +23221,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11150,
@@ -23178,7 +23230,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11300,
@@ -23187,7 +23239,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11300,
@@ -23196,7 +23248,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11250,
@@ -23205,7 +23257,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11250,
@@ -23214,11 +23266,11 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11250,
-            "y": 591.25,
+            "y": 613.75,
             "w": 50,
             "h": 25,
             "type": "lavamove",
@@ -23245,7 +23297,7 @@ else require('./_converter.js');
             },
             "xv": 9.184850993605149e-15,
             "yv": 150,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10150,
@@ -23254,7 +23306,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11000,
@@ -23263,7 +23315,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11000,
@@ -23272,7 +23324,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10850,
@@ -23281,7 +23333,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11000,
@@ -23290,7 +23342,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11000,
@@ -23299,7 +23351,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10900,
@@ -23308,10 +23360,10 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 10891.25,
+            "x": 10936.25,
             "y": 650,
             "w": 50,
             "h": 50,
@@ -23335,22 +23387,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 0,
+            "currentPoint": 3,
             "collidable": true,
             "pointOn": {
-                "x": 10850,
-                "y": 650
-            },
-            "pointTo": {
                 "x": 10950,
                 "y": 650
             },
-            "xv": 150,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 10850,
+                "y": 650
+            },
+            "xv": -150,
+            "yv": 1.8369701987210297e-14,
+            "inView": true
         },
         {
-            "x": 11008.75,
+            "x": 10963.75,
             "y": 650,
             "w": 50,
             "h": 50,
@@ -23374,19 +23426,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 0,
+            "currentPoint": 3,
             "collidable": true,
             "pointOn": {
-                "x": 11050,
-                "y": 650
-            },
-            "pointTo": {
                 "x": 10950,
                 "y": 650
             },
-            "xv": -150,
-            "yv": 1.8369701987210297e-14,
-            "inView": false
+            "pointTo": {
+                "x": 11050,
+                "y": 650
+            },
+            "xv": 150,
+            "yv": 0,
+            "inView": true
         },
         {
             "x": 11050,
@@ -23395,7 +23447,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10800,
@@ -23404,7 +23456,7 @@ else require('./_converter.js');
             "h": 175,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10750,
@@ -23413,7 +23465,7 @@ else require('./_converter.js');
             "h": 125,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10775,
@@ -23422,7 +23474,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10825,
@@ -23431,7 +23483,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10750,
@@ -23440,7 +23492,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10675,
@@ -23449,7 +23501,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11325,
@@ -23462,7 +23514,7 @@ else require('./_converter.js');
             },
             "type": "check",
             "collected": false,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11087.5,
@@ -23470,7 +23522,7 @@ else require('./_converter.js');
             "w": 75,
             "h": 25,
             "type": "rotate-lava",
-            "angle": -9,
+            "angle": -73129.50000000127,
             "rotateSpeed": -540,
             "pivotX": 11087.5,
             "pivotY": 587.5,
@@ -23478,8 +23530,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 39.528470752104745,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 10412.5,
@@ -23488,11 +23540,11 @@ else require('./_converter.js');
             "h": 12.5,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11400,
-            "y": 591.25,
+            "y": 636.25,
             "w": 76,
             "h": 50,
             "type": "lavamove",
@@ -23507,50 +23559,50 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
                 "x": 11400,
-                "y": 550
+                "y": 650
             },
             "pointTo": {
                 "x": 11400,
-                "y": 650
-            },
-            "xv": 9.184850993605149e-15,
-            "yv": 150,
-            "inView": false
-        },
-        {
-            "x": 11524,
-            "y": 608.75,
-            "w": 76,
-            "h": 50,
-            "type": "lavamove",
-            "points": [
-                [
-                    11524,
-                    650
-                ],
-                [
-                    11524,
-                    550
-                ]
-            ],
-            "speed": 150,
-            "currentPoint": 0,
-            "collidable": true,
-            "pointOn": {
-                "x": 11524,
-                "y": 650
-            },
-            "pointTo": {
-                "x": 11524,
                 "y": 550
             },
             "xv": 9.184850993605149e-15,
             "yv": -150,
-            "inView": false
+            "inView": true
+        },
+        {
+            "x": 11524,
+            "y": 563.75,
+            "w": 76,
+            "h": 50,
+            "type": "lavamove",
+            "points": [
+                [
+                    11524,
+                    650
+                ],
+                [
+                    11524,
+                    550
+                ]
+            ],
+            "speed": 150,
+            "currentPoint": 1,
+            "collidable": true,
+            "pointOn": {
+                "x": 11524,
+                "y": 550
+            },
+            "pointTo": {
+                "x": 11524,
+                "y": 650
+            },
+            "xv": 9.184850993605149e-15,
+            "yv": 150,
+            "inView": true
         },
         {
             "x": 11400,
@@ -23559,7 +23611,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11550,
@@ -23568,7 +23620,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11368.75,
@@ -23577,7 +23629,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11600,
@@ -23586,7 +23638,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11800,
@@ -23595,7 +23647,7 @@ else require('./_converter.js');
             "h": 43.75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11650,
@@ -23604,7 +23656,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11900,
@@ -23613,11 +23665,11 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11925,
-            "y": 616.25,
+            "y": 611.25,
             "w": 75,
             "h": 25,
             "type": "lavamove",
@@ -23632,19 +23684,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
                 "x": 11925,
-                "y": 600
+                "y": 675
             },
             "pointTo": {
                 "x": 11925,
-                "y": 675
+                "y": 600
             },
             "xv": 9.184850993605149e-15,
-            "yv": 150,
-            "inView": false
+            "yv": -150,
+            "inView": true
         },
         {
             "x": 11925,
@@ -23653,7 +23705,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11925,
@@ -23662,7 +23714,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12025,
@@ -23671,7 +23723,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11400,
@@ -23680,10 +23732,10 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 11724.166666665677,
+            "x": 11852.499999990147,
             "y": 1049,
             "w": 50,
             "h": 51,
@@ -23711,7 +23763,7 @@ else require('./_converter.js');
             },
             "xv": -700,
             "yv": 8.572527594031473e-14,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12200,
@@ -23720,7 +23772,7 @@ else require('./_converter.js');
             "h": 250,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12100,
@@ -23733,7 +23785,7 @@ else require('./_converter.js');
             },
             "type": "check",
             "collected": false,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11400,
@@ -23742,7 +23794,7 @@ else require('./_converter.js');
             "h": 102,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11547.5,
@@ -23751,7 +23803,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11625,
@@ -23760,7 +23812,7 @@ else require('./_converter.js');
             "h": 51,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11950,
@@ -23769,7 +23821,7 @@ else require('./_converter.js');
             "h": 51,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12031.25,
@@ -23778,7 +23830,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11750,
@@ -23787,7 +23839,7 @@ else require('./_converter.js');
             "h": 12.5,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11650,
@@ -23796,7 +23848,7 @@ else require('./_converter.js');
             "h": 12.5,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12125,
@@ -23805,7 +23857,7 @@ else require('./_converter.js');
             "h": 26,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11975,
@@ -23814,7 +23866,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12250,
@@ -23823,10 +23875,10 @@ else require('./_converter.js');
             "h": 550,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 12141.25,
+            "x": 12186.25,
             "y": 850,
             "w": 50,
             "h": 50,
@@ -23842,22 +23894,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
-                "x": 12100,
-                "y": 850
-            },
-            "pointTo": {
                 "x": 12200,
                 "y": 850
             },
-            "xv": 150,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 12100,
+                "y": 850
+            },
+            "xv": -150,
+            "yv": 1.8369701987210297e-14,
+            "inView": true
         },
         {
-            "x": 12158.75,
+            "x": 12113.75,
             "y": 750,
             "w": 50,
             "h": 50,
@@ -23873,19 +23925,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
-                "x": 12200,
-                "y": 750
-            },
-            "pointTo": {
                 "x": 12100,
                 "y": 750
             },
-            "xv": -150,
-            "yv": 1.8369701987210297e-14,
-            "inView": false
+            "pointTo": {
+                "x": 12200,
+                "y": 750
+            },
+            "xv": 150,
+            "yv": 0,
+            "inView": true
         },
         {
             "x": 12200,
@@ -23894,7 +23946,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12100,
@@ -23903,7 +23955,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12100,
@@ -23912,7 +23964,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12225,
@@ -23921,7 +23973,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12100,
@@ -23930,7 +23982,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12125,
@@ -23939,7 +23991,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12050,
@@ -23948,7 +24000,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12050,
@@ -23957,7 +24009,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12175,
@@ -23966,7 +24018,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12237.5,
@@ -23975,7 +24027,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12000,
@@ -23984,7 +24036,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12300,
@@ -23993,7 +24045,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12100,
@@ -24002,7 +24054,7 @@ else require('./_converter.js');
             "h": 375,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12275,
@@ -24010,7 +24062,7 @@ else require('./_converter.js');
             "w": 250,
             "h": 37.5,
             "type": "rotate-lava",
-            "angle": -3,
+            "angle": -24376.50000000043,
             "rotateSpeed": -180,
             "pivotX": 12275,
             "pivotY": 275,
@@ -24018,8 +24070,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 126.39842760097928,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 12275,
@@ -24027,7 +24079,7 @@ else require('./_converter.js');
             "w": 250,
             "h": 37.5,
             "type": "rotate-lava",
-            "angle": 87,
+            "angle": -24286.50000000043,
             "rotateSpeed": -180,
             "pivotX": 12275,
             "pivotY": 275,
@@ -24035,8 +24087,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 126.39842760097928,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 12225,
@@ -24045,7 +24097,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12275,
@@ -24054,7 +24106,7 @@ else require('./_converter.js');
             "h": 6.25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12393.75,
@@ -24063,7 +24115,7 @@ else require('./_converter.js');
             "h": 243.75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12200,
@@ -24072,7 +24124,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12225,
@@ -24081,7 +24133,7 @@ else require('./_converter.js');
             "h": 6.25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12150,
@@ -24090,7 +24142,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12150,
@@ -24099,7 +24151,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12125,
@@ -24108,11 +24160,11 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12100,
-            "y": -2.083333333333812,
+            "y": -6.250000000004807,
             "w": 50,
             "h": 25,
             "type": "lavamove",
@@ -24139,7 +24191,7 @@ else require('./_converter.js');
             },
             "xv": 1.5308084989341916e-14,
             "yv": -250,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12050,
@@ -24148,7 +24200,7 @@ else require('./_converter.js');
             "h": 12.5,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12000,
@@ -24157,7 +24209,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12000,
@@ -24170,7 +24222,7 @@ else require('./_converter.js');
             },
             "type": "check",
             "collected": false,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11950,
@@ -24179,11 +24231,11 @@ else require('./_converter.js');
             "h": 400,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12000,
-            "y": 282.5,
+            "y": 372.5,
             "w": 50,
             "h": 50,
             "type": "lavamove",
@@ -24198,23 +24250,23 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 300,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
                 "x": 12000,
-                "y": 200
+                "y": 400
             },
             "pointTo": {
                 "x": 12000,
-                "y": 400
+                "y": 200
             },
             "xv": 1.8369701987210297e-14,
-            "yv": 300,
-            "inView": false
+            "yv": -300,
+            "inView": true
         },
         {
             "x": 12050,
-            "y": 369.0625,
+            "y": 335.3125,
             "w": 50,
             "h": 50,
             "type": "lavamove",
@@ -24229,23 +24281,23 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 112.5,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
                 "x": 12050,
-                "y": 400
+                "y": 325
             },
             "pointTo": {
                 "x": 12050,
-                "y": 325
+                "y": 400
             },
             "xv": 6.8886382452038615e-15,
-            "yv": -112.5,
-            "inView": false
+            "yv": 112.5,
+            "inView": true
         },
         {
             "x": 12050,
-            "y": 244.0625,
+            "y": 210.3125,
             "w": 50,
             "h": 50,
             "type": "lavamove",
@@ -24260,19 +24312,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 112.5,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
                 "x": 12050,
-                "y": 275
+                "y": 200
             },
             "pointTo": {
                 "x": 12050,
-                "y": 200
+                "y": 275
             },
             "xv": 6.8886382452038615e-15,
-            "yv": -112.5,
-            "inView": false
+            "yv": 112.5,
+            "inView": true
         },
         {
             "x": 11900,
@@ -24281,7 +24333,7 @@ else require('./_converter.js');
             "h": 450,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11650,
@@ -24289,7 +24341,7 @@ else require('./_converter.js');
             "w": 500,
             "h": 100,
             "type": "rotate-lava",
-            "angle": -2,
+            "angle": -16251.000000000304,
             "rotateSpeed": -120,
             "pivotX": 11650,
             "pivotY": 250,
@@ -24297,8 +24349,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 254.95097567963924,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 11225,
@@ -24307,7 +24359,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11400,
@@ -24315,7 +24367,7 @@ else require('./_converter.js');
             "radius": 50,
             "type": "circle-normal",
             "renderType": "circle",
-            "inView": false
+            "inView": true
         },
         {
             "x": 10900,
@@ -24328,7 +24380,7 @@ else require('./_converter.js');
             },
             "type": "check",
             "collected": false,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10900,
@@ -24337,7 +24389,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11725,
@@ -24346,7 +24398,7 @@ else require('./_converter.js');
             "h": 6.25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "points": [
@@ -24375,7 +24427,7 @@ else require('./_converter.js');
                 "bottom": 225
             },
             "renderType": "poly",
-            "inView": false
+            "inView": true
         },
         {
             "points": [
@@ -24400,7 +24452,7 @@ else require('./_converter.js');
                 "bottom": 25
             },
             "renderType": "poly",
-            "inView": false
+            "inView": true
         },
         {
             "points": [
@@ -24429,7 +24481,7 @@ else require('./_converter.js');
                 "bottom": 400
             },
             "renderType": "poly",
-            "inView": false
+            "inView": true
         },
         {
             "points": [
@@ -24454,7 +24506,7 @@ else require('./_converter.js');
                 "bottom": 400
             },
             "renderType": "poly",
-            "inView": false
+            "inView": true
         },
         {
             "x": 10900,
@@ -24463,7 +24515,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "points": [
@@ -24492,7 +24544,7 @@ else require('./_converter.js');
                 "bottom": 350
             },
             "renderType": "poly",
-            "inView": false
+            "inView": true
         },
         {
             "points": [
@@ -24521,7 +24573,7 @@ else require('./_converter.js');
                 "bottom": 400
             },
             "renderType": "poly",
-            "inView": false
+            "inView": true
         },
         {
             "x": 10700,
@@ -24530,7 +24582,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11150,
@@ -24539,7 +24591,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11225,
@@ -24547,7 +24599,7 @@ else require('./_converter.js');
             "radius": 50,
             "type": "circle-normal",
             "renderType": "circle",
-            "inView": false
+            "inView": true
         },
         {
             "points": [
@@ -24572,7 +24624,7 @@ else require('./_converter.js');
                 "bottom": 375
             },
             "renderType": "poly",
-            "inView": false
+            "inView": true
         },
         {
             "x": 10750,
@@ -24581,7 +24633,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12000,
@@ -24590,7 +24642,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12125,
@@ -24598,7 +24650,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 20,
             "type": "rotate-lava",
-            "angle": 1.5,
+            "angle": 12188.250000004122,
             "rotateSpeed": 90,
             "pivotX": 12125,
             "pivotY": 1275,
@@ -24606,8 +24658,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 75.66372975210778,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 12050,
@@ -24616,7 +24668,7 @@ else require('./_converter.js');
             "h": 20,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12000,
@@ -24625,7 +24677,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12000,
@@ -24633,7 +24685,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 20,
             "type": "rotate-lava",
-            "angle": 28.5,
+            "angle": -12158.250000004122,
             "rotateSpeed": -90,
             "pivotX": 12000,
             "pivotY": 1225,
@@ -24641,8 +24693,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 75.66372975210778,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 12055,
@@ -24651,7 +24703,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11900,
@@ -24660,7 +24712,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11900,
@@ -24669,7 +24721,7 @@ else require('./_converter.js');
             "h": 45,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11950,
@@ -24678,7 +24730,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11875,
@@ -24686,7 +24738,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 20,
             "type": "rotate-lava",
-            "angle": 28.5,
+            "angle": -12158.250000004122,
             "rotateSpeed": -90,
             "pivotX": 11875,
             "pivotY": 1325,
@@ -24694,8 +24746,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 75.66372975210778,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 11800,
@@ -24704,7 +24756,7 @@ else require('./_converter.js');
             "h": 20,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11800,
@@ -24713,7 +24765,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11775,
@@ -24722,7 +24774,7 @@ else require('./_converter.js');
             "h": 250,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11800,
@@ -24731,7 +24783,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11775,
@@ -24740,7 +24792,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12000,
@@ -24748,7 +24800,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 20,
             "type": "rotate-lava",
-            "angle": 28.5,
+            "angle": -12158.250000004122,
             "rotateSpeed": -90,
             "pivotX": 12000,
             "pivotY": 1400,
@@ -24756,8 +24808,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 75.66372975210778,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 11900,
@@ -24766,7 +24818,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11900,
@@ -24775,7 +24827,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12065,
@@ -24784,7 +24836,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11750,
@@ -24793,7 +24845,7 @@ else require('./_converter.js');
             "h": 300,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11775,
@@ -24802,7 +24854,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11850,
@@ -24811,7 +24863,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11850,
@@ -24820,7 +24872,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12100,
@@ -24829,7 +24881,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12200,
@@ -24838,7 +24890,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12250,
@@ -24852,7 +24904,7 @@ else require('./_converter.js');
                 "y": 0
             },
             "direction": "right",
-            "inView": false
+            "inView": true
         },
         {
             "x": 12100,
@@ -24861,7 +24913,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12250,
@@ -24870,7 +24922,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12350,
@@ -24884,11 +24936,11 @@ else require('./_converter.js');
                 "y": -5000
             },
             "direction": "up",
-            "inView": false
+            "inView": true
         },
         {
             "x": 12300,
-            "y": 1441.25,
+            "y": 1486.25,
             "w": 100,
             "h": 100,
             "type": "lavamove",
@@ -24903,19 +24955,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
                 "x": 12300,
-                "y": 1400
+                "y": 1500
             },
             "pointTo": {
                 "x": 12300,
-                "y": 1500
+                "y": 1400
             },
             "xv": 9.184850993605149e-15,
-            "yv": 150,
-            "inView": false
+            "yv": -150,
+            "inView": true
         },
         {
             "x": 12400,
@@ -24924,7 +24976,7 @@ else require('./_converter.js');
             "h": 450,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12400,
@@ -24933,7 +24985,7 @@ else require('./_converter.js');
             "h": 625,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12400,
@@ -24942,7 +24994,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12450,
@@ -24951,7 +25003,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12250,
@@ -24960,7 +25012,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12250,
@@ -24970,7 +25022,7 @@ else require('./_converter.js');
             "type": "door",
             "id": 2,
             "active": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12150,
@@ -24980,7 +25032,7 @@ else require('./_converter.js');
             "type": "button",
             "id": 2,
             "active": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12550,
@@ -24989,7 +25041,7 @@ else require('./_converter.js');
             "h": 1050,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12500,
@@ -24998,7 +25050,7 @@ else require('./_converter.js');
             "h": 450,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12400,
@@ -25007,7 +25059,7 @@ else require('./_converter.js');
             "h": 250,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12450,
@@ -25016,7 +25068,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12450,
@@ -25025,7 +25077,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12455,
@@ -25034,7 +25086,7 @@ else require('./_converter.js');
             "h": 90,
             "color": "#950e0e",
             "type": "block",
-            "inView": false
+            "inView": true
         },
         {
             "x": 12450,
@@ -25043,7 +25095,7 @@ else require('./_converter.js');
             "h": 100,
             "color": "#000000",
             "type": "block",
-            "inView": false
+            "inView": true
         },
         {
             "x": 10600,
@@ -25052,10 +25104,10 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 10697.916666665677,
+            "x": 10743.749999990147,
             "y": 800,
             "w": 50,
             "h": 100,
@@ -25083,10 +25135,10 @@ else require('./_converter.js');
             },
             "xv": -250,
             "yv": 3.061616997868383e-14,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 10547.916666665677,
+            "x": 10593.749999990147,
             "y": 750,
             "w": 50,
             "h": 125,
@@ -25114,7 +25166,7 @@ else require('./_converter.js');
             },
             "xv": -250,
             "yv": 3.061616997868383e-14,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10450,
@@ -25123,7 +25175,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10600,
@@ -25132,7 +25184,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10200,
@@ -25141,7 +25193,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10400,
@@ -25150,7 +25202,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10350,
@@ -25159,7 +25211,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10350,
@@ -25168,7 +25220,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10550,
@@ -25177,7 +25229,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10425,
@@ -25186,7 +25238,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10300,
@@ -25195,7 +25247,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10150,
@@ -25204,10 +25256,10 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 10208.75,
+            "x": 10236.25,
             "y": 850,
             "w": 50,
             "h": 100,
@@ -25235,10 +25287,10 @@ else require('./_converter.js');
             },
             "xv": -150,
             "yv": 1.8369701987210297e-14,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 10241.25,
+            "x": 10213.75,
             "y": 950,
             "w": 50,
             "h": 100,
@@ -25266,7 +25318,7 @@ else require('./_converter.js');
             },
             "xv": 150,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10150,
@@ -25275,7 +25327,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10250,
@@ -25284,7 +25336,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10150,
@@ -25293,7 +25345,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10375,
@@ -25302,7 +25354,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10475,
@@ -25311,7 +25363,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10575,
@@ -25320,10 +25372,10 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 10267.5,
+            "x": 10277.5,
             "y": 1100,
             "w": 50,
             "h": 25,
@@ -25339,22 +25391,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 300,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 10300,
-                "y": 1100
-            },
-            "pointTo": {
                 "x": 10150,
                 "y": 1100
             },
-            "xv": -300,
-            "yv": 3.6739403974420595e-14,
-            "inView": false
+            "pointTo": {
+                "x": 10300,
+                "y": 1100
+            },
+            "xv": 300,
+            "yv": 0,
+            "inView": true
         },
         {
-            "x": 10182.5,
+            "x": 10172.5,
             "y": 1175,
             "w": 50,
             "h": 25,
@@ -25370,19 +25422,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 300,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 10150,
-                "y": 1175
-            },
-            "pointTo": {
                 "x": 10300,
                 "y": 1175
             },
-            "xv": 300,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 10150,
+                "y": 1175
+            },
+            "xv": -300,
+            "yv": 3.6739403974420595e-14,
+            "inView": true
         },
         {
             "x": 10550,
@@ -25391,7 +25443,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10150,
@@ -25400,7 +25452,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10150,
@@ -25409,7 +25461,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10550,
@@ -25418,7 +25470,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10650,
@@ -25427,7 +25479,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10700,
@@ -25436,7 +25488,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10725,
@@ -25445,7 +25497,7 @@ else require('./_converter.js');
             "h": 125,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10750,
@@ -25454,7 +25506,7 @@ else require('./_converter.js');
             "h": 350,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10650,
@@ -25463,7 +25515,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10800,
@@ -25476,7 +25528,7 @@ else require('./_converter.js');
             },
             "type": "check",
             "collected": false,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10650,
@@ -25485,7 +25537,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10900,
@@ -25494,7 +25546,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11150,
@@ -25504,7 +25556,7 @@ else require('./_converter.js');
             "type": "door",
             "id": 3,
             "active": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10200,
@@ -25514,7 +25566,7 @@ else require('./_converter.js');
             "type": "button",
             "id": 3,
             "active": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10975,
@@ -25522,7 +25574,7 @@ else require('./_converter.js');
             "w": 350,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 0.75,
+            "angle": 6094.125000000177,
             "rotateSpeed": 45,
             "pivotX": 10975,
             "pivotY": 1225,
@@ -25530,8 +25582,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 176.7766952966369,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 10975,
@@ -25539,7 +25591,7 @@ else require('./_converter.js');
             "w": 350,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 60.75,
+            "angle": 6154.125000000177,
             "rotateSpeed": 45,
             "pivotX": 10975,
             "pivotY": 1225,
@@ -25547,8 +25599,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 176.7766952966369,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 10975,
@@ -25556,7 +25608,7 @@ else require('./_converter.js');
             "w": 350,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 120.75,
+            "angle": 6214.125000000177,
             "rotateSpeed": 45,
             "pivotX": 10975,
             "pivotY": 1225,
@@ -25564,8 +25616,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 176.7766952966369,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "points": [
@@ -25590,7 +25642,7 @@ else require('./_converter.js');
                 "bottom": 1100
             },
             "renderType": "poly",
-            "inView": false
+            "inView": true
         },
         {
             "points": [
@@ -25615,7 +25667,7 @@ else require('./_converter.js');
                 "bottom": 1175
             },
             "renderType": "poly",
-            "inView": false
+            "inView": true
         },
         {
             "points": [
@@ -25640,7 +25692,7 @@ else require('./_converter.js');
                 "bottom": 1400
             },
             "renderType": "poly",
-            "inView": false
+            "inView": true
         },
         {
             "points": [
@@ -25665,7 +25717,7 @@ else require('./_converter.js');
                 "bottom": 1400
             },
             "renderType": "poly",
-            "inView": false
+            "inView": true
         },
         {
             "points": [
@@ -25690,7 +25742,7 @@ else require('./_converter.js');
                 "bottom": 1300
             },
             "renderType": "poly",
-            "inView": false
+            "inView": true
         },
         {
             "x": 10800,
@@ -25699,7 +25751,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10975,
@@ -25708,10 +25760,10 @@ else require('./_converter.js');
             "type": "circle-lava",
             "renderType": "circleR",
             "radius": 50,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 10658.75,
+            "x": 10686.25,
             "y": 1350,
             "w": 50,
             "h": 75,
@@ -25739,10 +25791,10 @@ else require('./_converter.js');
             },
             "xv": -150,
             "yv": 1.8369701987210297e-14,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 10691.25,
+            "x": 10663.75,
             "y": 1425,
             "w": 50,
             "h": 75,
@@ -25770,10 +25822,10 @@ else require('./_converter.js');
             },
             "xv": 150,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 10458.75,
+            "x": 10486.25,
             "y": 1350,
             "w": 50,
             "h": 75,
@@ -25801,10 +25853,10 @@ else require('./_converter.js');
             },
             "xv": -150,
             "yv": 1.8369701987210297e-14,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 10491.25,
+            "x": 10463.75,
             "y": 1425,
             "w": 50,
             "h": 75,
@@ -25832,10 +25884,10 @@ else require('./_converter.js');
             },
             "xv": 150,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 10258.75,
+            "x": 10286.25,
             "y": 1350,
             "w": 50,
             "h": 75,
@@ -25863,10 +25915,10 @@ else require('./_converter.js');
             },
             "xv": -150,
             "yv": 1.8369701987210297e-14,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 10291.25,
+            "x": 10263.75,
             "y": 1425,
             "w": 50,
             "h": 75,
@@ -25894,7 +25946,7 @@ else require('./_converter.js');
             },
             "xv": 150,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10150,
@@ -25903,7 +25955,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10950,
@@ -25911,7 +25963,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 25,
             "type": "rotate-lava",
-            "angle": 7.166666666666667,
+            "angle": 58232.75000002263,
             "rotateSpeed": 430,
             "pivotX": 10950,
             "pivotY": 1525,
@@ -25919,8 +25971,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 76.03453162872775,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 12250,
@@ -25933,7 +25985,7 @@ else require('./_converter.js');
             },
             "type": "check",
             "collected": false,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11225,
@@ -25946,7 +25998,7 @@ else require('./_converter.js');
             },
             "type": "check",
             "collected": false,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11550,
@@ -25955,7 +26007,7 @@ else require('./_converter.js');
             "h": 70,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11680,
@@ -25964,7 +26016,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11550,
@@ -25973,7 +26025,7 @@ else require('./_converter.js');
             "h": 70,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11400,
@@ -25982,7 +26034,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11700,
@@ -25991,7 +26043,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11150,
@@ -26000,7 +26052,7 @@ else require('./_converter.js');
             "h": 250,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11300,
@@ -26009,7 +26061,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11250,
@@ -26023,7 +26075,7 @@ else require('./_converter.js');
                 "y": 5000
             },
             "direction": "down",
-            "inView": false
+            "inView": true
         },
         {
             "x": 11650,
@@ -26032,7 +26084,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11300,
@@ -26042,7 +26094,7 @@ else require('./_converter.js');
             "type": "button",
             "id": 4,
             "active": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11700,
@@ -26052,7 +26104,7 @@ else require('./_converter.js');
             "type": "door",
             "id": 4,
             "active": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11525,
@@ -26061,7 +26113,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11400,
@@ -26070,7 +26122,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11725,
@@ -26079,7 +26131,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11525,
@@ -26088,7 +26140,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11795,
@@ -26097,7 +26149,7 @@ else require('./_converter.js');
             "h": 55,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11700,
@@ -26106,7 +26158,7 @@ else require('./_converter.js');
             "h": 55,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11800,
@@ -26122,7 +26174,7 @@ else require('./_converter.js');
                 "g": 0,
                 "b": 0
             },
-            "inView": false
+            "inView": true
         },
         {
             "x": 11800,
@@ -26131,10 +26183,10 @@ else require('./_converter.js');
             "h": 50,
             "type": "size",
             "size": 5,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 11898.75,
+            "x": 11866.25,
             "y": 1550,
             "w": 5,
             "h": 25,
@@ -26162,10 +26214,10 @@ else require('./_converter.js');
             },
             "xv": -150,
             "yv": 1.8369701987210297e-14,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 11896.25,
+            "x": 11928.75,
             "y": 1575,
             "w": 5,
             "h": 25,
@@ -26193,11 +26245,11 @@ else require('./_converter.js');
             },
             "xv": 150,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 12029.746954730606,
-            "y": 1571.8987818922405,
+            "x": 12014.156620530968,
+            "y": 1565.6626482123834,
             "w": 25,
             "h": 20,
             "type": "lavamove",
@@ -26224,11 +26276,11 @@ else require('./_converter.js');
             },
             "xv": -139.2715036327889,
             "yv": -55.70860145311558,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 12029.746954730606,
-            "y": 1558.1012181077595,
+            "x": 12014.156620530968,
+            "y": 1564.3373517876166,
             "w": 25,
             "h": 20,
             "type": "lavamove",
@@ -26255,11 +26307,11 @@ else require('./_converter.js');
             },
             "xv": -139.2715036327889,
             "yv": 55.70860145311558,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 12116.25,
-            "y": 1550,
+            "x": 12100,
+            "y": 1561.25,
             "w": 25,
             "h": 25,
             "type": "lavamove",
@@ -26282,23 +26334,23 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
                 "x": 12100,
-                "y": 1550
+                "y": 1575
             },
             "pointTo": {
-                "x": 12125,
+                "x": 12100,
                 "y": 1550
             },
-            "xv": 150,
-            "yv": 0,
-            "inView": false
+            "xv": 9.184850993605149e-15,
+            "yv": -150,
+            "inView": true
         },
         {
-            "x": 12166.25,
-            "y": 1550,
+            "x": 12150,
+            "y": 1561.25,
             "w": 25,
             "h": 25,
             "type": "lavamove",
@@ -26321,19 +26373,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
                 "x": 12150,
-                "y": 1550
+                "y": 1575
             },
             "pointTo": {
-                "x": 12175,
+                "x": 12150,
                 "y": 1550
             },
-            "xv": 150,
-            "yv": 0,
-            "inView": false
+            "xv": 9.184850993605149e-15,
+            "yv": -150,
+            "inView": true
         },
         {
             "x": 12375,
@@ -26342,7 +26394,7 @@ else require('./_converter.js');
             "h": 104,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12300,
@@ -26351,7 +26403,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12450,
@@ -26361,7 +26413,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#55894d",
             "tileColor": "#8bc482",
-            "inView": false
+            "inView": true
         },
         {
             "x": 12700,
@@ -26370,7 +26422,7 @@ else require('./_converter.js');
             "h": 1500,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12600,
@@ -26379,7 +26431,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12675,
@@ -26388,11 +26440,11 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12300,
-            "y": 981.5333333333581,
+            "y": 865.4000000002463,
             "w": 100,
             "h": 100,
             "type": "lavamove",
@@ -26419,11 +26471,11 @@ else require('./_converter.js');
             },
             "xv": 9.307315673519884e-15,
             "yv": -152,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12250,
-            "y": 1009.9083333333581,
+            "y": 1111.5250000002463,
             "w": 50,
             "h": 20,
             "type": "lavamove",
@@ -26450,10 +26502,10 @@ else require('./_converter.js');
             },
             "xv": 8.143901214329898e-15,
             "yv": 133,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 12330.9375,
+            "x": 12364.6875,
             "y": 750,
             "w": 25,
             "h": 25,
@@ -26469,23 +26521,23 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 112.5,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
-                "x": 12300,
-                "y": 750
-            },
-            "pointTo": {
                 "x": 12375,
                 "y": 750
             },
-            "xv": 112.5,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 12300,
+                "y": 750
+            },
+            "xv": -112.5,
+            "yv": 1.3777276490407723e-14,
+            "inView": true
         },
         {
             "x": 12300,
-            "y": 530.9375,
+            "y": 564.6875,
             "w": 25,
             "h": 50,
             "type": "lavamove",
@@ -26500,19 +26552,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 112.5,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
                 "x": 12300,
-                "y": 500
+                "y": 575
             },
             "pointTo": {
                 "x": 12300,
-                "y": 575
+                "y": 500
             },
             "xv": 6.8886382452038615e-15,
-            "yv": 112.5,
-            "inView": false
+            "yv": -112.5,
+            "inView": true
         },
         {
             "x": 12425,
@@ -26521,7 +26573,7 @@ else require('./_converter.js');
             "h": 20,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12300,
@@ -26530,7 +26582,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12375,
@@ -26539,7 +26591,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12300,
@@ -26548,7 +26600,7 @@ else require('./_converter.js');
             "h": 20,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12300,
@@ -26557,7 +26609,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12300,
@@ -26566,7 +26618,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12700,
@@ -26576,11 +26628,11 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#4d8977",
             "tileColor": "#82c4b0",
-            "inView": false
+            "inView": true
         },
         {
             "x": 1900,
-            "y": 139.16666666666563,
+            "y": 42.500000000007695,
             "w": 100,
             "h": 100,
             "type": "lavamove",
@@ -26595,19 +26647,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 100,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
                 "x": 1900,
-                "y": 300
+                "y": 0
             },
             "pointTo": {
                 "x": 1900,
-                "y": 0
+                "y": 300
             },
             "xv": 6.123233995736766e-15,
-            "yv": -100,
-            "inView": false
+            "yv": 100,
+            "inView": true
         },
         {
             "x": 1550,
@@ -26616,7 +26668,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 500,
@@ -26625,7 +26677,7 @@ else require('./_converter.js');
             "h": 75,
             "color": "#000000",
             "type": "block",
-            "inView": false
+            "inView": true
         },
         {
             "x": 574,
@@ -26634,7 +26686,7 @@ else require('./_converter.js');
             "h": 51,
             "color": "#000000",
             "type": "block",
-            "inView": false
+            "inView": true
         },
         {
             "x": 574,
@@ -26643,7 +26695,7 @@ else require('./_converter.js');
             "h": 1,
             "color": "#000000",
             "type": "block",
-            "inView": false
+            "inView": true
         },
         {
             "x": 12900,
@@ -26652,7 +26704,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12800,
@@ -26661,7 +26713,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12900,
@@ -26670,7 +26722,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12850,
@@ -26679,7 +26731,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 2000,
@@ -26689,7 +26741,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#4d6c89",
             "tileColor": "#828dc4",
-            "inView": false
+            "inView": true
         },
         {
             "x": 12925,
@@ -26697,7 +26749,7 @@ else require('./_converter.js');
             "w": 250,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 1.5,
+            "angle": 12188.25000000016,
             "rotateSpeed": 90,
             "pivotX": 12925,
             "pivotY": 525,
@@ -26705,8 +26757,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 127.47548783981962,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 13025,
@@ -26715,7 +26767,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13025,
@@ -26724,7 +26776,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13050,
@@ -26733,7 +26785,7 @@ else require('./_converter.js');
             "h": 250,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12850,
@@ -26742,7 +26794,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12800,
@@ -26752,7 +26804,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#333286",
             "tileColor": "#7351d2",
-            "inView": false
+            "inView": true
         },
         {
             "x": 12600,
@@ -26761,7 +26813,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12800,
@@ -26770,7 +26822,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12950,
@@ -26779,7 +26831,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12900,
@@ -26788,7 +26840,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12800,
@@ -26797,7 +26849,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12800,
@@ -26806,7 +26858,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13000,
@@ -26815,7 +26867,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13100,
@@ -26824,7 +26876,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12850,
@@ -26833,11 +26885,11 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12925,
-            "y": 1069.583333333269,
+            "y": 1021.2500000006324,
             "w": 50,
             "h": 25,
             "type": "lavamove",
@@ -26852,19 +26904,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 50,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
                 "x": 12925,
-                "y": 1075
+                "y": 1000
             },
             "pointTo": {
                 "x": 12925,
-                "y": 1000
+                "y": 1075
             },
             "xv": 3.061616997868383e-15,
-            "yv": -50,
-            "inView": false
+            "yv": 50,
+            "inView": true
         },
         {
             "x": 12800,
@@ -26874,7 +26926,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#6e4893",
             "tileColor": "#9978c9",
-            "inView": false
+            "inView": true
         },
         {
             "x": 12950,
@@ -26883,7 +26935,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12850,
@@ -26892,7 +26944,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12800,
@@ -26901,7 +26953,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13050,
@@ -26910,11 +26962,11 @@ else require('./_converter.js');
             "h": 200,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12900,
-            "y": 1358.75,
+            "y": 1213.75,
             "w": 50,
             "h": 25,
             "type": "lavamove",
@@ -26929,19 +26981,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
                 "x": 12900,
-                "y": 1375
+                "y": 1150
             },
             "pointTo": {
                 "x": 12900,
-                "y": 1150
+                "y": 1375
             },
             "xv": 9.184850993605149e-15,
-            "yv": -150,
-            "inView": false
+            "yv": 150,
+            "inView": true
         },
         {
             "x": 13050,
@@ -26951,7 +27003,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#894d5f",
             "tileColor": "#c48293",
-            "inView": false
+            "inView": true
         },
         {
             "x": 13100,
@@ -26960,7 +27012,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13100,
@@ -26972,7 +27024,7 @@ else require('./_converter.js');
             "maxTime": 4,
             "cdmult": 3,
             "trapType": "death",
-            "inView": false
+            "inView": true
         },
         {
             "x": 13150,
@@ -26981,7 +27033,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13125,
@@ -26990,7 +27042,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13275,
@@ -26999,7 +27051,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13300,
@@ -27008,7 +27060,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13450,
@@ -27017,7 +27069,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13425,
@@ -27026,7 +27078,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13150,
@@ -27035,7 +27087,7 @@ else require('./_converter.js');
             "h": 300,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13450,
@@ -27049,7 +27101,7 @@ else require('./_converter.js');
                 "y": -5000
             },
             "direction": "up",
-            "inView": false
+            "inView": true
         },
         {
             "x": 13450,
@@ -27058,7 +27110,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13400,
@@ -27067,7 +27119,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13275,
@@ -27075,7 +27127,7 @@ else require('./_converter.js');
             "w": 250,
             "h": 45,
             "type": "rotate-lava",
-            "angle": 2.3333333333333335,
+            "angle": 18959.50000000788,
             "rotateSpeed": 140,
             "pivotX": 13275,
             "pivotY": 675,
@@ -27083,8 +27135,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 127.00885795880538,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 13400,
@@ -27093,7 +27145,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13150,
@@ -27102,7 +27154,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13150,
@@ -27111,7 +27163,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13100,
@@ -27120,7 +27172,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13150,
@@ -27129,7 +27181,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13275,
@@ -27138,7 +27190,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13425,
@@ -27148,7 +27200,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#a15636",
             "tileColor": "#dc8150",
-            "inView": false
+            "inView": true
         },
         {
             "x": 13150,
@@ -27157,7 +27209,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13225,
@@ -27166,7 +27218,7 @@ else require('./_converter.js');
             "h": 12.5,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13400,
@@ -27176,7 +27228,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#a13636",
             "tileColor": "#dc5050",
-            "inView": false
+            "inView": true
         },
         {
             "x": 13150,
@@ -27185,10 +27237,10 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 13237.083333334323,
+            "x": 13301.250000009853,
             "y": 350,
             "w": 50,
             "h": 75,
@@ -27216,10 +27268,10 @@ else require('./_converter.js');
             },
             "xv": -350,
             "yv": 4.2862637970157365e-14,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 13312.916666665677,
+            "x": 13248.749999990147,
             "y": 425,
             "w": 50,
             "h": 75,
@@ -27247,7 +27299,7 @@ else require('./_converter.js');
             },
             "xv": 350,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13100,
@@ -27257,7 +27309,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#4f2222",
             "tileColor": "#a34d4d",
-            "inView": false
+            "inView": true
         },
         {
             "x": 13000,
@@ -27266,7 +27318,7 @@ else require('./_converter.js');
             "h": 300,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13050,
@@ -27275,7 +27327,7 @@ else require('./_converter.js');
             "h": 105,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13195,
@@ -27284,7 +27336,7 @@ else require('./_converter.js');
             "h": 105,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13000,
@@ -27293,7 +27345,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13300,
@@ -27302,7 +27354,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13500,
@@ -27311,7 +27363,7 @@ else require('./_converter.js');
             "h": 1500,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13500,
@@ -27320,7 +27372,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 13300,
@@ -27330,7 +27382,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#55894d",
             "tileColor": "#8bc482",
-            "inView": false
+            "inView": true
         },
         {
             "x": 13450,
@@ -27340,7 +27392,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#4d8977",
             "tileColor": "#82c4b0",
-            "inView": false
+            "inView": true
         },
         {
             "x": 13600,
@@ -27350,7 +27402,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#4d6c89",
             "tileColor": "#828dc4",
-            "inView": false
+            "inView": true
         },
         {
             "x": 13750,
@@ -27360,7 +27412,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#333286",
             "tileColor": "#7351d2",
-            "inView": false
+            "inView": true
         },
         {
             "x": 13900,
@@ -27370,7 +27422,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#6e4893",
             "tileColor": "#9978c9",
-            "inView": false
+            "inView": true
         },
         {
             "x": 14050,
@@ -27380,7 +27432,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#894d5f",
             "tileColor": "#c48293",
-            "inView": false
+            "inView": true
         },
         {
             "x": 14200,
@@ -27390,7 +27442,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#a15636",
             "tileColor": "#dc8150",
-            "inView": false
+            "inView": true
         },
         {
             "x": 14400,
@@ -27400,7 +27452,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#a13636",
             "tileColor": "#dc5050",
-            "inView": false
+            "inView": true
         },
         {
             "x": 15050,
@@ -27409,7 +27461,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 14850,
@@ -27418,7 +27470,7 @@ else require('./_converter.js');
             "h": 1300,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 14950,
@@ -27427,7 +27479,7 @@ else require('./_converter.js');
             "h": 1250,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 15050,
@@ -27436,7 +27488,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 15450,
@@ -27444,7 +27496,7 @@ else require('./_converter.js');
             "w": 50,
             "h": 50,
             "type": "winpad",
-            "inView": false
+            "inView": true
         },
         {
             "x": 15000,
@@ -27458,7 +27510,7 @@ else require('./_converter.js');
                 "y": 0
             },
             "direction": "right",
-            "inView": false
+            "inView": true
         },
         {
             "x": 13225,
@@ -27467,7 +27519,7 @@ else require('./_converter.js');
             "h": 12.5,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 14900,
@@ -27512,7 +27564,7 @@ else require('./_converter.js');
                 }
             ],
             "roundRadius": 25,
-            "inView": false
+            "inView": true
         },
         {
             "x": 14800,
@@ -27522,7 +27574,7 @@ else require('./_converter.js');
             "type": "trans",
             "collide": false,
             "opaq": 0.95,
-            "inView": false
+            "inView": true
         },
         {
             "x": 15500,
@@ -27531,7 +27583,7 @@ else require('./_converter.js');
             "h": 1600,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 14800,
@@ -27544,7 +27596,7 @@ else require('./_converter.js');
             "bgColor": "#55894d",
             "tileColor": "#8bc482",
             "changeColor": false,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18000,
@@ -27557,7 +27609,7 @@ else require('./_converter.js');
             "bgColor": "#55894d",
             "tileColor": "#8bc482",
             "changeColor": false,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18000,
@@ -27566,7 +27618,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18200,
@@ -27575,7 +27627,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 14850,
@@ -27585,7 +27637,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#4f2222",
             "tileColor": "#a34d4d",
-            "inView": false
+            "inView": true
         },
         {
             "x": 18050,
@@ -27595,10 +27647,10 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#224f2b",
             "tileColor": "#4da34e",
-            "inView": false
+            "inView": true
         },
         {
-            "x": 18358.75,
+            "x": 18386.25,
             "y": 150,
             "w": 50,
             "h": 50,
@@ -27626,10 +27678,10 @@ else require('./_converter.js');
             },
             "xv": -150,
             "yv": 1.8369701987210297e-14,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 18358.75,
+            "x": 18386.25,
             "y": 250,
             "w": 50,
             "h": 50,
@@ -27657,7 +27709,7 @@ else require('./_converter.js');
             },
             "xv": -150,
             "yv": 1.8369701987210297e-14,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18000,
@@ -27666,7 +27718,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18450,
@@ -27675,7 +27727,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18500,
@@ -27684,7 +27736,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18025,
@@ -27697,11 +27749,11 @@ else require('./_converter.js');
             },
             "type": "check",
             "collected": false,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 18558.75,
-            "y": 1.1174902042219585e-14,
+            "x": 18586.25,
+            "y": 7.807123344564369e-15,
             "w": 50,
             "h": 50,
             "type": "lavamove",
@@ -27728,11 +27780,11 @@ else require('./_converter.js');
             },
             "xv": -150,
             "yv": 1.8369701987210297e-14,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 18683.75,
-            "y": 1.1174902042219585e-14,
+            "x": 18711.25,
+            "y": 7.807123344564369e-15,
             "w": 50,
             "h": 50,
             "type": "lavamove",
@@ -27759,7 +27811,7 @@ else require('./_converter.js');
             },
             "xv": -150,
             "yv": 1.8369701987210297e-14,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18637.5,
@@ -27768,7 +27820,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18550,
@@ -27777,7 +27829,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18825,
@@ -27786,7 +27838,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18850,
@@ -27795,7 +27847,7 @@ else require('./_converter.js');
             "h": 450,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18600,
@@ -27804,11 +27856,11 @@ else require('./_converter.js');
             "h": 250,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 18591.25,
-            "y": 200,
+            "x": 18586.25,
+            "y": 250,
             "w": 50,
             "h": 50,
             "type": "lavamove",
@@ -27831,23 +27883,23 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 0,
+            "currentPoint": 2,
             "collidable": true,
             "pointOn": {
-                "x": 18550,
-                "y": 200
-            },
-            "pointTo": {
                 "x": 18600,
-                "y": 200
+                "y": 250
             },
-            "xv": 150,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 18550,
+                "y": 250
+            },
+            "xv": -150,
+            "yv": 1.8369701987210297e-14,
+            "inView": true
         },
         {
-            "x": 18691.25,
-            "y": 200,
+            "x": 18686.25,
+            "y": 250,
             "w": 50,
             "h": 50,
             "type": "lavamove",
@@ -27870,23 +27922,23 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 0,
+            "currentPoint": 2,
             "collidable": true,
             "pointOn": {
-                "x": 18650,
-                "y": 200
-            },
-            "pointTo": {
                 "x": 18700,
-                "y": 200
+                "y": 250
             },
-            "xv": 150,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 18650,
+                "y": 250
+            },
+            "xv": -150,
+            "yv": 1.8369701987210297e-14,
+            "inView": true
         },
         {
-            "x": 18791.25,
-            "y": 200,
+            "x": 18786.25,
+            "y": 250,
             "w": 50,
             "h": 50,
             "type": "lavamove",
@@ -27909,19 +27961,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 0,
+            "currentPoint": 2,
             "collidable": true,
             "pointOn": {
-                "x": 18750,
-                "y": 200
+                "x": 18800,
+                "y": 250
             },
             "pointTo": {
-                "x": 18800,
-                "y": 200
+                "x": 18750,
+                "y": 250
             },
-            "xv": 150,
-            "yv": 0,
-            "inView": false
+            "xv": -150,
+            "yv": 1.8369701987210297e-14,
+            "inView": true
         },
         {
             "x": 18050,
@@ -27930,10 +27982,10 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 18158.75,
+            "x": 18513.75,
             "y": 350,
             "w": 50,
             "h": 50,
@@ -27949,22 +28001,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 18550,
-                "y": 350
-            },
-            "pointTo": {
                 "x": 18000,
                 "y": 350
             },
-            "xv": -150,
-            "yv": 1.8369701987210297e-14,
-            "inView": false
+            "pointTo": {
+                "x": 18550,
+                "y": 350
+            },
+            "xv": 150,
+            "yv": 0,
+            "inView": true
         },
         {
-            "x": 18158.75,
+            "x": 18513.75,
             "y": 450,
             "w": 50,
             "h": 100,
@@ -27980,22 +28032,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 18550,
-                "y": 450
-            },
-            "pointTo": {
                 "x": 18000,
                 "y": 450
             },
-            "xv": -150,
-            "yv": 1.8369701987210297e-14,
-            "inView": false
+            "pointTo": {
+                "x": 18550,
+                "y": 450
+            },
+            "xv": 150,
+            "yv": 0,
+            "inView": true
         },
         {
-            "x": 18391.25,
+            "x": 18036.25,
             "y": 350,
             "w": 50,
             "h": 100,
@@ -28011,22 +28063,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 18000,
-                "y": 350
-            },
-            "pointTo": {
                 "x": 18550,
                 "y": 350
             },
-            "xv": 150,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 18000,
+                "y": 350
+            },
+            "xv": -150,
+            "yv": 1.8369701987210297e-14,
+            "inView": true
         },
         {
-            "x": 18391.25,
+            "x": 18036.25,
             "y": 500,
             "w": 50,
             "h": 50,
@@ -28042,19 +28094,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 150,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 18000,
-                "y": 500
-            },
-            "pointTo": {
                 "x": 18550,
                 "y": 500
             },
-            "xv": 150,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 18000,
+                "y": 500
+            },
+            "xv": -150,
+            "yv": 1.8369701987210297e-14,
+            "inView": true
         },
         {
             "x": 18350,
@@ -28063,7 +28115,7 @@ else require('./_converter.js');
             "h": 125,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18350,
@@ -28072,7 +28124,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18200,
@@ -28081,7 +28133,7 @@ else require('./_converter.js');
             "h": 125,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18200,
@@ -28090,7 +28142,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18150,
@@ -28099,7 +28151,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18000,
@@ -28108,7 +28160,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18150,
@@ -28117,7 +28169,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18000,
@@ -28126,10 +28178,10 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 18208.75,
+            "x": 18236.25,
             "y": 850,
             "w": 50,
             "h": 50,
@@ -28157,7 +28209,7 @@ else require('./_converter.js');
             },
             "xv": -150,
             "yv": 1.8369701987210297e-14,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18300,
@@ -28166,7 +28218,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18250,
@@ -28175,7 +28227,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18350,
@@ -28186,7 +28238,7 @@ else require('./_converter.js');
             "amount": 1000,
             "active": true,
             "currentNum": 0,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18550,
@@ -28195,7 +28247,7 @@ else require('./_converter.js');
             "h": 450,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18350,
@@ -28204,7 +28256,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18500,
@@ -28213,7 +28265,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18350,
@@ -28225,10 +28277,10 @@ else require('./_converter.js');
             "maxTime": 15,
             "cdmult": 3,
             "trapType": "death",
-            "inView": false
+            "inView": true
         },
         {
-            "x": 18408.75,
+            "x": 18436.25,
             "y": 850,
             "w": 50,
             "h": 100,
@@ -28256,10 +28308,10 @@ else require('./_converter.js');
             },
             "xv": -150,
             "yv": 1.8369701987210297e-14,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 18408.75,
+            "x": 18436.25,
             "y": 1000,
             "w": 50,
             "h": 50,
@@ -28287,7 +28339,7 @@ else require('./_converter.js');
             },
             "xv": -150,
             "yv": 1.8369701987210297e-14,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18050,
@@ -28296,7 +28348,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18200,
@@ -28305,7 +28357,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18000,
@@ -28314,7 +28366,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18100,
@@ -28323,7 +28375,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18000,
@@ -28335,7 +28387,7 @@ else require('./_converter.js');
             "maxTime": 3,
             "cdmult": 3,
             "trapType": "death",
-            "inView": false
+            "inView": true
         },
         {
             "x": 18900,
@@ -28344,7 +28396,7 @@ else require('./_converter.js');
             "h": 600,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18000,
@@ -28353,7 +28405,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18050,
@@ -28362,7 +28414,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18350,
@@ -28371,7 +28423,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18500,
@@ -28380,7 +28432,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18200,
@@ -28389,10 +28441,10 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 18102.083333331353,
+            "x": 18243.750000019707,
             "y": 1150,
             "w": 50,
             "h": 50,
@@ -28408,22 +28460,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 250,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
-                "x": 18000,
-                "y": 1150
-            },
-            "pointTo": {
                 "x": 18550,
                 "y": 1150
             },
-            "xv": 250,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 18000,
+                "y": 1150
+            },
+            "xv": -250,
+            "yv": 3.061616997868383e-14,
+            "inView": true
         },
         {
-            "x": 18447.916666668647,
+            "x": 18306.249999980293,
             "y": 1100,
             "w": 50,
             "h": 50,
@@ -28439,19 +28491,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 250,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
-                "x": 18550,
-                "y": 1100
-            },
-            "pointTo": {
                 "x": 18000,
                 "y": 1100
             },
-            "xv": -250,
-            "yv": 3.061616997868383e-14,
-            "inView": false
+            "pointTo": {
+                "x": 18550,
+                "y": 1100
+            },
+            "xv": 250,
+            "yv": 0,
+            "inView": true
         },
         {
             "x": 18600,
@@ -28460,7 +28512,7 @@ else require('./_converter.js');
             "h": 500,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18650,
@@ -28469,7 +28521,7 @@ else require('./_converter.js');
             "h": 450,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18176,
@@ -28477,7 +28529,7 @@ else require('./_converter.js');
             "w": 194,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 0.75,
+            "angle": 6094.125000002061,
             "rotateSpeed": 45,
             "pivotX": 18176,
             "pivotY": 1426,
@@ -28485,16 +28537,16 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 100.16985574512923,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
-            "x": 18349.985007325453,
-            "y": 1427.2906792249853,
+            "x": 18332.455949711886,
+            "y": 1348.6283828878272,
             "w": 50,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 0.75,
+            "angle": 6094.125000002061,
             "rotateSpeed": 45,
             "pivotX": 18175,
             "pivotY": 1425,
@@ -28502,16 +28554,16 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 210.35533905932738,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
-            "x": 18000.014992674547,
-            "y": 1422.7093207750147,
+            "x": 18017.544050288114,
+            "y": 1501.371617112172,
             "w": 50,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 180.75,
+            "angle": 6274.125000002061,
             "rotateSpeed": 45,
             "pivotX": 18175,
             "pivotY": 1425,
@@ -28519,8 +28571,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 210.35533905932738,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 18350,
@@ -28529,7 +28581,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18350,
@@ -28538,7 +28590,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18150,
@@ -28547,7 +28599,7 @@ else require('./_converter.js');
             "h": 250,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18000,
@@ -28556,7 +28608,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18300,
@@ -28565,7 +28617,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18150,
@@ -28574,7 +28626,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18000,
@@ -28583,7 +28635,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18100,
@@ -28592,7 +28644,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18200,
@@ -28601,7 +28653,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18300,
@@ -28610,7 +28662,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18050,
@@ -28620,7 +28672,7 @@ else require('./_converter.js');
             "type": "button",
             "id": 5,
             "active": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18650,
@@ -28630,7 +28682,7 @@ else require('./_converter.js');
             "type": "door",
             "id": 5,
             "active": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18450,
@@ -28639,7 +28691,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18500,
@@ -28648,7 +28700,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18600,
@@ -28657,7 +28709,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18500,
@@ -28666,7 +28718,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 18450,
@@ -28675,10 +28727,10 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 18497.916666668647,
+            "x": 18556.249999980293,
             "y": 1300,
             "w": 50,
             "h": 50,
@@ -28694,22 +28746,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 250,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
-                "x": 18600,
-                "y": 1300
-            },
-            "pointTo": {
                 "x": 18450,
                 "y": 1300
             },
-            "xv": -250,
-            "yv": 3.061616997868383e-14,
-            "inView": false
+            "pointTo": {
+                "x": 18600,
+                "y": 1300
+            },
+            "xv": 250,
+            "yv": 0,
+            "inView": true
         },
         {
-            "x": 18497.916666668647,
+            "x": 18556.249999980293,
             "y": 1400,
             "w": 50,
             "h": 50,
@@ -28725,19 +28777,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 250,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
-                "x": 18600,
-                "y": 1400
-            },
-            "pointTo": {
                 "x": 18450,
                 "y": 1400
             },
-            "xv": -250,
-            "yv": 3.061616997868383e-14,
-            "inView": false
+            "pointTo": {
+                "x": 18600,
+                "y": 1400
+            },
+            "xv": 250,
+            "yv": 0,
+            "inView": true
         },
         {
             "x": 18750,
@@ -28746,7 +28798,7 @@ else require('./_converter.js');
             "h": 600,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19150,
@@ -28755,10 +28807,10 @@ else require('./_converter.js');
             "h": 350,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 19002.083333331353,
+            "x": 18843.750000019707,
             "y": 1300,
             "w": 50,
             "h": 50,
@@ -28774,22 +28826,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 250,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 18750,
-                "y": 1300
-            },
-            "pointTo": {
                 "x": 19100,
                 "y": 1300
             },
-            "xv": 250,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 18750,
+                "y": 1300
+            },
+            "xv": -250,
+            "yv": 3.061616997868383e-14,
+            "inView": true
         },
         {
-            "x": 19002.083333331353,
+            "x": 18843.750000019707,
             "y": 1400,
             "w": 50,
             "h": 50,
@@ -28805,22 +28857,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 250,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 18750,
-                "y": 1400
-            },
-            "pointTo": {
                 "x": 19100,
                 "y": 1400
             },
-            "xv": 250,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 18750,
+                "y": 1400
+            },
+            "xv": -250,
+            "yv": 3.061616997868383e-14,
+            "inView": true
         },
         {
-            "x": 19002.083333331353,
+            "x": 18843.750000019707,
             "y": 1500,
             "w": 50,
             "h": 50,
@@ -28836,22 +28888,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 250,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 18750,
-                "y": 1500
-            },
-            "pointTo": {
                 "x": 19100,
                 "y": 1500
             },
-            "xv": 250,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 18750,
+                "y": 1500
+            },
+            "xv": -250,
+            "yv": 3.061616997868383e-14,
+            "inView": true
         },
         {
-            "x": 18847.916666668647,
+            "x": 19006.249999980293,
             "y": 1450,
             "w": 50,
             "h": 50,
@@ -28867,22 +28919,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 250,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 19100,
-                "y": 1450
-            },
-            "pointTo": {
                 "x": 18750,
                 "y": 1450
             },
-            "xv": -250,
-            "yv": 3.061616997868383e-14,
-            "inView": false
+            "pointTo": {
+                "x": 19100,
+                "y": 1450
+            },
+            "xv": 250,
+            "yv": 0,
+            "inView": true
         },
         {
-            "x": 18847.916666668647,
+            "x": 19006.249999980293,
             "y": 1550,
             "w": 50,
             "h": 50,
@@ -28898,22 +28950,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 250,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 19100,
-                "y": 1550
-            },
-            "pointTo": {
                 "x": 18750,
                 "y": 1550
             },
-            "xv": -250,
-            "yv": 3.061616997868383e-14,
-            "inView": false
+            "pointTo": {
+                "x": 19100,
+                "y": 1550
+            },
+            "xv": 250,
+            "yv": 0,
+            "inView": true
         },
         {
-            "x": 18847.916666668647,
+            "x": 19006.249999980293,
             "y": 1350,
             "w": 50,
             "h": 50,
@@ -28929,23 +28981,23 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 250,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 19100,
-                "y": 1350
-            },
-            "pointTo": {
                 "x": 18750,
                 "y": 1350
             },
-            "xv": -250,
-            "yv": 3.061616997868383e-14,
-            "inView": false
+            "pointTo": {
+                "x": 19100,
+                "y": 1350
+            },
+            "xv": 250,
+            "yv": 0,
+            "inView": true
         },
         {
             "x": 18750,
-            "y": 1297.9166666667904,
+            "y": 1456.2499999987683,
             "w": 50,
             "h": 50,
             "type": "lavamove",
@@ -28960,23 +29012,23 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 250,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
                 "x": 18750,
-                "y": 1550
+                "y": 1200
             },
             "pointTo": {
                 "x": 18750,
-                "y": 1200
+                "y": 1550
             },
             "xv": 1.5308084989341916e-14,
-            "yv": -250,
-            "inView": false
+            "yv": 250,
+            "inView": true
         },
         {
             "x": 18850,
-            "y": 1297.9166666667904,
+            "y": 1456.2499999987683,
             "w": 50,
             "h": 50,
             "type": "lavamove",
@@ -28991,23 +29043,23 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 250,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
                 "x": 18850,
-                "y": 1550
+                "y": 1200
             },
             "pointTo": {
                 "x": 18850,
-                "y": 1200
+                "y": 1550
             },
             "xv": 1.5308084989341916e-14,
-            "yv": -250,
-            "inView": false
+            "yv": 250,
+            "inView": true
         },
         {
             "x": 18950,
-            "y": 1297.9166666667904,
+            "y": 1456.2499999987683,
             "w": 50,
             "h": 50,
             "type": "lavamove",
@@ -29022,23 +29074,23 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 250,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
                 "x": 18950,
-                "y": 1550
+                "y": 1200
             },
             "pointTo": {
                 "x": 18950,
-                "y": 1200
+                "y": 1550
             },
             "xv": 1.5308084989341916e-14,
-            "yv": -250,
-            "inView": false
+            "yv": 250,
+            "inView": true
         },
         {
             "x": 19000,
-            "y": 1452.0833333332096,
+            "y": 1293.7500000012317,
             "w": 50,
             "h": 50,
             "type": "lavamove",
@@ -29053,146 +29105,146 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 250,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
                 "x": 19000,
-                "y": 1200
+                "y": 1550
             },
             "pointTo": {
                 "x": 19000,
-                "y": 1550
-            },
-            "xv": 1.5308084989341916e-14,
-            "yv": 250,
-            "inView": false
-        },
-        {
-            "x": 18900,
-            "y": 1452.0833333332096,
-            "w": 50,
-            "h": 50,
-            "type": "lavamove",
-            "points": [
-                [
-                    18900,
-                    1550
-                ],
-                [
-                    18900,
-                    1200
-                ]
-            ],
-            "speed": 250,
-            "currentPoint": 1,
-            "collidable": true,
-            "pointOn": {
-                "x": 18900,
-                "y": 1200
-            },
-            "pointTo": {
-                "x": 18900,
-                "y": 1550
-            },
-            "xv": 1.5308084989341916e-14,
-            "yv": 250,
-            "inView": false
-        },
-        {
-            "x": 18800,
-            "y": 1452.0833333332096,
-            "w": 50,
-            "h": 50,
-            "type": "lavamove",
-            "points": [
-                [
-                    18800,
-                    1550
-                ],
-                [
-                    18800,
-                    1200
-                ]
-            ],
-            "speed": 250,
-            "currentPoint": 1,
-            "collidable": true,
-            "pointOn": {
-                "x": 18800,
-                "y": 1200
-            },
-            "pointTo": {
-                "x": 18800,
-                "y": 1550
-            },
-            "xv": 1.5308084989341916e-14,
-            "yv": 250,
-            "inView": false
-        },
-        {
-            "x": 19100,
-            "y": 1452.0833333332096,
-            "w": 50,
-            "h": 50,
-            "type": "lavamove",
-            "points": [
-                [
-                    19100,
-                    1550
-                ],
-                [
-                    19100,
-                    1200
-                ]
-            ],
-            "speed": 250,
-            "currentPoint": 1,
-            "collidable": true,
-            "pointOn": {
-                "x": 19100,
-                "y": 1200
-            },
-            "pointTo": {
-                "x": 19100,
-                "y": 1550
-            },
-            "xv": 1.5308084989341916e-14,
-            "yv": 250,
-            "inView": false
-        },
-        {
-            "x": 19050,
-            "y": 1297.9166666667904,
-            "w": 50,
-            "h": 50,
-            "type": "lavamove",
-            "points": [
-                [
-                    19050,
-                    1200
-                ],
-                [
-                    19050,
-                    1550
-                ]
-            ],
-            "speed": 250,
-            "currentPoint": 1,
-            "collidable": true,
-            "pointOn": {
-                "x": 19050,
-                "y": 1550
-            },
-            "pointTo": {
-                "x": 19050,
                 "y": 1200
             },
             "xv": 1.5308084989341916e-14,
             "yv": -250,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 18847.916666668647,
+            "x": 18900,
+            "y": 1293.7500000012317,
+            "w": 50,
+            "h": 50,
+            "type": "lavamove",
+            "points": [
+                [
+                    18900,
+                    1550
+                ],
+                [
+                    18900,
+                    1200
+                ]
+            ],
+            "speed": 250,
+            "currentPoint": 0,
+            "collidable": true,
+            "pointOn": {
+                "x": 18900,
+                "y": 1550
+            },
+            "pointTo": {
+                "x": 18900,
+                "y": 1200
+            },
+            "xv": 1.5308084989341916e-14,
+            "yv": -250,
+            "inView": true
+        },
+        {
+            "x": 18800,
+            "y": 1293.7500000012317,
+            "w": 50,
+            "h": 50,
+            "type": "lavamove",
+            "points": [
+                [
+                    18800,
+                    1550
+                ],
+                [
+                    18800,
+                    1200
+                ]
+            ],
+            "speed": 250,
+            "currentPoint": 0,
+            "collidable": true,
+            "pointOn": {
+                "x": 18800,
+                "y": 1550
+            },
+            "pointTo": {
+                "x": 18800,
+                "y": 1200
+            },
+            "xv": 1.5308084989341916e-14,
+            "yv": -250,
+            "inView": true
+        },
+        {
+            "x": 19100,
+            "y": 1293.7500000012317,
+            "w": 50,
+            "h": 50,
+            "type": "lavamove",
+            "points": [
+                [
+                    19100,
+                    1550
+                ],
+                [
+                    19100,
+                    1200
+                ]
+            ],
+            "speed": 250,
+            "currentPoint": 0,
+            "collidable": true,
+            "pointOn": {
+                "x": 19100,
+                "y": 1550
+            },
+            "pointTo": {
+                "x": 19100,
+                "y": 1200
+            },
+            "xv": 1.5308084989341916e-14,
+            "yv": -250,
+            "inView": true
+        },
+        {
+            "x": 19050,
+            "y": 1456.2499999987683,
+            "w": 50,
+            "h": 50,
+            "type": "lavamove",
+            "points": [
+                [
+                    19050,
+                    1200
+                ],
+                [
+                    19050,
+                    1550
+                ]
+            ],
+            "speed": 250,
+            "currentPoint": 0,
+            "collidable": true,
+            "pointOn": {
+                "x": 19050,
+                "y": 1200
+            },
+            "pointTo": {
+                "x": 19050,
+                "y": 1550
+            },
+            "xv": 1.5308084989341916e-14,
+            "yv": 250,
+            "inView": true
+        },
+        {
+            "x": 19006.249999980293,
             "y": 1250,
             "w": 50,
             "h": 50,
@@ -29208,22 +29260,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 250,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 19100,
-                "y": 1250
-            },
-            "pointTo": {
                 "x": 18750,
                 "y": 1250
             },
-            "xv": -250,
-            "yv": 3.061616997868383e-14,
-            "inView": false
+            "pointTo": {
+                "x": 19100,
+                "y": 1250
+            },
+            "xv": 250,
+            "yv": 0,
+            "inView": true
         },
         {
-            "x": 19002.083333331353,
+            "x": 18843.750000019707,
             "y": 1200,
             "w": 50,
             "h": 50,
@@ -29239,19 +29291,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 250,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 18750,
-                "y": 1200
-            },
-            "pointTo": {
                 "x": 19100,
                 "y": 1200
             },
-            "xv": 250,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 18750,
+                "y": 1200
+            },
+            "xv": -250,
+            "yv": 3.061616997868383e-14,
+            "inView": true
         },
         {
             "x": 19200,
@@ -29260,7 +29312,7 @@ else require('./_converter.js');
             "h": 350,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19450,
@@ -29269,7 +29321,7 @@ else require('./_converter.js');
             "h": 950,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19200,
@@ -29283,7 +29335,7 @@ else require('./_converter.js');
                 "y": -15000
             },
             "direction": "up",
-            "inView": false
+            "inView": true
         },
         {
             "x": 19200,
@@ -29297,7 +29349,7 @@ else require('./_converter.js');
                 "y": 0
             },
             "direction": "right",
-            "inView": false
+            "inView": true
         },
         {
             "x": 19500,
@@ -29310,7 +29362,7 @@ else require('./_converter.js');
             },
             "type": "check",
             "collected": false,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19500,
@@ -29319,7 +29371,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19650,
@@ -29328,7 +29380,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19525,
@@ -29338,7 +29390,7 @@ else require('./_converter.js');
             "type": "color",
             "bgColor": "#787878",
             "tileColor": "#cccccc",
-            "inView": false
+            "inView": true
         },
         {
             "x": 19700,
@@ -29352,7 +29404,7 @@ else require('./_converter.js');
                 "y": 0
             },
             "direction": "right",
-            "inView": false
+            "inView": true
         },
         {
             "x": 19700,
@@ -29361,7 +29413,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19800,
@@ -29370,7 +29422,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19700,
@@ -29379,7 +29431,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 20000,
@@ -29388,10 +29440,10 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 20102.083333331353,
+            "x": 20056.249999980293,
             "y": 700,
             "w": 50,
             "h": 50,
@@ -29419,10 +29471,10 @@ else require('./_converter.js');
             },
             "xv": 250,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 20002.083333331353,
+            "x": 19956.249999980293,
             "y": 700,
             "w": 50,
             "h": 50,
@@ -29450,7 +29502,7 @@ else require('./_converter.js');
             },
             "xv": 250,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19850,
@@ -29459,7 +29511,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 20300,
@@ -29468,7 +29520,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 20300,
@@ -29477,7 +29529,7 @@ else require('./_converter.js');
             "h": 250,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19550,
@@ -29486,7 +29538,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 20100,
@@ -29495,7 +29547,7 @@ else require('./_converter.js');
             "h": 52,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 20100,
@@ -29504,10 +29556,10 @@ else require('./_converter.js');
             "h": 52,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 19947.916666668647,
+            "x": 19893.750000019707,
             "y": 900,
             "w": 50,
             "h": 100,
@@ -29535,10 +29587,10 @@ else require('./_converter.js');
             },
             "xv": -250,
             "yv": 3.061616997868383e-14,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 19847.916666668647,
+            "x": 19793.750000019707,
             "y": 950,
             "w": 50,
             "h": 100,
@@ -29566,10 +29618,10 @@ else require('./_converter.js');
             },
             "xv": -250,
             "yv": 3.061616997868383e-14,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 19747.916666668647,
+            "x": 19693.750000019707,
             "y": 900,
             "w": 50,
             "h": 100,
@@ -29597,7 +29649,7 @@ else require('./_converter.js');
             },
             "xv": -250,
             "yv": 3.061616997868383e-14,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19800,
@@ -29606,7 +29658,7 @@ else require('./_converter.js');
             "h": 4,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19550,
@@ -29615,7 +29667,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19500,
@@ -29624,7 +29676,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19500,
@@ -29633,7 +29685,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19625,
@@ -29642,7 +29694,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19600,
@@ -29651,7 +29703,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19700,
@@ -29660,7 +29712,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19750,
@@ -29669,7 +29721,7 @@ else require('./_converter.js');
             "h": 450,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19625,
@@ -29677,7 +29729,7 @@ else require('./_converter.js');
             "w": 250,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 0.75,
+            "angle": 6094.125000002061,
             "rotateSpeed": 45,
             "pivotX": 19625,
             "pivotY": 1375,
@@ -29685,8 +29737,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 127.47548783981962,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 19625,
@@ -29694,7 +29746,7 @@ else require('./_converter.js');
             "w": 250,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 1.5,
+            "angle": 12188.250000004122,
             "rotateSpeed": 90,
             "pivotX": 19625,
             "pivotY": 1375,
@@ -29702,8 +29754,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 127.47548783981962,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 19625,
@@ -29711,7 +29763,7 @@ else require('./_converter.js');
             "w": 250,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 2.25,
+            "angle": 18282.375000006185,
             "rotateSpeed": 135,
             "pivotX": 19625,
             "pivotY": 1375,
@@ -29719,8 +29771,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 127.47548783981962,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 19625,
@@ -29728,7 +29780,7 @@ else require('./_converter.js');
             "w": 250,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 3,
+            "angle": 24376.500000008244,
             "rotateSpeed": 180,
             "pivotX": 19625,
             "pivotY": 1375,
@@ -29736,8 +29788,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 127.47548783981962,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 19550,
@@ -29746,10 +29798,10 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 20052.083333331353,
+            "x": 19893.750000019707,
             "y": 1550,
             "w": 50,
             "h": 50,
@@ -29765,22 +29817,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 250,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 19800,
-                "y": 1550
-            },
-            "pointTo": {
                 "x": 20150,
                 "y": 1550
             },
-            "xv": 250,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 19800,
+                "y": 1550
+            },
+            "xv": -250,
+            "yv": 3.061616997868383e-14,
+            "inView": true
         },
         {
-            "x": 19952.083333331353,
+            "x": 19906.249999980293,
             "y": 1550,
             "w": 50,
             "h": 50,
@@ -29808,10 +29860,10 @@ else require('./_converter.js');
             },
             "xv": 250,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 19847.916666668647,
+            "x": 19906.249999980293,
             "y": 1550,
             "w": 50,
             "h": 50,
@@ -29827,22 +29879,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 250,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
-                "x": 19950,
-                "y": 1550
-            },
-            "pointTo": {
                 "x": 19800,
                 "y": 1550
             },
-            "xv": -250,
-            "yv": 3.061616997868383e-14,
-            "inView": false
+            "pointTo": {
+                "x": 19950,
+                "y": 1550
+            },
+            "xv": 250,
+            "yv": 0,
+            "inView": true
         },
         {
-            "x": 19847.916666668647,
+            "x": 19806.249999980293,
             "y": 1550,
             "w": 50,
             "h": 50,
@@ -29858,19 +29910,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 250,
-            "currentPoint": 0,
+            "currentPoint": 1,
             "collidable": true,
             "pointOn": {
-                "x": 19850,
-                "y": 1550
-            },
-            "pointTo": {
                 "x": 19800,
                 "y": 1550
             },
-            "xv": -250,
-            "yv": 3.061616997868383e-14,
-            "inView": false
+            "pointTo": {
+                "x": 19850,
+                "y": 1550
+            },
+            "xv": 250,
+            "yv": 0,
+            "inView": true
         },
         {
             "x": 19800,
@@ -29879,7 +29931,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 20200,
@@ -29890,7 +29942,7 @@ else require('./_converter.js');
             "amount": 50,
             "active": true,
             "currentNum": 0,
-            "inView": false
+            "inView": true
         },
         {
             "x": 20300,
@@ -29899,7 +29951,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 20200,
@@ -29911,7 +29963,7 @@ else require('./_converter.js');
             "maxTime": 0.01,
             "cdmult": 3,
             "trapType": "death",
-            "inView": false
+            "inView": true
         },
         {
             "x": 20150,
@@ -29920,7 +29972,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19975,
@@ -29928,7 +29980,7 @@ else require('./_converter.js');
             "w": 350,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 0.75,
+            "angle": 6094.125000002061,
             "rotateSpeed": 45,
             "pivotX": 19975,
             "pivotY": 1325,
@@ -29936,8 +29988,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 176.7766952966369,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 19800,
@@ -29946,7 +29998,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 20150,
@@ -29955,7 +30007,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19975,
@@ -29963,7 +30015,7 @@ else require('./_converter.js');
             "w": 350,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 150,
+            "angle": 1218825.0000004123,
             "rotateSpeed": 9000,
             "pivotX": 19975,
             "pivotY": 1325,
@@ -29971,8 +30023,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 176.7766952966369,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 19975,
@@ -29980,7 +30032,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 150,
+            "angle": 1218825.0000004123,
             "rotateSpeed": 9000,
             "pivotX": 19975,
             "pivotY": 1225,
@@ -29988,8 +30040,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 79.05694150420949,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 20075,
@@ -29997,7 +30049,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 150,
+            "angle": 1218825.0000004123,
             "rotateSpeed": 9000,
             "pivotX": 20075,
             "pivotY": 1325,
@@ -30005,8 +30057,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 79.05694150420949,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 19975,
@@ -30014,7 +30066,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 150,
+            "angle": 1218825.0000004123,
             "rotateSpeed": 9000,
             "pivotX": 19975,
             "pivotY": 1425,
@@ -30022,8 +30074,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 79.05694150420949,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 19875,
@@ -30031,7 +30083,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 150,
+            "angle": 1218825.0000004123,
             "rotateSpeed": 9000,
             "pivotX": 19875,
             "pivotY": 1325,
@@ -30039,8 +30091,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 79.05694150420949,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 19975,
@@ -30048,7 +30100,7 @@ else require('./_converter.js');
             "w": 350,
             "h": 50,
             "type": "rotate-lava",
-            "angle": -75,
+            "angle": -609412.5000002062,
             "rotateSpeed": -4500,
             "pivotX": 19975,
             "pivotY": 1325,
@@ -30056,8 +30108,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 176.7766952966369,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 20150,
@@ -30066,7 +30118,7 @@ else require('./_converter.js');
             "h": 150,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19875,
@@ -30074,7 +30126,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 25,
             "type": "rotate-lava",
-            "angle": 150,
+            "angle": 1218825.0000004123,
             "rotateSpeed": 9000,
             "pivotX": 19875,
             "pivotY": 1225,
@@ -30082,8 +30134,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 76.03453162872775,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 20075,
@@ -30091,7 +30143,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 25,
             "type": "rotate-lava",
-            "angle": 150,
+            "angle": 1218825.0000004123,
             "rotateSpeed": 9000,
             "pivotX": 20075,
             "pivotY": 1225,
@@ -30099,8 +30151,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 76.03453162872775,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 20075,
@@ -30108,7 +30160,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 25,
             "type": "rotate-lava",
-            "angle": 150,
+            "angle": 1218825.0000004123,
             "rotateSpeed": 9000,
             "pivotX": 20075,
             "pivotY": 1425,
@@ -30116,8 +30168,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 76.03453162872775,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 19875,
@@ -30125,7 +30177,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 25,
             "type": "rotate-lava",
-            "angle": 150,
+            "angle": 1218825.0000004123,
             "rotateSpeed": 9000,
             "pivotX": 19875,
             "pivotY": 1425,
@@ -30133,11 +30185,11 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 76.03453162872775,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
-            "x": 20286.475000001188,
+            "x": 20273.174999988176,
             "y": 1100,
             "w": 50,
             "h": 100,
@@ -30153,22 +30205,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 696969,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 20200,
-                "y": 1100
-            },
-            "pointTo": {
                 "x": 20300,
                 "y": 1100
             },
-            "xv": 696969,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 20200,
+                "y": 1100
+            },
+            "xv": -696969,
+            "yv": 8.535408549549316e-11,
+            "inView": true
         },
         {
-            "x": 20213.524999998812,
+            "x": 20226.825000011824,
             "y": 1200,
             "w": 50,
             "h": 100,
@@ -30184,19 +30236,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 696969,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 20300,
-                "y": 1200
-            },
-            "pointTo": {
                 "x": 20200,
                 "y": 1200
             },
-            "xv": -696969,
-            "yv": 8.535408549549316e-11,
-            "inView": false
+            "pointTo": {
+                "x": 20300,
+                "y": 1200
+            },
+            "xv": 696969,
+            "yv": 0,
+            "inView": true
         },
         {
             "x": 20200,
@@ -30205,7 +30257,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 20350,
@@ -30214,11 +30266,11 @@ else require('./_converter.js');
             "h": 450,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 20450,
-            "y": 1313.525000000439,
+            "y": 1273.1750000042102,
             "w": 50,
             "h": 100,
             "type": "lavamove",
@@ -30245,11 +30297,11 @@ else require('./_converter.js');
             },
             "xv": 4.267704274774658e-11,
             "yv": -696969,
-            "inView": false
+            "inView": true
         },
         {
             "x": 20400,
-            "y": 1286.474999999627,
+            "y": 1326.824999995857,
             "w": 50,
             "h": 100,
             "type": "lavamove",
@@ -30276,7 +30328,7 @@ else require('./_converter.js');
             },
             "xv": 4.267704274774658e-11,
             "yv": 696969,
-            "inView": false
+            "inView": true
         },
         {
             "x": 20450,
@@ -30284,7 +30336,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 25,
             "type": "rotate-lava",
-            "angle": 150,
+            "angle": 1218825.0000004123,
             "rotateSpeed": 9000,
             "pivotX": 20450,
             "pivotY": 1225,
@@ -30292,8 +30344,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 76.03453162872775,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 20450,
@@ -30301,7 +30353,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 25,
             "type": "rotate-lava",
-            "angle": 150,
+            "angle": 1218825.0000004123,
             "rotateSpeed": 9000,
             "pivotX": 20450,
             "pivotY": 1300,
@@ -30309,8 +30361,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 76.03453162872775,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 20450,
@@ -30318,7 +30370,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 25,
             "type": "rotate-lava",
-            "angle": 150,
+            "angle": 1218825.0000004123,
             "rotateSpeed": 9000,
             "pivotX": 20450,
             "pivotY": 1375,
@@ -30326,8 +30378,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 76.03453162872775,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 20450,
@@ -30335,7 +30387,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 25,
             "type": "rotate-lava",
-            "angle": 150,
+            "angle": 1218825.0000004123,
             "rotateSpeed": 9000,
             "pivotX": 20450,
             "pivotY": 1450,
@@ -30343,8 +30395,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 76.03453162872775,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 20450,
@@ -30352,7 +30404,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 25,
             "type": "rotate-lava",
-            "angle": 150,
+            "angle": 1218825.0000004123,
             "rotateSpeed": 9000,
             "pivotX": 20450,
             "pivotY": 1525,
@@ -30360,8 +30412,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 76.03453162872775,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 20450,
@@ -30369,7 +30421,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 25,
             "type": "rotate-lava",
-            "angle": 150,
+            "angle": 1218825.0000004123,
             "rotateSpeed": 9000,
             "pivotX": 20450,
             "pivotY": 1150,
@@ -30377,11 +30429,11 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 76.03453162872775,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
-            "x": 20436.475000001188,
+            "x": 20423.174999988176,
             "y": 1175,
             "w": 50,
             "h": 100,
@@ -30397,22 +30449,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 696969,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 20400,
-                "y": 1175
-            },
-            "pointTo": {
                 "x": 20450,
                 "y": 1175
             },
-            "xv": 696969,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 20400,
+                "y": 1175
+            },
+            "xv": -696969,
+            "yv": 8.535408549549316e-11,
+            "inView": true
         },
         {
-            "x": 20413.524999998812,
+            "x": 20426.825000011824,
             "y": 1275,
             "w": 50,
             "h": 100,
@@ -30428,22 +30480,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 696969,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 20450,
-                "y": 1275
-            },
-            "pointTo": {
                 "x": 20400,
                 "y": 1275
             },
-            "xv": -696969,
-            "yv": 8.535408549549316e-11,
-            "inView": false
+            "pointTo": {
+                "x": 20450,
+                "y": 1275
+            },
+            "xv": 696969,
+            "yv": 0,
+            "inView": true
         },
         {
-            "x": 20436.475000001188,
+            "x": 20423.174999988176,
             "y": 1375,
             "w": 50,
             "h": 100,
@@ -30459,22 +30511,22 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 696969,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 20400,
-                "y": 1375
-            },
-            "pointTo": {
                 "x": 20450,
                 "y": 1375
             },
-            "xv": 696969,
-            "yv": 0,
-            "inView": false
+            "pointTo": {
+                "x": 20400,
+                "y": 1375
+            },
+            "xv": -696969,
+            "yv": 8.535408549549316e-11,
+            "inView": true
         },
         {
-            "x": 20413.524999998812,
+            "x": 20426.825000011824,
             "y": 1475,
             "w": 50,
             "h": 100,
@@ -30490,19 +30542,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 696969,
-            "currentPoint": 1,
+            "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 20450,
-                "y": 1475
-            },
-            "pointTo": {
                 "x": 20400,
                 "y": 1475
             },
-            "xv": -696969,
-            "yv": 8.535408549549316e-11,
-            "inView": false
+            "pointTo": {
+                "x": 20450,
+                "y": 1475
+            },
+            "xv": 696969,
+            "yv": 0,
+            "inView": true
         },
         {
             "x": 20350,
@@ -30510,7 +30562,7 @@ else require('./_converter.js');
             "w": 350,
             "h": 50,
             "type": "rotate-lava",
-            "angle": -75,
+            "angle": -609412.5000002062,
             "rotateSpeed": -4500,
             "pivotX": 20350,
             "pivotY": 1350,
@@ -30518,8 +30570,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 176.7766952966369,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 20400,
@@ -30531,10 +30583,10 @@ else require('./_converter.js');
             "maxTime": 0.01,
             "cdmult": 3,
             "trapType": "death",
-            "inView": false
+            "inView": true
         },
         {
-            "x": 20427.083333331353,
+            "x": 20431.249999980293,
             "y": 1300,
             "w": 50,
             "h": 50,
@@ -30562,10 +30614,10 @@ else require('./_converter.js');
             },
             "xv": 250,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 20427.083333331353,
+            "x": 20431.249999980293,
             "y": 1375,
             "w": 50,
             "h": 50,
@@ -30593,10 +30645,10 @@ else require('./_converter.js');
             },
             "xv": 250,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 20427.083333331353,
+            "x": 20431.249999980293,
             "y": 1450,
             "w": 50,
             "h": 50,
@@ -30624,10 +30676,10 @@ else require('./_converter.js');
             },
             "xv": 250,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 20427.083333331353,
+            "x": 20431.249999980293,
             "y": 1225,
             "w": 50,
             "h": 50,
@@ -30655,10 +30707,10 @@ else require('./_converter.js');
             },
             "xv": 250,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 20427.083333331353,
+            "x": 20431.249999980293,
             "y": 1150,
             "w": 50,
             "h": 50,
@@ -30686,10 +30738,10 @@ else require('./_converter.js');
             },
             "xv": 250,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 20427.083333331353,
+            "x": 20431.249999980293,
             "y": 1550,
             "w": 50,
             "h": 50,
@@ -30717,7 +30769,7 @@ else require('./_converter.js');
             },
             "xv": 250,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
             "x": 20450,
@@ -30725,7 +30777,7 @@ else require('./_converter.js');
             "w": 250,
             "h": 50,
             "type": "rotate-lava",
-            "angle": 3,
+            "angle": 24376.500000008244,
             "rotateSpeed": 180,
             "pivotX": 20450,
             "pivotY": 1350,
@@ -30733,8 +30785,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 127.47548783981962,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 20400,
@@ -30742,7 +30794,7 @@ else require('./_converter.js');
             "w": 100,
             "h": 25,
             "type": "winpad",
-            "inView": false
+            "inView": true
         },
         {
             "x": 19200,
@@ -30756,7 +30808,7 @@ else require('./_converter.js');
             "trapType": "death",
             "tpx": 19325,
             "tpy": 925,
-            "inView": false
+            "inView": true
         },
         {
             "x": -25,
@@ -30765,7 +30817,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "zone",
             "value": 1,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1025,
@@ -30774,7 +30826,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "zone",
             "value": 2,
-            "inView": false
+            "inView": true
         },
         {
             "x": 1975,
@@ -30783,7 +30835,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "zone",
             "value": 3,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3025,
@@ -30792,7 +30844,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "zone",
             "value": 4,
-            "inView": false
+            "inView": true
         },
         {
             "x": 4000,
@@ -30801,7 +30853,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "zone",
             "value": 5,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5075,
@@ -30819,7 +30871,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "zone",
             "value": 7,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9975,
@@ -30828,7 +30880,7 @@ else require('./_converter.js');
             "h": 225,
             "type": "zone",
             "value": 8,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11300,
@@ -30837,7 +30889,7 @@ else require('./_converter.js');
             "h": 1700,
             "type": "zone",
             "value": 9,
-            "inView": false
+            "inView": true
         },
         {
             "x": 12475,
@@ -30846,7 +30898,7 @@ else require('./_converter.js');
             "h": 300,
             "type": "zone",
             "value": 10,
-            "inView": false
+            "inView": true
         },
         {
             "x": 17975,
@@ -30855,7 +30907,7 @@ else require('./_converter.js');
             "h": 1675,
             "type": "zone",
             "value": 11,
-            "inView": false
+            "inView": true
         },
         {
             "x": 19475,
@@ -30864,7 +30916,7 @@ else require('./_converter.js');
             "h": 1675,
             "type": "zone",
             "value": 12,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11150,
@@ -30873,7 +30925,7 @@ else require('./_converter.js');
             "h": 1900,
             "type": "zone",
             "value": 8,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3650,
@@ -30882,7 +30934,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3762.5,
@@ -30891,7 +30943,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3937.5,
@@ -30900,7 +30952,7 @@ else require('./_converter.js');
             "h": 12.5,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3850,
@@ -30909,7 +30961,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3900,
@@ -30918,7 +30970,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 4537.5,
@@ -30945,7 +30997,7 @@ else require('./_converter.js');
             "h": 12.5,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "points": [
@@ -30970,7 +31022,7 @@ else require('./_converter.js');
                 "bottom": 612.5
             },
             "renderType": "poly",
-            "inView": false
+            "inView": true
         },
         {
             "points": [
@@ -30995,11 +31047,11 @@ else require('./_converter.js');
                 "bottom": 750
             },
             "renderType": "poly",
-            "inView": false
+            "inView": true
         },
         {
             "x": 2950,
-            "y": 169.5833333333488,
+            "y": 178.75000000015396,
             "w": 50,
             "h": 50,
             "type": "lavamove",
@@ -31026,7 +31078,7 @@ else require('./_converter.js');
             },
             "xv": 3.061616997868383e-15,
             "yv": -50,
-            "inView": false
+            "inView": true
         },
         {
             "x": 6187.5,
@@ -31035,7 +31087,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 5900,
@@ -31044,7 +31096,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9925,
@@ -31053,7 +31105,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9800,
@@ -31062,11 +31114,11 @@ else require('./_converter.js');
             "h": 75,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9550,
-            "y": 1217.5,
+            "y": 1272.5,
             "w": 100,
             "h": 100,
             "type": "lavamove",
@@ -31093,11 +31145,11 @@ else require('./_converter.js');
             },
             "xv": 1.8369701987210297e-14,
             "yv": -300,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9850,
-            "y": 1217.5,
+            "y": 1272.5,
             "w": 100,
             "h": 100,
             "type": "lavamove",
@@ -31124,7 +31176,7 @@ else require('./_converter.js');
             },
             "xv": 1.8369701987210297e-14,
             "yv": -300,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9950,
@@ -31133,11 +31185,11 @@ else require('./_converter.js');
             "h": 500,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9850,
-            "y": 917.5,
+            "y": 972.5,
             "w": 100,
             "h": 100,
             "type": "lavamove",
@@ -31164,11 +31216,11 @@ else require('./_converter.js');
             },
             "xv": 1.8369701987210297e-14,
             "yv": -300,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9550,
-            "y": 917.5,
+            "y": 972.5,
             "w": 100,
             "h": 100,
             "type": "lavamove",
@@ -31195,10 +31247,10 @@ else require('./_converter.js');
             },
             "xv": 1.8369701987210297e-14,
             "yv": -300,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 9732.5,
+            "x": 9677.5,
             "y": 1400,
             "w": 100,
             "h": 100,
@@ -31226,7 +31278,7 @@ else require('./_converter.js');
             },
             "xv": 300,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9650,
@@ -31235,7 +31287,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9750,
@@ -31244,7 +31296,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9750,
@@ -31253,7 +31305,7 @@ else require('./_converter.js');
             "h": 200,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9650,
@@ -31262,7 +31314,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9650,
@@ -31271,7 +31323,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9650,
@@ -31280,11 +31332,11 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 9950,
-            "y": 582.5,
+            "x": 9550,
+            "y": 672.5,
             "w": 100,
             "h": 100,
             "type": "lavamove",
@@ -31307,19 +31359,19 @@ else require('./_converter.js');
                 ]
             ],
             "speed": 300,
-            "currentPoint": 1,
+            "currentPoint": 3,
             "collidable": true,
             "pointOn": {
-                "x": 9950,
-                "y": 500
-            },
-            "pointTo": {
-                "x": 9950,
+                "x": 9550,
                 "y": 700
             },
+            "pointTo": {
+                "x": 9550,
+                "y": 500
+            },
             "xv": 1.8369701987210297e-14,
-            "yv": 300,
-            "inView": false
+            "yv": -300,
+            "inView": true
         },
         {
             "x": 9950,
@@ -31328,7 +31380,7 @@ else require('./_converter.js');
             "h": 100,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9750,
@@ -31337,7 +31389,7 @@ else require('./_converter.js');
             "h": 12.5,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9737.5,
@@ -31346,7 +31398,7 @@ else require('./_converter.js');
             "h": 12.5,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9750,
@@ -31355,7 +31407,7 @@ else require('./_converter.js');
             "h": 12.5,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10037.5,
@@ -31364,7 +31416,7 @@ else require('./_converter.js');
             "h": 12.5,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9925,
@@ -31373,7 +31425,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9825,
@@ -31382,7 +31434,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9750,
@@ -31391,7 +31443,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9625,
@@ -31400,7 +31452,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9550,
@@ -31409,7 +31461,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9550,
@@ -31418,7 +31470,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9550,
@@ -31427,7 +31479,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9700,
@@ -31436,7 +31488,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9975,
@@ -31445,7 +31497,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10025,
@@ -31454,7 +31506,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9550,
@@ -31463,7 +31515,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9800,
@@ -31472,7 +31524,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9900,
@@ -31481,7 +31533,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9850,
@@ -31490,7 +31542,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9550,
@@ -31499,7 +31551,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "points": [
@@ -31524,7 +31576,7 @@ else require('./_converter.js');
                 "bottom": 400
             },
             "renderType": "poly",
-            "inView": false
+            "inView": true
         },
         {
             "x": 10025,
@@ -31533,7 +31585,7 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 9950,
@@ -31542,10 +31594,10 @@ else require('./_converter.js');
             "h": 25,
             "type": "lava",
             "canCollide": true,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 11641.25,
+            "x": 11613.75,
             "y": 662.5,
             "w": 12.5,
             "h": 12.5,
@@ -31572,7 +31624,7 @@ else require('./_converter.js');
             },
             "xv": 150,
             "yv": 0,
-            "inView": false
+            "inView": true
         },
         {
             "x": 10975,
@@ -31580,7 +31632,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 25,
             "type": "rotate-lava",
-            "angle": 7.166666666666667,
+            "angle": 58232.75000002263,
             "rotateSpeed": 430,
             "pivotX": 10975,
             "pivotY": 1525,
@@ -31588,8 +31640,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 76.03453162872775,
-            "unSim": 13.591666666666535,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 11000,
@@ -31597,7 +31649,7 @@ else require('./_converter.js');
             "w": 150,
             "h": 25,
             "type": "rotate-lava",
-            "angle": 7.166666666666667,
+            "angle": 58232.75000002263,
             "rotateSpeed": 430,
             "pivotX": 11000,
             "pivotY": 1525,
@@ -31605,39 +31657,8 @@ else require('./_converter.js');
             "canCollide": true,
             "renderType": "rotating",
             "cullingRadius": 76.03453162872775,
-            "unSim": 13.591666666666535,
-            "inView": false
-        },
-        {
-            "x": 2175,
-            "y": 666.25,
-            "w": 50,
-            "h": 50,
-            "type": "lavamove",
-            "points": [
-                [
-                    2175,
-                    550
-                ],
-                [
-                    2175,
-                    725
-                ]
-            ],
-            "speed": 150,
-            "currentPoint": 0,
-            "collidable": true,
-            "pointOn": {
-                "x": 2175,
-                "y": 550
-            },
-            "pointTo": {
-                "x": 2175,
-                "y": 725
-            },
-            "xv": 9.184850993605149e-15,
-            "yv": 150,
-            "inView": false
+            "unSim": 0,
+            "inView": true
         },
         {
             "x": 11825,
@@ -31646,7 +31667,7 @@ else require('./_converter.js');
             "h": 50,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 11850,
@@ -31655,7 +31676,7 @@ else require('./_converter.js');
             "h": 75,
             "type": "normal",
             "canJump": true,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3475,
@@ -31664,7 +31685,7 @@ else require('./_converter.js');
             "type": "circle-lava",
             "renderType": "circleR",
             "radius": 25,
-            "inView": false
+            "inView": true
         },
         {
             "x": 3125,
@@ -31673,57 +31694,112 @@ else require('./_converter.js');
             "type": "circle-lava",
             "renderType": "circleR",
             "radius": 25,
-            "inView": false
+            "inView": true
         },
         {
-            "x": 2325,
-            "y": 666.25,
+            "x": 2150,
+            "y": 701,
             "w": 50,
             "h": 50,
             "type": "lavamove",
             "points": [
                 [
-                    2325,
+                    2150,
                     550
+                ],
+                [
+                    2150,
+                    725
                 ],
                 [
                     2325,
                     725
+                ],
+                [
+                    2325,
+                    550
                 ]
             ],
-            "speed": 150,
+            "speed": 120,
             "currentPoint": 0,
             "collidable": true,
             "pointOn": {
-                "x": 2325,
+                "x": 2150,
                 "y": 550
             },
             "pointTo": {
-                "x": 2325,
+                "x": 2150,
                 "y": 725
             },
-            "xv": 9.184850993605149e-15,
-            "yv": 150,
-            "inView": false
+            "xv": 7.34788079488412e-15,
+            "yv": 120,
+            "inView": true
         },
         {
-            "x": 2325,
-            "y": 608.75,
+            "x": 2301,
+            "y": 725,
             "w": 50,
             "h": 50,
             "type": "lavamove",
             "points": [
                 [
-                    2325,
+                    2150,
                     550
+                ],
+                [
+                    2150,
+                    725
                 ],
                 [
                     2325,
                     725
+                ],
+                [
+                    2325,
+                    550
                 ]
             ],
-            "speed": 150,
+            "speed": 120,
             "currentPoint": 1,
+            "collidable": true,
+            "pointOn": {
+                "x": 2150,
+                "y": 725
+            },
+            "pointTo": {
+                "x": 2325,
+                "y": 725
+            },
+            "xv": 120,
+            "yv": 0,
+            "inView": true
+        },
+        {
+            "x": 2325,
+            "y": 574,
+            "w": 50,
+            "h": 50,
+            "type": "lavamove",
+            "points": [
+                [
+                    2150,
+                    550
+                ],
+                [
+                    2150,
+                    725
+                ],
+                [
+                    2325,
+                    725
+                ],
+                [
+                    2325,
+                    550
+                ]
+            ],
+            "speed": 120,
+            "currentPoint": 2,
             "collidable": true,
             "pointOn": {
                 "x": 2325,
@@ -31733,9 +31809,48 @@ else require('./_converter.js');
                 "x": 2325,
                 "y": 550
             },
-            "xv": 9.184850993605149e-15,
-            "yv": -150,
-            "inView": false
+            "xv": 7.34788079488412e-15,
+            "yv": -120,
+            "inView": true
+        },
+        {
+            "x": 2174,
+            "y": 550,
+            "w": 50,
+            "h": 50,
+            "type": "lavamove",
+            "points": [
+                [
+                    2150,
+                    550
+                ],
+                [
+                    2150,
+                    725
+                ],
+                [
+                    2325,
+                    725
+                ],
+                [
+                    2325,
+                    550
+                ]
+            ],
+            "speed": 120,
+            "currentPoint": 3,
+            "collidable": true,
+            "pointOn": {
+                "x": 2325,
+                "y": 550
+            },
+            "pointTo": {
+                "x": 2150,
+                "y": 550
+            },
+            "xv": -120,
+            "yv": 1.469576158976824e-14,
+            "inView": true
         }
     ]
 
@@ -31823,7 +31938,7 @@ else require('./_converter.js');
             "type": "normal",
             "angle": 0.18385397615613105,
             "radius": 12,
-            "speed": 110,
+            "speed": 220*2,
             "x": 5470.5552300369745,
             "y": 595.348051711072,
             "renderX": 5470.5552300369745,
@@ -31843,7 +31958,7 @@ else require('./_converter.js');
             "type": "normal",
             "angle": 5.847846079874761,
             "radius": 12,
-            "speed": 110,
+            "speed": 220*2,
             "x": 5322.006033584912,
             "y": 635.7985459729704,
             "renderX": 5322.006033584912,
@@ -31863,7 +31978,7 @@ else require('./_converter.js');
             "type": "normal",
             "angle": 6.146485471311952,
             "radius": 12,
-            "speed": 110,
+            "speed": 220*2,
             "x": 5528.696359986599,
             "y": 565.7613725201427,
             "renderX": 5528.696359986599,
@@ -31883,7 +31998,7 @@ else require('./_converter.js');
             "type": "normal",
             "angle": 2.6572654404071,
             "radius": 12,
-            "speed": 110,
+            "speed": 220,
             "x": 5476.818971284018,
             "y": 731.2909474633631,
             "renderX": 5476.818971284018,
@@ -31903,7 +32018,7 @@ else require('./_converter.js');
             "type": "normal",
             "angle": 4.960463488977311,
             "radius": 12,
-            "speed": 110,
+            "speed": 220,
             "x": 5190.7769700062345,
             "y": 746.2741313789465,
             "renderX": 5190.7769700062345,
