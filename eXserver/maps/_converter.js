@@ -812,7 +812,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                 p.platformerForce = params.force / 10000 * 1.5 * 1.8 * 1.6 * 5 / 16.66;
                 p.jumpForce = params.jumpHeight / 20 * 5.8;
                 p.jumpDecay = 0.96;
-                p.maxJumpCooldown = 23;
+                p.maxJumpCooldown = 22;
 
                 if(special === 'povv'){
                     if(params.y >= 9600){
