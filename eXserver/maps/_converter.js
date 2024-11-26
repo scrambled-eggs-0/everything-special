@@ -1660,7 +1660,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
 
             base${counter} = obstacles[obstacles.length-1];
 
-            {let overrideAngle=undefined;let angle=0;C(4,[],[1],{"r":${params.flSize*2}*2/3,boundPlayer:false,"innerRadius":0,"startSliceAngle":0,"endSliceAngle":0,"startSliceAngleRotateSpeed":0,"endSliceAngleRotateSpeed":0,"x":base${counter}.pos.x,"y":base${counter}.pos.y,sf:(o,p)=>{
+            {let overrideAngle=undefined;let angle=0;C(4,[],[${special === 'povv' && params.y*2 < 800 ? 3 : 1}],{"r":${params.flSize*2}*2/3,boundPlayer:false,"innerRadius":0,"startSliceAngle":0,"endSliceAngle":0,"startSliceAngleRotateSpeed":0,"endSliceAngleRotateSpeed":0,"x":base${counter}.pos.x,"y":base${counter}.pos.y,sf:(o,p)=>{
                 angle = ${alwaysOverrideAngle !== undefined ? alwaysOverrideAngle : `Math.atan2(yv${counter}, xv${counter});`}
 
                 if(overrideAngle !== undefined) angle = overrideAngle;

@@ -176,6 +176,7 @@ window.resetGame = () => {
     if(window.addSideMenuEvtListeners !== undefined) window.addSideMenuEvtListeners(nextFileName);
     window.spawnPosition.x = 100;
     window.spawnPosition.y = 1500;
+    window.camera.numControlledBy = 0;
     const player = window.players[window.selfId];
     if(player !== undefined){
         player.sat.r = 49.5;

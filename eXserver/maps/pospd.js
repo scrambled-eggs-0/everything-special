@@ -7582,10 +7582,10 @@
                 "inView": false
             },
             {
-                "x": 3100,
-                "y": 0,
-                "w": 100,
-                "h": 100,
+                "x": 3125,
+                "y": 25,
+                "w": 50,
+                "h": 50,
                 "type": "ship",
                 "state": false,
                 "shipAngle": 1.5707963267948966,
@@ -8039,8 +8039,17 @@
             {
                 "x": 3200,
                 "y": 450,
-                "w": 450,
-                "h": 100,
+                "w": 500,
+                "h": 75,
+                "type": "size",
+                "size": 3,
+                "inView": false
+            },
+            {
+                "x": 3200,
+                "y": 525,
+                "w": 50,
+                "h": 25,
                 "type": "size",
                 "size": 3,
                 "inView": false
@@ -9172,16 +9181,16 @@
                 "canJump": true,
                 "inView": false
             },
-            {
-                "x": 3200,
-                "y": 50,
-                "w": 0,
-                "h": 50,
-                "type": "ship",
-                "state": false,
-                "shipAngle": 1.5707963267948966,
-                "inView": false
-            },
+            // {
+            //     "x": 3200,
+            //     "y": 50,
+            //     "w": 0,
+            //     "h": 50,
+            //     "type": "ship",
+            //     "state": false,
+            //     "shipAngle": 1.5707963267948966,
+            //     "inView": false
+            // },
             {
                 "x": 3250,
                 "y": 500,
@@ -9274,7 +9283,7 @@
             },
             {
                 "x": 3950,
-                "y": 600,
+                "y": 550,
                 "w": 50,
                 "h": 50,
                 "type": "normal",
@@ -9292,9 +9301,9 @@
             },
             {
                 "x": 3950,
-                "y": 650,
+                "y": 600,
                 "w": 50,
-                "h": 100,
+                "h": 150,
                 "type": "lava",
                 "canCollide": true,
                 "inView": false
@@ -42253,9 +42262,19 @@
             musicPath: 'https://www.youtube.com/watch?v=0g2OB-y8bW4'
         });
 
+        C(2,[],[0],{x:0,y:0,points:[[8500,840],[8400,900]],cr:()=>{}});
+
+        C(2,[],[0,1],{boundPlayer: true,x:0,y:0,points:[[8200,1400],[8400,1500],[8000,1500]]});
+
+        C(1,[],[11],{x:8150,y:1300,w:100,h:100});
+
         C(0,[],[5],{x:15750,y:11450,r:50});
 
-        C(1,[],[15],{cr:()=>{},x:7900,y:1100,w:100,h:100,axisSpeedMultX: 1, axisSpeedMultY: 0});
+        C(1,[],[5],{x:7500,y:1400,w:1,h:100});
+
+        // C(1,[],[15],{cr:()=>{},x:7900,y:1100,w:100,h:100,axisSpeedMultX: 1, axisSpeedMultY: 0});
+
+        C(1,[],[15],{cr:()=>{},x:6750,y:1150,w:500,h:0,axisSpeedMultX: 1, axisSpeedMultY: 0});
 
         {
             const interpolate = (s,e,t) => {return (1-t) * s + t * e};
