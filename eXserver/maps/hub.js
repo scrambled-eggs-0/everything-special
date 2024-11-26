@@ -12940,6 +12940,231 @@
                 }
             })
         }
+
+        // difficulty chart
+        {
+            function smootherStep(t){
+                return t * t * t * (t * (t * 6. - 15.) + 10.);
+            }
+
+            const renderPortal = (o) => {
+                const p = window.players[window.selfId];
+                
+                let dx = Math.max(0,p.pos.x - (o.topLeft.x + o.dimensions.x/2));
+                const dy = Math.abs(p.pos.y - (o.topLeft.y + o.dimensions.y/2));
+
+                const ga = ctx.globalAlpha = smootherStep(1 - Math.min(1,dy / 600)) * smootherStep(Math.min(1,dx / 600));
+
+                ctx.fillStyle = difficultyImageColors[o.difficulty];
+
+                ctx.fillRect(o.topLeft.x, o.topLeft.y, o.dimensions.x, o.dimensions.y);
+        
+                if(o.dimensions.x > o.dimensions.y){
+                    ctx.translate(o.dimensions.x - o.dimensions.y + o.topLeft.x, o.topLeft.y);
+                } else {
+                    ctx.translate(o.topLeft.x, o.dimensions.y - o.dimensions.x + o.topLeft.y);
+                }
+    
+                ctx.lineCap = 'round';
+                // ctx.globalAlpha = t;
+                // difficultyImageMap[Math.min(8,Math.ceil(o.difficulty))](Math.min(o.dimensions.x, o.dimensions.y));
+    
+                // ctx.globalAlpha = 1 - t;
+                difficultyImageMap[o.difficulty](Math.min(o.dimensions.x, o.dimensions.y));
+                ctx.globalAlpha = ga;
+                ctx.lineCap = 'square';
+                // ctx.globalAlpha = 1;
+    
+                if(o.dimensions.x > o.dimensions.y){
+                    ctx.translate(-(o.dimensions.x - o.dimensions.y + o.topLeft.x), -o.topLeft.y);
+                } else {
+                    ctx.translate(-o.topLeft.x, -(o.dimensions.y - o.dimensions.x + o.topLeft.y));
+                }
+    
+                ctx.font = `${o.dimensions.x / 3.5}px Inter`;
+                ctx.fillStyle = 'white';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                ctx.fillText(
+                    o.mapName,
+                    o.topLeft.x + o.dimensions.x / 2,
+                    o.topLeft.y - o.dimensions.y / 4
+                );
+
+                // const dimensions = ctx.measureText(o.comment);
+
+                // let w = dimensions.actualBoundingBoxRight + dimensions.actualBoundingBoxLeft;
+
+                // if(w > 600){
+                //     const ratio = 600 / w;
+                //     ctx.font = `${o.dimensions.x / 3.5 * ratio}px Inter`;
+                //     w = 600;
+                // }
+
+                // 5250, 4650
+
+                const textX = 5250;//(4800 * 2 - (o.topLeft.x + o.dimensions.x/2));
+                dx = Math.max(0,textX - p.pos.x);
+
+                ctx.globalAlpha = smootherStep(1 - Math.min(1,dy / 600)) * smootherStep(Math.min(1,dx / 600));
+
+                ctx.textAlign = 'right';
+
+                if(o.comment.length === 2){
+                    ctx.fillText(o.comment[0], textX, o.topLeft.y + o.dimensions.y/2 - 30);
+                    ctx.fillText(o.comment[1], textX, o.topLeft.y + o.dimensions.y/2 + 30);
+                } else {
+                    ctx.fillText(o.comment, textX, o.topLeft.y + o.dimensions.y/2);
+                }
+
+                ctx.globalAlpha = 1;
+            };
+            const difficultyNames = [
+                'Peaceful',
+                'Moderate',
+                'Difficult',
+                'Hardcore',
+                'Exhausting',
+                'Relentless',
+                'Agonizing',
+                'Terrorizing',
+                'Cataclysmic!!'
+            ];
+            const difficultyComments = [
+                ['An Easy Stroll'],
+                ['Getting somewhere!'],
+                [`The challenge begins!`],
+                [`Getting pretty`, `demanding, now.`],
+                ['This is where', 'the fun begins :D'],
+                ['AH MAKE IT STOP'],
+                ['PLEASE'],
+                ['IM BEGGING YOU'],
+                ['AAAAAAAAAAAAAA']
+            ]
+            const difficultyColorsRgb = [
+                {
+                    "r": 108,
+                    "g": 217,
+                    "b": 91
+                },
+                {
+                    "r": 88,
+                    "g": 204,
+                    "b": 179
+                },
+                {
+                    "r": 10,
+                    "g": 119,
+                    "b": 191
+                },
+                {
+                    "r": 53,
+                    "g": 40,
+                    "b": 224
+                },
+                {
+                    "r": 161,
+                    "g": 66,
+                    "b": 201
+                },
+                {
+                    "r": 227,
+                    "g": 45,
+                    "b": 139
+                },
+                {
+                    "r": 252,
+                    "g": 84,
+                    "b": 52
+                },
+                {
+                    "r": 252,
+                    "g": 58,
+                    "b": 58
+                },
+                {
+                    "r": 201,
+                    "g": 93,
+                    "b": 93
+                }
+            ];
+            const x = 4300;
+            const portalSize = 200;
+            C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
+                const p = window.players[window.selfId];
+                ctx.globalAlpha = 0.33 + Math.max(0, 4300 - p.pos.y) / 4300 * .035;// + Math.sin(window.frames / 60) * 0.1;
+
+                const grad = ctx.createLinearGradient(x,4300,x,0);
+                const yPositions = [];
+                for(let i = 0; i < 9/*up to cata*/; i++){
+                    const t = (i+.5)/9;
+                    const y = (1-t) * x + (t) * 0;
+
+                    const {r,g,b} = difficultyColorsRgb[i];
+
+                    const a = 1 - Math.min(1,Math.abs(p.pos.y - y) / 800);
+                    console.log(`rgba(${r},${g},${b},${a})`);
+                    grad.addColorStop(t, `rgba(${r},${g},${b},${a})`);
+
+                    yPositions.push(y);
+
+                    // text on the right
+
+                    // portals on the left
+                }
+
+                const portalObs = yPositions.map((y,i) => {
+                    return {
+                        topLeft: {
+                            x: x + portalSize / 4,
+                            y: Math.round((y - portalSize / 2) / 100) * 100
+                        },
+                        dimensions: {
+                            x: portalSize,
+                            y: portalSize
+                        },
+                        difficulty: i,
+                        mapName: difficultyNames[i],
+                        comment: difficultyComments[i]
+                    }
+                })
+
+                ctx.fillStyle = grad;
+
+                ctx.fillRect(x,0,1000,4300);// TODO: make portals fade out when player draws near
+                ctx.globalAlpha = 1;
+
+                // draw difficulty images and portals
+                for(let i = 0; i < portalObs.length; i++){
+                    ctx.globalAlpha = 1;
+                    renderPortal(portalObs[i]);
+                }
+                ctx.globalAlpha = 1;
+            }});
+
+            // C(1,[],[19],{x:4300,y:0,w:1000,h:4300,speedMult:0.86,speedChangePermanent:false,cr:()=>{}});
+
+
+            // red vignette at the end
+            C(1,[],[24],{x:4300,y:0,w:1000,h:1800,innerR: 0, innerG: 0, innerB: 0, innerSize: 0.1, innerOpacity: 0, outerR: 0, outerG: 0, outerB: 0, outerSize: 0.5, outerOpacity: 1,ef:(p,res,o)=>{
+                const y = Math.max(p.pos.y, 163);
+                if(y < 1800){
+                    o.innerR = (1 - y / 1800) * 255;
+                    o.outerR = (1 - y / 1800) * 255;
+                } else {
+                    o.innerR = o.outerR = 0;
+                }
+                
+                if(y < 500){
+                    o.outerSize = interpolate(0.1, 1, y / 500);
+                } else {
+                    o.outerSize = 1;
+                }
+                
+                o.innerSize = 0;
+            },cr:()=>{}})
+        }
     }
 })();
 
