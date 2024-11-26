@@ -5010,7 +5010,7 @@ function spawnObs(data){
 
 		//Storage
 		obj.x = 10000;
-		obj.y = 5000;
+		obj.y = 10000;
 
 		let shape = 1;
 		obj.w = data.w;
@@ -5077,7 +5077,7 @@ function spawnObs(data){
 
 			let obj = {
 				x: 10000,
-				y: 5000,
+				y: 10000,
 				r: data.radius * 100/16,
 			}
 
@@ -5184,7 +5184,7 @@ function spawnObs(data){
 				if (bossTime == 0){
 					spawned = false;
 					e.pos.x = 10000;
-					e.pos.y = 5000;
+					e.pos.y = 10000;
 				}
 			}
 			C(shape, simulate, [1], obj)
@@ -5199,7 +5199,7 @@ function spawnObs(data){
 
 		//Storage
 		obj.x = 10000;
-		obj.y = 5000;
+		obj.y = 10000;
 
 		let shape;
 		if (data.r){
@@ -5300,9 +5300,9 @@ function spawnObs(data){
 		obj.sf = (e) => {
 			if (shape == 2 && !spawned && bossTime < data.time){
 				e.pos.x = 10000;
-				e.pos.y = 5000;
+				e.pos.y = 10000;
 				obj.x = 10000;
-				obj.y = 5000;
+				obj.y = 10000;
 			}
 			if (!spawned && bossTime > data.time && bossTime <= data.time + data.lifeTime){
 				e.pos.x += (goalObj.x - obj.x);
