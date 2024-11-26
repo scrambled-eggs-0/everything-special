@@ -25019,8 +25019,9 @@ else require('./_converter.js');
             "y": 1150,
             "w": 150,
             "h": 50,
-            "type": "door",
-            "id": 2,
+            "type": "coindoor",
+            "coins": 6,
+            "currentCoins": 6,
             "active": true,
             "inView": true
         },
@@ -25029,9 +25030,8 @@ else require('./_converter.js');
             "y": 1425,
             "w": 50,
             "h": 50,
-            "type": "button",
-            "id": 2,
-            "active": true,
+            "type": "coin",
+            "collected": false,
             "inView": true
         },
         {
@@ -25553,8 +25553,9 @@ else require('./_converter.js');
             "y": 1450,
             "w": 250,
             "h": 50,
-            "type": "door",
-            "id": 3,
+            "type": "coindoor",
+            "coins": 4,
+            "currentCoins": 4,
             "active": true,
             "inView": true
         },
@@ -25563,9 +25564,8 @@ else require('./_converter.js');
             "y": 1400,
             "w": 50,
             "h": 50,
-            "type": "button",
-            "id": 3,
-            "active": true,
+            "type": "coin",
+            "collected": false,
             "inView": true
         },
         {
@@ -26091,9 +26091,8 @@ else require('./_converter.js');
             "y": 1200,
             "w": 50,
             "h": 50,
-            "type": "button",
-            "id": 4,
-            "active": true,
+            "type": "coin",
+            "collected": false,
             "inView": true
         },
         {
@@ -26101,8 +26100,9 @@ else require('./_converter.js');
             "y": 1450,
             "w": 50,
             "h": 50,
-            "type": "door",
-            "id": 4,
+            "type": "coindoor",
+            "coins": 5,
+            "currentCoins": 5,
             "active": true,
             "inView": true
         },
@@ -28669,9 +28669,8 @@ else require('./_converter.js');
             "y": 1500,
             "w": 50,
             "h": 50,
-            "type": "button",
-            "id": 5,
-            "active": true,
+            "type": "coin",
+            "collected": false,
             "inView": true
         },
         {
@@ -28679,8 +28678,9 @@ else require('./_converter.js');
             "y": 1550,
             "w": 100,
             "h": 50,
-            "type": "door",
-            "id": 5,
+            "type": "coindoor",
+            "coins": 7,
+            "currentCoins": 7,
             "active": true,
             "inView": true
         },
