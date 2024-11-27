@@ -5503,7 +5503,7 @@ C(1, [], [9], {
 					y: 0,
 					w: 174800,
 					h: 1500,
-					musicPath: 'https://www.youtube.com/watch?v=lgq0OdRIEao'
+					musicPath: 'https://www.youtube.com/watch?v=D3boxTP-ZG8'
 				});
 			}
 			return;
