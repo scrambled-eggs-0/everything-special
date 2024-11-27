@@ -551,7 +551,7 @@
                 "type": "musicchange",
                 "musicPath": "https://www.youtube.com/watch?v=Q4xgKR1QjMY",
                 "volume": 1,
-                "startTime": 0,
+                "startTime": 1,
                 "inView": false
             },
             {
@@ -8869,8 +8869,9 @@
                     "y": 3000
                 },
                 "direction": "down",
-                "jumpHeight": 215,
+                "jumpHeight": 200,// !HERE
                 "maxForce": 1000,
+                overrideJC: 30,
                 "variableJumpHeight": false,
                 "platformerFriction": 0.8,
                 "specialPOQTPlatformer": true
@@ -27637,16 +27638,16 @@
                 "angle": 0,
                 "story": false
             },
-            {
-                "x": 24700,
-                "y": 9950,
-                "w": 25,
-                "h": 25,
-                "size": 18,
-                "text": "(use /respawn if you get stuck)",
-                "angle": 0,
-                "story": false
-            },
+            // {
+            //     "x": 24700,
+            //     "y": 9950,
+            //     "w": 25,
+            //     "h": 25,
+            //     "size": 18,
+            //     "text": "(use /respawn if you get stuck)",
+            //     "angle": 0,
+            //     "story": false
+            // },
             {
                 "x": 22450,
                 "y": 9475,

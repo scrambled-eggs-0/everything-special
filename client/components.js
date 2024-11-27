@@ -2489,6 +2489,7 @@ const renderEffectMap = [
             ctx.lineWidth = 3;
             ctx.globalAlpha = 0.25;
             ctx.beginPath();
+            o.topLeft = generateTopLeftCoordinates(o);
             ctx.lineTo(o.topLeft.x, o.topLeft.y);
             ctx.lineTo(o.topLeft.x + o.dimensions.x, o.topLeft.y + o.dimensions.y);
             ctx.stroke();

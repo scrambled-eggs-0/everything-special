@@ -31,7 +31,7 @@ C(1, [], [26], {
 	y: 0,
 	w: 2000,
 	h: 1500,
-	musicPath: 'https://www.youtube.com/watch?v=vE5uEesakTU'
+	musicPath: 'https://www.youtube.com/watch?v=ziFxpjRbfJc'//'https://www.youtube.com/watch?v=vE5uEesakTU'
 });
 
 var areaColors = [
@@ -3073,8 +3073,8 @@ for (let i = 0; i < areas.length; i++) {
 							e.pos.y = mainObs.pos.y;
 						},
 						ef: (p,res,o) => {
-							p.axisSpeedMultX *= .7;
-							p.axisSpeedMultY *= .7;
+							p.axisSpeedMultX = .7;
+							p.axisSpeedMultY = .7;
 						}
 					});
 				} else if (data.type === 'freezing'){
@@ -3139,8 +3139,8 @@ for (let i = 0; i < areas.length; i++) {
 							e.pos.y = mainObs.pos.y;
 						},
 						ef: (p,res,o) => {
-							p.axisSpeedMultX *= .3;
-							p.axisSpeedMultY *= .3;
+							p.axisSpeedMultX = .3;
+							p.axisSpeedMultY = .3;
 						}
 					});
 				} else if(data.type === 'creeper'){
@@ -3564,7 +3564,7 @@ C(1, [], [24], {
 	outerOpacity: 0,
 	sf:(o,p)=>{
 		const t = Math.max(0,Math.min(1,(p.pos.x - 420200) / (429000 - 420200)));
-		o.outerSize = 0.6 * (1-t) + 0.1 * t;
+		o.outerSize = 0.6 * (1-t) + 0.101 * t;
 		o.outerOpacity = 0 * (1-t) + 1 * t;
 	}
 });
@@ -3725,6 +3725,9 @@ var audioLoaded = false;
 try{
 	audio.addEventListener('canplaythrough', function() { 
 		audioLoaded = true;
+		window.resetFns.push(() => {
+			audio.pause();
+		})
 	}, false);
 }
 catch(err){

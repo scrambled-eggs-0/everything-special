@@ -652,7 +652,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                 return {
                     snapAngleRotateSpeed: 0,
                     snapAngle: 0,
-                    snapCooldown: params.snapWait * 60 + 2,
+                    snapCooldown: params.snapWait * 60,
                     snapDistanceY: params.snapDistance * 2,
                     snapDistanceX: params.snapDistance * 2,
                     toSnapX: params.snapX,
@@ -812,7 +812,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                 p.platformerForce = params.force / 10000 * 1.5 * 1.8 * 1.6 * 5 / 16.66;
                 p.jumpForce = params.jumpHeight / 20 * 5.8;
                 p.jumpDecay = 0.96;
-                p.maxJumpCooldown = 22;
+                p.maxJumpCooldown = 20;
 
                 if(special === 'povv'){
                     if(params.y >= 9600){
@@ -854,6 +854,10 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                         p.jumpDecay = 0.98;
                         p.platformerForce *= 1.2;
                         p.maxJumpCooldown = 24;
+                    }
+
+                    if(params.overrideJC !== undefined){
+                        p.maxJumpCooldown = params.overrideJC;
                     }
                 } else {
                     p.canJumpMidair = false;
@@ -919,6 +923,12 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
         'musicchange': {
             type: [1,[],[26]],
             customMap: (params) => {
+                if(params.startTime !== undefined && params.startTime !== 0 && special === 'poqt'){
+                    return {
+                        musicPath: params.musicPath,
+                        musicStartTime: params.startTime 
+                    }
+                }
                 return {
                     musicPath: params.musicPath,
                 }
@@ -1150,7 +1160,7 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
             return `
             var xv${counter} = ${params.xv/30};
             var yv${counter} = ${params.yv/30};
-            C(0,[3],[1],{r:${params.radius*2},y:${params.y*2},x:${params.x*2},boundPlayer:false,sf:(e)=>{
+            C(0,[3],[1],{r:${params.radius*2},y:${params.y*2},x:${params.x*2},boundPlayer:${special === 'podc'},sf:(e)=>{
             e.pos.y += yv${counter};
             e.pos.x += xv${counter};
             if ((e.pos.x - e.sat.r) < ${bounds.x} || e.pos.x + e.sat.r > ${bounds.x + bounds.w}) {
@@ -2126,6 +2136,30 @@ globalThis.convertOldExMap = (obs, enemies, safes, texts, counter, special=undef
                 path: [${o.points.map(p => `[${p[0]*2},${p[1]*2},0]`)}],
                 currentPoint: ${o.currentPoint},
                 sf:(o,p) => {
+                    ${(o.type === 'morphlavamove' && o.x === 44200 && o.y === 19100) ? `
+                        if(p.pos.y > 18800){
+                            morphTriggered${o.morphId} = false;
+
+                            lastCurrentPoint = -1;
+
+                            o.currentPoint = 0;
+                            o.pointOn = o.path[0];
+                            o.pointTo = o.path[1];
+                            moveActive = false;
+                            o.pos.x = o.path[o.currentPoint][0];
+                            o.pos.y = o.path[o.currentPoint][1];
+
+                            for(let i = 0; i < o.path.length; i++){
+                                o.path[i][2] = 0;
+                            }
+
+                            o.speed = o.pointOn[2];
+                            let angle = Math.atan2(o.pointTo[1] - o.pointOn[1], o.pointTo[0] - o.pointOn[0]);
+                            o.xv = Math.cos(angle) * o.speed;
+                            o.yv = Math.sin(angle) * o.speed;
+                            o.timeRemain = Math.sqrt((o.pointOn[0] - o.pointTo[0])**2 + (o.pointOn[1] - o.pointTo[1])**2) / o.speed;
+                        }   
+                    `: ""}
                     o.morphMoveId = ${o.morphId};
                     if((moveActive === false && morphTriggered${o.morphId} !== lastMorphTriggered && o.waitUntilTrue === false) || (moveActive === false && o.waitUntilTrue === true && morphTriggered${o.morphId} === false)){
                         ${special === 'poqt' && o.x > 48000 && o.x < 51000 ? `morphsStillMoving${o.morphId}++;`: ''}

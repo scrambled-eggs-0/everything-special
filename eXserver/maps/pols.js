@@ -9748,10 +9748,10 @@
                 "w": 50,
                 "h": 350,
                 "type": "grav",
-                "force": 40000,
+                "force": 30000,
                 "dir": {
                     "x": 0,
-                    "y": 40000
+                    "y": 30000
                 },
                 "direction": "down",
                 "inView": false
@@ -26102,7 +26102,7 @@
         if(window.isServer !== true){
             C(1,[],[0],{x:-150,y:3050,w:150,h:300})
             C(1,[],[0],{x:0,y:2900,w:150,h:200})
-            const o = obstacles.splice(239,1)[0];
+            const o = obstacles.splice(241,1)[0];
 
             C(1,[0],[11],{type:[1,[0],[11]],x:700,y:3400,w:100,h:400,points:[[350,1700],[950,1700]],speed:150,currentPoint:1.9166666666666665,pointOn:{"x":950,"y":1700},pointTo:{"x":350,"y":1700},xv:-150,yv:1.8369701987210297e-14,inView:false,path:[[700,3400,5],[1900,3400,5]],})
             C(1,[0],[11],{type:[1,[0],[11]],x:1900,y:3400,w:100,h:400,points:[[950,1700],[350,1700]],speed:150,currentPoint:1.9166666666666665,pointOn:{"x":350,"y":1700},pointTo:{"x":950,"y":1700},xv:150,yv:0,inView:false,path:[[1900,3400,5],[700,3400,5]],})
