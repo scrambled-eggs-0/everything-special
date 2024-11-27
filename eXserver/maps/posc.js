@@ -1,13 +1,14 @@
 window.loadMap((shared)=>{
     let counter = 0;
     const md = (a) => {return a;}
-    const {C, colors, spawnPosition, mapDimensions, camera, generateDimensions, obstacles, difficultyImageColors, difficultyImageMap, blendColor, changeCameraScale, players, selfId, input} = shared;
+    const {C, colors, spawnPosition, mapDimensions, camera, generateDimensions, obstacles, difficultyImageColors, difficultyImageMap, blendColor, changeCameraScale, players, input} = shared;
+    let selfId = shared.selfId;
 
     shared.linkDoors = {};
     shared.linkButtons = {};
     shared.morphsTriggered = {};
 
-    shared.C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
+    shared.C(0,[],[3],{x:-1E9,y:0,r:1,sf:()=>{selfId = shared.selfId;},cr:()=>{
         // render links
         ctx.strokeStyle = '#969696';
         ctx.setLineDash([50, 70]);

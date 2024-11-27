@@ -164,3 +164,33 @@ shared.initImportMap = async (str) => {
     if(importMapFn === undefined) importMapFn = (await import('./extras/importMap.js')).default;
     importMapFn(str);
 }
+
+shared.touchMode = false;
+shared.touchAngle = -1;
+window.ontouchstart = () => {
+    shared.touchMode = true;
+}
+window.ontouchmove = (e) => {
+    const t = e.changedTouches[0];
+    if(t === undefined) return;
+
+    if(t.pageX < window.innerWidth / 2){
+        shared.input.left = true;
+        shared.input.right = false;
+    } else {
+        shared.input.left = false;
+        shared.input.right = true;
+    }
+
+    if(t.pageY < window.innerHeight / 2){
+        shared.input.up = true;
+        shared.input.down = false;
+    } else {
+        shared.input.up = false;
+        shared.input.down = true;
+    }
+    shared.touchAngle = Math.atan2(t.pageY - window.innerHeight / 2, t.pageX - window.innerWidth/2);
+}
+window.ontouchend = () => {
+    shared.touchMode = false;
+}

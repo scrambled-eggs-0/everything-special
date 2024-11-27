@@ -3638,4 +3638,6 @@ C(1,[],[0],{type:[1,[],[0]],x:5100,y:8700,w:2300,h:200,toRender:false,})
 
     mapDimensions.x=24000;
     mapDimensions.y=12000;
+
+    C(0,[],[27],{x:8000,y:10200,r:0.0001,changeShipStateTo:false, initialShipAngle:0, shipTurnSpeed: 0,cr:()=>{}});
 })

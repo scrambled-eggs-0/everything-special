@@ -117,8 +117,13 @@ function simulate(){
     }
 
     if(shared.isExClient === true && player.dead === false) {
-        player.xa = (shared.input.right - shared.input.left) * player.speed;
-        player.ya = (shared.input.down - shared.input.up) * player.speed;
+        if(shared.touchMode === true){
+            player.xa = Math.cos(shared.touchAngle) * player.speed;
+            player.ya = Math.sin(shared.touchAngle) * player.speed;
+        } else {
+            player.xa = (shared.input.right - shared.input.left) * player.speed;
+            player.ya = (shared.input.down - shared.input.up) * player.speed;
+        }
 
         if(shared.input.shift === true) {
             if(player.god === true){

@@ -10,8 +10,6 @@ window.loadMap((shared)=>{
 
     shared.C(1,[],[12],{x:11950,y:17700,w:750,h:350,tpx:12450,tpy:18350});
 
-    
-
     let xv8001 = -4.123736912800346;
     let yv8001 = -12.04069204607393;
     let base8001;
@@ -8543,4 +8541,6 @@ C(1,[],[0],{type:[1,[],[0]],x:6000,y:11600,w:500,h:100,toRender:false,})
             collided = false;
         }})
     }
+
+    C(0,[],[27],{x:100,y:100,r:0.0001,changeShipStateTo:false, initialShipAngle:0, shipTurnSpeed: 0,cr:()=>{}});
 });
