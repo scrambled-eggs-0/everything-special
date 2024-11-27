@@ -18,7 +18,7 @@ const SCROLL_PARAMS = Object.freeze({
 });
 
 const environment = shared.environment = typeof location === 'undefined' ? 'server' : ((location.origin.endsWith('8080') || location.href.endsWith('editor')) ? 'editor' : 'client');
-const isProd = shared.isProd = typeof location === 'undefined' ? true : locationlocation.origin.startsWith('http://localhost') ? false : true; 
+const isProd = shared.isProd = typeof location === 'undefined' ? true : location.origin.startsWith('http://localhost') ? false : true; 
 
 if(isProd === false){
     window.s = {};
