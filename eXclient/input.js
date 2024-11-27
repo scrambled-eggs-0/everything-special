@@ -97,6 +97,7 @@ function handleKey(e){
             }
             else if(msg.length !== 0){
                 msg = shared.username + ': ' + msg;
+                console.log('send chat msg', msg);
                 const buf = new Uint8Array(msg.length + 2);
                 buf[0] = 7;// type 0 - set username and join game
                 // ['normal', 'system', 'dev', 'guest']
