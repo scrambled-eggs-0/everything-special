@@ -14,13 +14,13 @@ for(let i = 0; i < JSBlockNames.length; i++){
   Blockly.Blocks[JSBlockNames[i]] = JSBlockData[i](Blockly);
 }
 
-for(let key in global.window){
-    global[key] = global.window[key];
+for(let key in global.shared){
+    global[key] = global.shared[key];
 }
 global.isServer = true;
-global.window.isServer = true;
-global.window.onWorkspaceLoadFunctions=[];
-global.window.workspaceLoaded = false;
+global.shared.isServer = true;
+global.shared.onWorkspaceLoadFunctions=[];
+global.shared.workspaceLoaded = false;
 
 import blocks from './text.js';
 import forBlock from '../../shared/forBlock.js';
@@ -29,7 +29,7 @@ Blockly.common.defineBlocks(libraryBlocks);
 Blockly.common.defineBlocks(blocks);
 forBlock['modify_existing'](javascriptGenerator, Blockly);
 javascriptGenerator.addReservedWords('code');
-javascriptGenerator.INFINITE_LOOP_TRAP = 'if(--window.loopTrap == 0){try{eval("break;")}catch(e){eval("return;")}}\n';
+javascriptGenerator.INFINITE_LOOP_TRAP = 'if(--shared.loopTrap == 0){try{eval("break;")}catch(e){eval("return;")}}\n';
 Object.assign(javascriptGenerator.forBlock, forBlock);
 
 const validatorWorkspace = new Blockly.Workspace();

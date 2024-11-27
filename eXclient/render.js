@@ -1,7 +1,9 @@
+import shared from '../shared/shared.js';
+
 let canvas = window.canvas = document.getElementById('canvas');
 let ctx = window.ctx = canvas.getContext('2d');
 
-const camera = window.camera = {
+const camera = shared.camera = {
     x: 0, y: 0, scale: 1,
     numControlledBy: 0,
     /*3d*/
@@ -11,7 +13,7 @@ const camera = window.camera = {
     normal: [0, 0, 1]
 }
 
-window.defaultColors = {
+shared.defaultColors = {
     tile: '#1f2229',// the stroke and outside of arena
     background: '#323645',// the fillcolor
     vignette: {
@@ -23,9 +25,9 @@ window.defaultColors = {
     }
 }
 
-window.colors = {
-    tile: window.defaultColors.tile,
-    background: window.defaultColors.background,
+shared.colors = {
+    tile: shared.defaultColors.tile,
+    background: shared.defaultColors.background,
     vignette: {
         inner: {size:0.1,r:0,g:0,b:0,opacity:0},
         outer: {size:0.6,r:0,g:0,b:0,opacity:1},
@@ -35,12 +37,12 @@ window.colors = {
     }
 }
 
-window.selfId = undefined;
-window.tileSize = 100;
-window.renderDebug = false;
-window.distortionsActive = false;
-window.skullImgLoaded = false;
-window.skullImg = undefined;
+shared.selfId = undefined;
+shared.tileSize = 100;
+shared.renderDebug = false;
+shared.distortionsActive = false;
+shared.skullImgLoaded = false;
+shared.skullImg = undefined;
 const fullscreen = {
     ratio: 9 / 16,
     zoom: 1800,
@@ -48,15 +50,15 @@ const fullscreen = {
 // const width = 1600;
 // const height = 900;
 
-// window.tileImage = undefined;
-// window.tileImageColors = {
+// shared.tileImage = undefined;
+// shared.tileImageColors = {
 //     tile: '', background: ''
 // }
 
 // function generateTileImage({tile, background}) {
 //     const canv = document.createElement('canvas');
-//     const w = canvas.w + ctx.lineWidth + window.tileSize;
-//     const h = canvas.h + ctx.lineWidth + window.tileSize;
+//     const w = canvas.w + ctx.lineWidth + shared.tileSize;
+//     const h = canvas.h + ctx.lineWidth + shared.tileSize;
     
 //     const cx = canv.getContext('2d');
 //     canv.width = w;
@@ -69,7 +71,7 @@ const fullscreen = {
 //     cx.fillStyle = background;
 
 //     cx.lineWidth = 3;
-//     for (let x = -camera.x%tileSize; x < canvas.w + ctx.lineWidth + window.tileSize; x += window.tileSize) {
+//     for (let x = -camera.x%shared.tileSize; x < canvas.w + ctx.lineWidth + shared.tileSize; x += shared.tileSize) {
 //         ctx.beginPath();
 //         ctx.moveTo(x, 0);
 //         ctx.lineTo(x, canvas.h);
@@ -77,7 +79,7 @@ const fullscreen = {
 //         ctx.closePath();
 //     }
 
-//     for (let y = -camera.y%tileSize; y < canvas.h + ctx.lineWidth + window.tileSize; y += window.tileSize) {
+//     for (let y = -camera.y%shared.tileSize; y < canvas.h + ctx.lineWidth + shared.tileSize; y += shared.tileSize) {
 //         ctx.beginPath();
 //         ctx.moveTo(0, y);
 //         ctx.lineTo(canvas.w, y);
@@ -91,18 +93,18 @@ const fullscreen = {
 
 // let tileImg;
 // function createTileImg(scale, thicc) {
-//     const tileSize = 100;
+//     const shared.tileSize = 100;
 //     // const size =
-//     //     Math.round(Math.max(canvas.width, canvas.height) / tileSize) *
-//     //         tileSize +
+//     //     Math.round(Math.max(canvas.width, canvas.height) / shared.tileSize) *
+//     //         shared.tileSize +
 //     //     200;
 //     const canv = document.createElement('canvas');
 //     if(scale < 0.1){
 //         return canv;
 //     }
     
-//     const w = canvas.width/scale + tileSize;
-//     const h = canvas.height/scale + tileSize;
+//     const w = canvas.width/scale + shared.tileSize;
+//     const h = canvas.height/scale + shared.tileSize;
     
 //     const cx = canv.getContext('2d');
 //     canv.width = w//size / scale;
@@ -113,9 +115,9 @@ const fullscreen = {
 //     cx.globalAlpha = 0.75;
 //     cx.strokeStyle = colors.tile//colors.background;
 //     cx.lineWidth = thicc ? 4 : 2;
-//     for (let y = 0; y <= h; y += tileSize) {
-//         for (let x = 0; x <= w; x += tileSize) {
-//             cx.strokeRect(x, y, tileSize, tileSize);
+//     for (let y = 0; y <= h; y += shared.tileSize) {
+//         for (let x = 0; x <= w; x += shared.tileSize) {
+//             cx.strokeRect(x, y, shared.tileSize, shared.tileSize);
 //         }
 //     }
 //     cx.globalAlpha = 1;
@@ -123,10 +125,10 @@ const fullscreen = {
 // }
 
 let opaqIndex, len, lastPlayerX, lastPlayerY, lastPlayerRadius, diagonalStartOffset, diagonalDist, overRenderTiles = false, lastGA, j = false, lastNLDX = 0, lastNLDY = 0, cullingMinX=0, cullingMaxX=0, cullingMinY=0, cullingMaxY=0, canvSum=0;
-window.render = (os=window.obstacles, cols=window.colors, players=window.players) => {
+shared.render = (os=shared.obstacles, cols=shared.colors, players=shared.players) => {
     overRenderTiles = false;
-    if(window.selfId !== undefined){
-        const me = players[window.selfId];
+    if(shared.selfId !== undefined){
+        const me = players[shared.selfId];
 
         if(camera.numControlledBy === 0){
             camera.x = me.pos.x;
@@ -151,7 +153,7 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
 
     // const img = tileImg;
     //ctx.translate(pos.x , pos.y + (gridOffset.y % 50));
-    // ctx.drawImage(img, (canvas.w/2-camera.x)%tileSize, (canvas.h/2-camera.y)%tileSize);
+    // ctx.drawImage(img, (canvas.w/2-camera.x)%shared.tileSize, (canvas.h/2-camera.y)%shared.tileSize);
     
 
     if(overRenderTiles === true){
@@ -167,7 +169,7 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
 
         ctx.fillStyle = cols.background;
         // add 1 to all dimensions so that we don't get gap artifacts on the edge of the arena
-        ctx.fillRect(-(camera.x-canvas.w/2)+1, -(camera.y-canvas.h/2)+1, window.mapDimensions.x-2, window.mapDimensions.y-2);
+        ctx.fillRect(-(camera.x-canvas.w/2)+1, -(camera.y-canvas.h/2)+1, shared.mapDimensions.x-2, shared.mapDimensions.y-2);
 
         ctx.globalAlpha = 0.75;
         ctx.lineWidth = 4.8;
@@ -175,8 +177,8 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
 
         // accounting for rotation and such
         diagonalDist = Math.sqrt(canvas.w ** 2 + canvas.h ** 2);
-        diagonalStartOffset = (diagonalDist/2) % tileSize - tileSize - diagonalDist / 2;
-        for (let x = (canvas.w/2-camera.x)%tileSize + diagonalStartOffset; x < diagonalDist + ctx.lineWidth + window.tileSize; x += window.tileSize) {
+        diagonalStartOffset = (diagonalDist/2) % shared.tileSize - shared.tileSize - diagonalDist / 2;
+        for (let x = (canvas.w/2-camera.x)%shared.tileSize + diagonalStartOffset; x < diagonalDist + ctx.lineWidth + shared.tileSize; x += shared.tileSize) {
             ctx.beginPath();
             ctx.moveTo(x, diagonalStartOffset);
             ctx.lineTo(x, canvas.h - diagonalStartOffset);
@@ -184,7 +186,7 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
             ctx.closePath();
         }
     
-        for (let y = (canvas.h/2-camera.y)%tileSize + diagonalStartOffset; y < diagonalDist + ctx.lineWidth + window.tileSize; y += window.tileSize) {
+        for (let y = (canvas.h/2-camera.y)%shared.tileSize + diagonalStartOffset; y < diagonalDist + ctx.lineWidth + shared.tileSize; y += shared.tileSize) {
             ctx.beginPath();
             ctx.moveTo(diagonalStartOffset, y);
             ctx.lineTo(canvas.w - diagonalStartOffset, y);
@@ -202,13 +204,13 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
 
         ctx.fillStyle = cols.background;
         // add 1 to all dimensions so that we don't get gap artifacts on the edge of the arena
-        ctx.fillRect(-(camera.x-canvas.w/2)+1, -(camera.y-canvas.h/2)+1, window.mapDimensions.x-2, window.mapDimensions.y-2);
+        ctx.fillRect(-(camera.x-canvas.w/2)+1, -(camera.y-canvas.h/2)+1, shared.mapDimensions.x-2, shared.mapDimensions.y-2);
 
         ctx.globalAlpha = 0.75;
         ctx.lineWidth = 4.8;
         ctx.strokeStyle = cols.tile;
 
-        for (let x = (canvas.w/2-camera.x)%tileSize; x < canvas.w + ctx.lineWidth + window.tileSize; x += window.tileSize) {
+        for (let x = (canvas.w/2-camera.x)%shared.tileSize; x < canvas.w + ctx.lineWidth + shared.tileSize; x += shared.tileSize) {
             ctx.beginPath();
             ctx.moveTo(x, 0);
             ctx.lineTo(x, canvas.h);
@@ -216,7 +218,7 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
             ctx.closePath();
         }
     
-        for (let y = (canvas.h/2-camera.y)%tileSize; y < canvas.h + ctx.lineWidth + window.tileSize; y += window.tileSize) {
+        for (let y = (canvas.h/2-camera.y)%shared.tileSize; y < canvas.h + ctx.lineWidth + shared.tileSize; y += shared.tileSize) {
             ctx.beginPath();
             ctx.moveTo(0, y);
             ctx.lineTo(canvas.w, y);
@@ -228,12 +230,12 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
     ctx.globalAlpha = 1;
 
     // TODO: test if it's faster to draw tiles or image
-    // if(window.tileImageColors.tile !== window.colors.tile || window.tileImageColors.background !== window.colors.background){
+    // if(shared.tileImageColors.tile !== shared.colors.tile || shared.tileImageColors.background !== shared.colors.background){
     //     // TODO: optimize even further with just generating lines and using clearRect and having another canvas in the background with the solid bg color fill
-    //     window.tileImage = generateTileImage(window.colors);
+    //     shared.tileImage = generateTileImage(shared.colors);
     // }
 
-    // ctx.drawImage(window.tileImage, -camera.x % tileSize, -camera.y % tileSize);
+    // ctx.drawImage(shared.tileImage, -camera.x % shared.tileSize, -camera.y % shared.tileSize);
     ctx.translate(-(camera.x-canvas.w/2), -(camera.y-canvas.h/2));
 
     // render obstacles
@@ -320,7 +322,7 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
             lastNLDX = lastNLDX * 0.96 + 2/7*diameter/timesAround * 0.04;
             lastNLDY = lastNLDY * 0.96 + 5/7*diameter/timesAround * 0.04;
             ctx.setLineDash([lastNLDX, lastNLDY]);
-            ctx.lineDashOffset = (-window.frames / 1.56) % diameter;
+            ctx.lineDashOffset = (-shared.frames / 1.56) % diameter;
             ctx.strokeStyle = ctx.fillStyle;
             ctx.lineWidth = 8;
             ctx.lineCap = 'round';
@@ -343,7 +345,7 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
             ctx.lineWidth = 12;
             ctx.arc(player.pos.x, player.pos.y, Math.abs(player.renderRadius) / 2, 0, Math.PI * 2);
 
-            if(player.grappleX === -1 && player.id === window.selfId && input.action1 === true){
+            if(player.grappleX === -1 && player.id === shared.selfId && shared.input.action1 === true){
                 ctx.strokeStyle = 'white';
                 ctx.stroke();
                 ctx.closePath();
@@ -404,7 +406,7 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
     }
 
     // debug
-    if(window.renderDebug === true){
+    if(shared.renderDebug === true){
         ctx.fillStyle = 'red';
         ctx.strokeStyle = 'red';
         ctx.lineWidth = 2;
@@ -435,8 +437,8 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
 
     ctx.translate(camera.x-canvas.w/2, camera.y-canvas.h/2);
 
-    if(window.selfId !== undefined){
-        const me = players[window.selfId];
+    if(shared.selfId !== undefined){
+        const me = players[shared.selfId];
         if(me.ship === true){
             ctx.translate(canvas.w/2, canvas.h/2);
             ctx.rotate(me.shipAngle+Math.PI/2);
@@ -445,7 +447,7 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
     }
 
     // vignette
-    const v = window.colors.vignette;
+    const v = shared.colors.vignette;
     for(let key in v.innerInterp){
         v.innerInterp[key] = interpolate(v.innerInterp[key], v.inner[key], 0.03);
     }
@@ -474,8 +476,8 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
     ctx.fillStyle = grd;
     ctx.rect(0,0,canvas.w,canvas.h);
     if(v.holeFunctions.length !== 0){
-        if(window.selfId !== undefined){
-            const me = players[window.selfId];
+        if(shared.selfId !== undefined){
+            const me = players[shared.selfId];
             if(me.ship === true){
                 ctx.translate(canvas.w/2, canvas.h/2);
                 ctx.rotate(-me.shipAngle-Math.PI/2);
@@ -487,8 +489,8 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
             v.holeFunctions[i]();
         }
         ctx.translate(camera.x-canvas.w/2, camera.y-canvas.h/2);
-        if(window.selfId !== undefined){
-            const me = players[window.selfId];
+        if(shared.selfId !== undefined){
+            const me = players[shared.selfId];
             if(me.ship === true){
                 ctx.translate(canvas.w/2, canvas.h/2);
                 ctx.rotate(me.shipAngle+Math.PI/2);
@@ -499,12 +501,12 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
     ctx.fill('evenodd');
     ctx.closePath();
 
-    window.colors.vignette.inner = {size:0.1,r:0,g:0,b:0,opacity:0};
-    window.colors.vignette.outer = {size:0.6,r:0,g:0,b:0,opacity:1};
-    window.colors.vignette.holeFunctions.length=0;
-    // window.colors = {
-    //     tile: window.defaultColors.tile,
-    //     background: window.defaultColors.background,
+    shared.colors.vignette.inner = {size:0.1,r:0,g:0,b:0,opacity:0};
+    shared.colors.vignette.outer = {size:0.6,r:0,g:0,b:0,opacity:1};
+    shared.colors.vignette.holeFunctions.length=0;
+    // shared.colors = {
+    //     tile: shared.defaultColors.tile,
+    //     background: shared.defaultColors.background,
     //     vignette: {
     //         inner: {size:0.1,r:0,g:0,b:0,opacity:0},
     //         outer: {size:0.6,r:0,g:0,b:0,opacity:1},
@@ -513,7 +515,7 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
     //     }
     // }
 
-    if(window.disconnected === true){
+    if(shared.disconnected === true){
         let txt = 'Disconected From Server.'.split('');
         for(let i = 0; i < txt.length; i++) {if(Math.random() < 0.03) txt[i] = '#';}
         txt = txt.join('');
@@ -526,7 +528,7 @@ window.render = (os=window.obstacles, cols=window.colors, players=window.players
         ctx.fillText('You may still play the current map but cannot win or leave.', canvas.w - 30, canvas.h - 18);
     }
 
-    if(window.distortionsActive === true) window.renderGl();
+    if(shared.distortionsActive === true) shared.renderGl();
 }
 
 function interpolate(start, end, t){
@@ -554,12 +556,12 @@ function renderTextSpecials(o, cols){
 }
 
 // canvas resizing
-window.resizeFns = [];
+shared.resizeFns = [];
 const gui = document.querySelector('.gui');
 let lastScale=1;
 function resize(){
-    lastScale = window.camera.scale;
-    window.changeCameraScale(1);
+    lastScale = shared.camera.scale;
+    shared.changeCameraScale(1);
     const dpi = window.devicePixelRatio;
     gui.style.width = canvas.style.width = Math.ceil(window.innerWidth) + 'px';
     gui.style.height = canvas.style.height = Math.ceil(window.innerHeight) + 'px';
@@ -573,28 +575,28 @@ function resize(){
     ctx.lineJoin = 'round';
     ctx.lineCap = 'round';
 
-    for(let i = 0; i < window.resizeFns.length; i++){
-        window.resizeFns[i]();
+    for(let i = 0; i < shared.resizeFns.length; i++){
+        shared.resizeFns[i]();
     }
-    window.changeCameraScale(lastScale);
+    shared.changeCameraScale(lastScale);
 }
 
-window.changeCameraScale = (scale) => {
-    ctx.translate(-(1-1/window.camera.scale)*canvas.w/2, -(1-1/window.camera.scale)*canvas.h/2);
+shared.changeCameraScale = (scale) => {
+    ctx.translate(-(1-1/shared.camera.scale)*canvas.w/2, -(1-1/shared.camera.scale)*canvas.h/2);
 
     ctx.translate(canvas.w/2, canvas.h/2);
-    ctx.scale(1/window.camera.scale, 1/window.camera.scale);
+    ctx.scale(1/shared.camera.scale, 1/shared.camera.scale);
     ctx.translate(-canvas.w/2, -canvas.h/2);
 
-    window.camera.scale = scale;
-    canvas.w = canvas.width / canvas.zoom / window.camera.scale;
-    canvas.h = canvas.height / canvas.zoom / window.camera.scale;
+    shared.camera.scale = scale;
+    canvas.w = canvas.width / canvas.zoom / shared.camera.scale;
+    canvas.h = canvas.height / canvas.zoom / shared.camera.scale;
 
     ctx.translate(canvas.w/2, canvas.h/2);
-    ctx.scale(window.camera.scale, window.camera.scale);
+    ctx.scale(shared.camera.scale, shared.camera.scale);
     ctx.translate(-canvas.w/2, -canvas.h/2);
     
-    ctx.translate((1-1/window.camera.scale)*canvas.w/2, (1-1/window.camera.scale)*canvas.h/2);
+    ctx.translate((1-1/shared.camera.scale)*canvas.w/2, (1-1/shared.camera.scale)*canvas.h/2);
 }
   
 window.addEventListener('resize', function () {
@@ -604,25 +606,25 @@ resize();
 
 // if there's ever more extras, make an array system
 let nonLinearFns;
-window.initDistortion = async (vs, fs, uniformNames=[], uniformLambdas=[]) => {
+shared.initDistortion = async (vs, fs, uniformNames=[], uniformLambdas=[]) => {
     if(nonLinearFns === undefined) nonLinearFns = (await import('./extras/distort.js')).default;
     nonLinearFns.initNonlinearTransform(vs, fs, uniformNames, uniformLambdas);
 }
 
-window.unInitDistortion = () => {
+shared.unInitDistortion = () => {
     // can't be active if not loaded
     if(nonLinearFns === undefined) return;
     nonLinearFns.unInitNonlinearTransform();
 }
 
 let noiseFns;
-window.importNoise = async() => {
+shared.importNoise = async() => {
     if(noiseFns !== undefined) return noiseFns;
     return noiseFns = (await import('./extras/noise.js')).default;
 }
 
 let importedYT = false;
-window.importYoutube = async() => {
+shared.importYoutube = async() => {
     if(importedYT === true) return;
     const p1 = import('./extras/youtube.js');
     const p2 = new Promise((res) => {
@@ -640,7 +642,7 @@ window.importYoutube = async() => {
     return Promise.all([p1, p2]);
 }
 
-window.unTaintCanvas = () => {
+shared.unTaintCanvas = () => {
     const transform = ctx.getTransform();
 
     const newCanvas = document.createElement('canvas');

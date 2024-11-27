@@ -11,7 +11,7 @@ let previewPolygonPoints = [];
 let previewText = ''; let previewFontSize = 80;
 let isDragging = false;
 let generatorInit = false;
-window.inClearCheckMode = false;
+shared.inClearCheckMode = false;
 // let newBlockPos = {x: 0, y: 0};
 // let createBlockWidth = 0;
 // const blockPadding = 32; // const moveDist = 30;// Blockly.SNAP_RADIUS
@@ -24,14 +24,14 @@ const canvas = document.getElementById('canvas');
 createModeBtn.onclick = () => {
     alert('select a block to mass create!', false);
     blocklyDiv.style.cursor = 'crosshair';
-    const cl = window.ws.addChangeListener((e) => {
+    const cl = shared.ws.addChangeListener((e) => {
         if(e.blockId === undefined) return;
-        const block = window.ws.getBlockById(e.blockId);
+        const block = shared.ws.getBlockById(e.blockId);
         if(block === null || block.type !== "create_obstacle") return;
 
-        window.fadeAlert();
+        shared.fadeAlert();
 
-        window.setCreateBlock(block);
+        shared.setCreateBlock(block);
         
         // const createBlockPos = block.getRelativeToSurfaceXY();
         // createBlockWidth = block.width;
@@ -41,47 +41,47 @@ createModeBtn.onclick = () => {
         createModeBg.classList.remove('hidden');
         canvas.remove();
         createModeBg.appendChild(canvas);
-        window.ws.removeChangeListener(cl);
+        shared.ws.removeChangeListener(cl);
 
         // resetting mouseOut checks in case mouse isnt moved between the time of 2 clicks
-        window.canvasDimensions = canvas.getBoundingClientRect();
-        window.onmousemove({pageX: window.pageX, pageY: window.pageY, movementY: 0});
+        shared.canvasDimensions = canvas.getBoundingClientRect();
+        shared.onmousemove({pageX: shared.pageX, pageY: shared.pageY, movementY: 0});
 
         blocklyDiv.style.cursor = '';
     });
 }
 createModeBg.onmousedown = () => {
-    previewX = window.mouseX;
-    previewY = window.mouseY;
+    previewX = shared.mouseX;
+    previewY = shared.mouseY;
     isDragging = true;
 
-    if(window.mouseOut === true || (createBlock && createBlock.disposed === true)){
+    if(shared.mouseOut === true || (createBlock && createBlock.disposed === true)){
         // exit create mode
         createModeBg.classList.add('hidden');
         canvas.remove();
         outputPane.insertBefore(canvas, publishBtn);
         isDragging = false;
         inCreateMode = false;
-        window.inClearCheckMode = false;
+        shared.inClearCheckMode = false;
     }
 }
 let fixedPts;
-window.onclick = () => {
+shared.onclick = () => {
     if(inCreateMode === false) return;
 
     // if we click the canvas, create a block
     if(previewShape === 0){
-        if(snapGrid(window.mouseX) === snapGrid(previewX) && snapGrid(window.mouseY) === snapGrid(previewY)) {
+        if(snapGrid(shared.mouseX) === snapGrid(previewX) && snapGrid(shared.mouseY) === snapGrid(previewY)) {
             isDragging = false;
             return;
         }
     } else if(previewShape === 1){
-        if(snapGrid(window.mouseX) === snapGrid(previewX) || snapGrid(window.mouseY) === snapGrid(previewY)) {
+        if(snapGrid(shared.mouseX) === snapGrid(previewX) || snapGrid(shared.mouseY) === snapGrid(previewY)) {
             isDragging = false;
             return;
         }
     } else if(previewShape === 2){
-        const nextPt = [snapGrid(window.mouseX), snapGrid(window.mouseY)];
+        const nextPt = [snapGrid(shared.mouseX), snapGrid(shared.mouseY)];
         previewPolygonPoints.push(nextPt);
 
         // if we're not at the start
@@ -96,7 +96,7 @@ window.onclick = () => {
         }
     }
     
-    const newBlock = Blockly.Xml.domToBlock(createBlockXML, window.ws);
+    const newBlock = Blockly.Xml.domToBlock(createBlockXML, shared.ws);
 
     // get last child and connect
     let lastBlock = createBlock;
@@ -108,43 +108,43 @@ window.onclick = () => {
 
     // change x and y to reflect mouse pos
     // newBlock.getInput(newBlock.shapeParamToId['x'])
-    // newBlock.setFieldValue(window.mouseX, newBlock.shapeParamToId['x'] + 'F');
+    // newBlock.setFieldValue(shared.mouseX, newBlock.shapeParamToId['x'] + 'F');
 
     if(previewShape === 0){
         // circle
-        newBlock.getInput(newBlock.shapeParamToId['x']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(previewX))));
-        newBlock.getInput(newBlock.shapeParamToId['y']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(previewY))));
+        newBlock.getInput(newBlock.shapeParamToId['x']).setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(snapGrid(previewX))));
+        newBlock.getInput(newBlock.shapeParamToId['y']).setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(snapGrid(previewY))));
 
-        const dist = Math.sqrt((snapGrid(previewX) - snapGrid(window.mouseX)) ** 2 + (snapGrid(previewY) - snapGrid(window.mouseY)) ** 2);
-        newBlock.getInput(newBlock.shapeParamToId['r']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(Math.floor(dist * 1000) / 1000)));
+        const dist = Math.sqrt((snapGrid(previewX) - snapGrid(shared.mouseX)) ** 2 + (snapGrid(previewY) - snapGrid(shared.mouseY)) ** 2);
+        newBlock.getInput(newBlock.shapeParamToId['r']).setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(Math.floor(dist * 1000) / 1000)));
     } else if(previewShape === 1){
         // rect
-        const minX = Math.min(previewX, window.mouseX);
-        const maxX = Math.max(previewX, window.mouseX);
+        const minX = Math.min(previewX, shared.mouseX);
+        const maxX = Math.max(previewX, shared.mouseX);
 
-        const minY = Math.min(previewY, window.mouseY);
-        const maxY = Math.max(previewY, window.mouseY);
+        const minY = Math.min(previewY, shared.mouseY);
+        const maxY = Math.max(previewY, shared.mouseY);
 
-        newBlock.getInput(newBlock.shapeParamToId['x']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(minX))));
-        newBlock.getInput(newBlock.shapeParamToId['y']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(minY))));
+        newBlock.getInput(newBlock.shapeParamToId['x']).setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(snapGrid(minX))));
+        newBlock.getInput(newBlock.shapeParamToId['y']).setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(snapGrid(minY))));
 
-        newBlock.getInput(newBlock.shapeParamToId['w']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(maxX) - snapGrid(minX))));
-        newBlock.getInput(newBlock.shapeParamToId['h']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(maxY) - snapGrid(minY))));
+        newBlock.getInput(newBlock.shapeParamToId['w']).setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(snapGrid(maxX) - snapGrid(minX))));
+        newBlock.getInput(newBlock.shapeParamToId['h']).setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(snapGrid(maxY) - snapGrid(minY))));
     } else if(previewShape === 2){
         // polygon
         // points: [[300,700],[600,700],[450,900]]
-        newBlock.getInput(newBlock.shapeParamToId['points']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(fixedPts)));
+        newBlock.getInput(newBlock.shapeParamToId['points']).setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(fixedPts)));
         previewPolygonPoints.length = 0;
     } else if(previewShape === 3){
-        newBlock.getInput(newBlock.shapeParamToId['x']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(window.mouseX))));
-        newBlock.getInput(newBlock.shapeParamToId['y']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(window.mouseY))));
-        newBlock.getInput(newBlock.shapeParamToId['text']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(previewText)));
-        newBlock.getInput(newBlock.shapeParamToId['fontSize']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(previewFontSize)));
+        newBlock.getInput(newBlock.shapeParamToId['x']).setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(snapGrid(shared.mouseX))));
+        newBlock.getInput(newBlock.shapeParamToId['y']).setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(snapGrid(shared.mouseY))));
+        newBlock.getInput(newBlock.shapeParamToId['text']).setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(previewText)));
+        newBlock.getInput(newBlock.shapeParamToId['fontSize']).setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(previewFontSize)));
     } else {
         console.error('previewShapeToObs not defined | createMode.js');
     }
 
-    if(generatorInit === false) {generatorInit = true; window.generator.init(window.ws);}
+    if(generatorInit === false) {generatorInit = true; shared.generator.init(shared.ws);}
 
     for(let key in lastBlock.simulateParamToId){
         const shadow = lastBlock.getInput(lastBlock.simulateParamToId[key]).connection.getShadowDom(true).cloneNode(true);
@@ -169,13 +169,13 @@ createModeBg.oncontextmenu = (e) => {
     return e.preventDefault();
 }
 
-// btw if we have any more rendering effects that need to be done then create a sep file with maybe window.editorRenderFunctions
-const oldRender = window.render;
-window.render = () => {
+// btw if we have any more rendering effects that need to be done then create a sep file with maybe shared.editorRenderFunctions
+const oldRender = shared.render;
+shared.render = () => {
     oldRender();
 
     // render preview
-    if(!isDragging || window.inClearCheckMode === true) return;
+    if(!isDragging || shared.inClearCheckMode === true) return;
     ctx.beginPath();
     ctx.fillStyle = 'black';
     ctx.strokeStyle = 'black';
@@ -185,16 +185,16 @@ window.render = () => {
         // circle
         const x = snapGrid(previewX);
         const y = snapGrid(previewY);
-        const dist = Math.sqrt((x - snapGrid(window.mouseX)) ** 2 + (y - snapGrid(window.mouseY)) ** 2);
+        const dist = Math.sqrt((x - snapGrid(shared.mouseX)) ** 2 + (y - snapGrid(shared.mouseY)) ** 2);
         ctx.arc(x, y, dist, 0, Math.PI * 2);
     } else if(previewShape === 1){
         // rectangle
-        ctx.rect(snapGrid(previewX), snapGrid(previewY), snapGrid(window.mouseX)-snapGrid(previewX), snapGrid(window.mouseY)-snapGrid(previewY));
+        ctx.rect(snapGrid(previewX), snapGrid(previewY), snapGrid(shared.mouseX)-snapGrid(previewX), snapGrid(shared.mouseY)-snapGrid(previewY));
     } else if(previewShape === 2){
         // polygon
         if(previewPolygonPoints.length !== 0){
             ctx.setLineDash([15, 12]);
-            ctx.lineDashOffset = -window.time / 48;
+            ctx.lineDashOffset = -shared.time / 48;
             ctx.arc(previewPolygonPoints[0][0], previewPolygonPoints[0][1], 26, 0, Math.PI * 2);
             ctx.stroke();
             ctx.closePath();
@@ -209,10 +209,10 @@ window.render = () => {
         }
     } else if(previewShape === 3){
         // text
-        const x = snapGrid(window.mouseX); const y = snapGrid(window.mouseY);
+        const x = snapGrid(shared.mouseX); const y = snapGrid(shared.mouseY);
 
         ctx.setLineDash([28,8]);
-        ctx.lineDashOffset = -window.time / 55;
+        ctx.lineDashOffset = -shared.time / 55;
 
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -226,7 +226,7 @@ window.render = () => {
         const hOffset = (dimensions.actualBoundingBoxDescent - dimensions.actualBoundingBoxAscent) / 2;
         ctx.rect(x - w/2, y - h/2, w, h);
 
-        ctx.strokeText(previewText, x - wOffset * (window.wOffsetMult??1), y - hOffset * (window.hOffsetMult??1));
+        ctx.strokeText(previewText, x - wOffset * (shared.wOffsetMult??1), y - hOffset * (shared.hOffsetMult??1));
 
         ctx.lineWidth = 8;
 
@@ -242,12 +242,12 @@ window.render = () => {
 }
 
 // upload mode! Same thing with the canvas
-window.enterClearCheckMode = () => {
+shared.enterClearCheckMode = () => {
     const selected = Blockly.getSelected();
     if(selected !== null) selected.unselect();
-    window.runCode();
-    window.respawnPlayer();
-    window.inClearCheckMode = true;
+    shared.runCode();
+    shared.respawnPlayer();
+    shared.inClearCheckMode = true;
     if(document.activeElement.classList.contains('blocklyHtmlInput') === true){
         document.activeElement.blur();
     }
@@ -256,20 +256,20 @@ window.enterClearCheckMode = () => {
     createModeBg.appendChild(canvas);
 
     // resetting mouseOut checks in case mouse isnt moved between the time of 2 clicks
-    window.canvasDimensions = canvas.getBoundingClientRect();
-    window.onmousemove({pageX: window.pageX, pageY: window.pageY, movementY: 0});
+    shared.canvasDimensions = canvas.getBoundingClientRect();
+    shared.onmousemove({pageX: shared.pageX, pageY: shared.pageY, movementY: 0});
 
     blocklyDiv.style.cursor = '';
 }
 
-window.exitClearCheckMode = () => {
-    let last = window.mouseOut;
-    window.mouseOut = true;
+shared.exitClearCheckMode = () => {
+    let last = shared.mouseOut;
+    shared.mouseOut = true;
     createModeBg.onmousedown();
-    window.mouseOut = last;
+    shared.mouseOut = last;
 }
 
-window.setCreateBlock = (block) => {
+shared.setCreateBlock = (block) => {
     const lastPreviousConnection = block.previousConnection.targetConnection;
     const lastNextConnection = block.nextConnection.targetConnection;
 
@@ -285,10 +285,10 @@ window.setCreateBlock = (block) => {
     previewShape = parseInt(block.getFieldValue('SHAPE_DROPDOWN'));
     if(previewShape === 2) previewPolygonPoints.length = 0;
     else if(previewShape === 3) {
-        if(generatorInit === false) {generatorInit = true; window.generator.init(window.ws);}
-        previewText = window.generator.valueToCode(createBlock, createBlock.shapeParamToId['text'], 0);
+        if(generatorInit === false) {generatorInit = true; shared.generator.init(shared.ws);}
+        previewText = shared.generator.valueToCode(createBlock, createBlock.shapeParamToId['text'], 0);
         previewText = previewText.slice(1, previewText.length - 1);
-        previewFontSize = parseFloat(window.generator.valueToCode(createBlock, createBlock.shapeParamToId['fontSize'], 0));
+        previewFontSize = parseFloat(shared.generator.valueToCode(createBlock, createBlock.shapeParamToId['fontSize'], 0));
     }
 
     inCreateMode = true;

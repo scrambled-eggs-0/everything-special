@@ -1,63 +1,64 @@
+import shared from '../shared/shared.js';
 import scroll from './scroll.js';
 import Utils from './utils.js';
 const { SCROLL_PARAMS } = Utils;
 
 // scrolling
-window.dragging = false;
+shared.dragging = false;
 let totalDist = 0;
 let dragStartTime;
 
 // input
 const canvas = document.getElementById('canvas');
-window.mouseX = -1;
-window.mouseY = -1;
-window.scrollLocked = false;
-window.mouseDownFunctions = [];
-window.mouseMoveFunctions = [];
-window.mouseUpFunctions = [];
-window.mouseOut = false;
-window.pageX = -1;
-window.pageY = -1;
+shared.mouseX = -1;
+shared.mouseY = -1;
+shared.scrollLocked = false;
+shared.mouseDownFunctions = [];
+shared.mouseMoveFunctions = [];
+shared.mouseUpFunctions = [];
+shared.mouseOut = false;
+shared.pageX = -1;
+shared.pageY = -1;
 
-window.onmousedown = (e) => {
+shared.onmousedown = (e) => {
     // scrolling
     dragging = true;
     totalDist = 0;
     dragStartTime = Date.now();
     
-    for(let i = 0; i < window.mouseDownFunctions.length; i++){
-        window.mouseDownFunctions[i]();
+    for(let i = 0; i < shared.mouseDownFunctions.length; i++){
+        shared.mouseDownFunctions[i]();
     }
 }
 
-window.onmousemove = (e) => {
+shared.onmousemove = (e) => {
     // input
-    window.mouseX = ((e.pageX - window.canvasDimensions.x) / window.canvasDimensions.width) * canvas.width;//Math.min(1, Math.max(0, ) ;
-    window.mouseY = ((e.pageY - window.canvasDimensions.y) / window.canvasDimensions.height) * canvas.height;
+    shared.mouseX = ((e.pageX - shared.canvasDimensions.x) / shared.canvasDimensions.width) * canvas.width;//Math.min(1, Math.max(0, ) ;
+    shared.mouseY = ((e.pageY - shared.canvasDimensions.y) / shared.canvasDimensions.height) * canvas.height;
 
-    window.pageX = e.pageX;
-    window.pageY = e.pageY;
+    shared.pageX = e.pageX;
+    shared.pageY = e.pageY;
 
-    window.mouseOut = false;
+    shared.mouseOut = false;
 
-    if(window.mouseX < 0){
-        window.mouseX = 0;
-        window.mouseOut = true;
-    } else if(window.mouseX > canvas.width){
-        window.mouseX = canvas.width;
-        window.mouseOut = true;
+    if(shared.mouseX < 0){
+        shared.mouseX = 0;
+        shared.mouseOut = true;
+    } else if(shared.mouseX > canvas.width){
+        shared.mouseX = canvas.width;
+        shared.mouseOut = true;
     }
 
-    if(window.mouseY < 0){
-        window.mouseY = 0;
-        window.mouseOut = true;
-    } else if(window.mouseY > canvas.height){
-        window.mouseY = canvas.height;
-        window.mouseOut = true;
+    if(shared.mouseY < 0){
+        shared.mouseY = 0;
+        shared.mouseOut = true;
+    } else if(shared.mouseY > canvas.height){
+        shared.mouseY = canvas.height;
+        shared.mouseOut = true;
     }
 
-    for(let i = 0; i < window.mouseMoveFunctions.length; i++){
-        window.mouseMoveFunctions[i]();
+    for(let i = 0; i < shared.mouseMoveFunctions.length; i++){
+        shared.mouseMoveFunctions[i]();
     }
 
     // scrolling
@@ -65,7 +66,7 @@ window.onmousemove = (e) => {
 
     totalDist -= e.movementY * window.innerHeight;
 
-    if(Math.abs(totalDist) > SCROLL_PARAMS.sensitivity && (window.mouseX < SCROLL_PARAMS.edgeMargin || window.mouseX > canvas.width - SCROLL_PARAMS.edgeMargin) && window.scrollLocked !== true){
+    if(Math.abs(totalDist) > SCROLL_PARAMS.sensitivity && (shared.mouseX < SCROLL_PARAMS.edgeMargin || shared.mouseX > canvas.width - SCROLL_PARAMS.edgeMargin) && shared.scrollLocked !== true){
         const scrollTime = (Date.now() - dragStartTime);
         const averageSpeed = totalDist / scrollTime;
         if(scrollTime < SCROLL_PARAMS.maxScrollTime){
@@ -80,29 +81,29 @@ window.onmousemove = (e) => {
     }
 }
 
-window.onmouseup = () => {
+shared.onmouseup = () => {
     // scrolling
     dragging = false;
 
-    for(let i = 0; i < window.mouseUpFunctions.length; i++){
-        window.mouseUpFunctions[i]();
+    for(let i = 0; i < shared.mouseUpFunctions.length; i++){
+        shared.mouseUpFunctions[i]();
     }
 }
 
-// window.onmouseout = () => {
+// shared.onmouseout = () => {
 //     // scrolling
 //     dragging = false;
 
-//     for(let i = 0; i < window.mouseUpFunctions.length; i++){
-//         window.mouseUpFunctions[i]();
+//     for(let i = 0; i < shared.mouseUpFunctions.length; i++){
+//         shared.mouseUpFunctions[i]();
 //     }
 // }
 
 // mobile
 document.body.ontouchstart = (e) => {
     const touch = (e.changedTouches || e.originalEvent.touches)[0];
-    window.onmousemove({pageX: touch.pageX, pageY: touch.pageY, movementY: touch.pageY - lastTouchY});
-    window.onmousedown();
+    shared.onmousemove({pageX: touch.pageX, pageY: touch.pageY, movementY: touch.pageY - lastTouchY});
+    shared.onmousedown();
     lastTouchY = touch.pageY;
     return absorbEvent_(e);
 }
@@ -110,13 +111,13 @@ document.body.ontouchstart = (e) => {
 let lastTouchY = 0;
 document.body.ontouchmove = (e) => {
     const touch = (e.changedTouches || e.originalEvent.touches)[0];
-    window.onmousemove({pageX: touch.pageX, pageY: touch.pageY, movementY: touch.pageY - lastTouchY});
+    shared.onmousemove({pageX: touch.pageX, pageY: touch.pageY, movementY: touch.pageY - lastTouchY});
     lastTouchY = touch.pageY;
     return absorbEvent_(e);
 }
 
 document.body.ontouchend = (e) => {
-    window.onmouseup();
+    shared.onmouseup();
     return absorbEvent_(e);
 }
 
@@ -125,7 +126,7 @@ document.body.ontouchcancel = (e) => {
     return absorbEvent_(e);
 }
 
-window.oncontextmenu = (e) => { return e.preventDefault(); };
+shared.oncontextmenu = (e) => { return e.preventDefault(); };
 
 function absorbEvent_(e) {
     e.preventDefault && e.preventDefault();
@@ -137,9 +138,9 @@ function absorbEvent_(e) {
 
 window.addEventListener('keydown', e => {
     if (e.repeat === true) return;
-    if (window.scrollLocked !== true &&
+    if (shared.scrollLocked !== true &&
         (e.code === "ArrowDown" || e.code === "ArrowUp") &&
-        window.scrollAnimation === 1) {
+        shared.scrollAnimation === 1) {
         scroll(e.code === "ArrowUp");
     }
 })

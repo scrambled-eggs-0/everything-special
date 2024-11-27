@@ -1,4 +1,3 @@
-let str = '', pos;
 // this class is just to store player data so that other clients can get it if they're late to the map.
 class Player {
     constructor(){

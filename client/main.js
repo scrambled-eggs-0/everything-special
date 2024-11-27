@@ -1,63 +1,64 @@
-const canvas = window.canvas = document.getElementById('canvas');
-const ctx = window.ctx = canvas.getContext('2d');
+const canvas = shared.canvas = document.getElementById('canvas');
+const ctx = shared.ctx = canvas.getContext('2d');
 
+import shared from '../shared/shared.js';
 import './input.js';
 import simulate from './components.js';
 
 import Utils from './utils.js';
 const { environment, blendColor } = Utils;
 
-window.scrollingUp = false;
-window.scrollAnimation = 1;
+shared.scrollingUp = false;
+shared.scrollAnimation = 1;
 
-window.defaultColors = {
+shared.defaultColors = {
     tile: '#1b9456',//'#0d0d0d',// the stroke and outside of arena
     background: '#1fad64'//blendColor('#1ea761', '#1b9456', -0.34)//'#5260ab'//'#41ba56'//'#383838',// the fillcolor
 }
 
-window.colors = {
-    tile: window.defaultColors.tile,
-    background: window.defaultColors.background,
+shared.colors = {
+    tile: shared.defaultColors.tile,
+    background: shared.defaultColors.background,
 }
 
-window.lastColors = {
-    tile: window.defaultColors.tile,
-    background: window.defaultColors.background,
+shared.lastColors = {
+    tile: shared.defaultColors.tile,
+    background: shared.defaultColors.background,
 }
 
-window.lastPlayerData = [0, 0];
+shared.lastPlayerData = [0, 0];
 let renderUi = () => {};
 
 let translateMult;
-window.render = () => {
-    if(window.scrollAnimation < 1){
-        window.scrollAnimation += (Date.now() - firstTime - offtabTime) / window.frames * .00384;// at 120fps this is +0.032/s;
-        if(window.scrollAnimation > 1) window.scrollAnimation = 1;
+shared.render = () => {
+    if(shared.scrollAnimation < 1){
+        shared.scrollAnimation += (Date.now() - firstTime - offtabTime) / window.frames * .00384;// at 120fps this is +0.032/s;
+        if(shared.scrollAnimation > 1) shared.scrollAnimation = 1;
         else {
-            translateMult = window.scrollingUp === true ? 1 : -1;
+            translateMult = shared.scrollingUp === true ? 1 : -1;
 
-            // not the same as the exit transform because we also want to translate (-canvas.height) in addition to (1 - window.scrollAnimation) * canvas.height
-            ctx.translate(0, window.scrollAnimation * canvas.height * translateMult);
+            // not the same as the exit transform because we also want to translate (-canvas.height) in addition to (1 - shared.scrollAnimation) * canvas.height
+            ctx.translate(0, shared.scrollAnimation * canvas.height * translateMult);
 
-            let resetColorTile = window.colors.tile;
-            let resetColorBackground = window.colors.background; 
-            window.colors.tile = window.lastColors.tile;
-            window.colors.background = window.lastColors.background;
-            _render(window.lastObstacles, window.lastColors, window.lastPlayerData);
-            window.colors.tile = resetColorTile;
-            window.colors.background = resetColorBackground; 
+            let resetColorTile = shared.colors.tile;
+            let resetColorBackground = shared.colors.background; 
+            shared.colors.tile = shared.lastColors.tile;
+            shared.colors.background = shared.lastColors.background;
+            _render(shared.lastObstacles, shared.lastColors, shared.lastPlayerData);
+            shared.colors.tile = resetColorTile;
+            shared.colors.background = resetColorBackground; 
             ctx.translate(0, -canvas.height * translateMult);
         }
     }
 
-    _render(window.obstacles, window.colors, undefined);
+    _render(shared.obstacles, shared.colors, undefined);
 
-    if(window.scrollAnimation < 1){
-        ctx.translate(0, -(window.scrollAnimation - 1) * canvas.height * translateMult);
+    if(shared.scrollAnimation < 1){
+        ctx.translate(0, -(shared.scrollAnimation - 1) * canvas.height * translateMult);
     }
 }
 
-window.tileSize = 100; // 50
+shared.tileSize = 100; // 50
 let opaqIndex, len, lastPlayerX, lastPlayerY, lastPlayerRadius, lastGA, j = false, lastNLDX = 0, lastNLDY = 0;
 function _render(os, cols, playerData=undefined){
     ctx.fillStyle = cols.background;
@@ -67,7 +68,7 @@ function _render(os, cols, playerData=undefined){
     ctx.strokeStyle = cols.tile;
     ctx.lineWidth = environment === 'editor' ? 4 : 2;
 
-    for (let x = 0; x < canvas.width + ctx.lineWidth + window.tileSize; x += window.tileSize) {
+    for (let x = 0; x < canvas.width + ctx.lineWidth + shared.tileSize; x += shared.tileSize) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
         ctx.lineTo(x, canvas.height);
@@ -75,7 +76,7 @@ function _render(os, cols, playerData=undefined){
         ctx.closePath();
     }
 
-    for (let y = 0; y < canvas.height + ctx.lineWidth + window.tileSize; y += window.tileSize) {
+    for (let y = 0; y < canvas.height + ctx.lineWidth + shared.tileSize; y += shared.tileSize) {
         ctx.beginPath();
         ctx.moveTo(0, y);
         ctx.lineTo(canvas.width, y);
@@ -170,7 +171,7 @@ function _render(os, cols, playerData=undefined){
         lastNLDX = lastNLDX * 0.96 + 2/7*diameter/timesAround * 0.04;
         lastNLDY = lastNLDY * 0.96 + 5/7*diameter/timesAround * 0.04;
         ctx.setLineDash([lastNLDX, lastNLDY]);
-        ctx.lineDashOffset = (-window.time / 26) % diameter;
+        ctx.lineDashOffset = (-shared.time / 26) % diameter;
         ctx.strokeStyle = ctx.fillStyle;
         ctx.lineWidth = 8;
         ctx.lineCap = 'round';
@@ -218,14 +219,14 @@ function renderTextSpecials(o, cols){
 // TODO: rework this to use interpolation and not dt once omni is back up
 let lastTime, now, firstTime, accum, dt, offtabTime;
 lastTime = now = firstTime = Date.now();
-accum = window.time = window.frames = offtabTime = 0;
+accum = shared.time = window.frames = offtabTime = 0;
 dt = 1;
 const FRAME_TIME = 1000 / 60;
 (function run(){
     now = Date.now();
     dt = now - lastTime;
     accum += dt;
-    window.time += dt;
+    shared.time += dt;
     lastTime = now;
 
     if(dt > 2000) offtabTime += dt;
@@ -254,7 +255,7 @@ const FRAME_TIME = 1000 / 60;
         simulate();
     }
 
-    window.render();
+    shared.render();
 })();
 
 if(environment !== 'editor'){
@@ -272,12 +273,12 @@ if(environment !== 'editor'){
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
-        window.canvasDimensions = canvas.getBoundingClientRect();
+        shared.canvasDimensions = canvas.getBoundingClientRect();
     }
     window.addEventListener("resize", resize);
     resize();
 
-    if(window.tutorial !== true && window.standalone !== true && window.isExClient !== true){
+    if(shared.tutorial !== true && shared.standalone !== true && shared.isExClient !== true){
         (async () => {
             renderUi = await import('./sidemenu.js');
             renderUi = renderUi.default;
@@ -291,9 +292,9 @@ if(environment !== 'editor'){
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
-    window.canvasDimensions = canvas.getBoundingClientRect();
+    shared.canvasDimensions = canvas.getBoundingClientRect();
     setInterval(() => {
-        window.canvasDimensions = canvas.getBoundingClientRect();
+        shared.canvasDimensions = canvas.getBoundingClientRect();
     }, 1000)
 }
 

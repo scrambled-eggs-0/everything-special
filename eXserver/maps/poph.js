@@ -1,7 +1,10 @@
-var counter = 11000; // add 1000 for every new map so color changers dont conflict
-var flashLava = false;
-var lavaType = flashLava === true ? [0, 1] : [1];
-var dt = 1000/60;
+window.loadMap((shared)=>{
+    const {C, colors, spawnPosition, mapDimensions, camera, generateDimensions, obstacles, difficultyImageColors, difficultyImageMap, blendColor, changeCameraScale, players, selfId, generateTopLeftCoordinates, input} = shared;
+
+let counter = 5000; // add 1000 for every new map so color changers dont conflict
+let flashLava = false;
+let lavaType = flashLava === true ? [0, 1] : [1];
+let dt = 1000/60;
 
 
 mapDimensions.x = 700000;
@@ -9,16 +12,16 @@ mapDimensions.y = 20000;
 
 spawnPosition.x = 0;
 spawnPosition.y = 375;
-window.respawnPlayer();
+shared.respawnPlayer();
 colors.background = '#ffffff';
 colors.tile = '#d4d4d4';
 
-var safeColor = "#c3c3c3";
-var safeTileColor = "#9e9e9e"
+let safeColor = "#c3c3c3";
+let safeTileColor = "#9e9e9e"
 
 // Musics!
 // first music is created after animation
-C(1, [], [26], {
+shared.C(1, [], [26], {
 	x: 180200,
 	y: 0,
 	w: 354800 - 180200,
@@ -26,7 +29,7 @@ C(1, [], [26], {
 	musicPath: 'https://www.youtube.com/watch?v=ZGxAlvDkD1w'
 });
 
-C(1, [], [26], {
+shared.C(1, [], [26], {
 	x: 360200,
 	y: 0,
 	w: 2000,
@@ -34,7 +37,7 @@ C(1, [], [26], {
 	musicPath: 'https://www.youtube.com/watch?v=ziFxpjRbfJc'//'https://www.youtube.com/watch?v=vE5uEesakTU'
 });
 
-var areaColors = [
+let areaColors = [
 	{ // 1.1
 		background: "#ffffff",
 		tile: "#d4d4d4",
@@ -262,7 +265,7 @@ var areaColors = [
 	},
 ]
 
-var areas = [
+let areas = [
 	[{ //1.1
 		type: "normal",
 		count: 18,
@@ -611,16 +614,16 @@ var areas = [
 		speed: 7
 	}, {
 		extraobs: true,
-		forceCreate: `C(3,[],[20],{x:270700,y:-200,text:"These only kill if you're trying to move",fontSize: 80, hex: "#ffffff"});`
+		forceCreate: `shared.C(3,[],[20],{x:270700,y:-200,text:"These only kill if you're trying to move",fontSize: 80, hex: "#ffffff"});`
 	}, /*{
 		extraobs: true,
-		forceCreate: `C(0,[],[3],{x:270000,y:0,r:49.5*1.1,sf:(o,p)=>{
+		forceCreate: `shared.C(0,[],[3],{x:270000,y:0,r:49.5*1.1,sf:(o,p)=>{
 			if(p.pos.x > 270000 && p.pos.y < 280000){
 				o.pos.x = p.pos.x; 
 				o.pos.y = p.pos.y;
 			}
 		},cr:(o)=>{
-			const p = window.players[window.selfId];
+			const p = shared.players[shared.selfId];
 			if(!(p.pos.x > 270000 && p.pos.y < 280000)) return;
 			if(input.left || input.right || input.up || input.down){
 				ctx.fillStyle = 'white';
@@ -1028,7 +1031,7 @@ var areas = [
 		type: 0,
 	}, {
 		extraobs: true,
-		forceCreate: `C(1,[],[17],{x:349900,y:200,w:3800,h:1100,timeTrapToShowTenth:false,timeTrapToKill:false,timeTrapRecoverySpeed:3,timeTrapMaxTime:12*60,sf:(e)=>{
+		forceCreate: `shared.C(1,[],[17],{x:349900,y:200,w:3800,h:1100,timeTrapToShowTenth:false,timeTrapToKill:false,timeTrapRecoverySpeed:3,timeTrapMaxTime:12*60,sf:(e)=>{
             if(e.timeTrapTime <= 0){
                 players[selfId].pos.x = 354260;
                 players[selfId].pos.y = 800;
@@ -1064,28 +1067,28 @@ var areas = [
 
 	[/*{
 		extraobs: true,
-		forceCreate: `C(1,[],[17],{x:361500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
+		forceCreate: `shared.C(1,[],[17],{x:361500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
 	},{
 		extraobs: true,
-		forceCreate: `C(1,[],[17],{x:362500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
+		forceCreate: `shared.C(1,[],[17],{x:362500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
 	},{
 		extraobs: true,
-		forceCreate: `C(1,[],[17],{x:363500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
+		forceCreate: `shared.C(1,[],[17],{x:363500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
 	},{
 		extraobs: true,
-		forceCreate: `C(1,[],[17],{x:364500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
+		forceCreate: `shared.C(1,[],[17],{x:364500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
 	},{
 		extraobs: true,
-		forceCreate: `C(1,[],[17],{x:365500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
+		forceCreate: `shared.C(1,[],[17],{x:365500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
 	},{
 		extraobs: true,
-		forceCreate: `C(1,[],[17],{x:366500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
+		forceCreate: `shared.C(1,[],[17],{x:366500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
 	},{
 		extraobs: true,
-		forceCreate: `C(1,[],[17],{x:367500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
+		forceCreate: `shared.C(1,[],[17],{x:367500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
 	},{
 		extraobs: true,
-		forceCreate: `C(1,[],[17],{x:368500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
+		forceCreate: `shared.C(1,[],[17],{x:368500,y:0,w:200,h:1500,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:2*60});`
 	},*/{ //7.1
 		extraobs: true,
 		x: 500,
@@ -1416,7 +1419,7 @@ var areas = [
 	}],
 	[{  //7.4
 		extraobs: true,
-		forceCreate: `C(1,[],[3],{x:406000,y:0,w:8000,h:100,ef:(e)=>{
+		forceCreate: `shared.C(1,[],[3],{x:406000,y:0,w:8000,h:100,ef:(e)=>{
                 players[selfId].pos.y = 1350;
         },cr:(o)=>{
 			ctx.fillStyle = '#38ab30';
@@ -1427,7 +1430,7 @@ var areas = [
 		}});`
 	}, {  //7.4
 		extraobs: true,
-		forceCreate: `C(1,[],[3],{x:406000,y:1400,w:8000,h:100,ef:(e)=>{
+		forceCreate: `shared.C(1,[],[3],{x:406000,y:1400,w:8000,h:100,ef:(e)=>{
                 players[selfId].pos.y = 150;
         },cr:(o)=>{
 			ctx.fillStyle = '#38ab30';
@@ -1483,7 +1486,7 @@ var areas = [
 			speed: 4
 		}, {
 			type: "homing",
-			count: 32,
+			count: 26,
 			radius: 24,
 			speed: 3
 		}, {
@@ -1494,11 +1497,11 @@ var areas = [
 		},
 		{
 			extraobs: true,
-			forceCreate: `C(2,[],[1],{x:0,y:0,boundPlayer:false,points:[[421000,0],[429000,0],[429000,600]]});`
+			forceCreate: `shared.C(2,[],[1],{x:0,y:0,boundPlayer:false,points:[[421000,0],[429000,0],[429000,600]]});`
 		},
 		{
 			extraobs: true,
-			forceCreate: `C(2,[],[1],{x:0,y:0,boundPlayer:false,points:[[429000,1500],[421000,1500],[429000,900]]});`
+			forceCreate: `shared.C(2,[],[1],{x:0,y:0,boundPlayer:false,points:[[429000,1500],[421000,1500],[429000,900]]});`
 		},
 		// {
 		// 	type: "slower",
@@ -1537,7 +1540,7 @@ var areas = [
 		}, 
 		{
 			type: "homing",
-			count: 19,
+			count: 18,
 			radius: 26,
 			speed: 6
 		}, {
@@ -1550,17 +1553,17 @@ var areas = [
 	[// 8.3 - cc z20 w/ pulsing enemies
 		{
 			type: "snake",
-			count: 22,
+			count: 20,
 			radius: 18,
 			speed: 4
 		}, {
 			type: "oscillating",
-			count: 22,
+			count: 20,
 			radius: 18,
 			speed: 3.2
 		}, {
 			type: "slower",
-			count: 22,
+			count: 20,
 			radius: 24,
 			speed: 6
 		}
@@ -1606,7 +1609,7 @@ var areas = [
 	[
 		// {
 		// 	extraobs: true,
-		// 	forceCreate: `C(0,[],[3],{cr:()=>{ctx.shadowBlur = 10; ctx.shadowColor = "red";},x:-1E9,y:0,r:1})`
+		// 	forceCreate: `shared.C(0,[],[3],{cr:()=>{ctx.shadowBlur = 10; ctx.shadowColor = "red";},x:-1E9,y:0,r:1})`
 		// },
 		{ 
 			extraobs: true,
@@ -1650,7 +1653,7 @@ var areas = [
 		},
 		// {
 		// 	extraobs: true,
-		// 	forceCreate: `C(0,[],[3],{cr:()=>{ctx.shadowBlur = 0;},x:-1E9,y:0,r:1})`
+		// 	forceCreate: `shared.C(0,[],[3],{cr:()=>{ctx.shadowBlur = 0;},x:-1E9,y:0,r:1})`
 		// },
 	],
 	// 9.3 - all enemies
@@ -1809,7 +1812,7 @@ var areas = [
 			const reusableIndexes = [];
 			let maxTimer = 10;
 			let timer = maxTimer;
-			C(0,[],[3],{x:-1E9,y:0,sf:(o,p)=>{
+			shared.C(0,[],[3],{x:-1E9,y:0,sf:(o,p)=>{
 				if(p.pos.x < 525000) return;
 				timer--;
 				if(timer <= 0){
@@ -1825,7 +1828,7 @@ var areas = [
 					let previewTime = maxPreviewTime;
 					let previewDead = false;
 					// first spawn preview
-					C(1,[1],[3],{x:middleX-w/2,y:middleY-h/2,w,h,initialRotation:angle,rotateSpeed:0,pivotX:middleX,pivotY:middleY,cr:(o)=>{
+					shared.C(1,[1],[3],{x:middleX-w/2,y:middleY-h/2,w,h,initialRotation:angle,rotateSpeed:0,pivotX:middleX,pivotY:middleY,cr:(o)=>{
 						ctx.fillStyle = 'orange';
 						ctx.globalAlpha = Math.min(1,1 - previewTime / maxPreviewTime);
 						ctx.beginPath();
@@ -1842,7 +1845,7 @@ var areas = [
 						if(previewTime < 0 && previewDead === false){
 							previewDead = true;
 							let aliveTime = 50;
-							C(1,[1],[1],{boundPlayer:true,x:middleX-w/2,y:middleY-h/2,w,h,initialRotation:angle,rotateSpeed:0,pivotX:middleX,pivotY:middleY,sf:(o)=>{
+							shared.C(1,[1],[1],{boundPlayer:true,x:middleX-w/2,y:middleY-h/2,w,h,initialRotation:angle,rotateSpeed:0,pivotX:middleX,pivotY:middleY,sf:(o)=>{
 								aliveTime--;
 								if(aliveTime < 0){
 									reusableIndexes.push(index);
@@ -1865,11 +1868,11 @@ var areas = [
 		// invisible safes that prevent deaths on the safeszones
 		{
 			extraobs: true,
-			forceCreate: `C(1,[],[11],{x:525200,y:0,w:800,h:1500,cr:()=>{}})`
+			forceCreate: `shared.C(1,[],[11],{x:525200,y:0,w:800,h:1500,cr:()=>{}})`
 		},
 		{
 			extraobs: true,
-			forceCreate: `C(1,[],[11],{x:534000,y:0,w:800,h:1500,cr:()=>{}})`
+			forceCreate: `shared.C(1,[],[11],{x:534000,y:0,w:800,h:1500,cr:()=>{}})`
 		},
 	]
 
@@ -1920,7 +1923,7 @@ var areas = [
           } else if(area <= 30){
             ctx.globalAlpha = 1;
           } else if(area <= 41){
-            var grd = ctx.createRadialGradient(enemies[i].renderX + playerOffset.x,enemies[i].renderY + playerOffset.y, enemies[i].radius, enemies[i].renderX + playerOffset.x, enemies[i].renderY + playerOffset.y,enemies[i].radius*1.5+20);
+            let grd = ctx.createRadialGradient(enemies[i].renderX + playerOffset.x,enemies[i].renderY + playerOffset.y, enemies[i].radius, enemies[i].renderX + playerOffset.x, enemies[i].renderY + playerOffset.y,enemies[i].radius*1.5+20);
             if(Math.sqrt((enemies[i].renderX + playerOffset.x - 640)**2+(enemies[i].renderY + playerOffset.y - 360)**2) < enemies[i].radius + 100){
               grd.addColorStop(0, "rgb(255,0,0)");
             } else {
@@ -1944,17 +1947,17 @@ function shortAngleDist(a0, a1) {
 }
 
 
-var collided = false;
-var lastCollided = false;
-C(1, [], [3], {
+let collided = false;
+let lastCollided = false;
+shared.C(1, [], [3], {
 	cr: (o) => {}, // render as invisible
 	ef: (p, res, o) => {
-		window.changeCameraScale(1 / 1.5)
+		shared.changeCameraScale(1 / 1.5)
 		collided = true;
 	},
 	sf: (o, p) => {
 		if (lastCollided === true && collided === false) {
-			window.changeCameraScale(1 / 1.5)
+			shared.changeCameraScale(1 / 1.5)
 		}
 		lastCollided = collided;
 		collided = false;
@@ -1965,7 +1968,7 @@ C(1, [], [3], {
 
 //COLOR MANAGER
 
-C(0, [], [3], {
+shared.C(0, [], [3], {
 	x: -1e9,
 	y: 0,
 	r: 1,
@@ -1984,7 +1987,7 @@ C(0, [], [3], {
 
 
 //WOrld border
-C(1, [], [3], {
+shared.C(1, [], [3], {
 	x: -4000,
 	y: -4000,
 	w: 4000,
@@ -1995,7 +1998,7 @@ C(1, [], [3], {
 	}
 })
 
-C(1, [], [3], {
+shared.C(1, [], [3], {
 	x: -4000,
 	y: -4000,
 	w: 800000,
@@ -2005,7 +2008,7 @@ C(1, [], [3], {
 		ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y);
 	}
 })
-C(1, [], [0], {
+shared.C(1, [], [0], {
 	x: -4000,
 	y: 1500,
 	w: 800000,
@@ -2019,11 +2022,11 @@ C(1, [], [0], {
 
 
 function warpAround(rect, lengthT) {
-	var result = {};
-	var length = lengthT % (rect.w * 2 + rect.h * 2);
-	var xpos;
-	var ypos;
-	var dir;
+	let result = {};
+	let length = lengthT % (rect.w * 2 + rect.h * 2);
+	let xpos;
+	let ypos;
+	let dir;
 	if (length < rect.w) {
 		dir = 0;
 		ypos = rect.y;
@@ -2050,7 +2053,7 @@ function warpAround(rect, lengthT) {
 for (let i = 0; i < areas.length; i++) {
 	let bound = [1000 + i * 15000, 0, 8000, 1500];
 
-	C(1, [], [0], {
+	shared.C(1, [], [0], {
 		x: i * 15000 + 10000,
 		y: -100,
 		w: 5000,
@@ -2062,7 +2065,7 @@ for (let i = 0; i < areas.length; i++) {
 	})
 
 
-	C(1, [], [3], {
+	shared.C(1, [], [3], {
 		x: i * 15000,
 		y: 0,
 		w: 1000,
@@ -2075,14 +2078,14 @@ for (let i = 0; i < areas.length; i++) {
 			ctx.lineWidth = 4.8;
 			ctx.strokeStyle = safeTileColor;
 
-			for (let x = (o.pos.x); x < (o.pos.x + o.dimensions.x); x += window.tileSize) {
+			for (let x = (o.pos.x); x < (o.pos.x + o.dimensions.x); x += shared.tileSize) {
 				ctx.beginPath();
 				ctx.moveTo(x, o.pos.y);
 				ctx.lineTo(x, o.pos.y + o.dimensions.y);
 				ctx.stroke();
 				ctx.closePath();
 			}
-			for (let y = (o.pos.y); y < (o.pos.y + o.dimensions.y); y += window.tileSize) {
+			for (let y = (o.pos.y); y < (o.pos.y + o.dimensions.y); y += shared.tileSize) {
 				ctx.beginPath();
 				ctx.moveTo(o.pos.x, y);
 				ctx.lineTo(o.pos.x + o.dimensions.x, y);
@@ -2094,7 +2097,7 @@ for (let i = 0; i < areas.length; i++) {
 
 		}
 	})
-	C(1, [], [3], {
+	shared.C(1, [], [3], {
 		x: i * 15000 + 9000,
 		y: 0,
 		w: 1000,
@@ -2107,14 +2110,14 @@ for (let i = 0; i < areas.length; i++) {
 			ctx.lineWidth = 4.8;
 			ctx.strokeStyle = safeTileColor;
 
-			for (let x = (o.pos.x); x < (o.pos.x + o.dimensions.x); x += window.tileSize) {
+			for (let x = (o.pos.x); x < (o.pos.x + o.dimensions.x); x += shared.tileSize) {
 				ctx.beginPath();
 				ctx.moveTo(x, o.pos.y);
 				ctx.lineTo(x, o.pos.y + o.dimensions.y);
 				ctx.stroke();
 				ctx.closePath();
 			}
-			for (let y = (o.pos.y); y < (o.pos.y + o.dimensions.y); y += window.tileSize) {
+			for (let y = (o.pos.y); y < (o.pos.y + o.dimensions.y); y += shared.tileSize) {
 				ctx.beginPath();
 				ctx.moveTo(o.pos.x, y);
 				ctx.lineTo(o.pos.x + o.dimensions.x, y);
@@ -2177,7 +2180,7 @@ for (let i = 0; i < areas.length; i++) {
 					simulateType = data.simulateType;
 				}
 
-				C(firstNumber, simulateType, [data.type], obj)
+				shared.C(firstNumber, simulateType, [data.type], obj)
 
 
 			}
@@ -2249,7 +2252,7 @@ for (let i = 0; i < areas.length; i++) {
 				}
 
 				if (data.type == "wall") {
-					C(0, [3], [1], {
+					shared.C(0, [3], [1], {
 						r: r,
 						x,
 						y,
@@ -2293,7 +2296,7 @@ for (let i = 0; i < areas.length; i++) {
 						}
 					})
 				} else if (data.type == "normal") {
-					C(0, [3], [1], {
+					shared.C(0, [3], [1], {
 						r: r,
 						x,
 						y,
@@ -2332,7 +2335,7 @@ for (let i = 0; i < areas.length; i++) {
 					})
 				} else if (data.type == "immune") {
 					// same thing as normal lol but with different render
-					C(0, [3], [1], {
+					shared.C(0, [3], [1], {
 						r: r,
 						x,
 						y,
@@ -2376,7 +2379,7 @@ for (let i = 0; i < areas.length; i++) {
 					}
 
 					let rotateSpeed = (Math.random()*2-1) * 0.03;
-					C(2, [1], [1], {
+					shared.C(2, [1], [1], {
 						points: points,
 						x: x - bound[0],
 						y: y - bound[1],
@@ -2415,7 +2418,7 @@ for (let i = 0; i < areas.length; i++) {
 						}
 					})
 				} else if (data.type == "killmoving") {
-					C(0, [3], [3], {
+					shared.C(0, [3], [3], {
 						r: r,
 						x,
 						y,
@@ -2466,7 +2469,7 @@ for (let i = 0; i < areas.length; i++) {
 						}
 					})
 				} else if (data.type == "tpotherside") {
-					C(0, [3], [3], {
+					shared.C(0, [3], [3], {
 						r: r,
 						x,
 						y,
@@ -2518,7 +2521,7 @@ for (let i = 0; i < areas.length; i++) {
 						}
 					})
 				} else if (data.type == "outofbounds") {
-					C(0, [3], [1], {
+					shared.C(0, [3], [1], {
 						r: r,
 						x,
 						y,
@@ -2556,7 +2559,7 @@ for (let i = 0; i < areas.length; i++) {
 						}
 					})
 				} else if (data.type == "tired") {
-					C(0, [3], [1], {
+					shared.C(0, [3], [1], {
 						r: r,
 						x,
 						y,
@@ -2617,7 +2620,7 @@ for (let i = 0; i < areas.length; i++) {
 					})
 				} else if (data.type == "stop") {
 					let cycle = Math.random() * 1000
-					C(0, [3], [1], {
+					shared.C(0, [3], [1], {
 						r: r,
 						x,
 						y,
@@ -2665,7 +2668,7 @@ for (let i = 0; i < areas.length; i++) {
 						}
 					})
 				} else if (data.type == "warp") {
-					C(0, [3], [1], {
+					shared.C(0, [3], [1], {
 						r: r,
 						x,
 						y,
@@ -2702,7 +2705,7 @@ for (let i = 0; i < areas.length; i++) {
 						}
 					})
 				} else if (data.type == "rain") {
-					C(0, [3], [1], {
+					shared.C(0, [3], [1], {
 						r: r,
 						x,
 						y,
@@ -2739,7 +2742,7 @@ for (let i = 0; i < areas.length; i++) {
 						}
 					})
 				} else if (data.type == "homing") {
-					C(0, [3], [1], {
+					shared.C(0, [3], [1], {
 						r: r,
 						x,
 						y,
@@ -2810,7 +2813,7 @@ for (let i = 0; i < areas.length; i++) {
 						}
 					})
 				} else if (data.type == "blackhole") {
-					C(0, [3], [1], {
+					shared.C(0, [3], [1], {
 						r: r,
 						x,
 						y,
@@ -2868,7 +2871,7 @@ for (let i = 0; i < areas.length; i++) {
 						}
 					})
 				} else if (data.type == "push") {
-					C(0, [3], [1], {
+					shared.C(0, [3], [1], {
 						r: r,
 						x,
 						y,
@@ -2937,7 +2940,7 @@ for (let i = 0; i < areas.length; i++) {
 					let timeSinceLastDash = timeBetweenDashes;
 					let baseSpeed = prepareSpeed;
 
-					C(0, [3], [1], {
+					shared.C(0, [3], [1], {
 						r: r,
 						x,
 						y,
@@ -3015,7 +3018,7 @@ for (let i = 0; i < areas.length; i++) {
 					let aura = 160 * 3;
 					let mainObs;
 					// aura and render
-					C(0, [], [1], {
+					shared.C(0, [], [1], {
 						r: r,
 						x,
 						y,
@@ -3063,7 +3066,7 @@ for (let i = 0; i < areas.length; i++) {
 					});
 					mainObs = obstacles[obstacles.length-1];
 					// aura collision effect
-					C(0, [], [3], {
+					shared.C(0, [], [3], {
 						r: aura,
 						x,
 						y,
@@ -3081,7 +3084,7 @@ for (let i = 0; i < areas.length; i++) {
 					let aura = 160 * 1.5;
 					let mainObs;
 					// aura and render
-					C(0, [], [1], {
+					shared.C(0, [], [1], {
 						r: r,
 						x,
 						y,
@@ -3129,7 +3132,7 @@ for (let i = 0; i < areas.length; i++) {
 					});
 					mainObs = obstacles[obstacles.length-1];
 					// aura collision effect
-					C(0, [], [3], {
+					shared.C(0, [], [3], {
 						r: aura,
 						x,
 						y,
@@ -3146,7 +3149,7 @@ for (let i = 0; i < areas.length; i++) {
 				} else if(data.type === 'creeper'){
 					let stop=0, onWall=false;
 					let mag = Math.sqrt(vx ** 2 + vy ** 2);
-					C(0, [], [1], {
+					shared.C(0, [], [1], {
 						r: r,
 						x,
 						y,
@@ -3201,7 +3204,7 @@ for (let i = 0; i < areas.length; i++) {
 				} else if(data.type === "snake"){
 					let dir = 1; let timer = 400;
 
-					C(0, [], [1], {
+					shared.C(0, [], [1], {
 						r: r,
 						x,
 						y,
@@ -3252,7 +3255,7 @@ for (let i = 0; i < areas.length; i++) {
 					});
 				} else if(data.type === 'oscillating'){
 					let timer = 0;
-					C(0, [], [1], {
+					shared.C(0, [], [1], {
 						r: r,
 						x,
 						y,
@@ -3302,7 +3305,7 @@ for (let i = 0; i < areas.length; i++) {
 					vx = 0;
 					let timer = 0;
 					let onWall = false;
-					C(0, [], [1], {
+					shared.C(0, [], [1], {
 						r: r,
 						x,
 						y,
@@ -3354,7 +3357,7 @@ for (let i = 0; i < areas.length; i++) {
 					});
 				} else if(data.type === "liquid"){
 					let min = 600 ** 2;
-					C(0, [], [1], {
+					shared.C(0, [], [1], {
 						r: r,
 						x,
 						y,
@@ -3400,7 +3403,7 @@ for (let i = 0; i < areas.length; i++) {
 					});
 				} else if(data.type === "turning"){
 					let turnDir = data.speed / 150 / 30 * 1000 / 60;
-					C(0, [3], [1], {
+					shared.C(0, [3], [1], {
 						r: r,
 						x,
 						y,
@@ -3449,7 +3452,7 @@ for (let i = 0; i < areas.length; i++) {
 	}
 
 	if (i != 0) {
-		C(1, [], [12], {
+		shared.C(1, [], [12], {
 			x: i * 15000,
 			y: 0,
 			w: 200,
@@ -3465,14 +3468,14 @@ for (let i = 0; i < areas.length; i++) {
 				ctx.globalAlpha = 0.75;
 				ctx.lineWidth = 4.8;
 
-				for (let x = (o.pos.x); x < (o.pos.x + o.dimensions.x); x += window.tileSize) {
+				for (let x = (o.pos.x); x < (o.pos.x + o.dimensions.x); x += shared.tileSize) {
 					ctx.beginPath();
 					ctx.moveTo(x, o.pos.y);
 					ctx.lineTo(x, o.pos.y + o.dimensions.y);
 					ctx.stroke();
 					ctx.closePath();
 				}
-				for (let y = (o.pos.y); y < (o.pos.y + o.dimensions.y); y += window.tileSize) {
+				for (let y = (o.pos.y); y < (o.pos.y + o.dimensions.y); y += shared.tileSize) {
 					ctx.beginPath();
 					ctx.moveTo(o.pos.x, y);
 					ctx.lineTo(o.pos.x + o.dimensions.x, y);
@@ -3485,7 +3488,7 @@ for (let i = 0; i < areas.length; i++) {
 			},
 		})
 	}
-	C(1, [], [12], {
+	shared.C(1, [], [12], {
 		x: i * 15000 + 9800,
 		y: 0,
 		w: 200,
@@ -3506,14 +3509,14 @@ for (let i = 0; i < areas.length; i++) {
 			ctx.globalAlpha = 0.75;
 			ctx.lineWidth = 4.8;
 
-			for (let x = (o.pos.x); x < (o.pos.x + o.dimensions.x); x += window.tileSize) {
+			for (let x = (o.pos.x); x < (o.pos.x + o.dimensions.x); x += shared.tileSize) {
 				ctx.beginPath();
 				ctx.moveTo(x, o.pos.y);
 				ctx.lineTo(x, o.pos.y + o.dimensions.y);
 				ctx.stroke();
 				ctx.closePath();
 			}
-			for (let y = (o.pos.y); y < (o.pos.y + o.dimensions.y); y += window.tileSize) {
+			for (let y = (o.pos.y); y < (o.pos.y + o.dimensions.y); y += shared.tileSize) {
 				ctx.beginPath();
 				ctx.moveTo(o.pos.x, y);
 				ctx.lineTo(o.pos.x + o.dimensions.x, y);
@@ -3529,7 +3532,7 @@ for (let i = 0; i < areas.length; i++) {
 
 
 // regular vignette
-C(1, [], [24], {
+shared.C(1, [], [24], {
 	x: 0,
 	y: 0,
 	w: 420000,
@@ -3547,7 +3550,7 @@ C(1, [], [24], {
 })
 
 // calam cavern vignette
-C(1, [], [24], {
+shared.C(1, [], [24], {
 	x: 420200,
 	y: 0,
 	w: 24600,
@@ -3577,10 +3580,10 @@ for(let i = 0; i < obstacles.length; i++){
 	obstacles[i].cr = (o) => {
 		oldCR(o);
 
-		const p = window.players[window.selfId];
+		const p = shared.players[shared.selfId];
 
 		if(p.pos.x < 420200 || p.pos.x > 444800) return;
-		window.colors.vignette.holeFunctions.push(() => {
+		shared.colors.vignette.holeFunctions.push(() => {
 			ctx.moveTo(o.pos.x,o.pos.y);
 			ctx.arc(o.pos.x,o.pos.y,o.sat.r * 1.5,0,Math.PI*2);
 		})
@@ -3595,7 +3598,7 @@ for(let i = 0; i < obstacles.length; i++){
 	obstacles[i].cr = (o) => {
 		oldCR(o);
 
-		const p = window.players[window.selfId];
+		const p = shared.players[shared.selfId];
 
 		if(p.pos.x < 450200 || p.pos.x > 459800 || o.sat.r > 400) return;
 		ctx.globalAlpha = 5/10*0.4;
@@ -3613,7 +3616,7 @@ for(let i = 0; i < obstacles.length; i++){
 
 	const oldCR = obstacles[i].cr;
 	obstacles[i].cr = (o) => {
-		const p = window.players[window.selfId];
+		const p = shared.players[shared.selfId];
 		const d = (o.pos.x - p.pos.x) / (canvas.w/2);
 		if(d > 0) ctx.globalAlpha = 1 - Math.min(1,d);
 		else ctx.globalAlpha = 1 - Math.min(1,-d);
@@ -3627,7 +3630,7 @@ for(let i = 0; i < obstacles.length; i++){
 	if(obstacles[i].pos.x < 480200 || obstacles[i].pos.x > 490000 || obstacles[i].sat.r === undefined || obstacles[i].cr === undefined) continue;
 
 	obstacles[i].cr = (o) => {
-		const p = window.players[window.selfId];
+		const p = shared.players[shared.selfId];
 		if(p.pos.x < 480200 || p.pos.x > 490000) return;
 		const d = Math.sqrt((p.pos.x - o.pos.x) ** 2 + (p.pos.y - o.pos.y) ** 2);
 		
@@ -3656,7 +3659,7 @@ for(let i = 0; i < obstacles.length; i++){
 	if(obstacles[i].pos.x < 495200 || obstacles[i].pos.x > 504800 || obstacles[i].sat.r === undefined || obstacles[i].cr === undefined) continue;
 
 	obstacles[i].cr = (o) => {
-		const p = window.players[window.selfId];
+		const p = shared.players[shared.selfId];
 		if(p.pos.x < 495200 || p.pos.x > 504800) return;
 
 		const grd = ctx.createRadialGradient(o.pos.x,o.pos.y, o.sat.r, o.pos.x, o.pos.y , o.sat.r*1.5+20);
@@ -3680,7 +3683,7 @@ for(let i = 0; i < obstacles.length; i++){
 }
 
 // back to regular
-C(1, [], [24], {
+shared.C(1, [], [24], {
 	x: 450200,
 	y: 0,
 	w: 420000,
@@ -3698,7 +3701,7 @@ C(1, [], [24], {
 })
 
 
-C(1, [], [19], {
+shared.C(1, [], [19], {
 	speedChangePermanent: true,
 	speedMult: 2,
 	x: 0,
@@ -3712,20 +3715,21 @@ C(1, [], [19], {
 /* BOSSFIGHT STUFF */
 
 
-var firstTime = false;
+let firstTime = false;
 
+let audio;
 try{
-	var audio = new Audio("https://f-2f7z.onrender.com/Music.mp3");
+	audio = new Audio("https://f-2f7z.onrender.com/Music.mp3");
 }
 catch(err){
-	var audio = {};
+	audio = {};
 }
-var audioLoaded = false;
+let audioLoaded = false;
 
 try{
 	audio.addEventListener('canplaythrough', function() { 
 		audioLoaded = true;
-		window.resetFns.push(() => {
+		shared.resetFns.push(() => {
 			audio.pause();
 		})
 	}, false);
@@ -3735,8 +3739,8 @@ catch(err){
 }
 
 //TP TO BOSSFIGHT
-var giveInv = false;
-C(1, [], [3,11], {
+let giveInv = false;
+shared.C(1, [], [3,11], {
 	x: 540000,
 	y: 0,
 	w: 10000,
@@ -3749,7 +3753,7 @@ C(1, [], [3,11], {
 		if (!firstTime){
 			firstTime = Date.now();
 
-			window.stopMusic();
+			shared.stopMusic();
 		}
 		giveInv = true;
 		if (audioLoaded){
@@ -3764,7 +3768,7 @@ C(1, [], [3,11], {
 {
 	const maxInv = 60;// one second
 	let inv = 0;
-	C(0,[],[11],{x:-1E9,y:0,r:100,sf:(o,p)=>{
+	shared.C(0,[],[11],{x:-1E9,y:0,r:100,sf:(o,p)=>{
 		if(giveInv === true){
 			inv = maxInv;
 			giveInv = false;
@@ -3778,7 +3782,7 @@ C(1, [], [3,11], {
 			o.pos.y = p.pos.y;
 		}
 
-		window.tickFns.push(() => {
+		shared.tickFns.push(() => {
 			if(p.dead === true){
 				inv--;
 			}
@@ -3804,13 +3808,13 @@ C(1, [], [3,11], {
 //BOSSFIGHT MANAGER!!!!
 
 
-var bossFightPos = {
+let bossFightPos = {
 	x: 0,
 	y: 5500
 };
 
 
-var bossSpawns = [{"time":3.2384011346651507,"lifeTime":7,"x":748.825705775138,"y":-300,"w":236.4429482142196,"h":50,"type":1,"vy":0.5353145639029153,"vx":0.020636748763295854,"simulate":[1,3],"initialRotation":0.6324878957882356,"rotateSpeed":0.002085268127243168,"boundPlayer":true},{"time":3.6316554215978636,"lifeTime":7,"x":2100,"y":408.4458359454675,"w":170.80541024648295,"h":50,"type":1,"vx":-0.5540898107856294,"vy":-0.005095804595753706,"simulate":[1,3],"initialRotation":2.328575980532795,"rotateSpeed":0.0020179544704163658,"boundPlayer":true},{"time":5.010264347706765,"lifeTime":7,"x":2100,"y":1423.0616838703506,"w":234.9746134219635,"h":50,"type":1,"vx":-0.6622000763891029,"vy":-0.06555372837545502,"simulate":[1,3],"initialRotation":2.3327038198910475,"rotateSpeed":0.0025995341946220244,"boundPlayer":true},{"time":6.600934433481664,"lifeTime":7,"x":2100,"y":626.4414203679478,"w":217.6370455060168,"h":50,"type":1,"vx":-0.6260486490063787,"vy":0.054624950529699845,"simulate":[1,3],"initialRotation":0.4116315036058159,"rotateSpeed":0.0038675105571306235,"boundPlayer":true},{"time":1.1504889453207485,"lifeTime":7,"x":2100,"y":1754.8882025611792,"w":231.30326653857745,"h":50,"type":1,"vx":-0.42749871698922715,"vy":0.026793084554020602,"simulate":[1,3],"initialRotation":1.5280827005726365,"rotateSpeed":0.0009523142966526992,"boundPlayer":true},{"time":3.040978840071701,"lifeTime":7,"x":1581.4018719991898,"y":-300,"w":188.3399868706071,"h":50,"type":1,"vy":0.5354420821273803,"vx":-0.14140745338221108,"simulate":[1,3],"initialRotation":1.4652926313504289,"rotateSpeed":0.0031407473926849255,"boundPlayer":true},{"time":3.4981198415415267,"lifeTime":7,"x":838.973513377256,"y":2100,"w":192.91608246339877,"h":50,"type":1,"vy":-0.36267169568246826,"vx":0.04210578821174682,"simulate":[1,3],"initialRotation":2.951980588942067,"rotateSpeed":0.002886644319190585,"boundPlayer":true},{"time":6.419034968497345,"lifeTime":7,"x":-300,"y":729.4305784054407,"w":211.11879212947804,"h":50,"type":1,"vx":0.41857399548805874,"vy":0.1528210142375819,"simulate":[1,3],"initialRotation":0.11523377009384106,"rotateSpeed":0.002117376081148241,"boundPlayer":true},{"time":6.5982290767901794,"lifeTime":7,"x":2100,"y":38.35169095624469,"w":165.46561052728686,"h":50,"type":1,"vx":-0.5279337847673167,"vy":-0.019973684988255164,"simulate":[1,3],"initialRotation":1.6571366896160176,"rotateSpeed":0.0030172201221135655,"boundPlayer":true},{"time":4.982648642066969,"lifeTime":7,"x":2100,"y":1143.5471181751532,"w":197.58272810071696,"h":50,"type":1,"vx":-0.5276930926416097,"vy":0.015855168403678233,"simulate":[1,3],"initialRotation":2.655574350166979,"rotateSpeed":0.0024007505421317524,"boundPlayer":true},{"time":1.9557073185628386,"lifeTime":7,"x":-300,"y":437.13283895666734,"w":197.8318363869992,"h":50,"type":1,"vx":0.595627805364826,"vy":-0.10116444011253799,"simulate":[1,3],"initialRotation":0.7673153000894143,"rotateSpeed":0.0017972772117224763,"boundPlayer":true},{"time":3.3865658673518464,"lifeTime":7,"x":1363.9007174406959,"y":2100,"w":151.12926137267792,"h":50,"type":1,"vy":-0.536410976127761,"vx":0.09184199068731139,"simulate":[1,3],"initialRotation":1.2592277495858453,"rotateSpeed":0.0032675301753805606,"boundPlayer":true},{"time":1.9630763065349757,"lifeTime":7,"x":544.6238408917008,"y":-300,"w":214.4982982810355,"h":50,"type":1,"vy":0.5614763621885,"vx":-0.11245051468209702,"simulate":[1,3],"initialRotation":1.3098944567703492,"rotateSpeed":0.0009179847122288933,"boundPlayer":true},{"time":4.983284736008789,"lifeTime":7,"x":1019.3021137903147,"y":2100,"w":193.38003626350974,"h":50,"type":1,"vy":-0.4626575929042881,"vx":-0.026222133463819575,"simulate":[1,3],"initialRotation":1.918544152527755,"rotateSpeed":0.0015722587465536782,"boundPlayer":true},{"time":5.13223880454217,"lifeTime":7,"x":466.22849005091547,"y":-300,"w":179.353057970379,"h":50,"type":1,"vy":0.6600771165261125,"vx":0.015158662330369665,"simulate":[1,3],"initialRotation":2.7820556794912084,"rotateSpeed":0.0016292738936853032,"boundPlayer":true},{"time":5.550910585150382,"lifeTime":7,"x":1530.5676118398376,"y":2100,"w":164.90015068623603,"h":50,"type":1,"vy":-0.6480552784596441,"vx":-0.14171229827813883,"simulate":[1,3],"initialRotation":2.1072704230544126,"rotateSpeed":0.003923723347438788,"boundPlayer":true},{"time":6.238959019265064,"lifeTime":7,"x":763.0727871042144,"y":-300,"w":242.73152580267194,"h":50,"type":1,"vy":0.4614731046421279,"vx":-0.14369703850055018,"simulate":[1,3],"initialRotation":2.667386268865734,"rotateSpeed":0.0008159260692458981,"boundPlayer":true},{"time":6.6770661786178165,"lifeTime":7,"x":849.071536360709,"y":-300,"w":174.53235283852337,"h":50,"type":1,"vy":0.6287477687796177,"vx":0.14311771370749912,"simulate":[1,3],"initialRotation":0.6943423344566935,"rotateSpeed":0.0018078625924364343,"boundPlayer":true},{"time":6.549136363413583,"lifeTime":7,"x":-300,"y":1174.4576145986089,"w":154.07428299645508,"h":50,"type":1,"vx":0.458467085555171,"vy":0.01693963623625505,"simulate":[1,3],"initialRotation":2.6593435191718995,"rotateSpeed":0.00025038875234934996,"boundPlayer":true},{"time":0.5600879362559049,"lifeTime":7,"x":2100,"y":597.7659420176598,"w":213.93608698143439,"h":50,"type":1,"vx":-0.5425924981008127,"vy":-0.1121656430960011,"simulate":[1,3],"initialRotation":0.5589055590199618,"rotateSpeed":0.0038111328922957126,"boundPlayer":true},{"time":4.678486898042745,"lifeTime":7,"x":1929.039136657979,"y":2100,"w":192.45604691516456,"h":50,"type":1,"vy":-0.546566614496851,"vx":-0.10396341493760837,"simulate":[1,3],"initialRotation":2.2109564478740933,"rotateSpeed":0.000042770160089919076,"boundPlayer":true},{"time":4.018067781318725,"lifeTime":7,"x":-300,"y":1070.6970742395656,"w":213.91262022680633,"h":50,"type":1,"vx":0.4946731455432398,"vy":0.10940178428449285,"simulate":[1,3],"initialRotation":2.377144764771813,"rotateSpeed":0.002191906261281904,"boundPlayer":true},{"time":3.417217804120713,"lifeTime":7,"x":735.0237068751139,"y":2100,"w":226.54499330749456,"h":50,"type":1,"vy":-0.3673228633870656,"vx":-0.06624934745639631,"simulate":[1,3],"initialRotation":1.9784137059220965,"rotateSpeed":0.0003236608372851375,"boundPlayer":true},{"time":3.2366192511100618,"lifeTime":7,"x":1127.7418185067095,"y":2100,"w":166.7646797419542,"h":50,"type":1,"vy":-0.45934573226526343,"vx":0.16020164047408483,"simulate":[1,3],"initialRotation":2.566343548821638,"rotateSpeed":0.0036658533824278257,"boundPlayer":true},{"time":6.57109992523791,"lifeTime":7,"x":1747.1803835649346,"y":-300,"w":201.21693349825568,"h":50,"type":1,"vy":0.5731294509944467,"vx":0.0517292265711044,"simulate":[1,3],"initialRotation":1.0610953278829283,"rotateSpeed":0.0008813656741997615,"boundPlayer":true},{"time":0.506766415864313,"lifeTime":7,"x":-300,"y":1184.1670861169464,"w":188.10638036790948,"h":50,"type":1,"vx":0.5303476802566418,"vy":-0.089876500854469,"simulate":[1,3],"initialRotation":0.611021351623574,"rotateSpeed":0.0010523582854114481,"boundPlayer":true},{"time":3.110561253633941,"lifeTime":7,"x":-300,"y":1327.591637237504,"w":175.1638865396373,"h":50,"type":1,"vx":0.3931261605940626,"vy":-0.1247479000294375,"simulate":[1,3],"initialRotation":1.5791245620561867,"rotateSpeed":0.0034905321596548074,"boundPlayer":true},{"time":2.280506808082984,"lifeTime":7,"x":2100,"y":1866.1295841803121,"w":185.00758223397264,"h":50,"type":1,"vx":-0.5365692444358621,"vy":-0.0509975904337565,"simulate":[1,3],"initialRotation":1.6082298662016046,"rotateSpeed":0.0021453501331095827,"boundPlayer":true},{"time":3.870980932721952,"lifeTime":7,"x":1456.9122052072344,"y":-300,"w":201.35337966888545,"h":50,"type":1,"vy":0.5258949465604748,"vx":0.008869512371682875,"simulate":[1,3],"initialRotation":3.0275689311331515,"rotateSpeed":0.0032498635051834875,"boundPlayer":true},
+let bossSpawns = [{"time":3.2384011346651507,"lifeTime":7,"x":748.825705775138,"y":-300,"w":236.4429482142196,"h":50,"type":1,"vy":0.5353145639029153,"vx":0.020636748763295854,"simulate":[1,3],"initialRotation":0.6324878957882356,"rotateSpeed":0.002085268127243168,"boundPlayer":true},{"time":3.6316554215978636,"lifeTime":7,"x":2100,"y":408.4458359454675,"w":170.80541024648295,"h":50,"type":1,"vx":-0.5540898107856294,"vy":-0.005095804595753706,"simulate":[1,3],"initialRotation":2.328575980532795,"rotateSpeed":0.0020179544704163658,"boundPlayer":true},{"time":5.010264347706765,"lifeTime":7,"x":2100,"y":1423.0616838703506,"w":234.9746134219635,"h":50,"type":1,"vx":-0.6622000763891029,"vy":-0.06555372837545502,"simulate":[1,3],"initialRotation":2.3327038198910475,"rotateSpeed":0.0025995341946220244,"boundPlayer":true},{"time":6.600934433481664,"lifeTime":7,"x":2100,"y":626.4414203679478,"w":217.6370455060168,"h":50,"type":1,"vx":-0.6260486490063787,"vy":0.054624950529699845,"simulate":[1,3],"initialRotation":0.4116315036058159,"rotateSpeed":0.0038675105571306235,"boundPlayer":true},{"time":1.1504889453207485,"lifeTime":7,"x":2100,"y":1754.8882025611792,"w":231.30326653857745,"h":50,"type":1,"vx":-0.42749871698922715,"vy":0.026793084554020602,"simulate":[1,3],"initialRotation":1.5280827005726365,"rotateSpeed":0.0009523142966526992,"boundPlayer":true},{"time":3.040978840071701,"lifeTime":7,"x":1581.4018719991898,"y":-300,"w":188.3399868706071,"h":50,"type":1,"vy":0.5354420821273803,"vx":-0.14140745338221108,"simulate":[1,3],"initialRotation":1.4652926313504289,"rotateSpeed":0.0031407473926849255,"boundPlayer":true},{"time":3.4981198415415267,"lifeTime":7,"x":838.973513377256,"y":2100,"w":192.91608246339877,"h":50,"type":1,"vy":-0.36267169568246826,"vx":0.04210578821174682,"simulate":[1,3],"initialRotation":2.951980588942067,"rotateSpeed":0.002886644319190585,"boundPlayer":true},{"time":6.419034968497345,"lifeTime":7,"x":-300,"y":729.4305784054407,"w":211.11879212947804,"h":50,"type":1,"vx":0.41857399548805874,"vy":0.1528210142375819,"simulate":[1,3],"initialRotation":0.11523377009384106,"rotateSpeed":0.002117376081148241,"boundPlayer":true},{"time":6.5982290767901794,"lifeTime":7,"x":2100,"y":38.35169095624469,"w":165.46561052728686,"h":50,"type":1,"vx":-0.5279337847673167,"vy":-0.019973684988255164,"simulate":[1,3],"initialRotation":1.6571366896160176,"rotateSpeed":0.0030172201221135655,"boundPlayer":true},{"time":4.982648642066969,"lifeTime":7,"x":2100,"y":1143.5471181751532,"w":197.58272810071696,"h":50,"type":1,"vx":-0.5276930926416097,"vy":0.015855168403678233,"simulate":[1,3],"initialRotation":2.655574350166979,"rotateSpeed":0.0024007505421317524,"boundPlayer":true},{"time":1.9557073185628386,"lifeTime":7,"x":-300,"y":437.13283895666734,"w":197.8318363869992,"h":50,"type":1,"vx":0.595627805364826,"vy":-0.10116444011253799,"simulate":[1,3],"initialRotation":0.7673153000894143,"rotateSpeed":0.0017972772117224763,"boundPlayer":true},{"time":3.3865658673518464,"lifeTime":7,"x":1363.9007174406959,"y":2100,"w":151.12926137267792,"h":50,"type":1,"vy":-0.536410976127761,"vx":0.09184199068731139,"simulate":[1,3],"initialRotation":1.2592277495858453,"rotateSpeed":0.0032675301753805606,"boundPlayer":true},{"time":1.9630763065349757,"lifeTime":7,"x":544.6238408917008,"y":-300,"w":214.4982982810355,"h":50,"type":1,"vy":0.5614763621885,"vx":-0.11245051468209702,"simulate":[1,3],"initialRotation":1.3098944567703492,"rotateSpeed":0.0009179847122288933,"boundPlayer":true},{"time":4.983284736008789,"lifeTime":7,"x":1019.3021137903147,"y":2100,"w":193.38003626350974,"h":50,"type":1,"vy":-0.4626575929042881,"vx":-0.026222133463819575,"simulate":[1,3],"initialRotation":1.918544152527755,"rotateSpeed":0.0015722587465536782,"boundPlayer":true},{"time":5.13223880454217,"lifeTime":7,"x":466.22849005091547,"y":-300,"w":179.353057970379,"h":50,"type":1,"vy":0.6600771165261125,"vx":0.015158662330369665,"simulate":[1,3],"initialRotation":2.7820556794912084,"rotateSpeed":0.0016292738936853032,"boundPlayer":true},{"time":5.550910585150382,"lifeTime":7,"x":1530.5676118398376,"y":2100,"w":164.90015068623603,"h":50,"type":1,"vy":-0.6480552784596441,"vx":-0.14171229827813883,"simulate":[1,3],"initialRotation":2.1072704230544126,"rotateSpeed":0.003923723347438788,"boundPlayer":true},{"time":6.238959019265064,"lifeTime":7,"x":763.0727871042144,"y":-300,"w":242.73152580267194,"h":50,"type":1,"vy":0.4614731046421279,"vx":-0.14369703850055018,"simulate":[1,3],"initialRotation":2.667386268865734,"rotateSpeed":0.0008159260692458981,"boundPlayer":true},{"time":6.6770661786178165,"lifeTime":7,"x":849.071536360709,"y":-300,"w":174.53235283852337,"h":50,"type":1,"vy":0.6287477687796177,"vx":0.14311771370749912,"simulate":[1,3],"initialRotation":0.6943423344566935,"rotateSpeed":0.0018078625924364343,"boundPlayer":true},{"time":6.549136363413583,"lifeTime":7,"x":-300,"y":1174.4576145986089,"w":154.07428299645508,"h":50,"type":1,"vx":0.458467085555171,"vy":0.01693963623625505,"simulate":[1,3],"initialRotation":2.6593435191718995,"rotateSpeed":0.00025038875234934996,"boundPlayer":true},{"time":0.5600879362559049,"lifeTime":7,"x":2100,"y":597.7659420176598,"w":213.93608698143439,"h":50,"type":1,"vx":-0.5425924981008127,"vy":-0.1121656430960011,"simulate":[1,3],"initialRotation":0.5589055590199618,"rotateSpeed":0.0038111328922957126,"boundPlayer":true},{"time":4.678486898042745,"lifeTime":7,"x":1929.039136657979,"y":2100,"w":192.45604691516456,"h":50,"type":1,"vy":-0.546566614496851,"vx":-0.10396341493760837,"simulate":[1,3],"initialRotation":2.2109564478740933,"rotateSpeed":0.000042770160089919076,"boundPlayer":true},{"time":4.018067781318725,"lifeTime":7,"x":-300,"y":1070.6970742395656,"w":213.91262022680633,"h":50,"type":1,"vx":0.4946731455432398,"vy":0.10940178428449285,"simulate":[1,3],"initialRotation":2.377144764771813,"rotateSpeed":0.002191906261281904,"boundPlayer":true},{"time":3.417217804120713,"lifeTime":7,"x":735.0237068751139,"y":2100,"w":226.54499330749456,"h":50,"type":1,"vy":-0.3673228633870656,"vx":-0.06624934745639631,"simulate":[1,3],"initialRotation":1.9784137059220965,"rotateSpeed":0.0003236608372851375,"boundPlayer":true},{"time":3.2366192511100618,"lifeTime":7,"x":1127.7418185067095,"y":2100,"w":166.7646797419542,"h":50,"type":1,"vy":-0.45934573226526343,"vx":0.16020164047408483,"simulate":[1,3],"initialRotation":2.566343548821638,"rotateSpeed":0.0036658533824278257,"boundPlayer":true},{"time":6.57109992523791,"lifeTime":7,"x":1747.1803835649346,"y":-300,"w":201.21693349825568,"h":50,"type":1,"vy":0.5731294509944467,"vx":0.0517292265711044,"simulate":[1,3],"initialRotation":1.0610953278829283,"rotateSpeed":0.0008813656741997615,"boundPlayer":true},{"time":0.506766415864313,"lifeTime":7,"x":-300,"y":1184.1670861169464,"w":188.10638036790948,"h":50,"type":1,"vx":0.5303476802566418,"vy":-0.089876500854469,"simulate":[1,3],"initialRotation":0.611021351623574,"rotateSpeed":0.0010523582854114481,"boundPlayer":true},{"time":3.110561253633941,"lifeTime":7,"x":-300,"y":1327.591637237504,"w":175.1638865396373,"h":50,"type":1,"vx":0.3931261605940626,"vy":-0.1247479000294375,"simulate":[1,3],"initialRotation":1.5791245620561867,"rotateSpeed":0.0034905321596548074,"boundPlayer":true},{"time":2.280506808082984,"lifeTime":7,"x":2100,"y":1866.1295841803121,"w":185.00758223397264,"h":50,"type":1,"vx":-0.5365692444358621,"vy":-0.0509975904337565,"simulate":[1,3],"initialRotation":1.6082298662016046,"rotateSpeed":0.0021453501331095827,"boundPlayer":true},{"time":3.870980932721952,"lifeTime":7,"x":1456.9122052072344,"y":-300,"w":201.35337966888545,"h":50,"type":1,"vy":0.5258949465604748,"vx":0.008869512371682875,"simulate":[1,3],"initialRotation":3.0275689311331515,"rotateSpeed":0.0032498635051834875,"boundPlayer":true},
 { //STAGE 2
 	"time": 9.2,
 	"lifeTime": 1,
@@ -4977,7 +4981,7 @@ var bossSpawns = [{"time":3.2384011346651507,"lifeTime":7,"x":748.825705775138,"
 	//VIGNETETE
 
 	/*
-	C(1, [], [24], {
+	shared.C(1, [], [24], {
 	x: 0,
 	y: 1800,
 	w: 1111111,
@@ -4999,7 +5003,7 @@ var bossSpawns = [{"time":3.2384011346651507,"lifeTime":7,"x":748.825705775138,"
 ];
 
 
-var bossTime = 0;
+let bossTime = 0;
 
 function spawnObs(data){
 	if (data.customVignette){
@@ -5047,24 +5051,24 @@ function spawnObs(data){
 					spawned = false;
 				}
 
-				window.colors.vignette.inner.r = 250;
-				window.colors.vignette.inner.g = 0;
-				window.colors.vignette.inner.b = 0;
-				window.colors.vignette.outer.r = 250;
-				window.colors.vignette.outer.g = 0;
-				window.colors.vignette.outer.b = 0;
-				window.colors.vignette.inner.size = 0;
-				window.colors.vignette.outer.size = 1;
+				shared.colors.vignette.inner.r = 250;
+				shared.colors.vignette.inner.g = 0;
+				shared.colors.vignette.inner.b = 0;
+				shared.colors.vignette.outer.r = 250;
+				shared.colors.vignette.outer.g = 0;
+				shared.colors.vignette.outer.b = 0;
+				shared.colors.vignette.inner.size = 0;
+				shared.colors.vignette.outer.size = 1;
 				
-				window.colors.vignette.outer.opacity = Math.cos(bossTime * 1/0.37037037037 * Math.PI * 2 + 1.6) * 0.12 + 0.6;
-				window.colors.vignette.inner.size = Math.cos(bossTime * 1/0.37037037037 * Math.PI * 2 + 1.6) * 0.15 + 0.3;
-				window.colors.vignette.inner.opacity = Math.cos(bossTime * 1/0.37037037037 * Math.PI * 2 + 1.6) * 0.12 + 0.2;
+				shared.colors.vignette.outer.opacity = Math.cos(bossTime * 1/0.37037037037 * Math.PI * 2 + 1.6) * 0.12 + 0.6;
+				shared.colors.vignette.inner.size = Math.cos(bossTime * 1/0.37037037037 * Math.PI * 2 + 1.6) * 0.15 + 0.3;
+				shared.colors.vignette.inner.opacity = Math.cos(bossTime * 1/0.37037037037 * Math.PI * 2 + 1.6) * 0.12 + 0.2;
 				
 			}
 
 		}
 
-		C(shape, data.simulate, [data.type], obj)
+		shared.C(shape, data.simulate, [data.type], obj)
 	}
 	else if (data.enemy){
 
@@ -5190,7 +5194,7 @@ function spawnObs(data){
 					e.pos.y = 10000;
 				}
 			}
-			C(shape, simulate, [1], obj)
+			shared.C(shape, simulate, [1], obj)
 		}
 	}
 	else{
@@ -5341,7 +5345,7 @@ function spawnObs(data){
 
 		}
 
-		C(shape, data.simulate, [data.type], obj)
+		shared.C(shape, data.simulate, [data.type], obj)
 	}
 }
 
@@ -5350,7 +5354,7 @@ for(let i of bossSpawns){
 }
 
 //Manager
-C(1, [3], [3], {
+shared.C(1, [3], [3], {
 	x: 0,
 	y: 5500,
 	w: 2000,
@@ -5394,7 +5398,7 @@ C(1, [3], [3], {
 
 
 
-C(1, [], [0], {
+shared.C(1, [], [0], {
 	x: bossFightPos.x - 3000,
 	y: bossFightPos.y - 3000,
 	w: 9000,
@@ -5404,7 +5408,7 @@ C(1, [], [0], {
 		ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y);
 	}
 })
-C(1, [], [0], {
+shared.C(1, [], [0], {
 	x: bossFightPos.x - 3000,
 	y: bossFightPos.y + 2000,
 	w: 9000,
@@ -5414,7 +5418,7 @@ C(1, [], [0], {
 		ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y);
 	}
 })
-C(1, [], [0], {
+shared.C(1, [], [0], {
 	x: bossFightPos.x - 3000,
 	y: bossFightPos.y - 3000,
 	w: 3000,
@@ -5424,7 +5428,7 @@ C(1, [], [0], {
 		ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y);
 	}
 })
-C(1, [], [0], {
+shared.C(1, [], [0], {
 	x: bossFightPos.x + 2000,
 	y: bossFightPos.y - 3000,
 	w: 3000,
@@ -5438,13 +5442,13 @@ C(1, [], [0], {
 
 
 //Zone obstacles and checkpoints
-C(1, [], [9], {
+shared.C(1, [], [9], {
 	x: 180250,
 	y: 50,
 	w: 700,
 	h: 1400
 });
-C(1, [], [9], {
+shared.C(1, [], [9], {
 	x: 360250,
 	y: 50,
 	w: 700,
@@ -5480,7 +5484,7 @@ C(1, [], [9], {
 		"end": 1640 - 1170
 	}
 
-	C(1, [], [26], {
+	shared.C(1, [], [26], {
 		x: 0,
 		y: 0,
 		w: 174800,
@@ -5493,18 +5497,19 @@ C(1, [], [9], {
 	let w = canvas.width;
 	let h = canvas.height;
 	let ended = false;
-	C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
+	shared.C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
 		if(t > ts.end) {
 			if(ended === false){
 				unveilObs.pos.x = -1E9;
 				ended = true;
-				C(1, [], [26], {
+				shared.C(1, [], [26], {
 					x: 0,
 					y: 0,
 					w: 174800,
 					h: 1500,
 					musicPath: 'https://www.youtube.com/watch?v=D3boxTP-ZG8'
 				});
+				shared.respawnPlayer();
 			}
 			return;
 		}
@@ -5545,9 +5550,11 @@ C(1, [], [9], {
 		t++;
 		ctx.setTransform(transform);
 
-		for(let i = 0; i < window.players.length; i++){
-			if(window.players[i] === undefined) continue;
-			window.players[i].renderRadius = 0;
+		for(let i = 0; i < shared.players.length; i++){
+			if(shared.players[i] === undefined) continue;
+			shared.players[i].renderRadius = 0;
 		}
 	}})
 }
+
+});

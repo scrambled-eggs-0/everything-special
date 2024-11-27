@@ -1,4 +1,4 @@
-window.isExClient = true;
+shared.isExClient = true;
 import './style.css';
 
 // init rendering
@@ -19,16 +19,19 @@ import '../client/sound.js';
 // mapName to difficulty dict
 import '../eXserver/maps/_metadata.js';
 
-// joining game
-const gui = window.gui = document.querySelector('.gui');
-window.mapPath = '';
-window.username = '';
-window.authId = -1;
+// shared, like window but not accessible in console
+import shared from '../shared/shared.js';
 
-window.startGame = () => {
+// joining game
+const gui = shared.gui = document.querySelector('.gui');
+shared.mapPath = '';
+shared.username = '';
+shared.authId = -1;
+
+shared.startGame = () => {
     gui.classList.remove('hidden');
     lastTime = performance.now();
-    window.respawnPlayer();
+    shared.respawnPlayer();
     run();
     console.log('game starting');
 }
@@ -54,7 +57,7 @@ function run(){
     }
 
     sendUpdatePack();
-    window.render();
+    shared.render();
 }
 
 const u12 = new Uint8Array(12);
@@ -64,21 +67,21 @@ const f12 = new Float32Array(u12.buffer);
 const u8 = new Uint8Array(8);
 const f8 = new Float32Array(u8.buffer);
 
-window.u4 = new Uint8Array(4);
+shared.u4 = new Uint8Array(4);
 
 let lastShipAngle = Infinity;
 let lastDead = false;
 function sendUpdatePack(){
-    const player = window.players[window.selfId];
+    const player = shared.players[shared.selfId];
     f12[1] = player.pos.x;
     f12[2] = player.pos.y;
-    send(u12);
+    shared.send(u12);
 
     if(player.grapple === true){
         u12[0] = 11;
         f12[1] = player.grappleX;
         f12[2] = player.grappleY;
-        send(u12);
+        shared.send(u12);
         u12[0] = 4;
     }
 
@@ -86,19 +89,19 @@ function sendUpdatePack(){
         lastShipAngle = player.shipAngle;
         u8[0] = 9;
         f8[1] = player.shipAngle;
-        send(u8);
+        shared.send(u8);
     }
 
     if(player.deathTimer === true){
         u8[0] = 13;
         f8[1] = player.deathTime;
-        send(u8);
+        shared.send(u8);
     }
 
     if(player.dead !== lastDead){
         lastDead = player.dead;
-        window.u4[0] = 15;
-        window.u4[1] = player.dead === true ? 1 : 0;
-        send(window.u4);
+        shared.u4[0] = 15;
+        shared.u4[1] = player.dead === true ? 1 : 0;
+        shared.send(shared.u4);
     }
 }

@@ -1,3 +1,4 @@
+import shared from '../../shared/shared.js';
 function importMap(str){
     obstacles.length = 0;
 
@@ -12,7 +13,7 @@ function importMap(str){
 
     spawnPosition.x=playerSpawn.x*2;
     spawnPosition.y=playerSpawn.y*2;
-    window.respawnPlayer();
+    shared.respawnPlayer();
     colors.background=tileColor; colors.tile=bgColor;
 
     let counter = 0;
@@ -326,7 +327,7 @@ function importMap(str){
         'timetrap': {
             type: [1,[],[17]],
             customMap: (params) => {
-                //C(1,[],[17],{h:200,w:300,y:700,x:300,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:1.5,timeTrapMaxTime:300,});
+                //shared.C(1,[],[17],{h:200,w:300,y:700,x:300,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:1.5,timeTrapMaxTime:300,});
                 const p = {timeTrapToShowTenth:false,timeTrapToKill:true,timeTrapRecoverySpeed:params.cdmult};
     
                 p.timeTrapMaxTime = params.maxTime * 1000;
@@ -570,7 +571,7 @@ function importMap(str){
                     sizeMult: params.size / 24.5
                 }
             }
-            //C(1,[],[18],{h:200,w:300,y:700,x:300,sizeChangePermanent:false,sizeMult:1.5,});
+            //shared.C(1,[],[18],{h:200,w:300,y:700,x:300,sizeChangePermanent:false,sizeMult:1.5,});
         },
         'snap': {
             type: [1,[],[16]],
@@ -683,7 +684,7 @@ function importMap(str){
                     pushConversionRatio: 0.86
                 }
             }
-        },//C(3,[],[20],{fontSize:80,text:'I am a text :D',y:800,x:450,hex:colourRgb(100,100,100),});
+        },//shared.C(3,[],[20],{fontSize:80,text:'I am a text :D',y:800,x:450,hex:colourRgb(100,100,100),});
         'text': {
             customMap: (params) => {
                 // {
@@ -709,7 +710,7 @@ function importMap(str){
                         rotateSpeed: 0,
                         initialRotation: params.angle,
                     }
-                }//"C(3,[1],[20],{fontSize:80,text:'I am a text :D',y:800,x:450,pivotY:800,pivotX:450,rotateSpeed:0,initialRotation:45,hex:colourRgb(100,100,100),});"
+                }//"shared.C(3,[1],[20],{fontSize:80,text:'I am a text :D',y:800,x:450,pivotY:800,pivotX:450,rotateSpeed:0,initialRotation:45,hex:colourRgb(100,100,100),});"
                 else {
                     return {
                         type: [3,[],[20]],
@@ -770,7 +771,7 @@ function importMap(str){
                 }
             }
         },
-        // C(1,[],[10],{h:200,w:300,y:700,x:300,healSpeed:1,regenTime:100,maxStrength:60,});
+        // shared.C(1,[],[10],{h:200,w:300,y:700,x:300,healSpeed:1,regenTime:100,maxStrength:60,});
         // {
         //     "x": 2950,
         //     "y": 2650,
@@ -904,7 +905,7 @@ function importMap(str){
             return `
             var xv${counter} = ${params.xv/30};
             var yv${counter} = ${params.yv/30};
-            C(0,[3],[1],{r:${params.radius*2},y:${params.y*2},x:${params.x*2},sf:(e)=>{
+            shared.C(0,[3],[1],{r:${params.radius*2},y:${params.y*2},x:${params.x*2},sf:(e)=>{
             e.pos.y += yv${counter};
             e.pos.x += xv${counter};
             if ((e.pos.x - e.sat.r) < ${bounds.x} || e.pos.x + e.sat.r > ${bounds.x + bounds.w}) {
@@ -948,7 +949,7 @@ function importMap(str){
             return `
             var xv${counter} = ${params.xv/42};
             var yv${counter} = ${params.yv/42};
-            C(1,[3],[1],{w:${size},h:${size},y:${params.y*2},x:${params.x*2},sf:(e)=>{
+            shared.C(1,[3],[1],{w:${size},h:${size},y:${params.y*2},x:${params.x*2},sf:(e)=>{
             e.pos.y += yv${counter};
             e.pos.x += xv${counter};
             if ((e.pos.x) < ${bounds.x} || e.pos.x + ${size} > ${bounds.x + bounds.w}) {
@@ -1040,7 +1041,7 @@ function importMap(str){
             var yv${c} = ${params.yv/42};
             var shootDirectionIndex${c} = 0;
             var timer${c} = ${shootSpeed};
-            C(0,[3],[1],{r:${params.radius},y:${params.y*2},x:${params.x*2},sf:(e)=>{
+            shared.C(0,[3],[1],{r:${params.radius},y:${params.y*2},x:${params.x*2},sf:(e)=>{
             e.pos.y += yv${c};
             e.pos.x += xv${c};
             if ((e.pos.x - e.sat.r) < ${bounds.x} || e.pos.x + e.sat.r > ${bounds.x + bounds.w}) {
@@ -1065,17 +1066,17 @@ function importMap(str){
                 /*scoped using let*/
                 let xv${counter} = Math.cos(dir) * ${projectileParams.speed};
                 let yv${counter} = Math.sin(dir) * ${projectileParams.speed};
-                C(0,[3],[1],{r:${projectileParams.radius},y:e.pos.y,x:e.pos.x,sf:(e)=>{
+                shared.C(0,[3],[1],{r:${projectileParams.radius},y:e.pos.y,x:e.pos.x,sf:(e)=>{
                 e.pos.y += yv${counter};
                 e.pos.x += xv${counter};
                 /*delete obstacle*/
                 if ((e.pos.x - e.sat.r) < ${bounds.x} || e.pos.x + e.sat.r > ${bounds.x + bounds.w} || (e.pos.y - e.sat.r) < ${bounds.y} || e.pos.y + e.sat.r > ${bounds.y + bounds.h}) {
-                    window.tickFns.push(()=>{
+                    shared.tickFns.push(()=>{
                         for(let i = 0; i < obstacles.length; i++){
                             if(obstacles[i] === e) {obstacles.splice(i,1); break;}
                         }
-                        /*for(let key in window.idToObs){
-                            if(window.idToObs[key] === e){delete window.idToObs[key]; break;}
+                        /*for(let key in shared.idToObs){
+                            if(shared.idToObs[key] === e){delete shared.idToObs[key]; break;}
                         }*/
                     });
                 }
@@ -1124,7 +1125,7 @@ function importMap(str){
             var pos${counter} = {
                 x: ${params.x*2}, y: ${params.y*2} 
             }
-            C(0,[3],[1],{r:${params.radius},y:${params.y*2},x:${params.x*2},sf:(e)=>{
+            shared.C(0,[3],[1],{r:${params.radius},y:${params.y*2},x:${params.x*2},sf:(e)=>{
                 pos${counter}.y += yv${counter};
                 pos${counter}.x += xv${counter};
                 if ((pos${counter}.x - e.sat.r) < ${bounds.x} || pos${counter}.x + e.sat.r > ${bounds.x + bounds.w}) {
@@ -1152,7 +1153,7 @@ function importMap(str){
                     }
                 }
             }});
-            C(0,[3],[0],{r:${params.radius},y:${params.y*2},x:${params.x*2},sf:(e)=>{
+            shared.C(0,[3],[0],{r:${params.radius},y:${params.y*2},x:${params.x*2},sf:(e)=>{
                 if(switchState${counter} === true){
                     e.pos.x = -100000;
                 } else {
@@ -1286,8 +1287,8 @@ function importMap(str){
             const maxY = o.y + o.h + 100;
             str += `var minX${counter}, minY${counter}, maxX${counter}, maxY${counter};
             minX${counter} = ${minX};minY${counter} = ${minY};maxX${counter} = ${maxX};maxY${counter} = ${maxY};
-            C(1,[3],[0],{h:1,w:1,y:0,x:-10000,sf:(e)=>{
-                const player = window.players[window.selfId];
+            shared.C(1,[3],[0],{h:1,w:1,y:0,x:-10000,sf:(e)=>{
+                const player = shared.players[shared.selfId];
                 if ((player.pos.x) > md(minX${counter}) && (player.pos.x) < md(maxX${counter}) && (player.pos.y) > md(minY${counter}) && (player.pos.y) < md(maxY${counter})) {
                     colors.background="${o.tileColor}"; colors.tile="${o.bgColor}";
                 }
@@ -1296,7 +1297,7 @@ function importMap(str){
         } else if(o.type === 'switchlava'){
             o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
             str += `var timer${counter} = ${o.timer}; var state${counter} =${o.state}; var x${counter} = ${o.x}; 
-            C(1,[],[1],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},sf:(e)=>{
+            shared.C(1,[],[1],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},sf:(e)=>{
                     timer${counter} -= 1/60;
                     if(timer${counter} < 0){
                         state${counter} = !state${counter};
@@ -1341,7 +1342,7 @@ function importMap(str){
             counter++;
         } else if(o.type === 'block' || o.type === 'trans'){
             o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
-            str += `C(1,[],[20],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},
+            str += `shared.C(1,[],[20],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},
                 cr:(e)=>{
                     ctx.beginPath();
                     ctx.lineWidth = 2;
@@ -1359,7 +1360,7 @@ function importMap(str){
         } else if(o.type === 'grapplepoint' || o.type === 'movinggrapplepoint'){
             o.x *= 2; o.y *= 2;
             if(o.type === 'grapplepoint'){
-                str += `C(0,[],[0],{r:20+12/2,y:${o.y},x:${o.x},
+                str += `shared.C(0,[],[0],{r:20+12/2,y:${o.y},x:${o.x},
                     cr:(e)=>{
                         e.isGrapplePoint = true;
                         ctx.strokeStyle = '#c9c9c9';
@@ -1385,7 +1386,7 @@ function importMap(str){
 
                 p.path = p.path.substring(0, p.path.length-1);
                 p.path += ']';
-                str += `C(0,[0],[0],{r:20+12/2,
+                str += `shared.C(0,[0],[0],{r:20+12/2,
                     cr:(e)=>{
                         e.isGrapplePoint = true;
                         ctx.strokeStyle = '#c9c9c9';
@@ -1404,7 +1405,7 @@ function importMap(str){
         } else if(o.type === 'circle-sentry'){
             o.x *= 2; o.y *= 2; o.r *= 2;
             o.laser.x *= 2; o.laser.y *= 2; o.laser.w *= 2; o.laser.h *= 2;
-            str += `C(1,[5],[1],{h:${o.laser.h},w:${o.laser.w},y:${o.y-o.laser.h/2},x:${o.x-o.laser.w/2},
+            str += `shared.C(1,[5],[1],{h:${o.laser.h},w:${o.laser.w},y:${o.y-o.laser.h/2},x:${o.x-o.laser.w/2},
                 boundPlayer: true,
                 restAngles: [${o.rest*Math.PI/180}, ${o.rest*Math.PI/180+Math.PI}],
                 toRest: true,
@@ -1414,8 +1415,8 @@ function importMap(str){
                 pivotX: ${o.x},
                 pivotY: ${o.y}
             });
-            C(0,[],[0],{x:${o.x},y:${o.y},r:${o.r},cr:(e)=>{
-                ctx.fillStyle = window.colors.tile;
+            shared.C(0,[],[0],{x:${o.x},y:${o.y},r:${o.r},cr:(e)=>{
+                ctx.fillStyle = shared.colors.tile;
                 ctx.beginPath();
                 ctx.arc(e.pos.x, e.pos.y, e.sat.r, 0, Math.PI * 2);
                 ctx.fill();
@@ -1438,7 +1439,7 @@ function importMap(str){
             continue;
         } else if(o.type === 'resetcoins'){
             o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
-            str += `C(1,[],[20],{x:${o.x},y:${o.y},w:${o.w},h:${o.h},hex:'#000000',alpha:0,cr:()=>{},ef:()=>{
+            str += `shared.C(1,[],[20],{x:${o.x},y:${o.y},w:${o.w},h:${o.h},hex:'#000000',alpha:0,cr:()=>{},ef:()=>{
                 for(let i = 0; i < obstacles.length; i++){
                     if(obstacles[i].collected !== undefined){
                         obstacles[i].collected = false;
@@ -1450,7 +1451,7 @@ function importMap(str){
             continue;
         } else if(o.type === 'resettimetraps'){
             o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
-            str += `C(1,[],[20],{x:${o.x},y:${o.y},w:${o.w},h:${o.h},hex:'#000000',alpha:0,cr:()=>{},ef:()=>{
+            str += `shared.C(1,[],[20],{x:${o.x},y:${o.y},w:${o.w},h:${o.h},hex:'#000000',alpha:0,cr:()=>{},ef:()=>{
                 for(let i = 0; i < obstacles.length; i++){
                     if(obstacles[i].timeTrapTime !== undefined){
                         obstacles[i].timeTrapTime = obstacles[i].timeTrapMaxTime;
@@ -1502,8 +1503,8 @@ function importMap(str){
         let typeString = JSON.stringify(params.type);
         typeString = typeString.slice(1, typeString.length-1);
 
-        //C(1,[],[0],{h:100,w:1100,y:4300,x:4600,});
-        str += `C(${typeString},${paramString})\n`;
+        //shared.C(1,[],[0],{h:100,w:1100,y:4300,x:4600,});
+        str += `shared.C(${typeString},${paramString})\n`;
     }
 
     eval(str);

@@ -1,1 +1,1 @@
-"use strict";(self.webpackChunkomniserver=self.webpackChunkomniserver||[]).push([[254],{230:(e,s,r)=>{r.r(s),r.d(s,{default:()=>w});const n=r.p+"bd0fd7f3240c978e0c7d.png",c=new Image;c.src=window.jewelBoxUrl;const o=new Image;o.src=n;const w={arrowImg:o,starImg:c}}}]);
+"use strict";(self.webpackChunkomniserver=self.webpackChunkomniserver||[]).push([[254],{230:(e,s,r)=>{r.r(s),r.d(s,{default:()=>w});const n=r.p+"bd0fd7f3240c978e0c7d.png",c=new Image;c.src=shared.jewelBoxUrl;const o=new Image;o.src=n;const w={arrowImg:o,starImg:c}}}]);

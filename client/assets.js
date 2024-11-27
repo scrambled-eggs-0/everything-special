@@ -1,5 +1,5 @@
 const starImg = new Image();
-starImg.src = window.jewelBoxUrl;
+starImg.src = shared.jewelBoxUrl;
 
 import Arrow from './gfx/arrow.png';
 const arrowImg = new Image();

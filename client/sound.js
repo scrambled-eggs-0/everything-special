@@ -1,13 +1,14 @@
+import shared from '../shared/shared.js';
 import Utils from './utils.js';
 const { until } = Utils;
 
-window.hasLoadedNewMusic = false;
+shared.hasLoadedNewMusic = false;
 let lastLoadedLink;
 let audioIframe;
 let lastPlayTime = 0;
 
 // TODO: optimize? "sub" time takes about 1ms, so we could optimize by statically creating an element
-window.stopMusic = async (toAwait=false) => {
+shared.stopMusic = async (toAwait=false) => {
     if(toAwait === true){
         let returnBig = false;
         let callTime = Date.now();
@@ -29,13 +30,13 @@ window.stopMusic = async (toAwait=false) => {
     lastLoadedLink = undefined;
 }
 
-window.playMusic = async (link, startTime=0) => {
-    window.hasLoadedNewMusic = true;
+shared.playMusic = async (link, startTime=0) => {
+    shared.hasLoadedNewMusic = true;
 
     await until(() => {return navigator.userActivation.hasBeenActive === true});
     if(link === lastLoadedLink) return;
 
-    stopMusic();
+    shared.stopMusic();
     lastLoadedLink = link;
 
     
@@ -63,14 +64,14 @@ window.playMusic = async (link, startTime=0) => {
     lastPlayTime = Date.now();
 }
 
-window.playMusicIndefinitely = async (link) => {
+shared.playMusicIndefinitely = async (link) => {
     lastLoadedLink = undefined;
-    await window.playMusic(link);
+    await shared.playMusic(link);
     audioIframe = undefined;
 }
 
-window.reloadMusic = () => {
+shared.reloadMusic = () => {
     let linkToPlay = lastLoadedLink;
     lastLoadedLink = undefined;
-    window.playMusic(linkToPlay);
+    shared.playMusic(linkToPlay);
 }

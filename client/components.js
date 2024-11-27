@@ -2,16 +2,17 @@ import Utils from './utils.js';
 const { environment, blendColor, encodeAtPosition } = Utils;
 import scroll from './scroll.js';
 let toScroll = false;
+import shared from '../shared/shared.js';
 
-window.respawnPlayer = () => {
-    const player = window.players[window.selfId];
+shared.respawnPlayer = () => {
+    const player = shared.players[shared.selfId];
     if(player === undefined) return;
-    player.pos.x = window.spawnPosition.x;
-    player.pos.y = window.spawnPosition.y;
+    player.pos.x = shared.spawnPosition.x;
+    player.pos.y = shared.spawnPosition.y;
     player.renderRadius = 0;
     player.dead = false;
     player.forces.length = 0;
-    if(dragging === true) {window.onmouseup(); dragging = true;}
+    if(shared.dragging === true) {window.onmouseup(); shared.dragging = true;}
     else window.onmouseup();
 }
 
@@ -40,9 +41,9 @@ function create(shape, simulates, effects, params){
         e.endSliceAngleRotateSpeed = params.endSliceAngleRotateSpeed;
         if(params.circleSliceRotate !== undefined) e.simulate.push(params.circleSliceRotate);
     }
-    for(let key in window.satConstraintsMap[shape]){
+    for(let key in shared.satConstraintsMap[shape]){
         // [min, max, mustBeInt, customValidator(e)]
-        const c = window.satConstraintsMap[shape][key];
+        const c = shared.satConstraintsMap[shape][key];
         if(c[2] === true) e[key] = Math.round(e[key]);
         if(e[key] < c[0]) e[key] = c[0];
         else if(e[key] > c[1]) e[key] = c[1];
@@ -52,9 +53,9 @@ function create(shape, simulates, effects, params){
     for(let i = 0; i < simulates.length; i++){
         e.simulate.push(simulateMap[simulates[i]]);
         initSimulateMap[simulates[i]](e, params);
-        for(let key in window.simulateConstraintsMap[simulates[i]]){
+        for(let key in shared.simulateConstraintsMap[simulates[i]]){
             // [min, max, mustBeInt, customValidator(e)]
-            const c = window.simulateConstraintsMap[simulates[i]][key];
+            const c = shared.simulateConstraintsMap[simulates[i]][key];
             if(c[2] === true) e[key] = Math.round(e[key]);
             if(e[key] < c[0]) e[key] = c[0];
             else if(e[key] > c[1]) e[key] = c[1];
@@ -64,9 +65,9 @@ function create(shape, simulates, effects, params){
         e.effect.push(effectMap[effects[i]]);
         initEffectMap[effects[i]](e, params);
         if(idleEffectMap[effects[i]] !== undefined) e.simulate.push(idleEffectMap[effects[i]]);
-        for(let key in window.effectConstraintsMap[effects[i]]){
+        for(let key in shared.effectConstraintsMap[effects[i]]){
             // [min, max, mustBeInt, customValidator(e)]
-            const c = window.effectConstraintsMap[effects[i]][key];
+            const c = shared.effectConstraintsMap[effects[i]][key];
             if(c[2] === true) e[key] = Math.round(e[key]);
             if(e[key] < c[0]) e[key] = c[0];
             else if(e[key] > c[1]) e[key] = c[1];
@@ -82,22 +83,22 @@ function create(shape, simulates, effects, params){
     // fixing polygon points if they're dynamically generated
     if(params.fixPoly !== undefined){
         if(environment === 'editor'){
-            e.sat.setPoints(window.fixPolygon(params.points).map(pt => new SAT.Vector(pt[0], pt[1])));
+            e.sat.setPoints(shared.fixPolygon(params.points).map(pt => new SAT.Vector(pt[0], pt[1])));
             e.dimensions = generateDimensions(e);
             e.topLeft = generateTopLeftCoordinates(e);
         } else {
             (async()=>{
                 await import('../shared/fixPolygon.js');
-                e.sat.setPoints(window.fixPolygon(params.points).map(pt => new SAT.Vector(pt[0], pt[1])));
+                e.sat.setPoints(shared.fixPolygon(params.points).map(pt => new SAT.Vector(pt[0], pt[1])));
                 e.dimensions = generateDimensions(e);
                 e.topLeft = generateTopLeftCoordinates(e);
             })();
         }
     }
 }
-window.C = create;
-window.idToObs = {};
-window.tickFns = [];
+shared.C = create;
+shared.idToObs = {};
+shared.tickFns = [];
 
 function interpolate(start, end, t){
     return (1-t) * start + t * end;
@@ -107,19 +108,19 @@ let res = new SAT.Response();
 let angle, collided = false, grappleForceObj={};
 function simulate(){
     // player simulation
-    const player = window.players[window.selfId];
+    const player = shared.players[shared.selfId];
 
-    if(window.isExClient === true){
+    if(shared.isExClient === true){
         player.renderRadius = interpolate(player.renderRadius, player.sat.r, 1 / 5.4);
     } else {
         player.renderRadius = player.renderRadius * 0.83 + player.sat.r * 0.17;
     }
 
-    if(window.isExClient === true && player.dead === false) {
-        player.xa = (input.right - input.left) * player.speed;
-        player.ya = (input.down - input.up) * player.speed;
+    if(shared.isExClient === true && player.dead === false) {
+        player.xa = (shared.input.right - shared.input.left) * player.speed;
+        player.ya = (shared.input.down - shared.input.up) * player.speed;
 
-        if(input.shift === true) {
+        if(shared.input.shift === true) {
             if(player.god === true){
                 player.xa *= 5;
                 player.ya *= 5;
@@ -144,13 +145,13 @@ function simulate(){
 
         player.xv *= player.friction;
         player.yv *= player.friction;
-    } else if(window.dragging === true && player.dead === false){
-        if(player.axisSpeedMultX === 0 || player.axisSpeedMultY === 0) angle = Math.atan2((window.mouseY - player.pos.y), (window.mouseX - player.pos.x));
-        else angle = Math.atan2((window.mouseY - player.pos.y) * player.axisSpeedMultX, (window.mouseX - player.pos.x) * player.axisSpeedMultY);
+    } else if(shared.dragging === true && player.dead === false){
+        if(player.axisSpeedMultX === 0 || player.axisSpeedMultY === 0) angle = Math.atan2((shared.mouseY - player.pos.y), (shared.mouseX - player.pos.x));
+        else angle = Math.atan2((shared.mouseY - player.pos.y) * player.axisSpeedMultX, (shared.mouseX - player.pos.x) * player.axisSpeedMultY);
         player.xv = Math.cos(angle) * player.speed * player.axisSpeedMultX;
         player.yv = Math.sin(angle) * player.speed * player.axisSpeedMultY;
-        if(Math.abs(player.xv) > Math.abs(player.pos.x - window.mouseX)) player.xv = window.mouseX - player.pos.x;
-        if(Math.abs(player.yv) > Math.abs(player.pos.y - window.mouseY)) player.yv = window.mouseY - player.pos.y;
+        if(Math.abs(player.xv) > Math.abs(player.pos.x - shared.mouseX)) player.xv = shared.mouseX - player.pos.x;
+        if(Math.abs(player.yv) > Math.abs(player.pos.y - shared.mouseY)) player.yv = shared.mouseY - player.pos.y;
         player.pos.x += player.xv;
         player.pos.y += player.yv; 
     } else {
@@ -190,9 +191,9 @@ function simulate(){
         player.lastAliveRadius = player.sat.r;
         if(player.god !== true){
             if(player.pos.x - player.sat.r < 0) player.pos.x = player.sat.r;
-            else if(player.pos.x + player.sat.r > window.mapDimensions.x) player.pos.x = window.mapDimensions.x - player.sat.r;
+            else if(player.pos.x + player.sat.r > shared.mapDimensions.x) player.pos.x = shared.mapDimensions.x - player.sat.r;
             if(player.pos.y - player.sat.r < 0) player.pos.y = player.sat.r;
-            else if(player.pos.y + player.sat.r > window.mapDimensions.y) player.pos.y = window.mapDimensions.y - player.sat.r;
+            else if(player.pos.y + player.sat.r > shared.mapDimensions.y) player.pos.y = shared.mapDimensions.y - player.sat.r;
         
             for(let i = 0; i < obstacles.length; i++){
                 // collision (done before simulation because that is what last rendered frame sees)
@@ -227,7 +228,7 @@ function simulate(){
         }
 
         if(player.grapple === true){
-            if(input.action1 === true && player.grappleX === -1){
+            if(shared.input.action1 === true && player.grappleX === -1){
                 let resetRadius = player.sat.r;
                 player.sat.r = player.grappleRange;
                 let closestAngle = 0;
@@ -272,7 +273,7 @@ function simulate(){
                 }
                 player.sat.r = resetRadius;
             } else if(player.grappleX !== -1){
-                if(input.action1 === false){
+                if(shared.input.action1 === false){
                     player.grappleX = player.grappleY = -1;
                 } else {
                     let grappleLen = Math.sqrt((player.pos.x - player.grappleX) ** 2 + (player.pos.y - player.grappleY) ** 2);
@@ -309,8 +310,8 @@ function simulate(){
             player.deathTimer = false;
             player.dead = true;
 
-            window.u4[0] = 14;
-            send(window.u4);
+            shared.u4[0] = 14;
+            shared.send(shared.u4);
         }
     }
 
@@ -322,32 +323,32 @@ function simulate(){
         if(player.pos.x - player.sat.r < 0){
             player.pos.x = player.sat.r;
             player.touchingWall = true;
-        } else if(player.pos.x + player.sat.r > mapDimensions.x){
-            player.pos.x = mapDimensions.x - player.sat.r;
+        } else if(player.pos.x + player.sat.r > shared.mapDimensions.x){
+            player.pos.x = shared.mapDimensions.x - player.sat.r;
             player.touchingWall = true;
         }
         if(player.pos.y - player.sat.r < 0){
             player.pos.y = player.sat.r;
             player.touchingWall = true;
-        } else if(player.pos.y + player.sat.r > mapDimensions.y){
-            player.pos.y = mapDimensions.y - player.sat.r;
+        } else if(player.pos.y + player.sat.r > shared.mapDimensions.y){
+            player.pos.y = shared.mapDimensions.y - player.sat.r;
             player.touchingWall = true;
         }
     } else {
         player.dead = false;
     }
 
-    if(window.tickFns.length > 0){
-        for(let i = 0; i < window.tickFns.length; i++){
-            window.tickFns[i]();
+    if(shared.tickFns.length > 0){
+        for(let i = 0; i < shared.tickFns.length; i++){
+            shared.tickFns[i]();
         }
-        window.tickFns.length = 0;
+        shared.tickFns.length = 0;
     }
 
     // scrolling if specified by a simulate type
     if(toScroll === true){
         toScroll = false;
-        if(window.dragging === true) window.onmouseup();
+        if(shared.dragging === true) window.onmouseup();
         scroll();
     }
 
@@ -432,21 +433,21 @@ const collisionMatrix = [
     SAT.testCircleCircle, SAT.testCirclePolygon,
     SAT.testPolygonCircle, SAT.testPolygonPolygon
 ]
-window.collide = (a,b) => {
+shared.collide = (a,b) => {
     res.hasCollided = collisionMatrix[(a.sat.r === undefined) * 2 + (b.sat.r === undefined)](a.sat, b.sat, res);
     return res;// make sure to clear after use!
 }
-window.boundAB = (a,b) => {
-    const res = window.collide(a,b);
+shared.boundAB = (a,b) => {
+    const res = shared.collide(a,b);
     if(res.hasCollided === true) {
         a.pos.x -= res.overlapV.x;
         a.pos.y -= res.overlapV.y;
     }
     res.clear();
 }
-window.isABColliding = (a,b) => {
+shared.isABColliding = (a,b) => {
     if(a === undefined || b === undefined) return false;
-    const res = window.collide(a,b);
+    const res = shared.collide(a,b);
     const hasCollided = res.hasCollided;
     res.clear();
     return hasCollided;
@@ -466,7 +467,7 @@ const satMap = [
     /*polygon*/
     (p) => {
         // points: [[x,y], ...]
-        if(p.points.length < 2) p.points = window.satDefaultMap[2].points;
+        if(p.points.length < 2) p.points = shared.satDefaultMap[2].points;
         p.x = 0; p.y = 0;
         const s = new SAT.Polygon(new SAT.Vector(), p.points.map(pt => new SAT.Vector(pt[0], pt[1])));
         s.pos.x = p.x;
@@ -475,7 +476,7 @@ const satMap = [
     },
     /*text*/
     (p) => {
-        if(window.isServer === true) return new SAT.Box(new SAT.Vector(p.x, p.y), 100, 100).toPolygon();
+        if(shared.isServer === true) return new SAT.Box(new SAT.Vector(p.x, p.y), 100, 100).toPolygon();
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.font = `${p.fontSize}px Inter`;
@@ -527,7 +528,7 @@ const satMap = [
 
 // font loading fix
 function fixFonts() {
-    const os = window.obstacles;
+    const os = shared.obstacles;
     for(let i = 0; i < os.length; i++){
         if(os[i].isText !== true) continue;
         const oldDimensions = os[i].dimensions;
@@ -587,7 +588,7 @@ function generateDimensions(o){
         y: bottom - top
     }
 }
-window.generateDimensions = generateDimensions;
+shared.generateDimensions = generateDimensions;
 
 function generateTopLeftCoordinates(o){
     let topLeftX = o.pos.x, topLeftY = o.pos.y;
@@ -606,9 +607,9 @@ function generateTopLeftCoordinates(o){
     }
     return {x: topLeftX, y: topLeftY};
 }
-window.generateTopLeftCoordinates = generateTopLeftCoordinates;
+shared.generateTopLeftCoordinates = generateTopLeftCoordinates;
 
-window.satMapI2N = [
+shared.satMapI2N = [
     'circle',
     'rectangle',
     'polygon',
@@ -616,7 +617,7 @@ window.satMapI2N = [
     'circleSlice'
 ];
 
-window.satConstraintsMap = [
+shared.satConstraintsMap = [
     undefined,
     undefined,
     undefined,
@@ -624,7 +625,7 @@ window.satConstraintsMap = [
     undefined,
 ];
 
-window.satDefaultMap = [
+shared.satDefaultMap = [
     // circle
     {
         x: 450,
@@ -709,7 +710,7 @@ const initSimulateMap = [
             if(o.path[i][0] === o.path[i-1][0] && o.path[i][1] === o.path[i-1][1]) o.path.splice(i,1);
         }
 
-        if(o.path.length < 2) o.path = window.simulateDefaultMap[0].path;
+        if(o.path.length < 2) o.path = shared.simulateDefaultMap[0].path;
 
         o.currentPoint = Math.floor(init.currentPoint) % o.path.length;
 
@@ -763,8 +764,8 @@ const initSimulateMap = [
     // /*id*/
     (o, init) => {
         let id = init.id.toString().trim();
-        if(window.idToObs[id] !== undefined && environment === 'editor') alert(`Warning! Duplicate id "${id}" found! Duplicate ids override each other.`);
-        window.idToObs[id] = o;
+        if(shared.idToObs[id] !== undefined && environment === 'editor') alert(`Warning! Duplicate id "${id}" found! Duplicate ids override each other.`);
+        shared.idToObs[id] = o;
     },
     // /*rotateHoming*/
     (o, init) => {
@@ -821,7 +822,7 @@ const simulateMap = [
             o.timeRemain = dist / o.speed;
         }
 
-        o.topLeft = window.generateTopLeftCoordinates(o);
+        o.topLeft = shared.generateTopLeftCoordinates(o);
     },
     /*rotate*/
     (o) => {
@@ -839,7 +840,7 @@ const simulateMap = [
         
         o.rotation += o.rotateSpeed;
         o.dimensions = generateDimensions(o);
-        o.topLeft = window.generateTopLeftCoordinates(o);
+        o.topLeft = shared.generateTopLeftCoordinates(o);
     },
     /*grow*/
     (o) => {
@@ -879,7 +880,7 @@ const simulateMap = [
             }
         }
 
-        o.topLeft = window.generateTopLeftCoordinates(o);
+        o.topLeft = shared.generateTopLeftCoordinates(o);
         o.dimensions = generateDimensions(o);
         o.lastGrowth = o.growth;
     },
@@ -941,7 +942,7 @@ function shortAngleDist(a0,a1) {
     return 2*da % TAU - da;
 }
 
-window.simulateMapI2N = [
+shared.simulateMapI2N = [
     'pathMove',
     'rotate',
     'grow',
@@ -950,7 +951,7 @@ window.simulateMapI2N = [
     'rotateHoming',
 ]
 
-window.simulateDefaultMap = [
+shared.simulateDefaultMap = [
     // pathMove
     {
         currentPoint: 0,
@@ -990,7 +991,7 @@ window.simulateDefaultMap = [
     }
 ]
 
-window.simulateConstraintsMap = [
+shared.simulateConstraintsMap = [
     {currentPoint: [0]},
     undefined,
     {growSpeed: [0], shrinkSpeed: [0], minGrowth: [0.001], maxGrowth: [0.001]},
@@ -1140,7 +1141,7 @@ const initEffectMap = [
     /*changeMap*/
     (o, params) => {
         o.mapName = params.mapName;
-        o.difficulty = window.mapDifficulties[params.mapName] ?? 0;
+        o.difficulty = shared.mapDifficulties[params.mapName] ?? 0;
     },
     /*tornado*/
     (o, params) => {
@@ -1198,8 +1199,8 @@ const initEffectMap = [
         o.deathTime = params.deathTime;
 
         // for vignette
-        for(let key in window.effectDefaultMap[24]){
-            o[key] = window.effectDefaultMap[24][key];
+        for(let key in shared.effectDefaultMap[24]){
+            o[key] = shared.effectDefaultMap[24][key];
         }
 
         o.innerR = o.outerR = 255;
@@ -1247,24 +1248,24 @@ const effectMap = [
     },
     /*winpad*/
     (p, res, o) => {
-        if(environment === 'editor' || window.standalone === true){
+        if(environment === 'editor' || shared.standalone === true){
             // respawn
-            window.respawnPlayer();
-            if(window.inClearCheckMode === true){
-                window.exitClearCheckMode();
+            shared.respawnPlayer();
+            if(shared.inClearCheckMode === true){
+                shared.exitClearCheckMode();
                 uploadCode();
             }
-        } else if(window.won !== true){
-            window.won = true;
-            if(window.isExClient === true){
-                if(window.mapPath === '/maps/winroom') window.changeMap('/maps/hub');
-                else window.changeMap('/maps/winroom');
+        } else if(shared.won !== true){
+            shared.won = true;
+            if(shared.isExClient === true){
+                if(shared.mapPath === '/maps/winroom') shared.changeMap('/maps/hub');
+                else shared.changeMap('/maps/winroom');
             } else {
                 // scroll
                 toScroll = true;
 
-                if(window.tutorial === true){
-                    window.beatCurrentTutorialMap();
+                if(shared.tutorial === true){
+                    shared.beatCurrentTutorialMap();
                 }
             }
         }
@@ -1293,8 +1294,8 @@ const effectMap = [
         if(o.checkpointCollected === true) return;
         o.checkpointCollected = true;
         
-        window.spawnPosition.x = o.topLeft.x + o.dimensions.x / 2;
-        window.spawnPosition.y = o.topLeft.y + o.dimensions.y / 2;
+        shared.spawnPosition.x = o.topLeft.x + o.dimensions.x / 2;
+        shared.spawnPosition.y = o.topLeft.y + o.dimensions.y / 2;
     },
     /*breakable*/
     (p, res, o, id) => {
@@ -1478,10 +1479,10 @@ const effectMap = [
     (p, res, o) => {},
     /*changeMap*/
     (p, res, o) => {
-        if(window.won === true) return;
-        window.won = true;
-        if(window.isExClient === true){
-            window.changeMap('/maps/' + o.mapName);
+        if(shared.won === true) return;
+        shared.won = true;
+        if(shared.isExClient === true){
+            shared.changeMap('/maps/' + o.mapName);
         } else {
             // TODO: send user to the specified omni
         }
@@ -1493,7 +1494,7 @@ const effectMap = [
     },
     /*changeVignette*/
     (p, res, o) => {
-        const v = window.colors.vignette;
+        const v = shared.colors.vignette;
         v.inner.r = o.innerR;
         v.inner.g = o.innerG;
         v.inner.b = o.innerB;
@@ -1548,16 +1549,16 @@ const effectMap = [
     },
     /*changeMusic*/
     (p, res, o) => {
-        window.playMusic(o.musicPath, o.musicStartTime);
+        shared.playMusic(o.musicPath, o.musicStartTime);
     },
     /*changeShip*/
     (p, res, o) => {
         if(p.ship === o.changeShipStateTo) return;
             
-        if(window.isExClient === true && o.changeShipStateTo === false) {
+        if(shared.isExClient === true && o.changeShipStateTo === false) {
             // send disable ship
-            window.u4[0] = 10;
-            send(window.u4);
+            shared.u4[0] = 10;
+            shared.send(shared.u4);
         }
         if(p.ship === false && o.changeShipStateTo === true) {p.shipAngle = o.initialShipAngle; p.shipTurnSpeed = o.shipTurnSpeed; }
         
@@ -1566,10 +1567,10 @@ const effectMap = [
     /*changeGrapple*/
     (p, res, o) => {
         if(p.grapple === true && o.changeGrappleStateTo === false){
-            if(window.isExClient === true){
+            if(shared.isExClient === true){
                 // send disable grapple
-                window.u4[0] = 12;
-                send(window.u4);
+                shared.u4[0] = 12;
+                shared.send(shared.u4);
             }
             p.grappleX = p.grappleY = -1;
         }
@@ -1581,10 +1582,10 @@ const effectMap = [
     },
     /*changeDeathTimer*/
     (p, res, o) => {
-        if(window.isExClient === true && p.deathTimer === true && o.changeDeathTimerStateTo === false){
+        if(shared.isExClient === true && p.deathTimer === true && o.changeDeathTimerStateTo === false){
             // send disable death timer
-            window.u4[0] = 14;
-            send(window.u4);
+            shared.u4[0] = 14;
+            shared.send(shared.u4);
         }
 
         if(o.changeDeathTimerStateTo === true){
@@ -1708,7 +1709,7 @@ const idleEffectMap = [
     undefined,
 ]
 
-window.effectConstraintsMap = [
+shared.effectConstraintsMap = [
     /*bound*/
     undefined,
     /*kill*/
@@ -1771,7 +1772,7 @@ window.effectConstraintsMap = [
     undefined,
 ]
 
-window.effectMapI2N = [
+shared.effectMapI2N = [
     'bound',
     'kill',
     'bounce',
@@ -1804,7 +1805,7 @@ window.effectMapI2N = [
     'changeDeathTimer',
 ]
 
-window.effectDefaultMap = [
+shared.effectDefaultMap = [
     // bound
     {},
     // kill
@@ -1941,7 +1942,7 @@ window.effectDefaultMap = [
 const renderEffectMap = [
     /*bound*/
     (o) => { 
-        ctx.fillStyle = window.colors.tile;
+        ctx.fillStyle = shared.colors.tile;
     },
     /*kill*/
     (o) => {
@@ -1962,7 +1963,7 @@ const renderEffectMap = [
             ctx.save();
             ctx.clip();
 
-            ctx.drawImage(window.starImg, o.topLeft.x, o.topLeft.y, o.dimensions.x, o.dimensions.y);
+            ctx.drawImage(shared.starImg, o.topLeft.x, o.topLeft.y, o.dimensions.x, o.dimensions.y);
 
             ctx.restore();
         }
@@ -2011,7 +2012,7 @@ const renderEffectMap = [
                 let middleX = o.topLeft.x + o.dimensions.x/2;
                 let middleY = o.topLeft.y + o.dimensions.y/2; 
 
-                ctx.fillStyle = window.colors.tile;//'#313131';
+                ctx.fillStyle = shared.colors.tile;//'#313131';
                 ctx.font = `${Math.min(60, o.dimensions.x/4, o.dimensions.y/4)}px Inter`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
@@ -2025,7 +2026,7 @@ const renderEffectMap = [
     },
     /*coindoor*/
     (o) => {
-        ctx.fillStyle = window.colors.tile;
+        ctx.fillStyle = shared.colors.tile;
         ctx.globalAlpha = o.coins <= 0 ? 0.5 : 1;
         ctx.cleanUpFunction = () => {
             ctx.fillStyle = o.coinDoorColor;
@@ -2038,7 +2039,7 @@ const renderEffectMap = [
             ctx.fill();
             ctx.closePath();
     
-            ctx.fillStyle = window.colors.tile;//'#313131'//'#484a00';
+            ctx.fillStyle = shared.colors.tile;//'#313131'//'#484a00';
             ctx.font = `${Math.min(60, o.dimensions.x/4, o.dimensions.y/4)}px Inter`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
@@ -2071,7 +2072,7 @@ const renderEffectMap = [
     },
     /*breakable*/
     (o) => {
-        ctx.fillStyle = window.colors.tile;// to make it into hex
+        ctx.fillStyle = shared.colors.tile;// to make it into hex
         ctx.fillStyle = blendColor('#000000', ctx.fillStyle, 0.5);
         ctx.globalAlpha = o.strength / o.maxStrength;
     },
@@ -2083,7 +2084,7 @@ const renderEffectMap = [
         ctx.lineWidth = 4;
         ctx.toStroke = true;
 
-        // ctx.fillStyle = window.safeColor || "#8c8c8c",
+        // ctx.fillStyle = shared.safeColor || "#8c8c8c",
         // ctx.globalAlpha = .25,
         // ctx.beginPath(),
         // ctx.arc(pos.x, pos.y, obstacle.r, 0, 2 * Math.PI),
@@ -2099,7 +2100,7 @@ const renderEffectMap = [
     },
     /*conveyor*/
     (o) => {
-        ctx.fillStyle = window.colors.tile;
+        ctx.fillStyle = shared.colors.tile;
         ctx.globalAlpha = 0.1;
         ctx.cleanUpFunction = () => {
             ctx.save();
@@ -2110,7 +2111,7 @@ const renderEffectMap = [
                 for(let y = o.topLeft.y + 50; y <= o.topLeft.y + o.dimensions.y + 50; y += 100){
                     ctx.translate(x,y);
                     ctx.rotate(o.conveyorAngle+Math.PI/2);
-                    ctx.drawImage(window.arrowImg, -50, -50, 100, 100);
+                    ctx.drawImage(shared.arrowImg, -50, -50, 100, 100);
                     ctx.rotate(-o.conveyorAngle-Math.PI/2);
                     ctx.translate(-x,-y);
                 }
@@ -2126,7 +2127,7 @@ const renderEffectMap = [
     },
     /*platformer*/
     (o) => {
-        ctx.fillStyle = window.colors.tile;
+        ctx.fillStyle = shared.colors.tile;
         ctx.globalAlpha = 0.1;
         ctx.cleanUpFunction = () => {
             ctx.save();
@@ -2140,7 +2141,7 @@ const renderEffectMap = [
                 for(let y = o.topLeft.y + offsetY + 50; y <= o.topLeft.y + o.dimensions.y + 50; y += 100){
                     ctx.translate(x,y);
                     ctx.rotate(o.platformerAngle+Math.PI/2);
-                    ctx.drawImage(window.arrowImg, -50, -50, 100, 100);
+                    ctx.drawImage(shared.arrowImg, -50, -50, 100, 100);
                     ctx.rotate(-o.platformerAngle-Math.PI/2);
                     ctx.translate(-x,-y);
                 }
@@ -2151,7 +2152,7 @@ const renderEffectMap = [
             // rendering 👍 if player can jump
             // if there ever is to be more emojis like this, then make an array of emojis that i can push to that render on top of each other every frame (w/ priority? sorted?)
             if(o.canJump === true && o.touchingPlatformer === true){
-                const player = window.players[window.selfId];
+                const player = shared.players[shared.selfId];
                 if(player !== undefined){
                     ctx.globalAlpha = 1;
                     ctx.fillStyle = 'white';
@@ -2257,7 +2258,7 @@ const renderEffectMap = [
             ctx.closePath();
             
             // drawing snapMagnitude indicator
-            const player = window.players[window.selfId];
+            const player = shared.players[shared.selfId];
             if(player.pos.x + o.snapMagnitude < middleX - o.dimensions.x/2 || player.pos.x - o.snapMagnitude > middleX + o.dimensions.x/2 || player.pos.y + o.snapMagnitude < middleY - o.dimensions.y/2 || player.pos.y - o.snapMagnitude > middleY + o.dimensions.y/2){
                 ctx.restore();
                 return;
@@ -2451,7 +2452,7 @@ const renderEffectMap = [
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
-            ctx.globalAlpha = Math.min(1,((window.players[window.selfId].pos.y + canvas.h/2) - (o.topLeft.y)) / (o.dimensions.y));
+            ctx.globalAlpha = Math.min(1,((shared.players[shared.selfId].pos.y + canvas.h/2) - (o.topLeft.y)) / (o.dimensions.y));
             ctx.fillText(
                 o.mapName.toUpperCase().replace('O','o'),
                 o.topLeft.x + o.dimensions.x / 2,
@@ -2480,7 +2481,7 @@ const renderEffectMap = [
     },
     /*pushable*/
     (o) => {
-        ctx.fillStyle = window.colors.tile;
+        ctx.fillStyle = shared.colors.tile;
         ctx.cleanUpFunction = () => {
             ctx.save();
             ctx.clip();
@@ -2564,11 +2565,11 @@ const renderEffectMap = [
     },
     /*changeDeathTimer*/
     (o) => {
-        if(window.skullImg === undefined){
-            window.skullImg = new Image();
-            window.skullImg.src = 'https://svgsilh.com/svg/1294357.svg';
-            window.skullImg.onload = () => {
-                window.skullImgLoaded = true;
+        if(shared.skullImg === undefined){
+            shared.skullImg = new Image();
+            shared.skullImg.src = 'https://svgsilh.com/svg/1294357.svg';
+            shared.skullImg.onload = () => {
+                shared.skullImgLoaded = true;
             }
             return;
         }
@@ -2576,7 +2577,7 @@ const renderEffectMap = [
         ctx.fillStyle = o.changeDeathTimerStateTo === true ? 'red' : 'white';
         ctx.globalAlpha = 0.4;
 
-        if(window.skullImgLoaded === false) return;
+        if(shared.skullImgLoaded === false) return;
 
         ctx.cleanUpFunction = () => {
             ctx.globalAlpha = 1;
@@ -2585,12 +2586,12 @@ const renderEffectMap = [
 
             let minDimension = Math.min(o.dimensions.x, o.dimensions.y);
 
-            ctx.drawImage(window.skullImg, middleX - minDimension/2, middleY - minDimension/2, minDimension, minDimension);
+            ctx.drawImage(shared.skullImg, middleX - minDimension/2, middleY - minDimension/2, minDimension, minDimension);
         }
     },
 ]
 
-const difficultyImageColors = window.difficultyImageColors = [
+const difficultyImageColors = shared.difficultyImageColors = [
     /*0 - Peaceful*/
     "#6cd95b",
     /*1 - Moderate*/
@@ -2611,7 +2612,7 @@ const difficultyImageColors = window.difficultyImageColors = [
     "#c95d5d"
 ]
 
-const difficultyImageMap = window.difficultyImageMap = [
+const difficultyImageMap = shared.difficultyImageMap = [
     /*0 - Peaceful*/
     (size) => {
         ctx.globalAlpha *= 0.3;
@@ -2821,12 +2822,12 @@ const difficultyImageMap = window.difficultyImageMap = [
 ];
 
 // an obstacle is an ECS
-const obstacles = window.obstacles = [];
+const obstacles = shared.obstacles = [];
 
-window.spawnPosition = {x: 100, y: 1500};
+shared.spawnPosition = {x: 100, y: 1500};
 // a player is also an ecs
-window.createPlayer = () => {
-    create(0/*circle*/, [], [], /*no simulate/ effects*/ {x: window.spawnPosition.x, y: window.spawnPosition.y, r: /*24.5*/49.5})
+shared.createPlayer = () => {
+    create(0/*circle*/, [], [], /*no simulate/ effects*/ {x: shared.spawnPosition.x, y: shared.spawnPosition.y, r: /*24.5*/49.5})
     const player = obstacles.pop();
     player.axisSpeedMultX = player.axisSpeedMultY = 1;
     player.touchingNormalIndexes = [];
@@ -2850,9 +2851,9 @@ window.createPlayer = () => {
     return player;
 }
 
-window.players = [];
+shared.players = [];
 
-if(window.isExClient !== true) {window.players.push(window.createPlayer()); window.selfId = 0; window.mapDimensions = environment === 'server' ? {x:2000,y:2000} : {x:900,y:1600}}
-if(window.isExClient === true || environment === 'server') window.mapDimensions = {x: 2000, y: 2000};
+if(shared.isExClient !== true) {shared.players.push(shared.createPlayer()); shared.selfId = 0; shared.mapDimensions = environment === 'server' ? {x:2000,y:2000} : {x:900,y:1600}}
+if(shared.isExClient === true || environment === 'server') shared.mapDimensions = {x: 2000, y: 2000};
 
 export default simulate;

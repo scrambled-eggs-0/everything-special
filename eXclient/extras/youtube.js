@@ -1,4 +1,5 @@
-window.playYoutubeVideo = (link, {width/*=640*/, height/*=360*/, visible=true, loop=true, startTime=0, endTime=-1/*-1 = endTime end of video*/, volume=-1,/*-1 volume = default*/ autoplay=true, showPlayerUI=false, interactable=false, onReadyFn=()=>{}, onPlayFn=()=>{}, onPauseFn=()=>{}, onEndFn=()=>{}}) => {
+import shared from '../../shared/shared.js';
+shared.playYoutubeVideo = (link, {width/*=640*/, height/*=360*/, visible=true, loop=true, startTime=0, endTime=-1/*-1 = endTime end of video*/, volume=-1,/*-1 volume = default*/ autoplay=true, showPlayerUI=false, interactable=false, onReadyFn=()=>{}, onPlayFn=()=>{}, onPauseFn=()=>{}, onEndFn=()=>{}}) => {
     let videoId = link.split('?v=')[1];
 
     let div = document.createElement('div');
@@ -99,6 +100,6 @@ window.playYoutubeVideo = (link, {width/*=640*/, height/*=360*/, visible=true, l
     }
 }
 
-window.removeYoutubeVideo = (player) => {
+shared.removeYoutubeVideo = (player) => {
     player.remove();
 }

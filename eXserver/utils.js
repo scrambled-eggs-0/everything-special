@@ -1,4 +1,6 @@
+import shared from '../shared/shared.js';
 import SAT from 'sat';
+shared.SAT = SAT;
 global.window = {SAT};
 
 import ip from "ip";

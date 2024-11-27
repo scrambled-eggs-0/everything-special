@@ -121,6 +121,24 @@ app.get("/eXclient/extras/:filename", (res, req) => {
     }
 });
 
+app.get("/shared/:filename", (res, req) => {
+    const path = 'shared/' + req.getParameter(0);
+    
+    // Check if the file exists
+    if (fs.existsSync(path)) {
+        // Read and serve the file
+        const file = fs.readFileSync(path);
+        res.cork(() => {
+            res.writeHeader("Content-Type", "text/javascript");
+            res.end(file);
+        })
+    } else {
+        // File not found
+        res.writeStatus('404 Not Found');
+        res.end();
+    }
+});
+
 // DUPLICATE FROM OMNI SERVER. REMOVE WHEN MERGE
 app.get("/gfx/:filename", (res, req) => {
     let path = "client" + req.getUrl();

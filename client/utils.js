@@ -1,3 +1,4 @@
+import shared from '../shared/shared.js';
 const until = (condition, checkInterval=400) => {
     if(!!condition()) return true;
     return new Promise(resolve => {
@@ -16,11 +17,19 @@ const SCROLL_PARAMS = Object.freeze({
     edgeMargin: 117 // out of 900
 });
 
-const environment = window.environment = typeof location === 'undefined' ? 'server' : ((location.origin.endsWith('8080') || location.href.endsWith('editor')) ? 'editor' : 'client');
+const environment = shared.environment = typeof location === 'undefined' ? 'server' : ((location.origin.endsWith('8080') || location.href.endsWith('editor')) ? 'editor' : 'client');
+const isProd = shared.isProd = location.origin.startsWith('http://localhost') ? false : true; 
+
+if(isProd === false){
+    window.s = {};
+    setInterval(() => {
+        for(let key in shared){ window.s[key] = shared[key]; }
+    }, 1000)
+}
 
 const memoizedColors = {};
 
-window.blendColor = blendColor;
+shared.blendColor = blendColor;
 function blendColor(color1, color2, t) {
 	const memoizedIndex = color1 + '_' + color2 + '_' + t;
 	if (memoizedColors[memoizedIndex] !== undefined) {
@@ -57,30 +66,30 @@ function componentToHex(c) {
 // 	return 2*da % max - da;
 // }
 
-window.jewelBoxUrl = 'https://upload.wikimedia.org/wikipedia/commons/c/c3/A_Snapshot_of_the_Jewel_Box_cluster_with_the_ESO_VLT.jpg';
-window.decorationImgs = {};
+shared.jewelBoxUrl = 'https://upload.wikimedia.org/wikipedia/commons/c/c3/A_Snapshot_of_the_Jewel_Box_cluster_with_the_ESO_VLT.jpg';
+shared.decorationImgs = {};
 if(typeof Image !== 'undefined'){
-	window.arrowImg = new Image();
-	window.starImg = new Image();
-	window.starImg.crossOrigin = "Anonymous";
+	shared.arrowImg = new Image();
+	shared.starImg = new Image();
+	shared.starImg.crossOrigin = "Anonymous";
 	if(environment === 'editor'){
 		// editor
 		(async() => {
 			const exps = await import('./assets.js');
-			window.arrowImg = exps.default.arrowImg;
-			window.starImg = exps.default.starImg;
+			shared.arrowImg = exps.default.arrowImg;
+			shared.starImg = exps.default.starImg;
 		})();
 	} else {
 		// client
-		window.arrowImg.src = './gfx/arrow.png';
-		window.starImg.src = window.jewelBoxUrl;
+		shared.arrowImg.src = './gfx/arrow.png';
+		shared.starImg.src = shared.jewelBoxUrl;
 	}
 } else {
 	// server
-	window.arrowImg = window.starImg = {};
+	shared.arrowImg = shared.starImg = {};
 }
 
-window.colourRgb = (r,g,b) => {
+shared.colourRgb = (r,g,b) => {
 	r = Math.max(Math.min(Number(r), 100), 0) * 2.55;
 	g = Math.max(Math.min(Number(g), 100), 0) * 2.55;
 	b = Math.max(Math.min(Number(b), 100), 0) * 2.55;
@@ -90,19 +99,19 @@ window.colourRgb = (r,g,b) => {
 	return '#' + r + g + b;
 }
 
-if(environment === 'server') global.colourRgb = window.colourRgb;
+if(environment === 'server') global.colourRgb = shared.colourRgb;
 
-window.md = (a) => {return (a !== a || a === undefined || a === null) ? 0 : a;}; // make defined
-window.makeNumber = (a) => {return Number.isFinite(a) === true ? a : 0;};
-window.makeNotNaN = (a) => {return (a === a) ? a : 0;};
-window.makeNotNull = (a) => {return a === null ? 0 : a};
-window.makeNotUndefined = (a) => {return a === undefined ? 0 : a};
-window.rlt = (a) => {window.loopTrap = 1000; return a;};// reset loop trap
-window.makeType = (a,typeArr) => {
+shared.md = (a) => {return (a !== a || a === undefined || a === null) ? 0 : a;}; // make defined
+shared.makeNumber = (a) => {return Number.isFinite(a) === true ? a : 0;};
+shared.makeNotNaN = (a) => {return (a === a) ? a : 0;};
+shared.makeNotNull = (a) => {return a === null ? 0 : a};
+shared.makeNotUndefined = (a) => {return a === undefined ? 0 : a};
+shared.rlt = (a) => {shared.loopTrap = 1000; return a;};// reset loop trap
+shared.makeType = (a,typeArr) => {
 	if(typeArr.includes(generateConnectionType(a)) === true)return a;
 	return defaultTypeMap[typeof a];
 }
-window.generateConnectionType = (val) => {
+shared.generateConnectionType = (val) => {
 	const type = typeof val;
 	if(type === 'number') return 'Number';
 	if(type === 'string') {

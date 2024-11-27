@@ -49,7 +49,7 @@ createAccountButton.onclick = () => {
             if(succeeded === 'y'){
                 alert('account successfully created!');
                 updateCredsInLocalStorage(lastUsername, lastPassword);
-                window.parent.postMessage('finished!', window.parent.location.href);
+                shared.parent.postMessage('finished!', shared.parent.location.href);
             } else {
                 if(succeeded === 'p'){
                     // profile
@@ -102,7 +102,7 @@ loginButton.onclick = () => {
 
         if(succeeded === 'y'){
             updateCredsInLocalStorage(lastUsername, lastPassword);
-            window.parent.postMessage('finished!', window.parent.location.href);
+            shared.parent.postMessage('finished!', shared.parent.location.href);
         } else {
             alert('invalid login! Please try again.');
             resetState();
@@ -166,7 +166,7 @@ function postReq(usr, pswd, file, path, lambda){
         });
 }
 
-window.SHA = SHA;
+shared.SHA = SHA;
 function SHA(s) {
     var chrsz = 8;
     var hexcase = 0;

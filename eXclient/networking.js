@@ -1,3 +1,4 @@
+import shared from '../shared/shared.js';
 import './msgpackr.js';
 
 // used for decoding chat messages
@@ -5,10 +6,10 @@ import Utils from '../client/utils.js';
 const {decodeText} = Utils;
 
 const HOST = location.origin.replace(/^http/, 'ws');
-let ws, nextMsgFlag, gameStarted = false;
-window.disconnected = false;
+let ws, nextMsgFlag, gameStarted = false, canLoad=false;
+shared.disconnected = false;
 const messageQueue = [];
-window.send = (data) => {
+shared.send = (data) => {
     messageQueue.push(data);
 }
 
@@ -29,26 +30,26 @@ function initWS() {
 
     ws.onopen = () => {
         console.log('connected to the server!');
-        window.send = (data) => {
+        shared.send = (data) => {
             ws.send(data);
         }
         for(let i = 0; i < messageQueue.length; i++){
-            send(messageQueue[i]);
+            shared.send(messageQueue[i]);
         }
     }
 
     ws.onclose = () => {
-        if(window.username !== null) window.disconnected = true;
+        if(shared.username !== null) shared.disconnected = true;
         console.log('Websocket closed.');// Attempting to reconnect...
         // TODO: reconnection.
-        window.send = () => {};
+        shared.send = () => {};
     }
 }
 
 initWS();
 
-window.changeMap = function changeMap(url=`/maps/hub`, method='GET', headers=new Headers()){
-    headers.append('id', window.authId);
+shared.changeMap = function changeMap(url=`/maps/hub`, method='GET', headers=new Headers()){
+    headers.append('id', shared.authId);
     fetch(location.origin + url, {method, headers}).then(async (d) => {
         const levelData = await d.text();
         if(levelData === 'n') {console.error(`failed to load map url ${url}`); return;}
@@ -57,31 +58,43 @@ window.changeMap = function changeMap(url=`/maps/hub`, method='GET', headers=new
         const prevScript = document.getElementById('gameScript');
         if(prevScript !== null) prevScript.remove();
 
-        window.resetGame();
-        window.mapPath = url;
-        window.players.length = window.obstacles.length = 0;
+        shared.resetGame();
+        shared.mapPath = url;
+        shared.players.length = shared.obstacles.length = 0;
+
+        shared.mapReady = (fn) => {
+            fn(shared);
+        }
+
+        canLoad = true;
         const s = document.createElement('script');
         s.id = "gameScript";
         s.text = levelData;
         document.body.appendChild(s);
-        
+
         for(let i = 0; i < players.length; i++){
-            if(players[i] === undefined || players[i] === null) {window.players[i] = undefined; continue;}
+            if(players[i] === undefined || players[i] === null) {shared.players[i] = undefined; continue;}
             const playerData = players[i];
             const p = createPlayerFromData(playerData);
-            window.players[i] = p;
+            shared.players[i] = p;
         }
 
-        window.selfId = selfId;
+        shared.selfId = selfId;
 
-        window.won = false;
+        shared.won = false;
         if(!gameStarted) {
-            window.startGame();
+            shared.startGame();
             gameStarted = true;
         } else {
-            window.respawnPlayer();
+            shared.respawnPlayer();
         }
     })
+}
+
+window.loadMap = (I) => {
+    if(canLoad === false) return;
+    canLoad = false;
+    I(shared);
 }
 
 // first byte encodes the message type
@@ -89,21 +102,21 @@ const messageMap = [
     // 0 - set auth id (not clientid)
     (data) => {
         const u32 = new Uint32Array(data.buffer);
-        window.authId = u32[1];
+        shared.authId = u32[1];
 
         // TEMP
-        const username = window.username = localStorage.getItem('username');
+        const username = shared.username = localStorage.getItem('username');
         const password = localStorage.getItem('password');
         if(username === null || password === null){
             // get tutorial
             window.onkeydown({code: 'KeyZ', repeat: false, type: 'keydown'});
-            window.changeMap('/tutorial');
+            shared.changeMap('/tutorial');
         } else {
             // log in
             const headers = new Headers();
             headers.append('u', username);
             headers.append('p', password);
-            window.changeMap('/join', 'POST', headers);
+            shared.changeMap('/join', 'POST', headers);
         }
     },
     // 1 - reload page (for hot refresh)
@@ -124,21 +137,21 @@ const messageMap = [
         const u16 = new Uint16Array(raw);
         const id = u16[1];
 
-        if(id === window.selfId) return;
+        if(id === shared.selfId) return;
 
         const f32 = new Float32Array(raw);
-        window.players[id].pos.x = f32[1];
-        window.players[id].pos.y = f32[2];
+        shared.players[id].pos.x = f32[1];
+        shared.players[id].pos.y = f32[2];
     },
     // 5 - new player
     (data) => {
         let p = createPlayerFromData(msgpackr.unpack(data));
-        window.players[p.id] = p;
+        shared.players[p.id] = p;
     },
     // 6 - remove player
     (data) => {
         let id = new Uint16Array(data.buffer)[1];
-        window.players[id] = undefined;// make america undefined again
+        shared.players[id] = undefined;// make america undefined again
     },
     // 7 - chat message
     (data) => {
@@ -170,77 +183,77 @@ const messageMap = [
         const u16 = new Uint16Array(data.buffer);
         const id = u16[1];
 
-        if(id === window.selfId) return;
+        if(id === shared.selfId) return;
 
-        window.players[id].god = data[1] === 1;
+        shared.players[id].god = data[1] === 1;
     },
     // 9 - set ship angle
     (data) => {
         const u16 = new Uint16Array(data.buffer);
         const id = u16[1];
-        if(id === window.selfId) return;
+        if(id === shared.selfId) return;
 
         const f32 = new Float32Array(data.buffer);
-        window.players[id].ship = true;
-        window.players[id].shipAngle = f32[1];
+        shared.players[id].ship = true;
+        shared.players[id].shipAngle = f32[1];
     },
     // 10 - disable ship
     (data) => {
         const u16 = new Uint16Array(data.buffer);
         const id = u16[1];
-        if(id === window.selfId) return;
+        if(id === shared.selfId) return;
 
-        window.players[id].ship = false;
+        shared.players[id].ship = false;
     },
     // 11 - set grapple
     (data) => {
         const u16 = new Uint16Array(data.buffer);
         const id = u16[1];
-        if(id === window.selfId) return;
+        if(id === shared.selfId) return;
 
         const f32 = new Float32Array(data.buffer);
-        window.players[id].grapple = true;
-        window.players[id].grappleX = f32[1];
-        window.players[id].grappleY = f32[2];
+        shared.players[id].grapple = true;
+        shared.players[id].grappleX = f32[1];
+        shared.players[id].grappleY = f32[2];
     },
     // 13 - disable grapple
     (data) => {
         const u16 = new Uint16Array(data.buffer);
         const id = u16[1];
-        if(id === window.selfId) return;
+        if(id === shared.selfId) return;
 
-        window.players[id].grapple = false;
+        shared.players[id].grapple = false;
     },
     // 13 - set death timer
     (data) => {
         const u16 = new Uint16Array(data.buffer);
         const id = u16[1];
-        if(id === window.selfId) return;
+        if(id === shared.selfId) return;
 
         const f32 = new Float32Array(data.buffer);
-        window.players[id].deathTimer = true;
-        window.players[id].deathTime = f32[1];
+        shared.players[id].deathTimer = true;
+        shared.players[id].deathTime = f32[1];
     },
     // 14 - disable death timer
     (data) => {
         const u16 = new Uint16Array(data.buffer);
         const id = u16[1];
-        if(id === window.selfId) return;
+        if(id === shared.selfId) return;
 
-        window.players[id].deathTimer = false;
+        shared.players[id].deathTimer = false;
     },
     // 15 - change dead
     (data) => {
         const u16 = new Uint16Array(data.buffer);
         const id = u16[1];
-        if(id === window.selfId) return;
+        if(id === shared.selfId) return;
 
-        window.players[id].dead = data[1] === 1;
+        shared.players[id].dead = data[1] === 1;
     },
 ]
 
 function createPlayerFromData(data){
-    const p = window.createPlayer();
+    const p = shared.createPlayer();
 
     // if this gets bigger we may want to
     // for(let key in data)

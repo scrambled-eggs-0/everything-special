@@ -41,7 +41,7 @@ fetch(uploadUrl, {
             frameText.style.paddingTop = "0.8vh";
 
             frameText.onclick = () => {
-                window.open(IFrame.src);
+                shared.open(IFrame.src);
             }
 
             frameDiv.appendChild(frameText);

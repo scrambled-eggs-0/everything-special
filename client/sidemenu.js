@@ -1,3 +1,4 @@
+import shared from '../shared/shared.js';
 import Utils from './utils.js';
 const { until } = Utils;
 
@@ -85,9 +86,9 @@ requestIdleCallback(() => {
 const iconData = [
     {
         x: 100, y: 100,
-        img: () => {return window.scrollLocked === true ? lockImg : unlockedImg},
-        hoverFn: () => {window.scrollLocked = !window.scrollLocked;},
-        textFn: () => {return (window.scrollLocked === true ? 'Unlock Scroll' : 'Lock Scroll')},
+        img: () => {return shared.scrollLocked === true ? lockImg : unlockedImg},
+        hoverFn: () => {shared.scrollLocked = !shared.scrollLocked;},
+        textFn: () => {return (shared.scrollLocked === true ? 'Unlock Scroll' : 'Lock Scroll')},
         imgScale: 1,
         label: 'scrollLock'
     },
@@ -96,7 +97,7 @@ const iconData = [
         imgScale: 0.92,
         img: () => {return creatorImg;},
         hoverFn: () => {
-            fetch(`${location.origin}/getUser/${window.levelFileName}`, {
+            fetch(`${location.origin}/getUser/${shared.levelFileName}`, {
                 method: 'GET',
             })  .then(async (d) => {
                     const creatorName = await d.text();
@@ -115,12 +116,12 @@ const iconData = [
             headers.append('u', username);
             headers.append('hp', hashedPassword);
 
-            fetch(`${location.origin}/like/${window.levelFileName}`, {
+            fetch(`${location.origin}/like/${shared.levelFileName}`, {
                 method: 'POST', headers
             })  .then(_ => {
                     liked = !liked;
-                    const withoutTheJs = window.levelFileName.slice(0, window.levelFileName.length-3);
-                    console.log({lfn: window.levelFileName, withoutTheJs});
+                    const withoutTheJs = shared.levelFileName.slice(0, shared.levelFileName.length-3);
+                    console.log({lfn: shared.levelFileName, withoutTheJs});
                     if(liked === true) likedLevels[withoutTheJs] = true;
                     else delete likedLevels[withoutTheJs];
                     localStorage.setItem('likedLevels', Object.keys(likedLevels).join('|'));
@@ -139,11 +140,11 @@ const iconData = [
             headers.append('u', username);
             headers.append('hp', hashedPassword);
 
-            fetch(`${location.origin}/dislike/${window.levelFileName}`, {
+            fetch(`${location.origin}/dislike/${shared.levelFileName}`, {
                 method: 'POST', headers
             })  .then(_ => {
                     disliked = !disliked;
-                    const withoutTheJs = window.levelFileName.slice(0, window.levelFileName.length-3);
+                    const withoutTheJs = shared.levelFileName.slice(0, shared.levelFileName.length-3);
                     if(disliked === true) dislikedLevels[withoutTheJs] = true;
                     else delete dislikedLevels[withoutTheJs];
                     localStorage.setItem('dislikedLevels', Object.keys(dislikedLevels).join('|'));
@@ -172,7 +173,7 @@ const iconData = [
         text: 'Remix',
         label: 'Remix',
         hoverFn: () => {
-            fetch(`${location.origin}/remix/${window.levelFileName}`, {
+            fetch(`${location.origin}/remix/${shared.levelFileName}`, {
                 method: 'GET',
             })  .then(async (d) => {
                     const levelData = await d.text();
@@ -188,7 +189,7 @@ const iconData = [
         text: 'Share This Level',
         fontSize: 38,
         hoverFn: () => {
-            navigator.clipboard.writeText(`${location.origin}/standalone/${window.levelFileName.split('.')[0]}`);
+            navigator.clipboard.writeText(`${location.origin}/standalone/${shared.levelFileName.split('.')[0]}`);
             messageAlpha = 1;
             messageText = 'Link Copied to Clipboard!';
             if(sendShare === true){
@@ -215,23 +216,23 @@ const iconData = [
 async function processLogin(){
     if(username !== null) return true;
 
-    const childWindowOrigin = `${location.origin}/account`;
+    const childsharedOrigin = `${location.origin}/account`;
 
     let clientLoggedIn = false;
 
-    const loginWindow = document.createElement('iframe');
-    loginWindow.src = childWindowOrigin;
-    loginWindow.classList.add('loginWindow');
+    const loginshared = document.createElement('iframe');
+    loginshared.src = childsharedOrigin;
+    loginshared.classList.add('loginshared');
     const handleMessage = function(event) {
         if (event.origin === location.origin) {
-            loginWindow.remove();
-            window.removeEventListener('message', handleMessage);
+            loginshared.remove();
+            shared.removeEventListener('message', handleMessage);
             clientLoggedIn = true;
         }
     }
     window.addEventListener('message', handleMessage);
 
-    document.body.appendChild(loginWindow);
+    document.body.appendChild(loginshared);
 
     await until(()=>{return clientLoggedIn});
 
@@ -249,7 +250,7 @@ async function processLogin(){
 }
 
 export default function drawUi(canvas, ctx, isLast=false){
-    if((window.mouseX - gearX) ** 2 + (window.mouseY - gearY) ** 2 < gearRadius ** 2 / 4) gearImageRotation += 0.012;
+    if((shared.mouseX - gearX) ** 2 + (shared.mouseY - gearY) ** 2 < gearRadius ** 2 / 4) gearImageRotation += 0.012;
     renderGearImageRotation = interpolateDirection(renderGearImageRotation, gearImageRotation, 0.1);
 
     if(gearImgLoaded === true){
@@ -303,12 +304,12 @@ export default function drawUi(canvas, ctx, isLast=false){
             }
             ctx.globalAlpha = 1;
 
-            if(d.label === 'scrollLock') d.fontSize = window.scrollLocked === true ? 44 : 52;
+            if(d.label === 'scrollLock') d.fontSize = shared.scrollLocked === true ? 44 : 52;
             ctx.font = `${d.fontSize ?? 56}px Inter`;
             ctx.fillStyle = 'white';
             ctx.fillText(d.text, d.x + 125, d.y + 283);
             
-            if(window.mouseX > d.x + translateAmount && window.mouseX < d.x + translateAmount + 250 && window.mouseY > d.y && window.mouseY < d.y + 250){
+            if(shared.mouseX > d.x + translateAmount && shared.mouseX < d.x + translateAmount + 250 && shared.mouseY > d.y && shared.mouseY < d.y + 250){
                 hoverFn = d.hoverFn;
             }
         }
@@ -351,16 +352,16 @@ lastMouseX = lastMouseY = 0;
 
 // let lockHoveringOverCog = false;
 
-window.addSideMenuEvtListeners = (nextFileName) => {
-    window.mouseDownFunctions.push(() => {
+shared.addSideMenuEvtListeners = (nextFileName) => {
+    shared.mouseDownFunctions.push(() => {
         // update what we're hovering over
-        hoveringOverCog = gearImgLoaded === true && (window.mouseX - gearX) ** 2 + (window.mouseY - gearY) ** 2 < gearRadius ** 2 / 4;
+        hoveringOverCog = gearImgLoaded === true && (shared.mouseX - gearX) ** 2 + (shared.mouseY - gearY) ** 2 < gearRadius ** 2 / 4;
         const smoothAnim = smoothstep(settingsMenuAnimation);
         const translateAmount = (1-smoothAnim) * canvas.width;
         hoverFn = undefined;
         for(let i = 0; i < iconData.length; i++){
             const d = iconData[i];
-            if(window.mouseX > d.x + translateAmount && window.mouseX < d.x + translateAmount + 250 && window.mouseY > d.y && window.mouseY < d.y + 250){
+            if(shared.mouseX > d.x + translateAmount && shared.mouseX < d.x + translateAmount + 250 && shared.mouseY > d.y && shared.mouseY < d.y + 250){
                 hoverFn = d.hoverFn;
             }
         }
@@ -369,8 +370,8 @@ window.addSideMenuEvtListeners = (nextFileName) => {
             settingsDrag = true;
             dragging = false;
 
-            lastMouseX = window.mouseX;
-            lastMouseY = window.mouseY;
+            lastMouseX = shared.mouseX;
+            lastMouseY = shared.mouseY;
         } else {
             settingsDrag = false;
 
@@ -378,18 +379,18 @@ window.addSideMenuEvtListeners = (nextFileName) => {
         }
     })
 
-    window.mouseMoveFunctions.push(() => {
+    shared.mouseMoveFunctions.push(() => {
         if(settingsDrag === true){
-            if(settingsDragMove === true || ((lastMouseX - window.mouseX) ** 2 + (lastMouseY - window.mouseY) ** 2 > minDragDistSq)){
+            if(settingsDragMove === true || ((lastMouseX - shared.mouseX) ** 2 + (lastMouseY - shared.mouseY) ** 2 > minDragDistSq)){
                 settingsDragMove = true;
-                gearX = window.mouseX;
-                gearY = window.mouseY;
+                gearX = shared.mouseX;
+                gearY = shared.mouseY;
             }
         }
     })
     
-    window.mouseUpFunctions.push(() => {
-        hoveringOverCog = (window.mouseX - gearX) ** 2 + (window.mouseY - gearY) ** 2 < gearRadius ** 2 / 4;
+    shared.mouseUpFunctions.push(() => {
+        hoveringOverCog = (shared.mouseX - gearX) ** 2 + (shared.mouseY - gearY) ** 2 < gearRadius ** 2 / 4;
         if(settingsDrag === true && hoveringOverCog === true && settingsDragMove === false) {
             toggleSettingsMenu();
         }
@@ -409,7 +410,7 @@ window.addSideMenuEvtListeners = (nextFileName) => {
 function toggleSettingsMenu() {
     settingsMenuActive = !settingsMenuActive;
     if(settingsGradient === undefined){
-        settingsGradient = window.ctx.createLinearGradient(0,0,1600,0);
+        settingsGradient = shared.ctx.createLinearGradient(0,0,1600,0);
         settingsGradient.addColorStop(0, "rgba(0, 0, 0, 0)");
         settingsGradient.addColorStop(1, "rgba(0, 0, 0, 0.6)");
     }

@@ -1,9 +1,7 @@
-// this might not be necessary...
-
+import shared from '../shared/shared.js';
 import './utils.js';
 import '../client/components.js';
 import './maps/_metadata.js';
-global.C = window.C;
 
 // serializing messages
 import { unpack, pack } from 'msgpackr';
@@ -12,29 +10,12 @@ import { createCanvas, loadImage } from 'canvas';
 global.canvas = createCanvas(1,1);
 global.ctx = canvas.getContext('2d');
 
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-
 global.defaultMapName = 'hub';
 global.tutorialMapName = 'potb';
 
-global.isServer = true;
-global.window.isServer = true;
+shared.isServer = true;
 
 global.maps = {};
-
-global.spawnPosition = window.spawnPosition;
-global.mapDimensions = window.mapDimensions;
-
-global.window.mouseUpFunctions = [];
-global.window.mouseDownFunctions = [];
-global.window.mouseMoveFunctions = [];
-global.window.resizeFns = [];
-
-window.defaultColors = {tile: '#1b9456',background: '#1fad64'};
-window.colors = {tile: window.defaultColors.tile,background: window.defaultColors.background};
-window.lastColors = {tile: window.defaultColors.tile,background: window.defaultColors.background};
-global.colors = window.colors;
 
 const validPaths = {};
 

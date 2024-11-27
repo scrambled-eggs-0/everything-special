@@ -1,3 +1,4 @@
+import shared from '../shared/shared.js';
 import Utils from './utils.js';
 const { until, environment } = Utils;
 
@@ -9,18 +10,18 @@ let loadingCurrent = false;
 let nextFileName = '';
 let lastFileNameStack = [];
 let forwardFileNameStack = [];
-window.levelFileName = '';
+shared.levelFileName = '';
 
-window.isExClient = true;// TEMP
+shared.isExClient = true;// TEMP
 
 // never get code from server in editor
-if(environment === 'editor' || environment === 'server' || window.isExClient === true){
+if(environment === 'editor' || environment === 'server' || shared.isExClient === true){
     getNextCode = async () => {
         await until(() => { return false; })
     };
     scroll = () => {};
 } else if(location.href.includes('standalone') === true){
-    window.standalone = true;
+    shared.standalone = true;
     const split = location.href.split('/');
     reqUrl += '/' + split[split.length - 1];
     scroll = () => {};
@@ -30,7 +31,7 @@ if(environment === 'editor' || environment === 'server' || window.isExClient ===
         await until(() => {return getNextCodeLoaded !== false});
         return getNextCode();
     };
-    window.tutorial = true;
+    shared.tutorial = true;
     (async () => {
         const exps = await import('./tutorial.js');
         getNextCode = exps.default;
@@ -44,7 +45,7 @@ getNextCode().then(async (code) => {
     nextCode = code;
     replaceScript();
 
-    if(window.standalone === true){
+    if(shared.standalone === true){
         getNextCode = async () => {
             await until(() => { return false; })
         };
@@ -66,24 +67,24 @@ async function scroll(up=false){
     if(up === true){
         if(lastFileNameStack.length === 0) return;
         var lastCode = nextCode;
-        forwardFileNameStack.push(window.levelFileName);
+        forwardFileNameStack.push(shared.levelFileName);
         nextCode = await getLastCode(lastFileNameStack.pop());
-    } else if(window.levelFileName !== ''){
-        lastFileNameStack.push(window.levelFileName);
+    } else if(shared.levelFileName !== ''){
+        lastFileNameStack.push(shared.levelFileName);
         if(lastFileNameStack.length > 42) lastFileNameStack.shift();
         if(forwardFileNameStack.length !== 0) nextCode = await getLastCode(forwardFileNameStack.pop());
     }
 
-    window.scrollingUp = up === true;
-    window.lastObstacles = [];
+    shared.scrollingUp = up === true;
+    shared.lastObstacles = [];
     for(let i = 0; i < obstacles.length; i++){
-        window.lastObstacles.push(obstacles[i]);
+        shared.lastObstacles.push(obstacles[i]);
     }
-    for(let key in window.colors){
-        window.lastColors[key] = window.colors[key];
-        window.colors[key] = window.defaultColors[key];
+    for(let key in shared.colors){
+        shared.lastColors[key] = shared.colors[key];
+        shared.colors[key] = shared.defaultColors[key];
     }
-    window.lastPlayerData = [player.pos.x, player.pos.y];
+    shared.lastPlayerData = [player.pos.x, player.pos.y];
 
     // if we already have the next code
     if(nextCode !== undefined){
@@ -91,7 +92,7 @@ async function scroll(up=false){
         replaceScript();
 
         // animation timer
-        window.scrollAnimation = 0;
+        shared.scrollAnimation = 0;
 
         // fetch new next code
         if(up === true) nextCode = lastCode;
@@ -104,7 +105,7 @@ async function scroll(up=false){
         removeScript();
 
         // animation timer
-        window.scrollAnimation = 0;
+        shared.scrollAnimation = 0;
 
         // code is on its way, wait until it gets here
         await until(nextCodeLoaded, 16.66);
@@ -120,7 +121,7 @@ async function scroll(up=false){
     }
 }
 
-window.won = false;
+shared.won = false;
 async function getNextCode(){
     const response = await fetch(reqUrl);
     if (!response.ok) throw new Error(`Failed to fetch ${reqUrl}`);
@@ -140,7 +141,7 @@ async function getLastCode(fileName){
 async function replaceScript(){
     removeScript();
 
-    window.resetGame();
+    shared.resetGame();
     stopMusic();
 
     const scriptElement = document.createElement('script');
@@ -149,40 +150,40 @@ async function replaceScript(){
     document.body.appendChild(scriptElement);
 
     nextCode = undefined;
-    window.levelFileName = nextFileName;
+    shared.levelFileName = nextFileName;
 }
 
-window.removeScript = function removeScript(){
+shared.removeScript = function removeScript(){
     const last = document.getElementById("gameScript");
     if(last !== null) last.remove();
-    window.resetGame();
+    shared.resetGame();
     stopMusic();
 }
 
-window.resetFns = [];
-window.resetGame = () => {
-    for(let i = 0; i < window.resetFns.length; i++){
-        window.resetFns[i]();
+shared.resetFns = [];
+shared.resetGame = () => {
+    for(let i = 0; i < shared.resetFns.length; i++){
+        shared.resetFns[i]();
     }
-    window.resetFns.length = window.obstacles.length = window.mouseUpFunctions.length = window.mouseDownFunctions.length = window.mouseMoveFunctions.length = window.resizeFns.length = 0;
-    if(window.environment !== 'editor') {window.respawnPlayer(); /*player.renderRadius = player.sat.r;*/ }
-    else {window.infiniteLoop = false;}
-    for(let key in window.defaultColors) { window.colors[key] = window.defaultColors[key]; }
-    if(window.colors.vignette !== undefined) window.colors.vignette = structuredClone(window.defaultColors.vignette);
-    window.mouseDownFunctions.push(() => {
-        if(player.dead === true) window.respawnPlayer();
+    shared.resetFns.length = shared.obstacles.length = shared.mouseUpFunctions.length = shared.mouseDownFunctions.length = shared.mouseMoveFunctions.length = shared.resizeFns.length = 0;
+    if(shared.environment !== 'editor') {shared.respawnPlayer(); /*player.renderRadius = player.sat.r;*/ }
+    else {shared.infiniteLoop = false;}
+    for(let key in shared.defaultColors) { shared.colors[key] = shared.defaultColors[key]; }
+    if(shared.colors.vignette !== undefined) shared.colors.vignette = structuredClone(shared.defaultColors.vignette);
+    shared.mouseDownFunctions.push(() => {
+        if(player.dead === true) shared.respawnPlayer();
     })
-    window.changeCameraScale(1);
-    if(window.addSideMenuEvtListeners !== undefined) window.addSideMenuEvtListeners(nextFileName);
-    window.spawnPosition.x = 100;
-    window.spawnPosition.y = 1500;
-    window.camera.numControlledBy = 0;
-    const player = window.players[window.selfId];
+    shared.changeCameraScale(1);
+    if(shared.addSideMenuEvtListeners !== undefined) shared.addSideMenuEvtListeners(nextFileName);
+    shared.spawnPosition.x = 100;
+    shared.spawnPosition.y = 1500;
+    shared.camera.numControlledBy = 0;
+    const player = shared.players[shared.selfId];
     if(player !== undefined){
         player.sat.r = 49.5;
         player.speed = player.baseSpeed = 0.43;
     }
-    window.idToObs = {};
+    shared.idToObs = {};
 }
 
 export default scroll;

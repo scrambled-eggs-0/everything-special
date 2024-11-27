@@ -21,14 +21,14 @@ Blockly.common.defineBlocks(blocks);
 forBlock['modify_existing'](javascriptGenerator, Blockly);
 Blockly.Msg.MATH_ATAN2_TITLE = 'angle from (0,0) to X:%1 Y:%2';
 Object.assign(javascriptGenerator.forBlock, forBlock);
-window.generator = javascriptGenerator;
+shared.generator = javascriptGenerator;
 
-window.snap = 50;
-window.snapGrid = (val) => {
-  return Math.round(val / window.snap) * window.snap;
+shared.snap = 50;
+shared.snapGrid = (val) => {
+  return Math.round(val / shared.snap) * shared.snap;
 }
 
-window.workspaceLoaded = false;
+shared.workspaceLoaded = false;
 
 const zoom = {
   controls: true,
@@ -69,29 +69,29 @@ const theme = Blockly.Theme.defineTheme('defaultTheme', {
   // 'startHats': true
 });
 
-javascriptGenerator.INFINITE_LOOP_TRAP = 'if(--window.loopTrap == 0){window.onLoopTrap();throw "Infinite loop!";}\n';
-window.onLoopTrap = () => {
-  // if(!!confirm("Infinite loop detected. Would you like to undo?")) // newUndoShortcut.callback(window.ws);
-  window.infiniteLoop = true;
+javascriptGenerator.INFINITE_LOOP_TRAP = 'if(--shared.loopTrap == 0){shared.onLoopTrap();throw "Infinite loop!";}\n';
+shared.onLoopTrap = () => {
+  // if(!!confirm("Infinite loop detected. Would you like to undo?")) // newUndoShortcut.callback(shared.ws);
+  shared.infiniteLoop = true;
   alert("Infinite loop detected. Code execution paused.");
 }
 function getCode(){
   return javascriptGenerator.workspaceToCode(ws);//.replaceAll('var ', 'let ');
 }
-window.getCode = getCode;
+shared.getCode = getCode;
 
-let runCode = window.runCode = () => {
-  window.loopTrap = 1000;
+let runCode = shared.runCode = () => {
+  shared.loopTrap = 1000;
 
   const code = getCode();
 
-  window.resetGame();
-  window.hasLoadedNewMusic = false;
+  shared.resetGame();
+  shared.hasLoadedNewMusic = false;
 
   eval(code);
 
-  if(window.hasLoadedNewMusic === false){
-    window.stopMusic();
+  if(shared.hasLoadedNewMusic === false){
+    shared.stopMusic();
   }
 
   return code;
@@ -112,20 +112,20 @@ if(location.origin === 'http://localhost:8080'){
 }
 
 const messageText = document.getElementById('messagetext');
-window.alert = (msg, toFade=true) => {
+shared.alert = (msg, toFade=true) => {
   messageText.innerText = msg;
   messageText.style.opacity = "1";
-  if(toFade === true) window.fadeAlert();
+  if(toFade === true) shared.fadeAlert();
 }
 
-window.fadeAlert = () => {
+shared.fadeAlert = () => {
   messageText.style.opacity = "0";
   messageText.style.animation = 'none';
   messageText.offsetHeight; /* trigger reflow */
   messageText.style.animation = "fadeOut 3s ease-in-out 1";
 }
 
-const ws = window.ws = Blockly.inject(blocklyDiv, {toolbox, zoom, theme});
+const ws = shared.ws = Blockly.inject(blocklyDiv, {toolbox, zoom, theme});
 load(ws);
 
 runCode();
@@ -154,41 +154,41 @@ ws.addChangeListener((e) => {
 
 const publishBtn = document.getElementById('publish');
 publishBtn.onclick = () => {
-  if(window.infiniteLoop === true) {alert('Cannot upload because there is an infinite loop!'); return;}
+  if(shared.infiniteLoop === true) {alert('Cannot upload because there is an infinite loop!'); return;}
   let hasWinpad = false;
-  for(let i = 0; i < window.obstacles.length; i++){
-    if(window.obstacles[i].isWinpad === true) { hasWinpad = true; break; }
+  for(let i = 0; i < shared.obstacles.length; i++){
+    if(shared.obstacles[i].isWinpad === true) { hasWinpad = true; break; }
   }
   if(hasWinpad === false) { alert('You must add an obstacle with the "winpad" effect before you can upload!'); return; }
   if(confirm('Ready to publish?') !== true) return;
   alert('To prove your level is possible, you must clear it before uploading. Good Luck!');
-  window.enterClearCheckMode();
+  shared.enterClearCheckMode();
 }
 
 let username = localStorage.getItem('username');
 let hashedPassword = localStorage.getItem('hashedPassword');
 
 const uploadUrl = `${location.origin}/upload`;
-window.uploadCode = () => {
+shared.uploadCode = () => {
   // direct user to login page if we don't have a saved username
   if(username === null){
-    const childWindowOrigin = `${location.origin}/account`;
+    const childsharedOrigin = `${location.origin}/account`;
 
-    const loginWindow = document.createElement('iframe');
-    loginWindow.src = childWindowOrigin;
-    loginWindow.classList.add('loginWindow');
+    const loginshared = document.createElement('iframe');
+    loginshared.src = childsharedOrigin;
+    loginshared.classList.add('loginshared');
     const handleMessage = function(event) {
       if (event.origin === location.origin) {
-        loginWindow.remove();
-        window.removeEventListener('message', handleMessage);
+        loginshared.remove();
+        shared.removeEventListener('message', handleMessage);
         username = localStorage.getItem('username');
         hashedPassword = localStorage.getItem('hashedPassword');
-        window.uploadCode();
+        shared.uploadCode();
       }
     }
     window.addEventListener('message', handleMessage);
 
-    document.body.appendChild(loginWindow);
+    document.body.appendChild(loginshared);
 
     return;
   }
@@ -224,21 +224,21 @@ window.uploadCode = () => {
 
 import './createMode.js';
 
-window.requestIdleCallback(() => {
+shared.requestIdleCallback(() => {
   // overriding the duplicate function 
   const PASTE = Blockly.ShortcutItems.names.PASTE;
   const oldPasteShortcut = Blockly.ShortcutRegistry.registry.getRegistry()[PASTE];
   const newPasteShortcut = {
     ...oldPasteShortcut,
     callback(workspace) {
-      if(window.inClearCheckMode === true) return false;
-      window.onWorkspaceLoadFunctions.length = 0;
-      window.workspaceLoaded = false;
-      window.importNeedsStructuredClone = true;
+      if(shared.inClearCheckMode === true) return false;
+      shared.onWorkspaceLoadFunctions.length = 0;
+      shared.workspaceLoaded = false;
+      shared.importNeedsStructuredClone = true;
       const returnVal = oldPasteShortcut.callback.call(this, workspace);
-      window.workspaceLoaded = true;
-      delete window.importNeedsStructuredClone;
-      for(let i = 0; i < window.onWorkspaceLoadFunctions.length; i++) window.onWorkspaceLoadFunctions[i]();
+      shared.workspaceLoaded = true;
+      delete shared.importNeedsStructuredClone;
+      for(let i = 0; i < shared.onWorkspaceLoadFunctions.length; i++) shared.onWorkspaceLoadFunctions[i]();
       return returnVal;
     }
   }
@@ -249,20 +249,20 @@ window.requestIdleCallback(() => {
   const newUndoShortcut = {
     ...oldUndoShortcut,
     callback(workspace) {
-      if(window.inClearCheckMode === true) return false;
-      window.onWorkspaceLoadFunctions.length = 0;
-      const toWSUnload = window.ws.undoStack_[window.ws.undoStack_.length-1]?.type === 'delete';
-      if(toWSUnload === true) window.workspaceLoaded = false;
-      window.importNeedsStructuredClone = true;
+      if(shared.inClearCheckMode === true) return false;
+      shared.onWorkspaceLoadFunctions.length = 0;
+      const toWSUnload = shared.ws.undoStack_[shared.ws.undoStack_.length-1]?.type === 'delete';
+      if(toWSUnload === true) shared.workspaceLoaded = false;
+      shared.importNeedsStructuredClone = true;
       const returnVal = oldUndoShortcut.callback.call(this, workspace);
-      if(toWSUnload === true) window.workspaceLoaded = true;
-      delete window.importNeedsStructuredClone;
-      for(let i = 0; i < window.onWorkspaceLoadFunctions.length; i++) window.onWorkspaceLoadFunctions[i]();
+      if(toWSUnload === true) shared.workspaceLoaded = true;
+      delete shared.importNeedsStructuredClone;
+      for(let i = 0; i < shared.onWorkspaceLoadFunctions.length; i++) shared.onWorkspaceLoadFunctions[i]();
       return returnVal;
     }
   }
   Blockly.ShortcutRegistry.registry.register(newUndoShortcut, /*allowOverrides:*/ true);
-  window.undoShortcut = newUndoShortcut.callback;
+  shared.undoShortcut = newUndoShortcut.callback;
 
   // removing the duplicate function from the menu
   Blockly.ContextMenuRegistry.registry.unregister('blockDuplicate');

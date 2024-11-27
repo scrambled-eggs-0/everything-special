@@ -79,7 +79,7 @@ ok so this is what i'll do in order:
 - sync map system. When you enter a map that another player is in, they send the state 
     - also when dt > 1000 refetch map
 - fix all bugs with current maps
-    - remove eval(str), make all maps just a series of C() calls
+    - remove eval(str), make all maps just a series of shared.C() calls
     - grapple and deathtimer and other powerups should be removed when transitioning between maps (on client and server) and weird bug w/ deathTimer = 5000 when entering and exiting maps with deathtimer in hub
 - get omni back up and running
 - map editor w/ custom code (resizable bar like leetcode)
@@ -90,7 +90,7 @@ ok so this is what i'll do in order:
 - trailer (should be working on continuously for like an hour a day)
 - make server not load maps
 - anticheat, load testing, security
-    - also clean up code, idk if there will be any other examples but window.resizeElements taking an array should b changed ✅
+    - also clean up code, idk if there will be any other examples but shared.resizeElements taking an array should b changed ✅
     - players should simulate other players, get some bonus if they catch hackers (to incentivise)
 
 // 3d system design. Had to design it now because im designing the tutorial and we shouldnt make 2 diff systems

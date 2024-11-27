@@ -1,4 +1,5 @@
-window.mouse = {
+import shared from '../shared/shared.js';
+shared.mouse = {
     screen: {
         x: -1,
         y: -1
@@ -9,17 +10,17 @@ window.mouse = {
     }
 }
 
-window.mouseX = -1;
-window.mouseY = -1;
-window.scrollLocked = false;
-window.mouseDownFunctions = [];
-window.mouseMoveFunctions = [];
-window.mouseUpFunctions = [];
-window.mouseOut = false;
-window.pageX = -1;
-window.pageY = -1;
+shared.mouseX = -1;
+shared.mouseY = -1;
+shared.scrollLocked = false;
+shared.mouseDownFunctions = [];
+shared.mouseMoveFunctions = [];
+shared.mouseUpFunctions = [];
+shared.mouseOut = false;
+shared.pageX = -1;
+shared.pageY = -1;
 
-window.dragging = false;
+shared.dragging = false;
 
 window.onmousedown = (e) => {}
 
@@ -45,7 +46,7 @@ const Controls = {
     KeyY: 'action1'
 };
 
-window.input = {
+shared.input = {
     up: false,
     down: false,
     left: false,
@@ -70,38 +71,39 @@ function handleKey(e){
         if(e.type === 'keydown' && e.code === 'Enter'){
             let msg = chat.value.trim();
             if(msg === '/reset'){
-                window.changeMap('/maps/hub');
+                shared.changeMap('/maps/hub');
             }
-            else if(msg.slice(0,6) === '/tpmap'){
-                window.changeMap(`/maps/` + msg.slice(7).toLowerCase());
+            else if(shared.isProd === true){
+                if(msg.slice(0,6) === '/tpmap'){
+                    shared.changeMap(`/maps/` + msg.slice(7).toLowerCase());
+                }
+                else if(msg.slice(0,6) === '/scale'){
+                    const num = parseFloat(msg.slice(7));
+                    shared.changeCameraScale(num);
+                }
+                else if(msg.slice(0,4) === '/map'){
+                    shared.initImportMap(msg.slice(5));
+                }
             }
-            else if(msg.slice(0,6) === '/scale'){
-                const num = parseFloat(msg.slice(7));
-                changeCameraScale(num);
-            }
-            else if(msg.slice(0,4) === '/map'){
-                window.initImportMap(msg.slice(5));
-            }
-            // TEMP PLEASE REMOVE
-            else if(window.zones !== undefined && msg.slice(0,7).toLowerCase() === '/tpzone'){
+            else if(shared.zones !== undefined && msg.slice(0,7).toLowerCase() === '/tpzone'){
                 const num = parseInt(msg.slice(8));
-                for(let i = 0; i < window.zones.length; i++){
-                    if(window.zones[i].zone === num){
-                        window.players[window.selfId].pos.x = window.zones[i].x;
-                        window.players[window.selfId].pos.y = window.zones[i].y;
+                for(let i = 0; i < shared.zones.length; i++){
+                    if(shared.zones[i].zone === num){
+                        shared.players[shared.selfId].pos.x = shared.zones[i].x;
+                        shared.players[shared.selfId].pos.y = shared.zones[i].y;
                         break;
                     }
                 }
             }
             else if(msg.length !== 0){
-                msg = window.username + ': ' + msg;
+                msg = shared.username + ': ' + msg;
                 const buf = new Uint8Array(msg.length + 2);
                 buf[0] = 7;// type 0 - set username and join game
                 // ['normal', 'system', 'dev', 'guest']
-                if(window.players[window.selfId].dev === true) buf[1] = 2;
-                else if(window.players[window.selfId].guest === true) buf[1] = 3; 
+                if(shared.players[shared.selfId].dev === true) buf[1] = 2;
+                else if(shared.players[shared.selfId].guest === true) buf[1] = 3; 
                 encodeAtPosition(msg, buf, 2);
-                send(buf);
+                shared.send(buf);
             }
             chat.value = '';
             chat.blur();
@@ -113,15 +115,15 @@ function handleKey(e){
         if (e.repeat) return e.preventDefault();
 
         if(e.type === 'keydown'){
-            if(e.code === 'KeyO' && window.players[window.selfId].dev === true){
-                window.players[window.selfId].god = !window.players[window.selfId].god;
+            if(e.code === 'KeyO' && shared.isProd === false && shared.players[shared.selfId].dev === true){
+                shared.players[shared.selfId].god = !shared.players[shared.selfId].god;
                 const buf = new Uint8Array(2);
                 buf[0] = 8;
-                buf[1] = window.players[window.selfId].god;
-                send(buf);
+                buf[1] = shared.players[shared.selfId].god;
+                shared.send(buf);
                 return e.preventDefault();
-            } else if(e.code === 'KeyR' && window.players[window.selfId].dead === true){
-                window.respawnPlayer();
+            } else if(e.code === 'KeyR' && shared.players[shared.selfId].dead === true){
+                shared.respawnPlayer();
             } else if(e.code === 'Enter'){
                 chatOpen = true;
                 chatDiv.classList.remove('hidden');
@@ -145,20 +147,20 @@ function handleKey(e){
                     // }
                 }
                 zenMode = !zenMode;
-            } else if (e.code === 'KeyU'){
-                window.renderDebug = !window.renderDebug;
+            } else if (e.code === 'KeyU' && shared.isProd === false){
+                shared.renderDebug = !shared.renderDebug;
             }
         }
 
         if (Controls[e.code] != undefined) {
-            window.input[Controls[e.code]] = e.type === 'keydown';
+            shared.input[Controls[e.code]] = e.type === 'keydown';
             e.preventDefault();
         }
     }
 }
 
 let importMapFn;
-window.initImportMap = async (str) => {
+shared.initImportMap = async (str) => {
     if(importMapFn === undefined) importMapFn = (await import('./extras/importMap.js')).default;
     importMapFn(str);
 }

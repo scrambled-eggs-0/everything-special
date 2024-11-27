@@ -1,4 +1,5 @@
-const mapDifficulties = window.mapDifficulties = Object.freeze({
+import shared from '../../shared/shared.js';
+shared.mapDifficulties = Object.freeze({
     popb: 0.2,
     poca: 1.2,
     pospd: 2.8,

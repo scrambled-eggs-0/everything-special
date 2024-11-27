@@ -13,7 +13,7 @@
 // }
 // emojis.push(["\u2705", "\u2705"], ["\u26C5", "\u26C5"], ["\u{1F300}", "\u{1F300}"]);
 
-const decoPaths = [window.jewelBoxUrl, 'arrow.png', 'https://static.wikia.nocookie.net/geometry-dash/images/0/01/RegularBlock01.png'];
+const decoPaths = [shared.jewelBoxUrl, 'arrow.png', 'https://static.wikia.nocookie.net/geometry-dash/images/0/01/RegularBlock01.png'];
 const decoOptions = []; 
 if(typeof location !== 'undefined'){
   for(let i = 0; i < decoPaths.length; i++){
@@ -33,7 +33,7 @@ if(typeof location !== 'undefined'){
     decoOptions.push(['[unloaded image]', decoPaths[i]]);
   }
 }
-const getDecoOptions = ()=>{if(decoOptions.length === 0){return [[{src: window.jewelBoxUrl, width: 50, height: 50, alt: 'jewelBox'}, window.jewelBoxUrl]]}return decoOptions};
+const getDecoOptions = ()=>{if(decoOptions.length === 0){return [[{src: shared.jewelBoxUrl, width: 50, height: 50, alt: 'jewelBox'}, shared.jewelBoxUrl]]}return decoOptions};
 
 export default {
   blockData: [
@@ -501,18 +501,18 @@ export default {
           this.setPreviousStatement(true, null);
 
           this.shapeOptions = [];
-          for(let i = 0; i < window.satMapI2N.length; i++){
-            this.shapeOptions.push([window.satMapI2N[i], i.toString()]);
+          for(let i = 0; i < shared.satMapI2N.length; i++){
+            this.shapeOptions.push([shared.satMapI2N[i], i.toString()]);
           }
 
           this.simulateOptions = [];
-          for(let i = 0; i < window.simulateMapI2N.length; i++){
-            this.simulateOptions.push([window.simulateMapI2N[i], i.toString()]);
+          for(let i = 0; i < shared.simulateMapI2N.length; i++){
+            this.simulateOptions.push([shared.simulateMapI2N[i], i.toString()]);
           }
 
           this.effectOptions = [];
-          for(let i = 0; i < window.effectMapI2N.length; i++){
-            this.effectOptions.push([window.effectMapI2N[i], i.toString()]);
+          for(let i = 0; i < shared.effectMapI2N.length; i++){
+            this.effectOptions.push([shared.effectMapI2N[i], i.toString()]);
           }
 
           this.numSimulateFields = this.numEffectFields = this.shapeIdGenerator = this.simulateIdGenerator = this.effectIdGenerator = 0;
@@ -529,11 +529,11 @@ export default {
 
           this.appendDummyInput("NUM_SIMULATES_CONTAINER")
             .appendField("number of simulates")
-            .appendField(new Blockly.FieldNumber(0, 0, window.simulateMapI2N.length, 1, this.validateNumberOfSimulatesDropdown), 'NUM_SIMULATES_DROPDOWN');
+            .appendField(new Blockly.FieldNumber(0, 0, shared.simulateMapI2N.length, 1, this.validateNumberOfSimulatesDropdown), 'NUM_SIMULATES_DROPDOWN');
 
           this.appendDummyInput("NUM_EFFECTS_CONTAINER")
             .appendField("number of effects")
-            .appendField(new Blockly.FieldNumber(1, 1, window.effectMapI2N.length, 1, this.validateNumberOfEffectsDropdown), 'NUM_EFFECTS_DROPDOWN');
+            .appendField(new Blockly.FieldNumber(1, 1, shared.effectMapI2N.length, 1, this.validateNumberOfEffectsDropdown), 'NUM_EFFECTS_DROPDOWN');
 
           // this.appendDummyInput()
           //   .appendField("tick function:");
@@ -567,7 +567,7 @@ export default {
         },
 
         updateNumberOfSimulatesDropdown: function(newValue) {
-          if(window.workspaceLoaded === false) return;
+          if(shared.workspaceLoaded === false) return;
 
           // remove existing
           for(let i = 0; i < this.numSimulateFields; i++){
@@ -583,8 +583,8 @@ export default {
           this.simulateParamToId = {};
 
           this.simulateOptions = [];
-          for(let i = 0; i < window.simulateMapI2N.length; i++){
-            this.simulateOptions.push([window.simulateMapI2N[i], i.toString()]);
+          for(let i = 0; i < shared.simulateMapI2N.length; i++){
+            this.simulateOptions.push([shared.simulateMapI2N[i], i.toString()]);
           }
 
           let insertionIndex = this.getIndexOfInput(`NUM_SIMULATES_CONTAINER`) + 1;
@@ -615,7 +615,7 @@ export default {
         },
 
         updateNumberOfEffectsDropdown: function(newValue) {
-          if(window.workspaceLoaded === false) return;
+          if(shared.workspaceLoaded === false) return;
           // remove existing
           for(let i = 0; i < this.numEffectFields; i++){
             this.removeInput(`EFFECT_CONTAINER${i}`, true);
@@ -631,8 +631,8 @@ export default {
           this.effectParamToId = {};
 
           this.effectOptions = [];
-          for(let i = 0; i < window.effectMapI2N.length; i++){
-            this.effectOptions.push([window.effectMapI2N[i], i.toString()]);
+          for(let i = 0; i < shared.effectMapI2N.length; i++){
+            this.effectOptions.push([shared.effectMapI2N[i], i.toString()]);
           }
 
           let insertionIndex = this.getIndexOfInput(`NUM_EFFECTS_CONTAINER`) + 1;
@@ -663,13 +663,13 @@ export default {
         },
 
         updateShapeDropdown: function(newValue) {
-          if(window.workspaceLoaded === false) return;
-          // if(window.blocklyLoaded !== true) return;
+          if(shared.workspaceLoaded === false) return;
+          // if(shared.blocklyLoaded !== true) return;
           // return; // TODO: get this working with serialization. possibly set the value of num_simulates so that fields can be pre-appended?
           let oldValue = this.getFieldValue("SHAPE_DROPDOWN");
 
-          const oldValueMap = window.satDefaultMap[oldValue];
-          const newValueMap = window.satDefaultMap[newValue];
+          const oldValueMap = shared.satDefaultMap[oldValue];
+          const newValueMap = shared.satDefaultMap[newValue];
 
           if(oldValueMap !== undefined) {
             for(let key in oldValueMap){
@@ -700,14 +700,14 @@ export default {
         },
 
         updateSimulateDropdown: function(newValue, dropdownId) {
-          if(window.workspaceLoaded === false) return this.getIndexOfInput(`SIMULATE_CONTAINER${dropdownId}`) + 1;
+          if(shared.workspaceLoaded === false) return this.getIndexOfInput(`SIMULATE_CONTAINER${dropdownId}`) + 1;
           let oldValue = this.getFieldValue(`SIMULATE_DROPDOWN${dropdownId}`);
 
-          if(oldValue !== undefined && oldValue !== null) this.simulateOptions[oldValue] = [window.simulateMapI2N[oldValue], oldValue.toString()];
+          if(oldValue !== undefined && oldValue !== null) this.simulateOptions[oldValue] = [shared.simulateMapI2N[oldValue], oldValue.toString()];
           this.simulateOptions[newValue] = null;
 
-          const oldValueMap = window.simulateDefaultMap[oldValue];
-          const newValueMap = window.simulateDefaultMap[newValue];
+          const oldValueMap = shared.simulateDefaultMap[oldValue];
+          const newValueMap = shared.simulateDefaultMap[newValue];
 
           if(oldValueMap !== undefined) {
             for(let key in oldValueMap){
@@ -751,14 +751,14 @@ export default {
         },
 
         updateEffectDropdown: function(newValue, dropdownId) {
-          if(window.workspaceLoaded === false) return this.getIndexOfInput(`EFFECT_CONTAINER${dropdownId}`) + 1;
+          if(shared.workspaceLoaded === false) return this.getIndexOfInput(`EFFECT_CONTAINER${dropdownId}`) + 1;
           let oldValue = this.getFieldValue(`EFFECT_DROPDOWN${dropdownId}`);
 
-          if(oldValue !== undefined && oldValue !== null) this.effectOptions[oldValue] = [window.effectMapI2N[oldValue], oldValue.toString()];
+          if(oldValue !== undefined && oldValue !== null) this.effectOptions[oldValue] = [shared.effectMapI2N[oldValue], oldValue.toString()];
           this.effectOptions[newValue] = null;
 
-          const oldValueMap = window.effectDefaultMap[oldValue];
-          const newValueMap = window.effectDefaultMap[newValue];
+          const oldValueMap = shared.effectDefaultMap[oldValue];
+          const newValueMap = shared.effectDefaultMap[newValue];
 
           if(oldValueMap !== undefined) {
             for(let key in oldValueMap){
@@ -847,9 +847,9 @@ export default {
         
         loadExtraState: function(state) {
           if(this.isInsertionMarker() === true) { this.sditk = state.sditk; this.editk = state.editk; };
-          if(window.workspaceLoaded === true) return;
+          if(shared.workspaceLoaded === true) return;
 
-          if(window.importNeedsStructuredClone !== undefined){
+          if(shared.importNeedsStructuredClone !== undefined){
             state.shapeParamToId = structuredClone(state.shapeParamToId);
             state.simulateParamToId = structuredClone(state.simulateParamToId);
             state.effectParamToId = structuredClone(state.effectParamToId);
@@ -864,7 +864,7 @@ export default {
 
             this.shapeIdGenerator = state.lastShapeIdGen - Object.keys(this.shapeParamToId).length;
 
-            const params = window.satDefaultMap[state.lastShape];
+            const params = shared.satDefaultMap[state.lastShape];
             
             for(let key in newValueMap){
               const id = newValueMap[key];
@@ -985,7 +985,7 @@ export default {
 
           const block = this;
 
-          window.onWorkspaceLoadFunctions.push(() => {
+          shared.onWorkspaceLoadFunctions.push(() => {
             for(let i = 0; i < simulateOptionsToNull.length; i++){
               block.simulateOptions[simulateOptionsToNull[i]] = null;
             }
@@ -1016,7 +1016,7 @@ export default {
         validateIdDropdown: function(newValue) {
           if(this.selectedOption[1] === newValue) return newValue;
           const block = this.getSourceBlock();
-          if(newValue === 'this' && window.workspaceLoaded === true){
+          if(newValue === 'this' && shared.workspaceLoaded === true){
             block.setInputsInline(false);
             block.removeInput("ID", true);
 
@@ -1035,7 +1035,7 @@ export default {
             block.appendValueInput("ID")
               .appendField('delete ', 'PREFIX1')
               .appendField(new Blockly.FieldDropdown([["obstacle with id", "id"],["this obstacle", "this"]], block.validateIdDropdown), 'ID_DROPDOWN')
-              .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(Object.keys(window.idToObs)[0] ?? "No obstacles with [id] simulate type found")));
+              .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(Object.keys(shared.idToObs)[0] ?? "No obstacles with [id] simulate type found")));
             block.setInputsInline(true);
             block.inputList.unshift(block.inputList.pop());
           }
@@ -1073,7 +1073,7 @@ export default {
         validateIdDropdown: function(newValue) {
           if(this.selectedOption[1] === newValue) return newValue;
           const block = this.getSourceBlock();
-          if(newValue === 'this' && window.workspaceLoaded === true){
+          if(newValue === 'this' && shared.workspaceLoaded === true){
             block.setInputsInline(false);
             block.removeInput("ID", true);
 
@@ -1092,7 +1092,7 @@ export default {
             block.appendValueInput("ID")
               .appendField('get ', 'PREFIX1')
               .appendField(new Blockly.FieldDropdown([["obstacle with id", "id"],["this obstacle", "this"]], block.validateIdDropdown), 'ID_DROPDOWN')
-              .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(Object.keys(window.idToObs)[0] ?? "No obstacles with [id] simulate type found")));
+              .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(Object.keys(shared.idToObs)[0] ?? "No obstacles with [id] simulate type found")));
             block.setInputsInline(true);
             block.inputList.unshift(block.inputList.pop());
           }
@@ -1138,7 +1138,7 @@ export default {
         validateIdDropdown: function(newValue) {
           if(this.selectedOption[1] === newValue) return newValue;
           const block = this.getSourceBlock();
-          if(newValue === 'this' && window.workspaceLoaded === true){
+          if(newValue === 'this' && shared.workspaceLoaded === true){
             block.setInputsInline(false);
             block.removeInput("ID", true);
 
@@ -1157,7 +1157,7 @@ export default {
             block.appendValueInput("ID")
               .appendField('set ', 'PREFIX1')
               .appendField(new Blockly.FieldDropdown([["obstacle with id", "id"],["this obstacle", "this"]], block.validateIdDropdown), 'ID_DROPDOWN')
-              .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(Object.keys(window.idToObs)[0] ?? "No obstacles with [id] simulate type found")));
+              .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(Object.keys(shared.idToObs)[0] ?? "No obstacles with [id] simulate type found")));
             block.setInputsInline(true);
             block.inputList.unshift(block.inputList.pop());
           }
@@ -1178,13 +1178,13 @@ export default {
 
           this.appendValueInput("ID2")
             .appendField(' with obstacle with id ', 'BETWEEN')
-            .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(Object.keys(window.idToObs)[0] ?? "No obstacles with [id] simulate type found")))
+            .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(Object.keys(shared.idToObs)[0] ?? "No obstacles with [id] simulate type found")))
             .setCheck("String");
           
           this.lastColType = 'bound';
 
           this.setInputsInline(true);
-          if(window.workspaceLoaded === false) {
+          if(shared.workspaceLoaded === false) {
             this.setOutput(true);
           }
           this.setNextStatement(true, null);
@@ -1193,7 +1193,7 @@ export default {
 
         updateColType: function(newValue){
           const block = this.getSourceBlock();
-          if(window.workspaceLoaded === true)block.unplug(true);
+          if(shared.workspaceLoaded === true)block.unplug(true);
           if(newValue === 'bound'){
             block.setNextStatement(true, null);
             block.setPreviousStatement(true, null);
@@ -1217,7 +1217,7 @@ export default {
           block.removeInput("ID", true);
           block.removeInput("ID2", true);
 
-          const keys = Object.keys(window.idToObs);
+          const keys = Object.keys(shared.idToObs);
 
           if(newValue === 'id'){
             block.appendValueInput("ID")
@@ -1424,7 +1424,7 @@ export default {
   ]
 }
 
-window.generateShadowBlock = (value) => {
+shared.generateShadowBlock = (value) => {
   // see https://blockly-demo.appspot.com/static/demos/code/index.html for xml decoding
   const type = typeof value;
   if(type === 'number'){
@@ -1488,7 +1488,7 @@ function generateParameterDropdownOptions(childBlock, isPlug=false, id="NO_ID"){
     // yes, id is dynamic meaning evaluating it at compile time won't always be accurate.
     // However, blockly and post evades-x has always been about optimizing for the 95%,
     // even if it makes the 5% harder.
-    const allBlocks = window.ws.getAllBlocks();
+    const allBlocks = shared.ws.getAllBlocks();
     for(let i = 0; i < allBlocks.length; i++){
       if(allBlocks[i].obstacleId === id){
         block = allBlocks[i];
@@ -1496,11 +1496,11 @@ function generateParameterDropdownOptions(childBlock, isPlug=false, id="NO_ID"){
       }
     }
   } else {
-    if(isPlug === false) block = window.getParentBlockOfType(childBlock);///*.getSourceBlock()*/.getSurroundParent();
+    if(isPlug === false) block = shared.getParentBlockOfType(childBlock);///*.getSourceBlock()*/.getSurroundParent();
     else {
       let firstParent = childBlock.getParent();
       if(firstParent === null) return [['x', 'x'], ['y', 'y']];
-      block = window.getParentBlockOfType(firstParent);
+      block = shared.getParentBlockOfType(firstParent);
     }
   }
   
@@ -1537,8 +1537,8 @@ function generateParameterDropdownOptions(childBlock, isPlug=false, id="NO_ID"){
     }
   }
 
-  window.C(shape, simulates, effects, params);
-  const o = window.obstacles.pop();
+  shared.shared.C(shape, simulates, effects, params);
+  const o = shared.obstacles.pop();
 
   const arr = [['x', 'x'], ['y', 'y']];
   if(shape === 0) arr.push(['radius', 'sat.r']);
@@ -1555,7 +1555,7 @@ function generateParameterDropdownOptions(childBlock, isPlug=false, id="NO_ID"){
   return arr;
 }
 
-window.getParentBlockOfType = (block, type='create_obstacle') => {
+shared.getParentBlockOfType = (block, type='create_obstacle') => {
   let parent = block.getSurroundParent();
   let lastParent = block;
   while(parent !== null){

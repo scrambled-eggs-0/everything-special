@@ -1,14 +1,18 @@
-if(window.isServer !== true){
+window.loadMap((shared)=>{
+    const md = (a) => {return a;}
+    const {C, colors, spawnPosition, mapDimensions, camera, generateDimensions, difficultyImageColors, difficultyImageMap, blendColor, changeCameraScale, players, generateTopLeftCoordinates, input, simulateMapI2N, effectMapI2N} = shared;
+    let {obstacles} = shared;
+    let counter = 10000;
+    let selfId = shared.selfId;
 
-var or = window.render; window.render = (...params) => {
+var or = shared.render; shared.render = (...params) => {
     or(...params);
-    const p = window.players[window.selfId];
+    selfId = shared.selfId;
+    const p = shared.players[shared.selfId];
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 1000;
     ctx.strokeRect(-1000/2,-1000/2,canvas.w+1000,canvas.h+1000);
 }
-
-var counter = 10000;// add 1000 for every new map so color changers dont conflict
 
 var obs = [
     {
@@ -333,11 +337,12 @@ var obs = [
 ]
 
 var dt = 1000 / 60;
-window.time = window.frames / 60;
+shared.time = window.frames / 60;
+let time = shared.time;
 
 var mainSafeCollided=false;
 var thisFrameCol=false;
-C(2,[],[11],{x:0,y:0,points:[
+shared.C(2,[],[11],{x:0,y:0,points:[
     [
         9525,
         2900
@@ -373,7 +378,7 @@ C(2,[],[11],{x:0,y:0,points:[
 ], sf:()=>{
     mainSafeCollided = thisFrameCol;
     thisFrameCol = false;
-    window.time = window.frames / 60;
+    time = shared.time = window.frames / 60;
 }, cr:(o)=>{
     ctx.beginPath();
     o.renderShape(o);
@@ -385,7 +390,7 @@ C(2,[],[11],{x:0,y:0,points:[
 // remove custom render
 obstacles[obstacles.length-1].effect.push(()=>{thisFrameCol = true;});
 
-// C(0,[],[20], {
+// shared.C(0,[],[20], {
 //     x: 9600, y: 3100,
 //     r: 50,
 //     hex: '#000000',
@@ -429,21 +434,21 @@ obstacles[obstacles.length-1].effect.push(()=>{thisFrameCol = true;});
 // 3: "text"
 // 4: "circleSlice"
 
-// C(0,[],[1], {
+// shared.C(0,[],[1], {
 //     x: 9350, y: 3000, r: 50,
 //     collidable: false
 // })
 
-// C(0,[],[0], {
+// shared.C(0,[],[0], {
 //     x: 9850, y: 3050, r: 50
 // })
 
-// C(0,[],[12], {
+// shared.C(0,[],[12], {
 //     x: 9600, y: 3350, r: 50,
 //     tpx: 9600, tpy: 3100
 // })
 
-// C(0,[],[2], {
+// shared.C(0,[],[2], {
 //     x: 9650, y: 2850, r: 50,
 //     bounciness: 1, decay: 0.98
 // })
@@ -468,15 +473,15 @@ obstacles[obstacles.length-1].effect.push(()=>{thisFrameCol = true;});
 
 //         const shapeOptions = [0,1,2,4];
 //         const shape = shapeOptions[Math.floor(Math.random() * shapeOptions.length)];
-//         const shapeDefaults = window.satDefaultMap[shape];
+//         const shapeDefaults = shared.satDefaultMap[shape];
 
 //         // let simulate = '';
 //         // let simulateDefaults = {};
 //         // while(Math.random() < 0.1){
-//         //     const newSimulate = Math.floor(Math.random() * (window.simulateDefaultMap.length - 1));
+//         //     const newSimulate = Math.floor(Math.random() * (shared.simulateDefaultMap.length - 1));
 //         //     simulate += newSimulate + ',';
-//         //     for(let key in window.simulateDefaultMap[newSimulate]){
-//         //         simulateDefaults[key] = window.simulateDefaultMap[newSimulate][key];
+//         //     for(let key in shared.simulateDefaultMap[newSimulate]){
+//         //         simulateDefaults[key] = shared.simulateDefaultMap[newSimulate][key];
 //         //     }
 //         // }
 
@@ -487,11 +492,11 @@ obstacles[obstacles.length-1].effect.push(()=>{thisFrameCol = true;});
 //             freebie = false;
 //             let newEffect;
 //             do {
-//                 newEffect = Math.floor(Math.random() * window.effectDefaultMap.length);
+//                 newEffect = Math.floor(Math.random() * shared.effectDefaultMap.length);
 //             } while(excludedEffects.includes(newEffect))
 //             effect += newEffect + ',';
-//             for(let key in window.effectDefaultMap[newEffect]){
-//                 effectDefaults[key] = window.effectDefaultMap[newEffect][key];
+//             for(let key in shared.effectDefaultMap[newEffect]){
+//                 effectDefaults[key] = shared.effectDefaultMap[newEffect][key];
 //             }
 //         }
 
@@ -508,7 +513,7 @@ obstacles[obstacles.length-1].effect.push(()=>{thisFrameCol = true;});
 
 //         }
 
-//         randStr += `C(${shape},[],[${effect}],${JSON.stringify(obj)})\n`;
+//         randStr += `shared.C(${shape},[],[${effect}],${JSON.stringify(obj)})\n`;
 //     }
     
 // }
@@ -566,7 +571,8 @@ function rotatePts(pts){
     });
 }
 
-window.obsArr = [];
+shared.obsArr = [];
+const obsArr = shared.obsArr;
 function createAtPos(effectName, shape=randomShape(), simulateName=undefined, extraParams=undefined){
     let effect = effectMapN2I[effectName];
     let simulate = simulateName === undefined ? undefined : simulateMapN2I[simulateName];
@@ -613,9 +619,9 @@ function createAtPos(effectName, shape=randomShape(), simulateName=undefined, ex
         }
     }
 
-    params = {...params, ...window.effectDefaultMap[effect], x, y};
+    params = {...params, ...shared.effectDefaultMap[effect], x, y};
     if(simulate !== undefined){
-        params = {...params, ...window.simulateDefaultMap[simulate]};
+        params = {...params, ...shared.simulateDefaultMap[simulate]};
     }
 
     if(extraParams !== undefined){
@@ -624,8 +630,8 @@ function createAtPos(effectName, shape=randomShape(), simulateName=undefined, ex
         }
     }
 
-    const add2str = `C(${shape},[${simulate === undefined ? '' : simulate}],[${effect}],${JSON.stringify(params)})`;
-    window.obsArr.push(add2str);
+    const add2str = `shared.C(${shape},[${simulate === undefined ? '' : simulate}],[${effect}],${JSON.stringify(params)})`;
+    shared.obsArr.push(add2str);
 
     console.log(add2str);
     eval(add2str);
@@ -633,45 +639,45 @@ function createAtPos(effectName, shape=randomShape(), simulateName=undefined, ex
 
 function undoCreate(){
     obstacles.pop();
-    window.obsArr.pop();
+    shared.obsArr.pop();
 }
 
 function modifyLast(newText){
     obstacles.pop();
-    window.obsArr.pop();
+    shared.obsArr.pop();
 
     eval(newText);
-    window.obsArr.push(newText);
+    shared.obsArr.push(newText);
 }
 
 function createRawFromText(txt){
     eval(txt);
-    window.obsArr.push(txt);
+    shared.obsArr.push(txt);
 }
 
-// C(1,[],[28],)
+// shared.C(1,[],[28],)
 
 // LAYER 0
-// C(2,[],[1],{"points":[[9400,2900],[9200,2900],[9300,2700]],"boundPlayer":true,"x":0,"y":0})
-// C(0,[],[2],{"r":100,"bounciness":1,"decay":0.98,"x":9900,"y":2800})
-// C(1,[],[0],{"w":200,"h":200,"x":9200,"y":3300})
+// shared.C(2,[],[1],{"points":[[9400,2900],[9200,2900],[9300,2700]],"boundPlayer":true,"x":0,"y":0})
+// shared.C(0,[],[2],{"r":100,"bounciness":1,"decay":0.98,"x":9900,"y":2800})
+// shared.C(1,[],[0],{"w":200,"h":200,"x":9200,"y":3300})
 
 // LAYER 1
 /*
 [
-    "C(2,[],[1],{\"points\":[[9400,2900],[9200,2900],[9300,2700]],\"boundPlayer\":true,\"x\":0,\"y\":0})",
-    "C(0,[],[2],{\"r\":100,\"bounciness\":1,\"decay\":0.98,\"x\":9900,\"y\":2800})",
-    "C(1,[],[0],{\"w\":200,\"h\":200,\"x\":9200,\"y\":3300})",
-    "C(4,[],[12],{\"r\":100,\"innerRadius\":40.64241808749951,\"startSliceAngle\":0.30379966049688445,\"endSliceAngle\":1.0130537215644402,\"endSliceAngleRotateSpeed\":0.004801857239320743,\"startSliceAngleRotateSpeed\":-0.0004234700543029213,\"tpx\":100,\"tpy\":100,\"x\":9900,\"y\":3400})",
-    "C(1,[],[16],{\"w\":200,\"h\":200,\"toSnapX\":true,\"toSnapY\":true,\"snapDistanceX\":100,\"snapDistanceY\":100,\"snapCooldown\":40,\"snapAngle\":0,\"snapAngleRotateSpeed\":0,\"x\":9500,\"y\":3400})",
-    "C(0,[],[7],{\"r\":100,\"coinAmount\":1,\"color\":\"#d6d611\",\"x\":9200,\"y\":3100})",
-    "C(4,[],[8],{\"r\":100,\"innerRadius\":80,\"startSliceAngle\":0.38006924183255364,\"endSliceAngle\":5.781138491161774,\"startSliceAngleRotateSpeed\":0,\"endSliceAngleRotateSpeed\":0,\"coindoorCoinAmount\":3,\"coinDoorColor\":\"#d6d611\",\"x\":10000,\"y\":3100})",
-    "C(2,[],[10],{\"points\":[[9600,2800],[9700,2700],[9600,2600],[9500,2700]],\"maxStrength\":60,\"regenTime\":100,\"healSpeed\":1,\"x\":0,\"y\":0})"
+    "shared.C(2,[],[1],{\"points\":[[9400,2900],[9200,2900],[9300,2700]],\"boundPlayer\":true,\"x\":0,\"y\":0})",
+    "shared.C(0,[],[2],{\"r\":100,\"bounciness\":1,\"decay\":0.98,\"x\":9900,\"y\":2800})",
+    "shared.C(1,[],[0],{\"w\":200,\"h\":200,\"x\":9200,\"y\":3300})",
+    "shared.C(4,[],[12],{\"r\":100,\"innerRadius\":40.64241808749951,\"startSliceAngle\":0.30379966049688445,\"endSliceAngle\":1.0130537215644402,\"endSliceAngleRotateSpeed\":0.004801857239320743,\"startSliceAngleRotateSpeed\":-0.0004234700543029213,\"tpx\":100,\"tpy\":100,\"x\":9900,\"y\":3400})",
+    "shared.C(1,[],[16],{\"w\":200,\"h\":200,\"toSnapX\":true,\"toSnapY\":true,\"snapDistanceX\":100,\"snapDistanceY\":100,\"snapCooldown\":40,\"snapAngle\":0,\"snapAngleRotateSpeed\":0,\"x\":9500,\"y\":3400})",
+    "shared.C(0,[],[7],{\"r\":100,\"coinAmount\":1,\"color\":\"#d6d611\",\"x\":9200,\"y\":3100})",
+    "shared.C(4,[],[8],{\"r\":100,\"innerRadius\":80,\"startSliceAngle\":0.38006924183255364,\"endSliceAngle\":5.781138491161774,\"startSliceAngleRotateSpeed\":0,\"endSliceAngleRotateSpeed\":0,\"coindoorCoinAmount\":3,\"coinDoorColor\":\"#d6d611\",\"x\":10000,\"y\":3100})",
+    "shared.C(2,[],[10],{\"points\":[[9600,2800],[9700,2700],[9600,2600],[9500,2700]],\"maxStrength\":60,\"regenTime\":100,\"healSpeed\":1,\"x\":0,\"y\":0})"
 ]
 */
 
 // `var tutorialMorphTriggered = false;
-// C(1,[],[5],{h:200,w:200,y:2700,x:8900,
+// shared.C(1,[],[5],{h:200,w:200,y:2700,x:8900,
 //     cr:(e)=>{
 //         ctx.globalAlpha = 0.8;
 //         if (tutorialMorphTriggered === true) {
@@ -702,7 +708,7 @@ function createRawFromText(txt){
 // });`
 
 // `var tutorialMorphTriggered = false;
-// C(0,[],[0],{r:100,y:3100,x:8900,
+// shared.C(0,[],[0],{r:100,y:3100,x:8900,
 //     cr:(e)=>{
 //         if(tutorialMorphTriggered){
 //             e.pos.x = -1E9;
@@ -716,7 +722,7 @@ function createRawFromText(txt){
 //         ctx.fillStyle = colors.tile;
 //         for(let i = 0; i < 100; i++){
 //             const t = Math.PI * 2 * i / 100;
-//             const a = Math.sin(window.time / 1000) * 8;
+//             const a = Math.sin(shared.time / 1000) * 8;
 
 //             let x = Math.cos(t) * 100 * (Math.cos(8*t + a) / 8 + 0.9);
 //             let y = Math.sin(t) * 100 * (Math.sin(8*t + a) / 8 + 0.9);
@@ -733,16 +739,16 @@ function createRawFromText(txt){
 //     }
 // });`;
 
-// `C(0,[],[3],{
+// `shared.C(0,[],[3],{
 //     x:9900,y:3700,r:100,ef:()=>{
-//         if(window.camera.scale>0.3){changeCameraScale(window.camera.scale*0.999);}
+//         if(shared.camera.scale>0.3){changeCameraScale(shared.camera.scale*0.999);}
 //         else {changeCameraScale(0.5)}
 //     }
 // })`
 
 // // These 2 make up sentry
 
-// `C(1,[5],[1],{h:60,w:200,y:2500-30,x:10000,
+// `shared.C(1,[5],[1],{h:60,w:200,y:2500-30,x:10000,
 //     boundPlayer: true,
 //     restAngles: [0, Math.PI],
 //     toRest: true,
@@ -752,8 +758,8 @@ function createRawFromText(txt){
 //     pivotX: 10100,
 //     pivotY: 2500
 // });`
-// `C(0,[],[0],{x:10100,y:2500,r:42,cr:(e)=>{
-//     ctx.fillStyle = window.colors.tile;
+// `shared.C(0,[],[0],{x:10100,y:2500,r:42,cr:(e)=>{
+//     ctx.fillStyle = shared.colors.tile;
 //     ctx.beginPath();
 //     ctx.arc(e.pos.x, e.pos.y, e.sat.r, 0, Math.PI * 2);
 //     ctx.fill();
@@ -778,41 +784,41 @@ function createRawFromText(txt){
 // // LAYER 2
 
 
-window.obsArr.push(...[
-    "C(2,[],[1],{\"points\":[[9400,2900],[9200,2900],[9300,2700]],\"boundPlayer\":true,\"x\":0,\"y\":0})",
-    "C(0,[],[2],{\"r\":100,\"bounciness\":1,\"decay\":0.98,\"x\":9900,\"y\":2800})",
-    "C(1,[],[0],{\"w\":200,\"h\":200,\"x\":9200,\"y\":3300})",
-    "C(4,[],[12],{\"r\":100,\"innerRadius\":40.64241808749951,\"startSliceAngle\":0.30379966049688445,\"endSliceAngle\":1.0130537215644402,\"endSliceAngleRotateSpeed\":0.004801857239320743,\"startSliceAngleRotateSpeed\":-0.0004234700543029213,\"tpx\":9600,\"tpy\":3100,\"x\":9900,\"y\":3400})",
-    "C(1,[],[16],{\"w\":200,\"h\":200,\"toSnapX\":true,\"toSnapY\":true,\"snapDistanceX\":100,\"snapDistanceY\":100,\"snapCooldown\":676*60/1000,\"snapAngle\":0,\"snapAngleRotateSpeed\":-0.023*1000/60,\"x\":9500,\"y\":3400})",
-    "C(0,[],[7],{\"r\":100,\"coinAmount\":3,\"color\":\"#d6d611\",\"x\":9200,\"y\":3100})",
-    "C(4,[],[8],{\"r\":100,\"innerRadius\":80,\"startSliceAngle\":0.38006924183255364,\"endSliceAngle\":5.781138491161774,\"startSliceAngleRotateSpeed\":0,\"endSliceAngleRotateSpeed\":0,\"coindoorCoinAmount\":3,\"coinDoorColor\":\"#d6d611\",\"x\":10000,\"y\":3100})",
-    "C(0,[],[13],{\"r\":100,\"conveyorForce\":0.3,\"conveyorAngle\":90,\"conveyorAngleRotateSpeed\":0,\"conveyorFriction\":0.8,\"x\":9400,\"y\":2500})",
-    "C(4,[],[15],{\"r\":100,\"innerRadius\":15.551755296935532,\"startSliceAngle\":0.5554132385054658,\"endSliceAngle\":5.067483808732879,\"endSliceAngleRotateSpeed\":0.0031502474922624635,\"startSliceAngleRotateSpeed\":0.0001404600416380597,\"axisSpeedMultX\":0,\"axisSpeedMultY\":1,\"x\":9800,\"y\":2500})",
-    "C(1,[],[27],{\"w\":200,\"h\":200,\"changeShipStateTo\":true,\"initialShipAngle\":-Math.PI/2,\"shipTurnSpeed\":0.0031415926535897934,\"x\":10100,\"y\":2700})",
-    "C(0,[],[27],{\"r\":100,\"changeShipStateTo\":false,\"initialShipAngle\":0,\"shipTurnSpeed\":0.031415926535897934,\"x\":10300,\"y\":3100})",
-    "C(2,[],[18],{\"points\":[[10100,3500],[10150,3300],[10250,3300],[10300,3500]],\"sizeMult\":0.5,\"sizeChangePermanent\":false,\"x\":0,\"y\":0})",
-    "C(0,[],[4],{\"r\":100,\"url\":\"https://images.pexels.com/photos/12043242/pexels-photo-12043242.jpeg\",\"x\":9000,\"y\":3400})",
-    "C(4,[],[23],{\"r\":100,\"innerRadius\":0,\"startSliceAngle\":5.3197196411114005,\"endSliceAngle\":0.6615698517358614,\"endSliceAngleRotateSpeed\":-0.0021034335423010786,\"startSliceAngleRotateSpeed\":-0.000723994345467791,\"tornadoStrength\":7,\"x\":9300,\"y\":3700})",
-    "var tutorialMorphTriggered = false;\nC(1,[],[5],{h:200,w:200,y:2700,x:8900,\n    cr:(e)=>{\n        ctx.globalAlpha = 0.8;\n        if (tutorialMorphTriggered === true) {\n            ctx.globalAlpha = 0.3;\n        }\n\n        ctx.strokeStyle = ctx.fillStyle = 'white';\n\n        let topX = e.topLeft.x; let topY = e.topLeft.y;\n\n        ctx.fillRect(topX, topY, e.dimensions.x, e.dimensions.y);\n        ctx.globalAlpha *= 1 / 0.8;\n        ctx.strokeRect(topX, topY, e.dimensions.x, e.dimensions.y);\n\n        ctx.fillStyle = colors.tile;\n        ctx.fillRect(\n            topX + 15,\n            topY + 15,\n            e.dimensions.x - 30,\n            e.dimensions.y - 30\n        );\n\n        ctx.globalAlpha = 1;\n    },\n    ef:(e) => {\n        tutorialMorphTriggered = true;    \n    }\n});",
-    "var tutorialMorphTriggered = false;\nC(0,[],[0],{r:100,y:3100,x:8900,\n    cr:(e)=>{\n        if(tutorialMorphTriggered){\n            e.pos.x = -1E9;\n            return;\n        }\n        ctx.beginPath();\n        let middleX = e.topLeft.x; let middleY = e.topLeft.y;\n        middleX += e.dimensions.x / 2;\n        middleY += e.dimensions.y / 2;\n        ctx.translate(middleX, middleY);\n        ctx.fillStyle = colors.tile;\n        for(let i = 0; i < 100; i++){\n            const t = Math.PI * 2 * i / 100;\n            const a = Math.sin(window.time / 1000) * 8;\n\n            let x = Math.cos(t) * 100 * (Math.cos(8*t + a) / 8 + 0.9);\n            let y = Math.sin(t) * 100 * (Math.sin(8*t + a) / 8 + 0.9);\n\n            if(i === 0){\n                ctx.moveTo(x,y);\n            } else {\n                ctx.lineTo(x,y);\n            }\n        }\n        ctx.fill();\n        ctx.closePath();\n        ctx.translate(-middleX, -middleY);\n    }\n});",
-    "C(2,[1],[0],{\"points\":[[9500,3850],[9500,3750],[9700,3700],[9700,3900]],\"x\":0,\"y\":0,\"initialRotation\":0,\"rotateSpeed\":0.001,\"pivotX\":9600,\"pivotY\":3800})",
-    "C(0,[],[5],{\"r\":100,\"x\":9100,\"y\":2500})",
-    "C(1,[5],[1],{h:60,w:200,y:2500-30,x:10000,\n    boundPlayer: true,\n    restAngles: [0, Math.PI],\n    toRest: true,\n    homingRotateSpeed: 0.0007*1000/60,\n    detectionRadius: 150,\n    spokeAngles: [0, Math.PI],\n    pivotX: 10100,\n    pivotY: 2500\n});",
-    "C(0,[],[0],{x:10100,y:2500,r:59,cr:(e)=>{\n    ctx.fillStyle = window.colors.tile;\n    ctx.beginPath();\n    ctx.arc(e.pos.x, e.pos.y, e.sat.r, 0, Math.PI * 2);\n    ctx.fill();\n    ctx.closePath();\n\n    ctx.strokeStyle = 'red';\n    ctx.lineWidth = 15;\n    ctx.beginPath();\n    ctx.arc(\n        e.pos.x,\n        e.pos.y,\n        Math.max(e.sat.r - 30, 0),\n        0,\n        Math.PI * 2\n    );\n    ctx.stroke();\n    ctx.closePath();\n}});",
-    "C(1,[],[17],{\"w\":200,\"h\":200,\"timeTrapMaxTime\":60,\"timeTrapRecoverySpeed\":3,\"timeTrapToKill\":true,\"timeTrapToShowTenth\":true,\"x\":9200,\"y\":2100})",
-    // "C(0,[],[26],{\"r\":100,\"musicPath\":\"https://www.youtube.com/watch?v=LlXqegSTUr0\",\"x\":9600,\"y\":3100})", // what we did in the desert is goated asf
-    "C(4,[],[9],{\"r\":100,\"innerRadius\":0,\"startSliceAngle\":0,\"endSliceAngle\":Math.PI*3/2,\"endSliceAngleRotateSpeed\":-0.001,\"startSliceAngleRotateSpeed\":-0.001,\"checkpointOffsetX\":0,\"checkpointOffsetY\":0,\"x\":9600,\"y\":2200})",
-    "C(2,[],[25],{\"points\":[[10000,2100],[10000,2300],[9800,2200]],\"pushAngle\":0,\"maxPushDistance\":100,\"idlePushBackSpeed\":0.25,\"positiveDirectionOnly\":false,\"pushConversionRatio\":0.8,\"x\":0,\"y\":0})"
+shared.obsArr.push(...[
+    "shared.C(2,[],[1],{\"points\":[[9400,2900],[9200,2900],[9300,2700]],\"boundPlayer\":true,\"x\":0,\"y\":0})",
+    "shared.C(0,[],[2],{\"r\":100,\"bounciness\":1,\"decay\":0.98,\"x\":9900,\"y\":2800})",
+    "shared.C(1,[],[0],{\"w\":200,\"h\":200,\"x\":9200,\"y\":3300})",
+    "shared.C(4,[],[12],{\"r\":100,\"innerRadius\":40.64241808749951,\"startSliceAngle\":0.30379966049688445,\"endSliceAngle\":1.0130537215644402,\"endSliceAngleRotateSpeed\":0.004801857239320743,\"startSliceAngleRotateSpeed\":-0.0004234700543029213,\"tpx\":9600,\"tpy\":3100,\"x\":9900,\"y\":3400})",
+    "shared.C(1,[],[16],{\"w\":200,\"h\":200,\"toSnapX\":true,\"toSnapY\":true,\"snapDistanceX\":100,\"snapDistanceY\":100,\"snapCooldown\":676*60/1000,\"snapAngle\":0,\"snapAngleRotateSpeed\":-0.023*1000/60,\"x\":9500,\"y\":3400})",
+    "shared.C(0,[],[7],{\"r\":100,\"coinAmount\":3,\"color\":\"#d6d611\",\"x\":9200,\"y\":3100})",
+    "shared.C(4,[],[8],{\"r\":100,\"innerRadius\":80,\"startSliceAngle\":0.38006924183255364,\"endSliceAngle\":5.781138491161774,\"startSliceAngleRotateSpeed\":0,\"endSliceAngleRotateSpeed\":0,\"coindoorCoinAmount\":3,\"coinDoorColor\":\"#d6d611\",\"x\":10000,\"y\":3100})",
+    "shared.C(0,[],[13],{\"r\":100,\"conveyorForce\":0.3,\"conveyorAngle\":90,\"conveyorAngleRotateSpeed\":0,\"conveyorFriction\":0.8,\"x\":9400,\"y\":2500})",
+    "shared.C(4,[],[15],{\"r\":100,\"innerRadius\":15.551755296935532,\"startSliceAngle\":0.5554132385054658,\"endSliceAngle\":5.067483808732879,\"endSliceAngleRotateSpeed\":0.0031502474922624635,\"startSliceAngleRotateSpeed\":0.0001404600416380597,\"axisSpeedMultX\":0,\"axisSpeedMultY\":1,\"x\":9800,\"y\":2500})",
+    "shared.C(1,[],[27],{\"w\":200,\"h\":200,\"changeShipStateTo\":true,\"initialShipAngle\":-Math.PI/2,\"shipTurnSpeed\":0.0031415926535897934,\"x\":10100,\"y\":2700})",
+    "shared.C(0,[],[27],{\"r\":100,\"changeShipStateTo\":false,\"initialShipAngle\":0,\"shipTurnSpeed\":0.031415926535897934,\"x\":10300,\"y\":3100})",
+    "shared.C(2,[],[18],{\"points\":[[10100,3500],[10150,3300],[10250,3300],[10300,3500]],\"sizeMult\":0.5,\"sizeChangePermanent\":false,\"x\":0,\"y\":0})",
+    "shared.C(0,[],[4],{\"r\":100,\"url\":\"https://images.pexels.com/photos/12043242/pexels-photo-12043242.jpeg\",\"x\":9000,\"y\":3400})",
+    "shared.C(4,[],[23],{\"r\":100,\"innerRadius\":0,\"startSliceAngle\":5.3197196411114005,\"endSliceAngle\":0.6615698517358614,\"endSliceAngleRotateSpeed\":-0.0021034335423010786,\"startSliceAngleRotateSpeed\":-0.000723994345467791,\"tornadoStrength\":7,\"x\":9300,\"y\":3700})",
+    "var tutorialMorphTriggered = false;\nshared.C(1,[],[5],{h:200,w:200,y:2700,x:8900,\n    cr:(e)=>{\n        ctx.globalAlpha = 0.8;\n        if (tutorialMorphTriggered === true) {\n            ctx.globalAlpha = 0.3;\n        }\n\n        ctx.strokeStyle = ctx.fillStyle = 'white';\n\n        let topX = e.topLeft.x; let topY = e.topLeft.y;\n\n        ctx.fillRect(topX, topY, e.dimensions.x, e.dimensions.y);\n        ctx.globalAlpha *= 1 / 0.8;\n        ctx.strokeRect(topX, topY, e.dimensions.x, e.dimensions.y);\n\n        ctx.fillStyle = colors.tile;\n        ctx.fillRect(\n            topX + 15,\n            topY + 15,\n            e.dimensions.x - 30,\n            e.dimensions.y - 30\n        );\n\n        ctx.globalAlpha = 1;\n    },\n    ef:(e) => {\n        tutorialMorphTriggered = true;    \n    }\n});",
+    "var tutorialMorphTriggered = false;\nshared.C(0,[],[0],{r:100,y:3100,x:8900,\n    cr:(e)=>{\n        if(tutorialMorphTriggered){\n            e.pos.x = -1E9;\n            return;\n        }\n        ctx.beginPath();\n        let middleX = e.topLeft.x; let middleY = e.topLeft.y;\n        middleX += e.dimensions.x / 2;\n        middleY += e.dimensions.y / 2;\n        ctx.translate(middleX, middleY);\n        ctx.fillStyle = colors.tile;\n        for(let i = 0; i < 100; i++){\n            const t = Math.PI * 2 * i / 100;\n            const a = Math.sin(shared.time / 1000) * 8;\n\n            let x = Math.cos(t) * 100 * (Math.cos(8*t + a) / 8 + 0.9);\n            let y = Math.sin(t) * 100 * (Math.sin(8*t + a) / 8 + 0.9);\n\n            if(i === 0){\n                ctx.moveTo(x,y);\n            } else {\n                ctx.lineTo(x,y);\n            }\n        }\n        ctx.fill();\n        ctx.closePath();\n        ctx.translate(-middleX, -middleY);\n    }\n});",
+    "shared.C(2,[1],[0],{\"points\":[[9500,3850],[9500,3750],[9700,3700],[9700,3900]],\"x\":0,\"y\":0,\"initialRotation\":0,\"rotateSpeed\":0.001,\"pivotX\":9600,\"pivotY\":3800})",
+    "shared.C(0,[],[5],{\"r\":100,\"x\":9100,\"y\":2500})",
+    "shared.C(1,[5],[1],{h:60,w:200,y:2500-30,x:10000,\n    boundPlayer: true,\n    restAngles: [0, Math.PI],\n    toRest: true,\n    homingRotateSpeed: 0.0007*1000/60,\n    detectionRadius: 150,\n    spokeAngles: [0, Math.PI],\n    pivotX: 10100,\n    pivotY: 2500\n});",
+    "shared.C(0,[],[0],{x:10100,y:2500,r:59,cr:(e)=>{\n    ctx.fillStyle = shared.colors.tile;\n    ctx.beginPath();\n    ctx.arc(e.pos.x, e.pos.y, e.sat.r, 0, Math.PI * 2);\n    ctx.fill();\n    ctx.closePath();\n\n    ctx.strokeStyle = 'red';\n    ctx.lineWidth = 15;\n    ctx.beginPath();\n    ctx.arc(\n        e.pos.x,\n        e.pos.y,\n        Math.max(e.sat.r - 30, 0),\n        0,\n        Math.PI * 2\n    );\n    ctx.stroke();\n    ctx.closePath();\n}});",
+    "shared.C(1,[],[17],{\"w\":200,\"h\":200,\"timeTrapMaxTime\":60,\"timeTrapRecoverySpeed\":3,\"timeTrapToKill\":true,\"timeTrapToShowTenth\":true,\"x\":9200,\"y\":2100})",
+    // "shared.C(0,[],[26],{\"r\":100,\"musicPath\":\"https://www.youtube.com/watch?v=LlXqegSTUr0\",\"x\":9600,\"y\":3100})", // what we did in the desert is goated asf
+    "shared.C(4,[],[9],{\"r\":100,\"innerRadius\":0,\"startSliceAngle\":0,\"endSliceAngle\":Math.PI*3/2,\"endSliceAngleRotateSpeed\":-0.001,\"startSliceAngleRotateSpeed\":-0.001,\"checkpointOffsetX\":0,\"checkpointOffsetY\":0,\"x\":9600,\"y\":2200})",
+    "shared.C(2,[],[25],{\"points\":[[10000,2100],[10000,2300],[9800,2200]],\"pushAngle\":0,\"maxPushDistance\":100,\"idlePushBackSpeed\":0.25,\"positiveDirectionOnly\":false,\"pushConversionRatio\":0.8,\"x\":0,\"y\":0})"
 ])
 
 // // LAYER 2.5 
-window.obsArr.push(...[
-    `C(2,[],[10],{"points":[[9500,2700],[9600,2600],[9700,2700],[9600,2800]],"maxStrength":60,"regenTime":100,"healSpeed":1,"x":0,"y":0})`,
-    `C(0,[2],[1],{"r":100,"boundPlayer":false,"x":8700,"y":3400,"growSpeed":0.0006*1000/60,"shrinkSpeed":0.0006*1000/60,"maxGrowth":1,"minGrowth":0.5,"startGrowth":1,"toStartGrowing":true})`,
-    `C(2,[],[19],{"points":[[8900,3600],[9100,3600],[9000,3800]],"speedMult":2.5,"speedChangePermanent":false,"x":0,"y":0})`,
-    `C(0,[],[15],{"r":100,"axisSpeedMultX":-1,"axisSpeedMultY":-1,"x":10200,"y":3700})`,
-    `C(0,[2],[1],{"r":100,"boundPlayer":false,"x":8700,"y":3400,"growSpeed":0.0006*1000/60,"shrinkSpeed":0.0006*1000/60,"maxGrowth":1,"minGrowth":0.5,"startGrowth":1,"toStartGrowing":true})`,
-    `C(0,[0],[16],{
+shared.obsArr.push(...[
+    `shared.C(2,[],[10],{"points":[[9500,2700],[9600,2600],[9700,2700],[9600,2800]],"maxStrength":60,"regenTime":100,"healSpeed":1,"x":0,"y":0})`,
+    `shared.C(0,[2],[1],{"r":100,"boundPlayer":false,"x":8700,"y":3400,"growSpeed":0.0006*1000/60,"shrinkSpeed":0.0006*1000/60,"maxGrowth":1,"minGrowth":0.5,"startGrowth":1,"toStartGrowing":true})`,
+    `shared.C(2,[],[19],{"points":[[8900,3600],[9100,3600],[9000,3800]],"speedMult":2.5,"speedChangePermanent":false,"x":0,"y":0})`,
+    `shared.C(0,[],[15],{"r":100,"axisSpeedMultX":-1,"axisSpeedMultY":-1,"x":10200,"y":3700})`,
+    `shared.C(0,[2],[1],{"r":100,"boundPlayer":false,"x":8700,"y":3400,"growSpeed":0.0006*1000/60,"shrinkSpeed":0.0006*1000/60,"maxGrowth":1,"minGrowth":0.5,"startGrowth":1,"toStartGrowing":true})`,
+    `shared.C(0,[0],[16],{
         x: 10500, y: 2800, r: 100,
         snapDistanceX: 100, snapDistanceY: 100,
         toSnapX: false,
@@ -824,7 +830,7 @@ window.obsArr.push(...[
         currentPoint: 1,
         path: [[0,0,0.3],[100,300,0.3]]
     })`,
-    `C(1,[1],[12],{
+    `shared.C(1,[1],[12],{
         x: 8700, y: 2450,
         w: 200, h: 100,
         initialRotation: 0,
@@ -833,19 +839,19 @@ window.obsArr.push(...[
         pivotY: 2500,
         tpx: 9600, tpy: 3100
     })`,
-    "C(2,[],[18],{\"points\":[[10600,3300],[10550,3500],[10450,3500],[10400,3300]],\"sizeMult\":1.2,\"sizeChangePermanent\":true,\"x\":0,\"y\":0})",
-    "C(1,[],[28],{h:200,w:200,y:2700,x:8600,changeGrappleStateTo: true, grappleRange: 488, grappleForce: 0.008, grappleFric: 0.99});",
-    "C(0,[],[28],{h:70.71*2,w:70.71*2,y:3100,x:8600,r:100,changeGrappleStateTo: false, grappleRange: 488, grappleForce: 0.08, grappleFric: 0.99});",
-    `C(1,[],[29],{"w":200,"h":200,"changeDeathTimerStateTo":true,"drainAmountWhileStandingOn":0,"deathTime":10,"x":10300,"y":2400})`,
-    `C(0,[],[29],{"r":100,"changeDeathTimerStateTo":false,"drainAmountWhileStandingOn":0,"deathTime":10,"x":10200,"y":2200})`,
+    "shared.C(2,[],[18],{\"points\":[[10600,3300],[10550,3500],[10450,3500],[10400,3300]],\"sizeMult\":1.2,\"sizeChangePermanent\":true,\"x\":0,\"y\":0})",
+    "shared.C(1,[],[28],{h:200,w:200,y:2700,x:8600,changeGrappleStateTo: true, grappleRange: 488, grappleForce: 0.008, grappleFric: 0.99});",
+    "shared.C(0,[],[28],{h:70.71*2,w:70.71*2,y:3100,x:8600,r:100,changeGrappleStateTo: false, grappleRange: 488, grappleForce: 0.08, grappleFric: 0.99});",
+    `shared.C(1,[],[29],{"w":200,"h":200,"changeDeathTimerStateTo":true,"drainAmountWhileStandingOn":0,"deathTime":10,"x":10300,"y":2400})`,
+    `shared.C(0,[],[29],{"r":100,"changeDeathTimerStateTo":false,"drainAmountWhileStandingOn":0,"deathTime":10,"x":10200,"y":2200})`,
     `var ang = Math.random() * Math.PI * 2;
     var mag = 0.3;
     var xv_ = Math.cos(ang) * mag;
     var yv_ = Math.sin(ang) * mag;
     var topX = 0;
     var topY = 0;
-    C(0,[],[1],{r:30,y:3700,x:8700,collidable:false,sf:(e)=>{
-        window.time = Date.now();
+    shared.C(0,[],[1],{r:30,y:3700,x:8700,collidable:false,sf:(e)=>{
+        time = shared.time = Date.now();
         e.pos.y += yv_ * dt;
         e.pos.x += xv_ * dt;
         topX = e.pos.x; topY = e.pos.y;
@@ -862,7 +868,7 @@ window.obsArr.push(...[
     }});`,
 
     // pass a ball between this one and the above.
-    `C(0,[],[1],{r:30,y:3700,x:8700,collidable:false,sf:(e)=>{
+    `shared.C(0,[],[1],{r:30,y:3700,x:8700,collidable:false,sf:(e)=>{
         e.pos.x = topX - 300;
         e.pos.y = topY + 300;
     },cr:(o)=>{
@@ -878,13 +884,13 @@ window.obsArr.push(...[
     }});`,
 
     // the ball
-    `C(0,[],[1],{r:30,y:3700,x:8700,collidable:true,sf:(e)=>{
-        let t = (window.time / 500) % 2;
+    `shared.C(0,[],[1],{r:30,y:3700,x:8700,collidable:true,sf:(e)=>{
+        let t = (shared.time / 500) % 2;
         if(t > 1) t = 2 - t; 
         e.pos.x = topX + t * (-300);
         e.pos.y = topY + t * (300);
     },cr:(o)=>{
-        let t = (window.time / 500) % 2;
+        let t = (shared.time / 500) % 2;
         if(t > 1) t = 2 - t; 
         ctx.lineWidth = 4;
         ctx.strokeStyle = 'black';
@@ -901,7 +907,7 @@ window.obsArr.push(...[
     var mag2 = 0.3;
     var xv2_ = Math.cos(ang2) * mag2;
     var yv2_ = Math.sin(ang2) * mag2;
-    C(0,[],[1],{r:27,y:3700,x:8700,collidable:false,sf:(e)=>{
+    shared.C(0,[],[1],{r:27,y:3700,x:8700,collidable:false,sf:(e)=>{
         e.pos.y += yv2_ * dt;
         e.pos.x += xv2_ * dt;
         if ((e.pos.x - e.sat.r) < 8600 || e.pos.x + e.sat.r > 8800) {
@@ -919,7 +925,7 @@ window.obsArr.push(...[
     var mag3 = 0.3;
     var xv3_ = Math.cos(ang3) * mag3;
     var yv3_ = Math.sin(ang3) * mag3;
-    C(0,[],[1],{r:24,y:3700,x:8700,collidable:false,sf:(e)=>{
+    shared.C(0,[],[1],{r:24,y:3700,x:8700,collidable:false,sf:(e)=>{
         e.pos.y += yv3_ * dt;
         e.pos.x += xv3_ * dt;
         if ((e.pos.x - e.sat.r) < 8600 || e.pos.x + e.sat.r > 8800) {
@@ -933,14 +939,14 @@ window.obsArr.push(...[
             e.pos.y = Math.min(3800 - e.sat.r, e.pos.y);
         }
     }});`,
-    `C(1,[],[0,2],{"w":200,"h":200,"x":8900,"y":2100,"bounciness":0.3,"decay":0.996})`,
+    `shared.C(1,[],[0,2],{"w":200,"h":200,"x":8900,"y":2100,"bounciness":0.3,"decay":0.996})`,
 
     // weirdGrid (made after all obs around here but put here because layering w/ pushboxes breaks illusion)
-    `var weirdAngle; C(1,[],[3],{x:11000+2,y:3600+2,w:200-4,h:200-4,cr:(o)=>{
+    `var weirdAngle; shared.C(1,[],[3],{x:11000+2,y:3600+2,w:200-4,h:200-4,cr:(o)=>{
         ctx.fillStyle = colors.background;
         ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y);
 
-        const weirdAngle = (window.time / 1000) % (Math.PI * 2);
+        const weirdAngle = (shared.time / 1000) % (Math.PI * 2);
         const mag = 35;
 
         const pts = [
@@ -964,7 +970,7 @@ window.obsArr.push(...[
     }})`,
 
     // pushBoxButton
-    `var btnsPressed=0;var proTxt;var pbButtonSteppedOn=false;var pbButtonActivated=false;C(1,[],[3],{
+    `var btnsPressed=0;var proTxt;var pbButtonSteppedOn=false;var pbButtonActivated=false;shared.C(1,[],[3],{
         x: 9800, y: 4200, w: 200, h: 200,
         cr: (o) => {
             ctx.globalAlpha = 0.8;
@@ -1024,12 +1030,12 @@ window.obsArr.push(...[
 
             if(collided === true && pbButtonActivated === false){
                 pbButtonActivated = true;
-                C(3,[],[20],{hex:'#FFFFFF',color:'white',x:9900,y:4450,fontSize: 48, text: 'pro', alpha: 1});
+                shared.C(3,[],[20],{hex:'#FFFFFF',color:'white',x:9900,y:4450,fontSize: 48, text: 'pro', alpha: 1});
                 proTxt = obstacles[obstacles.length-1];
                 btnsPressed++;
                 if(btnsPressed === 3){
                     proTxt.pos.x = -100;
-                    C(3,[],[20],{hex:'#FFFFFF',color:'white',x:9600,y:4550,fontSize: 48, text: 'super pro', alpha: 1})
+                    shared.C(3,[],[20],{hex:'#FFFFFF',color:'white',x:9600,y:4550,fontSize: 48, text: 'super pro', alpha: 1})
                 }
             }
         },
@@ -1039,7 +1045,7 @@ window.obsArr.push(...[
     })`,
 
     // squareOnlyPushBoxButton
-    `var sqCcircle=false;var sqOnlyPbButtonSteppedOn = false; var sqOnlyPbButtonActivated = false;C(1,[],[3],{
+    `var sqCcircle=false;var sqOnlyPbButtonSteppedOn = false; var sqOnlyPbButtonActivated = false;shared.C(1,[],[3],{
         x: 9200, y: 4200, w: 200, h: 200,
         cr: (o) => {
             ctx.globalAlpha = 0.8;
@@ -1081,7 +1087,7 @@ window.obsArr.push(...[
             ctx.globalAlpha = 0.3;
             ctx.lineWidth = 10;
             ctx.strokeStyle = 'white';
-            const w = 40 + Math.sin(window.time / 1200) * 10;
+            const w = 40 + Math.sin(shared.time / 1200) * 10;
             ctx.strokeRect(o.pos.x+w, o.pos.y+w, 200-w*2, 200-w*2, 0, Math.PI * 2);
             ctx.globalAlpha = 1;
 
@@ -1098,7 +1104,7 @@ window.obsArr.push(...[
                 btnsPressed++;
                 if(btnsPressed === 3){
                     proTxt.pos.x = -100;
-                    C(3,[],[20],{hex:'#FFFFFF',color:'white',x:9600,y:4550,fontSize: 48, text: 'super pro', alpha: 1})
+                    shared.C(3,[],[20],{hex:'#FFFFFF',color:'white',x:9600,y:4550,fontSize: 48, text: 'super pro', alpha: 1})
                 }
             }
 
@@ -1112,7 +1118,7 @@ window.obsArr.push(...[
     })`,
 
     // crowdPushBoxButton
-    `var crAmt=0;var crButtonSteppedOn=false;var crButtonActivated=false;C(1,[],[3],{
+    `var crAmt=0;var crButtonSteppedOn=false;var crButtonActivated=false;shared.C(1,[],[3],{
         x: 9500, y: 4300, w: 200, h: 200,
         cr: (o) => {
             ctx.globalAlpha = 0.8;
@@ -1179,7 +1185,7 @@ window.obsArr.push(...[
                 btnsPressed++;
                 if(btnsPressed === 3){
                     proTxt.pos.x = -100;
-                    C(3,[],[20],{hex:'#FFFFFF',color:'white',x:9600,y:4550,fontSize: 48, text: 'super pro', alpha: 1})
+                    shared.C(3,[],[20],{hex:'#FFFFFF',color:'white',x:9600,y:4550,fontSize: 48, text: 'super pro', alpha: 1})
                 }
             }
         },
@@ -1189,13 +1195,13 @@ window.obsArr.push(...[
     })`,
 
     // pushCircle
-    `C(0,[],[3],{"r":100,"x":9000,"y":4300,ef:(p, res, o)=>{
+    `shared.C(0,[],[3],{"r":100,"x":9000,"y":4300,ef:(p, res, o)=>{
         p.pos.x += res.overlapV.x * 0.5;
         p.pos.y += res.overlapV.y * 0.5;
         o.pos.x -= res.overlapV.x * 0.5;
         o.pos.y -= res.overlapV.y * 0.5;
     },cr:(e)=>{
-        ctx.fillStyle = window.colors.tile;
+        ctx.fillStyle = shared.colors.tile;
         ctx.beginPath();
         ctx.arc(e.pos.x, e.pos.y, e.sat.r, 0, Math.PI * 2);
         ctx.fill();
@@ -1212,13 +1218,13 @@ window.obsArr.push(...[
     }}); var pushCircle = obstacles[obstacles.length-1];`,
 
     // pushBox
-    `C(1,[],[3],{w:200,h:200,"x":10100,"y":4200,ef:(p, res, o)=>{
+    `shared.C(1,[],[3],{w:200,h:200,"x":10100,"y":4200,ef:(p, res, o)=>{
         p.pos.x += res.overlapV.x * 0.5;
         p.pos.y += res.overlapV.y * 0.5;
         o.pos.x -= res.overlapV.x * 0.5;
         o.pos.y -= res.overlapV.y * 0.5;
     },cr:(e)=>{
-        ctx.fillStyle = window.colors.tile;
+        ctx.fillStyle = shared.colors.tile;
         ctx.fillRect(e.pos.x, e.pos.y, 200, 200);
 
         ctx.globalAlpha = 0.3;
@@ -1239,7 +1245,7 @@ window.obsArr.push(...[
     }});var pushBox = obstacles[obstacles.length-1]`,
 
     // resetPushboxes
-    `var touchingReset=false;C(2,[],[3],{"points":[[9600,4000],[9700,4100],[9600,4200],[9500,4100]],"x":0,"y":0,
+    `var touchingReset=false;shared.C(2,[],[3],{"points":[[9600,4000],[9700,4100],[9600,4200],[9500,4100]],"x":0,"y":0,
         cr:(o)=>{
             if(touchingReset === true){
                 ctx.globalAlpha = 0.8;
@@ -1324,7 +1330,7 @@ window.obsArr.push(...[
     })`,
 
     // moving grapplepoints
-    `C(0,[0],[3],{r:20+12/2,
+    `shared.C(0,[0],[3],{r:20+12/2,
         cr:(e)=>{
             e.isGrapplePoint = true;
             ctx.strokeStyle = '#c9c9c9';
@@ -1337,7 +1343,7 @@ window.obsArr.push(...[
             ctx.globalAlpha = 1;
         },currentPoint:0,x:8350,y:2750,path:[[0,0,0.45],[100,0,0.45],[100,100,0.45],[0,100,0.45]]
     });\n`,
-    `C(0,[0],[3],{r:20+12/2,
+    `shared.C(0,[0],[3],{r:20+12/2,
         cr:(e)=>{
             e.isGrapplePoint = true;
             ctx.strokeStyle = '#c9c9c9';
@@ -1350,7 +1356,7 @@ window.obsArr.push(...[
             ctx.globalAlpha = 1;
         },currentPoint:1,x:8350,y:2750,path:[[0,0,0.45],[100,0,0.45],[100,100,0.45],[0,100,0.45]]
     });\n`,
-    `C(0,[0],[3],{r:20+12/2,
+    `shared.C(0,[0],[3],{r:20+12/2,
         cr:(e)=>{
             e.isGrapplePoint = true;
             ctx.strokeStyle = '#c9c9c9';
@@ -1363,7 +1369,7 @@ window.obsArr.push(...[
             ctx.globalAlpha = 1;
         },currentPoint:2,x:8350,y:2750,path:[[0,0,0.45],[100,0,0.45],[100,100,0.45],[0,100,0.45]]
     });\n`,
-    `C(0,[0],[3],{r:20+12/2,
+    `shared.C(0,[0],[3],{r:20+12/2,
         cr:(e)=>{
             e.isGrapplePoint = true;
             ctx.strokeStyle = '#c9c9c9';
@@ -1377,9 +1383,9 @@ window.obsArr.push(...[
         },currentPoint:3,x:8350,y:2750,path:[[0,0,0.45],[100,0,0.45],[100,100,0.45],[0,100,0.45]]
     });\n`,
 
-    `C(0,[],[1,11],{"r":100,"boundPlayer":false,"x":8500,"y":2500})`,
+    `shared.C(0,[],[1,11],{"r":100,"boundPlayer":false,"x":8500,"y":2500})`,
 
-    `var circles=[];C(1,[],[3],{"w":200,"h":200,"x":8300,"y":3300,cr:(o)=>{
+    `var circles=[];shared.C(1,[],[3],{"w":200,"h":200,"x":8300,"y":3300,cr:(o)=>{
         ctx.fillStyle = '#f0f0f0'; // CHECK
 
         ctx.save();
@@ -1401,11 +1407,11 @@ window.obsArr.push(...[
         
         ctx.restore();
     },ef:(p,res,e)=>{
-        var p = window.players[window.selfId];
+        var p = shared.players[shared.selfId];
         circles.push(p.pos.x, p.pos.y, p.renderRadius, 0);
     }})`,
 
-    `C(1,[],[3],{"w":200,"h":200,"x":8300,"y":3600,cr:(o)=>{
+    `shared.C(1,[],[3],{"w":200,"h":200,"x":8300,"y":3600,cr:(o)=>{
         ctx.fillStyle = '#0f0f0f';
 
         ctx.save();
@@ -1427,14 +1433,14 @@ window.obsArr.push(...[
         
         ctx.restore();
     },ef:(p,res,e)=>{
-        var p = window.players[window.selfId];
+        var p = shared.players[shared.selfId];
         circles.push(p.pos.x, p.pos.y-300, p.renderRadius, 1);
     }})`,
 
-    `C(3,[],[27],{x:8250,y:3100,text:"Welcome.", fontSize: 98, changeShipStateTo: false, inbitialShipAngle: 0, shipTurnSpeed: 0.03})`,
-    // `C(3,[],[27],{x:8200,y:3100,text:"Welcome.", fontSize: 120, changeShipStateTo: false, inbitialShipAngle: 0, shipTurnSpeed: 0.03})`,
+    `shared.C(3,[],[27],{x:8250,y:3100,text:"Welcome.", fontSize: 98, changeShipStateTo: false, inbitialShipAngle: 0, shipTurnSpeed: 0.03})`,
+    // `shared.C(3,[],[27],{x:8200,y:3100,text:"Welcome.", fontSize: 120, changeShipStateTo: false, inbitialShipAngle: 0, shipTurnSpeed: 0.03})`,
 
-    `C(1,[],[24],{x:10700,y:3300,w: 200,h:200,innerR: 0, innerG: 255, innerB: 0, innerSize: 0.1, innerOpacity: 0.1, outerR: 0, outerG: 0, outerB: 255, outerSize: 0.8, outerOpacity: 1,
+    `shared.C(1,[],[24],{x:10700,y:3300,w: 200,h:200,innerR: 0, innerG: 255, innerB: 0, innerSize: 0.1, innerOpacity: 0.1, outerR: 0, outerG: 0, outerB: 255, outerSize: 0.8, outerOpacity: 1,
     
     cr:(e)=>{
         ctx.beginPath();
@@ -1446,7 +1452,7 @@ window.obsArr.push(...[
         ctx.globalAlpha = 0.3;
         for(let i = 0; i < 200; i++){
             const t = Math.PI * 2 * i / 200;
-            const a = -(window.time / 1000)%(Math.PI * 2) * 14;
+            const a = -(shared.time / 1000)%(Math.PI * 2) * 14;
 
             const p = Math.max(Math.abs(Math.cos(t)),Math.abs(Math.sin(t)));
             let x = e.dimensions.x/2 *Math.cos(t) / p * (Math.cos(14*t + a) / 14 + 0.9);
@@ -1466,7 +1472,7 @@ window.obsArr.push(...[
     })`,
 
     // slip
-    // `C(1,[],[3],{x:8900,y:3900,w:200,h:200,cr:(e)=>{
+    // `shared.C(1,[],[3],{x:8900,y:3900,w:200,h:200,cr:(e)=>{
     //     ctx.fillStyle = '#a83291';
     //     ctx.globalAlpha = 0.25;
     //     ctx.fillRect(8900,3900,200,200);
@@ -1474,7 +1480,7 @@ window.obsArr.push(...[
     // }})`,
 
     // RotateMovement
-    `var rmColliding=false;var rmLastX;var rmLastY;var rotateAngle=Math.PI*2*(30/360);C(1,[],[3],{x:10400,y:3600,w:200,h:200,ef:(p, res, e)=>{
+    `var rmColliding=false;var rmLastX;var rmLastY;var rotateAngle=Math.PI*2*(30/360);shared.C(1,[],[3],{x:10400,y:3600,w:200,h:200,ef:(p, res, e)=>{
         if(rmLastX !== undefined){
             let movementX = p.pos.x - rmLastX;
             let movementY = p.pos.y - rmLastY;
@@ -1573,10 +1579,10 @@ window.obsArr.push(...[
         // ctx.translate(-o.dimensions.x / 2, -o.dimensions.y/2);
     }})`,
 
-    `var lastCollidingSC=false,collidingSC=false;C(0,[],[3],{
+    `var lastCollidingSC=false,collidingSC=false;shared.C(0,[],[3],{
     x:9900,y:3700,r:100,ef:()=>{
-        if(window.camera.scale>0.3){
-            changeCameraScale(window.camera.scale*0.999);
+        if(shared.camera.scale>0.3){
+            changeCameraScale(shared.camera.scale*0.999);
         }
         collidingSC = true;
     },sf:()=>{
@@ -1587,14 +1593,14 @@ window.obsArr.push(...[
         collidingSC = false;
     }})`,
 
-    // C(3,[],[20],{x:10900,y:3100,fontSize:60,text:"ShearScreen (perlin render)",hex:'#FFFFFF',alpha:1})
+    // shared.C(3,[],[20],{x:10900,y:3100,fontSize:60,text:"ShearScreen (perlin render)",hex:'#FFFFFF',alpha:1})
     // idea: perlin noise obs, obs that setTransforms when you stand on it (skew along middle of canvas y axis, symmetrical on the top and bottom)
 
     // maybe make circle?
-    `var lastTransform2;var tOffset = 0;var lastPcollided=false;var Pcollided = false;var noiseFns;var importedNois=false;C(1,[],[3],{x:11000,y:3300,w:200,h:200,cr:(o)=>{
+    `var lastTransform2;var tOffset = 0;var lastPcollided=false;var Pcollided = false;var noiseFns;var importedNois=false;shared.C(1,[],[3],{x:11000,y:3300,w:200,h:200,cr:(o)=>{
         if(importedNois===false) {
             (async()=>{
-                noiseFns = await window.importNoise();
+                noiseFns = await shared.importNoise();
             })();
         }
         if(noiseFns === undefined) return;
@@ -1629,10 +1635,10 @@ window.obsArr.push(...[
         Pcollided = false;    
     }});`,
 
-    `var lastTransform;var tOffset2 = 0;var lastPcollided2=false;var Pcollided2 = false;C(1,[],[3],{x:10800,y:3000,w:200,h:200,cr:(o)=>{
+    `var lastTransform;var tOffset2 = 0;var lastPcollided2=false;var Pcollided2 = false;shared.C(1,[],[3],{x:10800,y:3000,w:200,h:200,cr:(o)=>{
         if(importedNois===false) {
             (async()=>{
-                noiseFns = await window.importNoise();
+                noiseFns = await shared.importNoise();
             })();
         }
         if(noiseFns === undefined) return;
@@ -1668,7 +1674,7 @@ window.obsArr.push(...[
     }})`,
 
     // gaura
-    `C(0,[],[3],{x:9000,y:4000,r:100,cr:(e)=>{
+    `shared.C(0,[],[3],{x:9000,y:4000,r:100,cr:(e)=>{
         ctx.globalAlpha = 0.3;
         ctx.fillStyle = '#320745';
 
@@ -1703,7 +1709,7 @@ window.obsArr.push(...[
     let baseRadius = 26;
     let maxTimer = 0.28;
     let jumpHeight = 50;
-    C(0,[],[3],{r:26,y:2700,x:8600,collidable:false,sf:(e)=>{
+    shared.C(0,[],[3],{r:26,y:2700,x:8600,collidable:false,sf:(e)=>{
         if (jumping === true) {
             e.pos.y += yvel * dt * z;
             e.pos.x += xvel * dt * z;
@@ -1760,7 +1766,7 @@ window.obsArr.push(...[
     let baseRadius = 26;
     let maxTimer = 0.28;
     let jumpHeight = 50;
-    C(0,[],[3],{r:26,y:2700,x:8600,collidable:false,sf:(e)=>{
+    shared.C(0,[],[3],{r:26,y:2700,x:8600,collidable:false,sf:(e)=>{
         if (jumping === true) {
             e.pos.y += yvel * dt * z;
             e.pos.x += xvel * dt * z;
@@ -1806,7 +1812,7 @@ window.obsArr.push(...[
     }});}`,
 
     // idit
-    `var iditangle = 0;C(4,[],[3],{"r":100,"innerRadius":0,"startSliceAngle":0,"endSliceAngle":Math.PI/2,"endSliceAngleRotateSpeed":0.0032,"startSliceAngleRotateSpeed":0.005,"x":9300,"y":4000,
+    `var iditangle = 0;shared.C(4,[],[3],{"r":100,"innerRadius":0,"startSliceAngle":0,"endSliceAngle":Math.PI/2,"endSliceAngleRotateSpeed":0.0032,"startSliceAngleRotateSpeed":0.005,"x":9300,"y":4000,
         cr:(o)=>{
             ctx.save();
             // render shape and clip
@@ -1863,7 +1869,7 @@ window.obsArr.push(...[
         }
     })`,
 
-    `C(4,[],[3],{"r":100,"innerRadius":0,"startSliceAngle":Math.PI,"endSliceAngle":Math.PI*3/2,"endSliceAngleRotateSpeed":0.0032,"startSliceAngleRotateSpeed":0.005,"x":9300,"y":4000,
+    `shared.C(4,[],[3],{"r":100,"innerRadius":0,"startSliceAngle":Math.PI,"endSliceAngle":Math.PI*3/2,"endSliceAngleRotateSpeed":0.0032,"startSliceAngleRotateSpeed":0.005,"x":9300,"y":4000,
         cr:(o)=>{
             ctx.save();
             // render shape and clip
@@ -1919,18 +1925,18 @@ window.obsArr.push(...[
             p.pos.y += Math.sin(iditangle) * 50;
         }
     })`,
-    // `C(4,[],[3],{"r":100,"innerRadius":0,"startSliceAngle":Math.PI,"endSliceAngle":Math.PI*3/2,"endSliceAngleRotateSpeed":0.005,"startSliceAngleRotateSpeed":0.005,"x":9300,"y":4000})`,
+    // `shared.C(4,[],[3],{"r":100,"innerRadius":0,"startSliceAngle":Math.PI,"endSliceAngle":Math.PI*3/2,"endSliceAngleRotateSpeed":0.005,"startSliceAngleRotateSpeed":0.005,"x":9300,"y":4000})`,
 
     // circle ring!
-    // `C(4,[],[0],{"r":1250*Math.sqrt(2),"innerRadius":1250*Math.sqrt(2) - 300,"startSliceAngle":0,"endSliceAngle":Math.PI*2-0.0001,"startSliceAngleRotateSpeed":0,"endSliceAngleRotateSpeed":0,"x":9600,"y":3100})`
+    // `shared.C(4,[],[0],{"r":1250*Math.sqrt(2),"innerRadius":1250*Math.sqrt(2) - 300,"startSliceAngle":0,"endSliceAngle":Math.PI*2-0.0001,"startSliceAngleRotateSpeed":0,"endSliceAngleRotateSpeed":0,"x":9600,"y":3100})`
 
     // CircleSnap
-    `C(4,[],[3],{"r":100,"innerRadius":0,"startSliceAngle":0,"endSliceAngle":Math.PI*3/2,"startSliceAngleRotateSpeed":0.001,"endSliceAngleRotateSpeed":0.001,"x":10800,"y":3700,cr:(o)=>{
+    `shared.C(4,[],[3],{"r":100,"innerRadius":0,"startSliceAngle":0,"endSliceAngle":Math.PI*3/2,"startSliceAngleRotateSpeed":0.001,"endSliceAngleRotateSpeed":0.001,"x":10800,"y":3700,cr:(o)=>{
         // ctx.globalAlpha = 0.2;
         ctx.globalAlpha = 0.4;
         ctx.strokeStyle = 'white';
         ctx.setLineDash([30, 50]);
-        ctx.lineDashOffset = -window.time / 1000 * 60 / 2;
+        ctx.lineDashOffset = -shared.time / 1000 * 60 / 2;
         ctx.lineWidth = 4;
 
         ctx.beginPath();
@@ -1947,10 +1953,10 @@ window.obsArr.push(...[
     }})`,
 
     // :) inside
-    `C(3,[1],[20],{x:10800,hex:'#FFFFFF',alpha:1,y:3700,text:":)", fontSize: 65,initialRotation:Math.PI/2,rotateSpeed:0,pivotX:10800,pivotY:3700})`,
+    `shared.C(3,[1],[20],{x:10800,hex:'#FFFFFF',alpha:1,y:3700,text:":)", fontSize: 65,initialRotation:Math.PI/2,rotateSpeed:0,pivotX:10800,pivotY:3700})`,
 
     // The Everything Obstacle
-    `C(2,[],[0,1,2,3,4,5,7,8,9,10,11,13,14,15,16,17,18,19,20,23,24,25,28],{
+    `shared.C(2,[],[0,1,2,3,4,5,7,8,9,10,11,13,14,15,16,17,18,19,20,23,24,25,28],{
         "boundPlayer": false,
         "bounciness": 1,
         "decay": 0.98,
@@ -2025,7 +2031,7 @@ window.obsArr.push(...[
         "points":[[9650,1800],[9700,2000],[9500,2000],[9550,1800]],"x":0,"y":0
     })`,
 
-    `C(2,[],[17],{
+    `shared.C(2,[],[17],{
         x:0,y:0,points:[[10400,2200],[10600,2100],[10600,2300]],
         "timeTrapMaxTime":60,"timeTrapRecoverySpeed":1.65,"timeTrapToKill":false,"timeTrapToShowTenth":false,
         sf:(o,p)=>{
@@ -2037,7 +2043,7 @@ window.obsArr.push(...[
     })`,
 
     // spring
-    `var springXV=0;var springYV=0;var springX=9300;var springY=1900;var springStrength=0.048;C(4,[],[4],{
+    `var springXV=0;var springYV=0;var springX=9300;var springY=1900;var springStrength=0.048;shared.C(4,[],[4],{
         "r":100,
         startSliceAngle: 0,
         "endSliceAngle":Math.PI*2 - 0.01,
@@ -2085,9 +2091,9 @@ window.obsArr.push(...[
     }}
     )`,
 
-    `var fangle=0;C(0,[],[0],{x:9000,y:1900,r:40,cr:(o)=>{
+    `var fangle=0;shared.C(0,[],[0],{x:9000,y:1900,r:40,cr:(o)=>{
         const radius = o.sat.r;
-        const p = window.players[window.selfId];
+        const p = shared.players[shared.selfId];
 
         function shortAngleDist(a0,a1) {
             const max = Math.PI*2;
@@ -2172,7 +2178,7 @@ window.obsArr.push(...[
     }})`,
 
     // particles
-    `var ps=[];var pcol=false;C(0,[],[3],{
+    `var ps=[];var pcol=false;shared.C(0,[],[3],{
         x: 10800, y: 4000, r: 100,
         cr:(o)=>{
             ps.push([
@@ -2216,13 +2222,13 @@ window.obsArr.push(...[
         }
     })`,
 
-    `C(1,[],[14],{"w":200,h:200,"platformerForce":0.1,"platformerAngle":90,"platformerAngleRotateSpeed":0,"platformerFriction":0.875,"maxJumpCooldown":30,"jumpForce":0.3,"jumpDecay":0.95,"x":11000,"y":3900})`,
+    `shared.C(1,[],[14],{"w":200,h:200,"platformerForce":0.1,"platformerAngle":90,"platformerAngleRotateSpeed":0,"platformerFriction":0.875,"maxJumpCooldown":30,"jumpForce":0.3,"jumpDecay":0.95,"x":11000,"y":3900})`,
 
-    // C(3,[],[20],{x:8700,y:2200,fontSize:28,text:"Digdig diamond that looks like a normal",hex:'#FFFFFF',alpha:1})
+    // shared.C(3,[],[20],{x:8700,y:2200,fontSize:28,text:"Digdig diamond that looks like a normal",hex:'#FFFFFF',alpha:1})
 
     // turret-sentry
 
-    `{const recyclableInds=[];let cdTimer=333,maxcdTimer=333;C(0,[5],[3],{r:100,y:2500,x:10700,
+    `{const recyclableInds=[];let cdTimer=333,maxcdTimer=333;shared.C(0,[5],[3],{r:100,y:2500,x:10700,
         boundPlayer: true,
         restAngles: [Math.PI/3, Math.PI, Math.PI*5/3],
         toRest: true,
@@ -2236,7 +2242,7 @@ window.obsArr.push(...[
                 ctx.translate(o.pos.x, o.pos.y);
                 ctx.rotate(Math.PI * 2 * (i/3) + o.rotation);
 
-                ctx.globalAlpha = 0.4 + 0.2 * Math.abs(Math.sin(window.time / 1200));
+                ctx.globalAlpha = 0.4 + 0.2 * Math.abs(Math.sin(shared.time / 1200));
                 ctx.strokeStyle = 'black';
                 ctx.fillStyle = '#053564';
                 ctx.lineWidth = 4;
@@ -2281,7 +2287,7 @@ window.obsArr.push(...[
                 let mag = 0;
 
                 let thisInd;
-                C(0,[],[1],{x:o.pos.x,y:o.pos.y,r:30,sf:(e)=>{
+                shared.C(0,[],[1],{x:o.pos.x,y:o.pos.y,r:30,sf:(e)=>{
                     if(mag > 400){
                         if(e.pos.x < 1E8){
                             recyclableInds.push(thisInd);
@@ -2323,12 +2329,12 @@ window.obsArr.push(...[
         }
     });}`,
     // circle part of the turret sentry
-    "C(0,[],[0],{x:10700,y:2500,r:59,cr:(e)=>{\n    ctx.fillStyle = window.colors.tile;\n    ctx.beginPath();\n    ctx.arc(e.pos.x, e.pos.y, e.sat.r, 0, Math.PI * 2);\n    ctx.fill();\n    ctx.closePath();\n\n    ctx.strokeStyle = '#053564';\n    ctx.lineWidth = 15;\n    ctx.beginPath();\n    ctx.arc(\n        e.pos.x,\n        e.pos.y,\n        Math.max(e.sat.r - 30, 0),\n        0,\n        Math.PI * 2\n    );\n    ctx.stroke();\n    ctx.closePath();\n}});",
+    "shared.C(0,[],[0],{x:10700,y:2500,r:59,cr:(e)=>{\n    ctx.fillStyle = shared.colors.tile;\n    ctx.beginPath();\n    ctx.arc(e.pos.x, e.pos.y, e.sat.r, 0, Math.PI * 2);\n    ctx.fill();\n    ctx.closePath();\n\n    ctx.strokeStyle = '#053564';\n    ctx.lineWidth = 15;\n    ctx.beginPath();\n    ctx.arc(\n        e.pos.x,\n        e.pos.y,\n        Math.max(e.sat.r - 30, 0),\n        0,\n        Math.PI * 2\n    );\n    ctx.stroke();\n    ctx.closePath();\n}});",
 
     // switchmove
 
     // wallboost - boost
-    `C(1,[],[3],{"w":200,"h":200,"x":9800,"y":3900,cr:(o)=>{
+    `shared.C(1,[],[3],{"w":200,"h":200,"x":9800,"y":3900,cr:(o)=>{
         ctx.save();
         ctx.beginPath();
         ctx.rect(o.pos.x, o.pos.y, 200, 200);
@@ -2343,8 +2349,8 @@ window.obsArr.push(...[
         const amt = 16;
         ctx.translate(o.pos.x + 100, o.pos.y + 100);
         for(let a = 0; a < amt; a+=2){// draw every other
-            const angle = a / amt * Math.PI * 2 + window.time / 1200;
-            const angle2 = (a+1) / amt * Math.PI * 2 + window.time / 1200;
+            const angle = a / amt * Math.PI * 2 + shared.time / 1200;
+            const angle2 = (a+1) / amt * Math.PI * 2 + shared.time / 1200;
 
             ctx.beginPath();
             ctx.moveTo(0,0);
@@ -2375,7 +2381,7 @@ window.obsArr.push(...[
     // 9[2]00 1600 slip w/ render like oldEx
 
     // 8900 1600 cloud (white vinette comes in, covering most of screen) - render can be a cloud or just a white gradient circle
-    `C(0,[],[24],{
+    `shared.C(0,[],[24],{
         "r":100,
         "innerR":255,"innerG":255,"innerB":255,"innerSize":0,"innerOpacity":1,
         "outerR":255,"outerG":255,"outerB":255,"outerSize":0.03,"outerOpacity":0.03,
@@ -2396,7 +2402,7 @@ window.obsArr.push(...[
     })`,
 
     // 9900 1900 speed and size timetrap (should render as a gradient)
-    `{let lastCollided = false;let c=false;C(4,[],[3,17],{
+    `{let lastCollided = false;let c=false;shared.C(4,[],[3,17],{
         "r":100,"x":9900,"y":1900,innerRadius: 30, startSliceAngle: Math.PI/6 - Math.PI/2, endSliceAngle: -Math.PI/6 - Math.PI/2, startSliceAngleRotateSpeed:0, endSliceAngleRotateSpeed: 0,
         "timeTrapMaxTime":240,"timeTrapRecoverySpeed":3,"timeTrapToKill":false,"timeTrapToShowTenth":true,
         cr:(o)=>{
@@ -2407,7 +2413,7 @@ window.obsArr.push(...[
             // changeSize (<1) '#1c1852'
 
             const ga = 0.1 + (0.25 + 0.28) / 2 * (240 - o.timeTrapTime) / 240;
-            const fs = blendColor('#eba500', '#1c1852', (Math.sin(window.time / 1000) + 1) / 2);
+            const fs = blendColor('#eba500', '#1c1852', (Math.sin(shared.time / 1000) + 1) / 2);
 
             let grd = ctx.createRadialGradient(middleX, middleY, 0, middleX, middleY, Math.min(100, (o.dimensions.x + o.dimensions.y)/5));
 
@@ -2465,7 +2471,7 @@ window.obsArr.push(...[
     })}`,
 
     // 8100 2800 obs that turns debug mode on (and off if outside). Renders like the debug bounding box for a square (pt top left corner)
-    `{let collided=false;let lastCollided=false;C(1,[],[3],{
+    `{let collided=false;let lastCollided=false;shared.C(1,[],[3],{
         x: 8100, y: 2400, w: 200, h: 200,
         cr:(o)=>{
             ctx.fillStyle = 'red';
@@ -2480,12 +2486,12 @@ window.obsArr.push(...[
             ctx.strokeRect(o.pos.x, o.pos.y, 200, 200);
         },
         ef:(p,res,o)=>{
-            window.renderDebug = true;   
+            shared.renderDebug = true;   
             collided = true; 
         },
         sf:(o)=>{
             if(lastCollided === true && collided === false){
-                window.renderDebug = false;
+                shared.renderDebug = false;
             }
             lastCollided = collided;
             collided = false;
@@ -2493,20 +2499,20 @@ window.obsArr.push(...[
     })}`,
 
     // rotating coming out of the walls (left above the portal?) that's text that says "hello" and bounds
-    `C(3,[1],[0],{
+    `shared.C(3,[1],[0],{
         x: 8400, y: 1900, fontSize: 60, text: "Hello",
         pivotX: 8150, pivotY: 1650, initialRotation: 0,
         rotateSpeed: 0.001
     })`,
 
-    `C(3,[1],[1],{
+    `shared.C(3,[1],[1],{
         x: 8400+75, y: 1900+75, fontSize: 60, text: "How are you?",
         pivotX: 8150+75, pivotY: 1650+75, initialRotation: 180,
         rotateSpeed: 0.001
     })`,
 
     // light switch that inverts
-    `{const top = 3900+20-50;const bottom =4100-20-50;const sideMargin=10;C(1,[],[3],{
+    `{const top = 3900+20-50;const bottom =4100-20-50;const sideMargin=10;shared.C(1,[],[3],{
         x: 10400+sideMargin, y: top, w: 200 - sideMargin * 2, h: 100, // maybe scale from 200 -> 200 - 20*2?
         cr:(o)=>{
             ctx.strokeStyle = 'grey';
@@ -2551,7 +2557,7 @@ window.obsArr.push(...[
     })}`,
 
     // slip
-    `{let lastX=undefined;let lastY=undefined;let xv;let yv;let slipX;let slipY;let collided=false;let lastCollided=false;C(2,[],[3],{
+    `{let lastX=undefined;let lastY=undefined;let xv;let yv;let slipX;let slipY;let collided=false;let lastCollided=false;shared.C(2,[],[3],{
         x: 0, y: 0,
         points: [
             [10700,2850],
@@ -2610,11 +2616,11 @@ window.obsArr.push(...[
     })}`,
 
     // negative size
-    // `C(3,[],[20],{hex:'#FFFFFF',alpha:1,text:"TODO: cooler render", fontSize: 48,x:10800,y:2100})`,// Idea: maybe smth with circle going inside out -> sine wave from max to 0 radius and when its negative it renders as a hollow o
-    `C(0,[],[18],{"r":100,"sizeMult":-0.5,"sizeChangePermanent":false,x:11400,y:3400,cr:(o)=>{//"x":10800,"y":2100
-        const r = Math.sin(window.time / 420) * o.sat.r;
+    // `shared.C(3,[],[20],{hex:'#FFFFFF',alpha:1,text:"TODO: cooler render", fontSize: 48,x:10800,y:2100})`,// Idea: maybe smth with circle going inside out -> sine wave from max to 0 radius and when its negative it renders as a hollow o
+    `shared.C(0,[],[18],{"r":100,"sizeMult":-0.5,"sizeChangePermanent":false,x:11400,y:3400,cr:(o)=>{//"x":10800,"y":2100
+        const r = Math.sin(shared.time / 420) * o.sat.r;
         ctx.setLineDash([30, 40]);
-        ctx.lineDashOffset = -window.time / 15;
+        ctx.lineDashOffset = -shared.time / 15;
 
         ctx.strokeStyle = '#1c1852';
         ctx.lineWidth = 10;
@@ -2642,13 +2648,13 @@ window.obsArr.push(...[
         }
         ctx.globalAlpha = 1;
     }})`,
-    // `C(0,[],[29],{"r":24,changeDeathTimerStateTo:true,deathTime:1,drainAmountWhileStandingOn:0,"x":11100,"y":2700})`,
+    // `shared.C(0,[],[29],{"r":24,changeDeathTimerStateTo:true,deathTime:1,drainAmountWhileStandingOn:0,"x":11100,"y":2700})`,
 
     // player inside recreating oldest eX
     // player should have collision w/ real player so make it a sep obs
 
     // background
-    `C(1,[],[3],{
+    `shared.C(1,[],[3],{
         x: 10100, y: 3900, w: 200, h: 200,
         cr:(o)=>{
             ctx.fillStyle = 'rgba(0,0,0,.2)';
@@ -2664,7 +2670,7 @@ window.obsArr.push(...[
         }
     })`,
     // player
-    `{let lastPosX,lastPosY;C(0,[],[0],{
+    `{let lastPosX,lastPosY;shared.C(0,[],[0],{
         x: 10200, y: 4000, r: 25,
         cr:(o)=>{
             ctx.fillStyle = 'white';
@@ -2697,7 +2703,7 @@ window.obsArr.push(...[
     })}`,
 
     // fixCamera
-    `{function interpolate(s,e,t){return (1-t) * s + t*e;}let lastCollided=false;let collided=false;let fadeOutTimer=-1;C(0,[],[3],{
+    `{function interpolate(s,e,t){return (1-t) * s + t*e;}let lastCollided=false;let collided=false;let fadeOutTimer=-1;shared.C(0,[],[3],{
         x: 11000,y:2400,r:100,
         cr:(o) => {
             ctx.strokeStyle = '#c2c2c2';
@@ -2745,13 +2751,13 @@ window.obsArr.push(...[
         },
         ef:(p,res,o)=>{
             fadeOutTimer = -1;
-            window.camera.x = interpolate(window.camera.x, 9600, 0.1);
-            window.camera.y = interpolate(window.camera.y, 3100, 0.1);
+            shared.camera.x = interpolate(shared.camera.x, 9600, 0.1);
+            shared.camera.y = interpolate(shared.camera.y, 3100, 0.1);
 
             p.pos.x += res.overlapV.x;
             p.pos.y += res.overlapV.y;
 
-            window.camera.numControlledBy = 1;
+            shared.camera.numControlledBy = 1;
 
             collided = true;
         },
@@ -2765,11 +2771,11 @@ window.obsArr.push(...[
 
                 const t = Math.max(0.1,1 - (fadeOutTimer / 2000) ** 2);
 
-                window.camera.x = interpolate(window.camera.x, p.pos.x, t);
-                window.camera.y = interpolate(window.camera.y, p.pos.y, t);
+                shared.camera.x = interpolate(shared.camera.x, p.pos.x, t);
+                shared.camera.y = interpolate(shared.camera.y, p.pos.y, t);
 
                 if(fadeOutTimer <= 0) {
-                    window.camera.numControlledBy = 0;
+                    shared.camera.numControlledBy = 0;
                     lastCameraX = lastCameraY = undefined;
                     fadeOutTimer = -1;
                 }
@@ -2781,7 +2787,7 @@ window.obsArr.push(...[
     })}`,
 
     // frictionChanger
-    `{let collided = false; let lastCollided = false;C(1,[],[3],{
+    `{let collided = false; let lastCollided = false;shared.C(1,[],[3],{
         x: 9100, y: 1200, w: 200, h: 200,
         cr:(o) => {
             ctx.fillStyle = ctx.strokeStyle = '#1c1852';
@@ -2813,7 +2819,7 @@ window.obsArr.push(...[
     })}`,
 
     // yellow sentry that notices the player, ! over the head, and lunges towards the player
-    `{let spd =0.03;let xv=0,yv=0;let state = 'idle';let stateTime = 0;C(0,[],[0],{x:11300,y:2500,r:59,cr:(o)=>{
+    `{let spd =0.03;let xv=0,yv=0;let state = 'idle';let stateTime = 0;shared.C(0,[],[0],{x:11300,y:2500,r:59,cr:(o)=>{
         ctx.globalAlpha = 0.3 * (Math.sin(Date.now() / 800)+1)/2;
         ctx.fillStyle = '#cad41c';
         ctx.beginPath();
@@ -2822,7 +2828,7 @@ window.obsArr.push(...[
         ctx.closePath();
         ctx.globalAlpha = 1;
 
-        ctx.fillStyle = window.colors.tile;
+        ctx.fillStyle = shared.colors.tile;
         ctx.beginPath();
         ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
         ctx.fill();
@@ -2919,10 +2925,10 @@ window.obsArr.push(...[
 
     
     // we're also prolly gonna need a speedChanger too
-    // `C(1,[],[19],{"w":200,"h":200,"speedMult":0.2,"speedChangePermanent":false,"x":9100,"y":1200,cr:()=>{}})`,
+    // `shared.C(1,[],[19],{"w":200,"h":200,"speedMult":0.2,"speedChangePermanent":false,"x":9100,"y":1200,cr:()=>{}})`,
     
     // Invert
-    // `C(0,[],[3],{
+    // `shared.C(0,[],[3],{
     
     // })`
 
@@ -2933,8 +2939,8 @@ window.obsArr.push(...[
     // crystals
 
     // top - octahedron
-    `window.numGemsCollected=0;{let fadeTextOffset;const fadeInTime=400;const stayTime=600;const fadeOutTime=400;let fadeText='';let fadeTimer=-1;let collided=false;let particles=[];C(2,[],[3],{"x":0,"y":0,points:[[9600-43*2,1400],[9600,1400-61*2],[9600+43*2,1400],[9600,1400+61*2]],cr:(o)=>{
-        if(window.stopRenderingGems === true) return;
+    `shared.numGemsCollected=0;{let fadeTextOffset;const fadeInTime=400;const stayTime=600;const fadeOutTime=400;let fadeText='';let fadeTimer=-1;let collided=false;let particles=[];shared.C(2,[],[3],{"x":0,"y":0,points:[[9600-43*2,1400],[9600,1400-61*2],[9600+43*2,1400],[9600,1400+61*2]],cr:(o)=>{
+        if(shared.stopRenderingGems === true) return;
         let offsetX = 0;
         let offsetY = crystalOffset - 1700;
         let offsetAngle = Math.atan2(offsetY, offsetX) + crystalRotation + Math.PI;
@@ -2945,11 +2951,11 @@ window.obsArr.push(...[
         const ry = 1400;
         
         ctx.save();
-        // ctx.filter = "hue-rotate(" + ((window.time / 10) % 360) + "deg)";
+        // ctx.filter = "hue-rotate(" + ((shared.time / 10) % 360) + "deg)";
         // center is 0,0 and sides are 100 units away
         ctx.translate(rx, ry);
         ctx.scale(2,2);
-        ctx.translate(0, Math.sin(window.time / 1000) * 8);
+        ctx.translate(0, Math.sin(shared.time / 1000) * 8);
 
         // line point definitions
 
@@ -2957,7 +2963,7 @@ window.obsArr.push(...[
         const height = 55 + 6;
         const topVertex = [0,-height];//85
         const bottomVertex = [0,height];
-        const angle = (window.time / 1000) % (Math.PI/2);// /2
+        const angle = (shared.time / 1000) % (Math.PI/2);// /2
         const sideVertex1 = [Math.cos(angle) * width, 0];
         const sideVertex2 = [-Math.cos(angle) * width, 0];
         const sideVertex3 = [Math.sin(angle) * width, 0];
@@ -3127,10 +3133,10 @@ window.obsArr.push(...[
         collided = true;
 
         // should also fade in / fade out 1 / 4. When fade ends jump should start
-        window.numGemsCollected++;
-        fadeText = window.numGemsCollected + " / 4";
+        shared.numGemsCollected++;
+        fadeText = shared.numGemsCollected + " / 4";
         fadeTimer = fadeInTime + fadeOutTime + stayTime;
-        fadeTextOffset = Math.sin(window.time / 1000) * 8;
+        fadeTextOffset = Math.sin(shared.time / 1000) * 8;
 
         for(let i = 0; i < 50; i++){
             particles.push({r: Math.random() * 10 + 8, vMult: Math.random()*.5 + 0.5, mag: 0, angle: Math.random() * Math.PI * 2, col: blendColor('#028500','#FFFFFF',Math.random())})
@@ -3138,8 +3144,8 @@ window.obsArr.push(...[
     }})}`,
 
     // right - cube
-    `{let fadeTextOffset;const fadeInTime=400;const stayTime=600;const fadeOutTime=400;let fadeText='';let fadeTimer=-1;let collided=false;let particles=[];C(1,[],[3],{"x":11200,"y":3000,w:200,h:200,cr:(o)=>{
-        if(window.stopRenderingGems === true) return;
+    `{let fadeTextOffset;const fadeInTime=400;const stayTime=600;const fadeOutTime=400;let fadeText='';let fadeTimer=-1;let collided=false;let particles=[];shared.C(1,[],[3],{"x":11200,"y":3000,w:200,h:200,cr:(o)=>{
+        if(shared.stopRenderingGems === true) return;
         let offsetX = 0;
         let offsetY = crystalOffset - 1700;
         let offsetAngle = Math.atan2(offsetY, offsetX) + crystalRotation + Math.PI*3/2;
@@ -3152,7 +3158,7 @@ window.obsArr.push(...[
         // center is 0,0 and sides are 100 units away
         ctx.translate(rx, ry);
         ctx.scale(2,2);
-        ctx.translate(0, Math.sin(window.time / 1000) * 8);
+        ctx.translate(0, Math.sin(shared.time / 1000) * 8);
 
         // --- definitions and initialization ---
         ctx.lineJoin = 'round';
@@ -3175,7 +3181,7 @@ window.obsArr.push(...[
         ctx.lineWidth = lineWidth;
 
         // x,y,rx,ry
-        const angle = (window.time / 1000) % (Math.PI/2);
+        const angle = (shared.time / 1000) % (Math.PI/2);
 
         // first ellipse
         const vertex1 = [Math.cos(angle) * ellipseRx, Math.sin(angle) * ellipseRy - ellipseDist];
@@ -3363,10 +3369,10 @@ window.obsArr.push(...[
         collided = true;
 
         // should also fade in / fade out 1 / 4. When fade ends jump should start
-        window.numGemsCollected++;
-        fadeText = window.numGemsCollected + " / 4";
+        shared.numGemsCollected++;
+        fadeText = shared.numGemsCollected + " / 4";
         fadeTimer = fadeInTime + fadeOutTime + stayTime;
-        fadeTextOffset = Math.sin(window.time / 1000) * 8;
+        fadeTextOffset = Math.sin(shared.time / 1000) * 8;
 
         for(let i = 0; i < 50; i++){
             particles.push({r: Math.random() * 10 + 8, vMult: Math.random()*.5 + 0.5, mag: 0, angle: Math.random() * Math.PI * 2, col: blendColor('#028500','#FFFFFF',Math.random())})
@@ -3374,8 +3380,8 @@ window.obsArr.push(...[
     }})}`,
 
     // bottom - tetrahedron
-    `window.numGemsCollected=0;{let fadeTextOffset;const fadeInTime=400;const stayTime=600;const fadeOutTime=400;let fadeText='';let fadeTimer=-1;let collided=false;let particles=[];C(2,[],[3],{"x":0,"y":0,points:[[9600,4650],[9750,4900],[9450,4900]],cr:(o)=>{
-        if(window.stopRenderingGems === true) return;
+    `shared.numGemsCollected=0;{let fadeTextOffset;const fadeInTime=400;const stayTime=600;const fadeOutTime=400;let fadeText='';let fadeTimer=-1;let collided=false;let particles=[];shared.C(2,[],[3],{"x":0,"y":0,points:[[9600,4650],[9750,4900],[9450,4900]],cr:(o)=>{
+        if(shared.stopRenderingGems === true) return;
         let offsetX = 0;
         let offsetY = crystalOffset - 1700;
         let offsetAngle = Math.atan2(offsetY, offsetX) + crystalRotation;
@@ -3386,18 +3392,18 @@ window.obsArr.push(...[
         const ry = 4800;
         
         ctx.save();
-        // ctx.filter = "hue-rotate(" + ((window.time / 10) % 360) + "deg)";
+        // ctx.filter = "hue-rotate(" + ((shared.time / 10) % 360) + "deg)";
         // center is 0,0 and sides are 100 units away
         ctx.translate(rx, ry);
         ctx.scale(2,2);
-        ctx.translate(0, Math.sin(window.time / 1000) * 8);
+        ctx.translate(0, Math.sin(shared.time / 1000) * 8);
 
         // --- init ---
         const extendDownMult = 0.45;
         const width = 43*2 * 0.84;
         const height = 60;
         const topVertex = [0,-height];//85
-        const angle = (window.time / 1000) % (Math.PI/1.5);
+        const angle = (shared.time / 1000) % (Math.PI/1.5);
         const tilt = 20;
         const sideVertex1 = [Math.sin(angle) * width, height*extendDownMult + Math.cos(angle)*tilt];
         const sideVertex2 = [Math.sin(angle+Math.PI*2/3) * width, height*extendDownMult + Math.cos(angle+Math.PI*2/3)*tilt];
@@ -3585,10 +3591,10 @@ window.obsArr.push(...[
         collided = true;
 
         // should also fade in / fade out 1 / 4. When fade ends jump should start
-        window.numGemsCollected++;
-        fadeText = window.numGemsCollected + " / 4";
+        shared.numGemsCollected++;
+        fadeText = shared.numGemsCollected + " / 4";
         fadeTimer = fadeInTime + fadeOutTime + stayTime;
-        fadeTextOffset = Math.sin(window.time / 1000) * 8;
+        fadeTextOffset = Math.sin(shared.time / 1000) * 8;
 
         for(let i = 0; i < 50; i++){
             particles.push({r: Math.random() * 10 + 8, vMult: Math.random()*.5 + 0.5, mag: 0, angle: Math.random() * Math.PI * 2, col: blendColor('#028500','#FFFFFF',Math.random())})
@@ -3596,8 +3602,8 @@ window.obsArr.push(...[
     }})}`,
 
     // left - circle w/ radial lines
-    `{let fadeTextOffset;const fadeInTime=400;const stayTime=600;const fadeOutTime=400;let fadeText='';let fadeTimer=-1;let collided=false;let particles=[];C(0,[],[3],{"x":7900,"y":3100,r:100,cr:(o)=>{
-        if(window.stopRenderingGems === true) return;
+    `{let fadeTextOffset;const fadeInTime=400;const stayTime=600;const fadeOutTime=400;let fadeText='';let fadeTimer=-1;let collided=false;let particles=[];shared.C(0,[],[3],{"x":7900,"y":3100,r:100,cr:(o)=>{
+        if(shared.stopRenderingGems === true) return;
         let offsetX = 0;
         let offsetY = crystalOffset - 1700;
         let offsetAngle = Math.atan2(offsetY, offsetX) + crystalRotation + Math.PI/2;
@@ -3610,7 +3616,7 @@ window.obsArr.push(...[
         // center is 0,0 and sides are 100 units away
         ctx.translate(rx, ry);
         ctx.scale(2,2);
-        ctx.translate(0, Math.sin(window.time / 1000) * 8);
+        ctx.translate(0, Math.sin(shared.time / 1000) * 8);
 
         // --- definitions and initialization ---
         ctx.lineJoin = 'round';
@@ -3631,7 +3637,7 @@ window.obsArr.push(...[
         ctx.lineWidth = lineWidth;
 
         // x,y,rx,ry
-        const angle = (window.time / 1000) % (Math.PI/2);
+        const angle = (shared.time / 1000) % (Math.PI/2);
 
         // --- drawing background --- TODO
         ctx.shadowColor = 'rgba('+orbColor.r+','+orbColor.g+','+orbColor.b+',0.3)';
@@ -3661,7 +3667,7 @@ window.obsArr.push(...[
         ctx.strokeStyle = lineColor;
         ctx.beginPath();
         ctx.arc(0,0,r,0,Math.PI*2);
-        ctx.fillStyle = blendColor(glassColor, '#FFFFFF', (Math.sin(window.time / 1000)+1)/2 * 0.3);
+        ctx.fillStyle = blendColor(glassColor, '#FFFFFF', (Math.sin(shared.time / 1000)+1)/2 * 0.3);
         ctx.globalAlpha = glassAlpha;
         ctx.fill();
         ctx.globalAlpha = 1;
@@ -3670,7 +3676,7 @@ window.obsArr.push(...[
 
         // stuff behind orb
         ctx.beginPath();
-        ctx.ellipse(0,0,r,Math.abs(tilt*Math.sin(window.time / 1000)),0,0,Math.PI,Math.sin(window.time / 1000) < 0);
+        ctx.ellipse(0,0,r,Math.abs(tilt*Math.sin(shared.time / 1000)),0,0,Math.PI,Math.sin(shared.time / 1000) < 0);
         ctx.stroke();
         ctx.closePath();
 
@@ -3688,7 +3694,7 @@ window.obsArr.push(...[
         ctx.strokeStyle = lineColor;
         ctx.beginPath();
         ctx.arc(0,0,r,0,Math.PI*2);
-        ctx.fillStyle = blendColor(glassColor, '#FFFFFF', (Math.sin(window.time / 1000)+1)/2 * 0.3);
+        ctx.fillStyle = blendColor(glassColor, '#FFFFFF', (Math.sin(shared.time / 1000)+1)/2 * 0.3);
         ctx.globalAlpha = glassAlpha;
         ctx.fill();
         ctx.globalAlpha = 1;
@@ -3710,7 +3716,7 @@ window.obsArr.push(...[
 
         // stuff ahead of orb
         ctx.beginPath();
-        ctx.ellipse(0,0,r,Math.abs(tilt*Math.sin(window.time / 1000)),0,0,Math.PI,Math.sin(window.time / 1000) >= 0);
+        ctx.ellipse(0,0,r,Math.abs(tilt*Math.sin(shared.time / 1000)),0,0,Math.PI,Math.sin(shared.time / 1000) >= 0);
         ctx.stroke();
         ctx.closePath();
 
@@ -3764,10 +3770,10 @@ window.obsArr.push(...[
         collided = true;
 
         // should also fade in / fade out 1 / 4. When fade ends jump should start
-        window.numGemsCollected++;
-        fadeText = window.numGemsCollected + " / 4";
+        shared.numGemsCollected++;
+        fadeText = shared.numGemsCollected + " / 4";
         fadeTimer = fadeInTime + fadeOutTime + stayTime;
-        fadeTextOffset = Math.sin(window.time / 1000) * 8;
+        fadeTextOffset = Math.sin(shared.time / 1000) * 8;
 
         for(let i = 0; i < 50; i++){
             particles.push({r: Math.random() * 10 + 8, vMult: Math.random()*.5 + 0.5, mag: 0, angle: Math.random() * Math.PI * 2, col: blendColor('#028500','#FFFFFF',Math.random())})
@@ -3775,7 +3781,7 @@ window.obsArr.push(...[
     }})}`,
 
     // mirror which is a grey wall but you can see yourself rendered on the other side
-    `{let collided=false;let lastCollided = false;let renderPlayer;let fadeOut=false;C(1,[],[0],{x: 9900, w: 200, y: 1300 - 20, h: 40,cr: (o)=>{
+    `{let collided=false;let lastCollided = false;let renderPlayer;let fadeOut=false;shared.C(1,[],[0],{x: 9900, w: 200, y: 1300 - 20, h: 40,cr: (o)=>{
         ctx.fillStyle = '#1c1c1c';
         ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y);
     },ef:()=>{
@@ -3786,11 +3792,11 @@ window.obsArr.push(...[
                 players[renderPlayer.id] = undefined;
                 renderPlayer = undefined;
             }
-            renderPlayer = window.createPlayer();
-            renderPlayer.id = window.players.length;
+            renderPlayer = shared.createPlayer();
+            renderPlayer.id = shared.players.length;
             renderPlayer.name = 'Clone';
             renderPlayer.renderRadius = 0;
-            window.players.push(renderPlayer);
+            shared.players.push(renderPlayer);
             fadeOut = false;
         }
     },sf:(o,p)=>{
@@ -3804,7 +3810,7 @@ window.obsArr.push(...[
 
             const keys = ['ship', 'shipAngle', 'grapple', 'deathTimer', 'deathTime'];
             for(let i = 0; i < keys.length; i++){
-                renderPlayer[keys[i]] = window.players[window.selfId][keys[i]];
+                renderPlayer[keys[i]] = shared.players[shared.selfId][keys[i]];
             }
 
             if(fadeOut === true){
@@ -3827,7 +3833,7 @@ window.obsArr.push(...[
     }})}`,
 
     // player with zzz from the top (or blue z with alpha fading on middle?) that will swap places with you looking like you took their place when collided 10000 1600
-    `{let spawnTimer=0;let maxSpawnTimer = 600;let zs=[];let moved=false;C(0,[],[0],{x: 10000, y: 1600, r: 49.5,ef:(p,res,o)=>{
+    `{let spawnTimer=0;let maxSpawnTimer = 600;let zs=[];let moved=false;shared.C(0,[],[0],{x: 10000, y: 1600, r: 49.5,ef:(p,res,o)=>{
         const tmp1 = o.pos.x;
         const tmp2 = o.pos.y;
 
@@ -3854,8 +3860,8 @@ window.obsArr.push(...[
             if(spawnTimer < 0){
                 spawnTimer += maxSpawnTimer;
 
-                const x = o.pos.x + Math.sin(window.time / 300 + i*Math.PI) * 20;
-                const y = o.pos.y - 100*i - ((window.time * 0.1) % 100);
+                const x = o.pos.x + Math.sin(shared.time / 300 + i*Math.PI) * 20;
+                const y = o.pos.y - 100*i - ((shared.time * 0.1) % 100);
                 ctx.globalAlpha = Math.max(0,(o.pos.y - y) / 300);
                 
                 zs.push({x: o.pos.x, y: o.pos.y, alpha: 1, dead: false, xangle: 0, xvMul: Math.random() - 0.5})
@@ -3886,8 +3892,8 @@ window.obsArr.push(...[
 
     // typing! - If we ever make this into a real obs render I think we should make obs flash red when you type an
     // incorrect key and a param to "type over" correct keys with incorrect letters so that you have to backspace
-    `var typingVinette;C(1,[],[24],{x:11300,y:3600,w: 200,h:200,innerR: 0, innerG: 0, innerB: 0, innerSize: 0, innerOpacity: 0, outerR: 0, outerG: 0, outerB: 0, outerSize: 0.42, outerOpacity: 0.9});typingVinette=obstacles[obstacles.length-1]`,
-    `{let completed = false;let active = false;let curChar = 0;let text="Type me to continue!";let freezeX, freezeY;C(2,[],[3],{"x":0,"y":0,points:[[11400, 3600], [11500, 3700],[11400, 3800], [11300, 3700]],ef:(p)=>{
+    `var typingVinette;shared.C(1,[],[24],{x:11300,y:3600,w: 200,h:200,innerR: 0, innerG: 0, innerB: 0, innerSize: 0, innerOpacity: 0, outerR: 0, outerG: 0, outerB: 0, outerSize: 0.42, outerOpacity: 0.9});typingVinette=obstacles[obstacles.length-1]`,
+    `{let completed = false;let active = false;let curChar = 0;let text="Type me to continue!";let freezeX, freezeY;shared.C(2,[],[3],{"x":0,"y":0,points:[[11400, 3600], [11500, 3700],[11400, 3800], [11300, 3700]],ef:(p)=>{
         if(completed === true) return;
         if(active === true) {
             p.pos.x = freezeX;
@@ -3899,16 +3905,16 @@ window.obsArr.push(...[
         freezeX = p.pos.x;
         freezeY = p.pos.y;
 
-        let oldKeyDown = window.onkeydown;
-        let oldKeyUp = window.onkeyup;
+        let oldKeyDown = shared.onkeydown;
+        let oldKeyUp = shared.onkeyup;
 
-        for(let key in window.input){window.input[key] = false;}
+        for(let key in shared.input){shared.input[key] = false;}
 
-        window.onkeyup = () => {};
-        window.onkeydown = (e) => {
+        shared.onkeyup = () => {};
+        shared.onkeydown = (e) => {
             if(e.type !== 'keydown') return;
             if(text[curChar] === e.key) curChar++;
-            if(curChar >= text.length) {window.onkeydown = oldKeyDown; window.onkeyup = oldKeyUp; completed = true; active = false;typingVinette.pos.x = -1E9;}
+            if(curChar >= text.length) {shared.onkeydown = oldKeyDown; shared.onkeyup = oldKeyUp; completed = true; active = false;typingVinette.pos.x = -1E9;}
         }
     },cr:(o)=>{
         if (completed === true) ctx.globalAlpha = 0.2;
@@ -3944,16 +3950,16 @@ window.obsArr.push(...[
     // teleport to mouse cursor (render is a mouse cursor but the white bit in the middle fades green) 11400 3400
     // also cursor is lava obs in here as well
     `{let mouseX,mouseY;let hint = undefined;
-    const oldMouseMove = window.onmousemove;
-    window.onmousemove = (...params) => {
+    const oldMouseMove = shared.onmousemove;
+    shared.onmousemove = (...params) => {
         oldMouseMove(...params);
         const e = params[0];
         mouseX = e.pageX; mouseY = e.pageY;
     }
-    C(0,[],[3],{
+    shared.C(0,[],[3],{
         x: 10000, y: 4600, r: 52,
         cr: (o) => {
-            const p = window.players[window.selfId];
+            const p = shared.players[shared.selfId];
             const angle = Math.atan2(o.pos.y - p.pos.y, o.pos.x - p.pos.x) - 1.1;
             const s = 100 / 17;
             ctx.translate(o.pos.x, o.pos.y);
@@ -3962,7 +3968,7 @@ window.obsArr.push(...[
             ctx.translate(-11*s/2, -17*s/2);
 
             ctx.beginPath();
-            ctx.fillStyle = blendColor('#FFFFFF', '#38ab30', (Math.sin(window.time / 520)+1)/2 * 0.8);
+            ctx.fillStyle = blendColor('#FFFFFF', '#38ab30', (Math.sin(shared.time / 520)+1)/2 * 0.8);
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 6;
             ctx.moveTo(0, 0);
@@ -4028,14 +4034,14 @@ window.obsArr.push(...[
     // cursor is lava
 
     // lava obs
-    C(0,[],[1],{x: -1E9, y: 0, r: 49.5});
+    shared.C(0,[],[1],{x: -1E9, y: 0, r: 49.5});
     const lavaObs = obstacles[obstacles.length - 1];
 
     let clcollided = false; let cllastcollided=false;
-    C(0,[],[3],{
+    shared.C(0,[],[3],{
         x: 9300, y: 4600, r: 52,
         cr: (o) => {
-            const p = window.players[window.selfId];
+            const p = shared.players[shared.selfId];
             const angle = Math.atan2(o.pos.y - p.pos.y, o.pos.x - p.pos.x) - 1.1;
             const s = 100 / 17;
             ctx.translate(o.pos.x, o.pos.y);
@@ -4044,7 +4050,7 @@ window.obsArr.push(...[
             ctx.translate(-11*s/2, -17*s/2);
 
             ctx.beginPath();
-            ctx.fillStyle = blendColor('#FFFFFF', '#9e0000', (Math.sin(window.time / 520)+1)/2 * 0.8);
+            ctx.fillStyle = blendColor('#FFFFFF', '#9e0000', (Math.sin(shared.time / 520)+1)/2 * 0.8);
             ctx.strokeStyle = 'black';
             ctx.lineWidth = 6;
             ctx.moveTo(0, 0);
@@ -4090,12 +4096,12 @@ window.obsArr.push(...[
     }`,
 
     // hole (teleports you to the other side of it)
-    `{let colliding = false;let lastColliding = false;let t,angle;C(0,[],[0], {
+    `{let colliding = false;let lastColliding = false;let t,angle;shared.C(0,[],[0], {
         x: 8100, y: 2800, r: 100,
         cr: (o) => {
             ctx.fillStyle = colors.background;
             // ctx.setLineDash([30, 30]);
-            // ctx.lineDashOffset = -window.time / 15;
+            // ctx.lineDashOffset = -shared.time / 15;
             ctx.lineWidth = 4.8;
             ctx.strokeStyle = colors.tile;
 
@@ -4156,7 +4162,7 @@ window.obsArr.push(...[
     })}`,
 
     // 7800 2800 4 lavas with .1 opacity. When you stand on them they get less and less opaque until they become full opaq and kill (or maybe lavas and normals in checkerboard?)
-    // `{let opaq=0.1;C(0,[],[1],{boundPlayer: true,x:-1E9, y:3400, r: 50},ef:(p,res,o)=>{
+    // `{let opaq=0.1;shared.C(0,[],[1],{boundPlayer: true,x:-1E9, y:3400, r: 50},ef:(p,res,o)=>{
     //     opaq += dt;
     // });}`,
 
@@ -4173,7 +4179,7 @@ window.obsArr.push(...[
             pts.push([x + Math.cos(angle) * r1, y + Math.sin(angle) * r2]);
         }
     
-        C(2,[1],[0],{x:0,y:0,points: pts,initialRotation:0,pivotX:x,pivotY:y,rotateSpeed:0.002,cr:(o)=>{
+        shared.C(2,[1],[0],{x:0,y:0,points: pts,initialRotation:0,pivotX:x,pivotY:y,rotateSpeed:0.002,cr:(o)=>{
             ctx.beginPath();
             ctx.fillStyle = colors.tile;
             ctx.ellipse(x,y,r1,r2,o.rotation,0,Math.PI*2);
@@ -4196,7 +4202,7 @@ window.obsArr.push(...[
         let accel = 0.001; let xv=0,yv=0;let fric = 0.03;
         let offset = 0;
         let angleOffMult = 1;
-        C(4,[],[1],{x: 10800, y: 2100, r: 100, innerRadius: 0, startSliceAngle: angle+Math.PI/4, endSliceAngle: angle-Math.PI/4, startSliceAngleRotateSpeed: 0, endSliceAngleRotateSpeed: 0, boundPlayer: true,
+        shared.C(4,[],[1],{x: 10800, y: 2100, r: 100, innerRadius: 0, startSliceAngle: angle+Math.PI/4, endSliceAngle: angle-Math.PI/4, startSliceAngleRotateSpeed: 0, endSliceAngleRotateSpeed: 0, boundPlayer: true,
             cr:(o)=>{
                 ctx.strokeStyle = 'black';
                 ctx.fillStyle = 'yellow';
@@ -4231,7 +4237,7 @@ window.obsArr.push(...[
                     angle = interpolateDirection(angle, Math.PI, 0.1);
                     if(shortAngleDist(angle, Math.PI) < 0.01) {state = 'idle'; angleOffMult = 0; return;}
 
-                    const sang = (Math.sin(window.time / 200 + offset)+1)/2 * Math.PI/4 * angleOffMult;
+                    const sang = (Math.sin(shared.time / 200 + offset)+1)/2 * Math.PI/4 * angleOffMult;
 
                     angleOffMult *= 0.7;
 
@@ -4256,7 +4262,7 @@ window.obsArr.push(...[
 
                     angle = interpolateDirection(angle, fang, 0.33);
 
-                    const sang = (Math.sin(window.time / 200 + offset)+1)/2 * Math.PI/4;
+                    const sang = (Math.sin(shared.time / 200 + offset)+1)/2 * Math.PI/4;
 
                     o.startSliceAngle = angle + Math.PI/4 - sang;
                     o.endSliceAngle = angle - Math.PI/4 + sang;
@@ -4268,7 +4274,7 @@ window.obsArr.push(...[
                     o.pos.y += yv * dt;
                 } else /*if(state === 'aggro')*/{
 
-                    if(offset === undefined) offset = -(window.time/200 + Math.PI/2) % (Math.PI*2);
+                    if(offset === undefined) offset = -(shared.time/200 + Math.PI/2) % (Math.PI*2);
 
                     if(dist > 500 + o.sat.r + p.sat.r){
                         state = 'return';
@@ -4278,7 +4284,7 @@ window.obsArr.push(...[
 
                     angle = interpolateDirection(angle, fang, 0.33);
 
-                    const sang = (Math.sin(window.time / 200 + offset)+1)/2 * Math.PI/4;
+                    const sang = (Math.sin(shared.time / 200 + offset)+1)/2 * Math.PI/4;
 
                     o.startSliceAngle = angle + Math.PI/4 - sang;
                     o.endSliceAngle = angle - Math.PI/4 + sang;
@@ -4294,10 +4300,10 @@ window.obsArr.push(...[
     }`,
 
     // normal but if you touch it it grows, also oscillates
-    `{let baseSize = 70; let maxBaseSize = 170; let oscilAmt=30;C(0,[],[0],{
+    `{let baseSize = 70; let maxBaseSize = 170; let oscilAmt=30;shared.C(0,[],[0],{
         x: 7800, y: 2800, r: 100,
         sf:(o)=>{
-            o.sat.r = baseSize + oscilAmt * Math.sin(window.time / 450);
+            o.sat.r = baseSize + oscilAmt * Math.sin(shared.time / 450);
             o.dimensions = generateDimensions(o);
         },
         ef:(o)=>{
@@ -4318,7 +4324,7 @@ window.obsArr.push(...[
             ctx.setLineDash([30, 30]);
             for(let i = 0; i < 3; i++){
                 ctx.beginPath();
-                ctx.arc(o.pos.x, o.pos.y, o.sat.r * (i/3) + (window.time / 200) % (o.sat.r/3), 0, Math.PI * 2);
+                ctx.arc(o.pos.x, o.pos.y, o.sat.r * (i/3) + (shared.time / 200) % (o.sat.r/3), 0, Math.PI * 2);
                 ctx.stroke();
                 ctx.closePath();
             }
@@ -4329,28 +4335,28 @@ window.obsArr.push(...[
     // pong!
 
     // conveyors
-    `C(1,[],[13],{"w":100,"h":200,"conveyorForce":0.1,"conveyorAngle":180,"conveyorAngleRotateSpeed":0,"conveyorFriction":0.8,"x":7800,"y":3300})`,
-    `C(1,[],[13],{"w":100,"h":200,"conveyorForce":0.1,"conveyorAngle":0,"conveyorAngleRotateSpeed":0,"conveyorFriction":0.8,"x":8000,"y":3300})`,
+    `shared.C(1,[],[13],{"w":100,"h":200,"conveyorForce":0.1,"conveyorAngle":180,"conveyorAngleRotateSpeed":0,"conveyorFriction":0.8,"x":7800,"y":3300})`,
+    `shared.C(1,[],[13],{"w":100,"h":200,"conveyorForce":0.1,"conveyorAngle":0,"conveyorAngleRotateSpeed":0,"conveyorFriction":0.8,"x":8000,"y":3300})`,
 
-    `C(1,[],[13],{"w":100,"h":100,"conveyorForce":0.3,"conveyorAngle":-90,"conveyorAngleRotateSpeed":0,"conveyorFriction":0.8,"x":7900,"y":3300})`,
-    `C(1,[],[13],{"w":100,"h":100,"conveyorForce":0.3,"conveyorAngle":90,"conveyorAngleRotateSpeed":0,"conveyorFriction":0.8,"x":7900,"y":3400})`,
+    `shared.C(1,[],[13],{"w":100,"h":100,"conveyorForce":0.3,"conveyorAngle":-90,"conveyorAngleRotateSpeed":0,"conveyorFriction":0.8,"x":7900,"y":3300})`,
+    `shared.C(1,[],[13],{"w":100,"h":100,"conveyorForce":0.3,"conveyorAngle":90,"conveyorAngleRotateSpeed":0,"conveyorFriction":0.8,"x":7900,"y":3400})`,
 
     // bounding circles
-    `C(1,[],[18],{"w":300,"h":200,"sizeMult":0.5,"sizeChangePermanent":false,"x":7800,"y":3300})`,
+    `shared.C(1,[],[18],{"w":300,"h":200,"sizeMult":0.5,"sizeChangePermanent":false,"x":7800,"y":3300})`,
 
-    `C(4,[],[15],{"r":100,"innerRadius":0,"startSliceAngle":Math.PI/2,"endSliceAngle":-Math.PI/2,"startSliceAngleRotateSpeed":0,"endSliceAngleRotateSpeed":0,"x":8100,"y":3400,axisSpeedMultX:0, axisSpeedMultY:1})`,
-    `C(4,[],[0],{"r":100,"innerRadius":0,"startSliceAngle":-Math.PI/2,"endSliceAngle":Math.PI/2,"startSliceAngleRotateSpeed":0,"endSliceAngleRotateSpeed":0,"x":8100,"y":3400})`,
+    `shared.C(4,[],[15],{"r":100,"innerRadius":0,"startSliceAngle":Math.PI/2,"endSliceAngle":-Math.PI/2,"startSliceAngleRotateSpeed":0,"endSliceAngleRotateSpeed":0,"x":8100,"y":3400,axisSpeedMultX:0, axisSpeedMultY:1})`,
+    `shared.C(4,[],[0],{"r":100,"innerRadius":0,"startSliceAngle":-Math.PI/2,"endSliceAngle":Math.PI/2,"startSliceAngleRotateSpeed":0,"endSliceAngleRotateSpeed":0,"x":8100,"y":3400})`,
     
-    `C(4,[],[15],{"r":100,"innerRadius":0,"startSliceAngle":-Math.PI/2,"endSliceAngle":Math.PI/2,"startSliceAngleRotateSpeed":0,"endSliceAngleRotateSpeed":0,"x":7800,"y":3400,axisSpeedMultX:0, axisSpeedMultY:1})`,
-    `C(4,[],[0],{"r":100,"innerRadius":0,"startSliceAngle":Math.PI/2,"endSliceAngle":-Math.PI/2,"startSliceAngleRotateSpeed":0,"endSliceAngleRotateSpeed":0,"x":7800,"y":3400})`,
+    `shared.C(4,[],[15],{"r":100,"innerRadius":0,"startSliceAngle":-Math.PI/2,"endSliceAngle":Math.PI/2,"startSliceAngleRotateSpeed":0,"endSliceAngleRotateSpeed":0,"x":7800,"y":3400,axisSpeedMultX:0, axisSpeedMultY:1})`,
+    `shared.C(4,[],[0],{"r":100,"innerRadius":0,"startSliceAngle":Math.PI/2,"endSliceAngle":-Math.PI/2,"startSliceAngleRotateSpeed":0,"endSliceAngleRotateSpeed":0,"x":7800,"y":3400})`,
 
     // fix camera to position
-    `var scoreLeft=0;var scoreRight=0;var scoreObs;{function interpolate(s,e,t){return (1-t) * s + t*e;}let lastCollided=false;let collided=false;let fadeOutTimer=-1;let interpScale;C(1,[],[3],{
+    `var scoreLeft=0;var scoreRight=0;var scoreObs;{function interpolate(s,e,t){return (1-t) * s + t*e;}let lastCollided=false;let collided=false;let fadeOutTimer=-1;let interpScale;shared.C(1,[],[3],{
         x: 7800,y:3300,w:300,h:200,
         cr:(o) => {},
         ef:(p,res,o)=>{
             if(lastCollided === false){
-                interpScale = window.camera.scale;
+                interpScale = shared.camera.scale;
 
                 scoreObs.text = '0 - 0';
                 scoreObs.alpha = 0;
@@ -4358,15 +4364,15 @@ window.obsArr.push(...[
             }
 
             fadeOutTimer = -1;
-            window.camera.x = interpolate(window.camera.x, 7950, 0.1);
-            window.camera.y = interpolate(window.camera.y, 3400, 0.1);
+            shared.camera.x = interpolate(shared.camera.x, 7950, 0.1);
+            shared.camera.y = interpolate(shared.camera.y, 3400, 0.1);
 
             scoreObs.alpha = interpolate(scoreObs.alpha, 1, 0.01);
 
             interpScale = interpolate(interpScale, 3, Math.pow(0.01, dt / 16));
             changeCameraScale(interpScale);
 
-            window.camera.numControlledBy = 1;
+            shared.camera.numControlledBy = 1;
 
             collided = true;
         },
@@ -4382,8 +4388,8 @@ window.obsArr.push(...[
 
                 const t = Math.max(0.1,1 - (fadeOutTimer / 2000) ** 2);
 
-                window.camera.x = interpolate(window.camera.x, p.pos.x, t);
-                window.camera.y = interpolate(window.camera.y, p.pos.y, t);
+                shared.camera.x = interpolate(shared.camera.x, p.pos.x, t);
+                shared.camera.y = interpolate(shared.camera.y, p.pos.y, t);
 
                 interpScale = interpolate(interpScale, 1, Math.pow(0.1, dt / 16));
                 changeCameraScale(interpScale);
@@ -4391,7 +4397,7 @@ window.obsArr.push(...[
                 if(fadeOutTimer <= 0) {
                     scoreObs.text = '';
                     changeCameraScale(1);
-                    window.camera.numControlledBy = 0;
+                    shared.camera.numControlledBy = 0;
                     lastCameraX = lastCameraY = undefined;
                     fadeOutTimer = -1;
                 }
@@ -4410,7 +4416,7 @@ window.obsArr.push(...[
     let topX = 0;
     let topY = 0;
     const bounds = [7800, 3300, 8100, 3500];
-    C(0,[],[3],{r:30,x: 7950, y: 3400, r: 24.75,collidable:false,sf:(e)=>{
+    shared.C(0,[],[3],{r:30,x: 7950, y: 3400, r: 24.75,collidable:false,sf:(e)=>{
         e.pos.y += yv * dt;
         e.pos.x += xv * dt;
         topX = e.pos.x; topY = e.pos.y;
@@ -4467,7 +4473,7 @@ window.obsArr.push(...[
     }});}pongBall = obstacles[obstacles.length-1]`,
 
     // cloning thing that makes a clone on the other side
-    `{let collided=false;let lastCollided = false;let fadeOut=false;C(1,[],[3],{x: 7800, w: 300, y: 3300, h: 200,cr: (o)=>{},
+    `{let collided=false;let lastCollided = false;let fadeOut=false;shared.C(1,[],[3],{x: 7800, w: 300, y: 3300, h: 200,cr: (o)=>{},
     ef:()=>{
         collided = true;
 
@@ -4476,12 +4482,12 @@ window.obsArr.push(...[
                 players[pongPlayer.id] = undefined;
                 pongPlayer = undefined;
             }
-            pongPlayer = window.createPlayer();
-            pongPlayer.id = window.players.length;
+            pongPlayer = shared.createPlayer();
+            pongPlayer.id = shared.players.length;
             pongPlayer.name = 'Opponent';
             pongPlayer.pos = pongPlayer.sat.pos;
             pongPlayer.renderRadius = 0;
-            window.players.push(pongPlayer);
+            shared.players.push(pongPlayer);
             fadeOut = false;
         }
     },sf:(o,p)=>{
@@ -4515,7 +4521,7 @@ window.obsArr.push(...[
     }})}`,
 
     // score text
-    `C(3,[],[20],{hex:"#FFFFFF",alpha:1,x:7950,y:3400,fontSize: 34,text:'',cr:(o)=>{
+    `shared.C(3,[],[20],{hex:"#FFFFFF",alpha:1,x:7950,y:3400,fontSize: 34,text:'',cr:(o)=>{
         ctx.fillStyle = 'white';
         ctx.globalAlpha = o.alpha;
         ctx.font = o.fontSize + "px Inter";
@@ -4526,7 +4532,7 @@ window.obsArr.push(...[
     }});scoreObs = obstacles[obstacles.length-1];`,
 
     // lava that only kills you if you're fully inside. Rendered w/ turning enemy arcs
-    // `C(1,[],[3],{"w":200,"h":200,"x":10500,"y":1800,cr:(o)=>{
+    // `shared.C(1,[],[3],{"w":200,"h":200,"x":10500,"y":1800,cr:(o)=>{
 
     // }})`
 
@@ -4537,9 +4543,9 @@ window.obsArr.push(...[
     const minY = 2500 - 100;
     const maxY = 2500 + 100;
     let lastX;let lastY;let collided=false;let lastCollided=false;
-    C(1,[],[3],{x:7800,y:2400,w:200,h:200,cr:(o)=>{
+    shared.C(1,[],[3],{x:7800,y:2400,w:200,h:200,cr:(o)=>{
             ctx.strokeStyle = colors.tile;
-            ctx.lineWidth = 3;//(Math.sin(window.time / 800)+1)/2 * 1 + 3;
+            ctx.lineWidth = 3;//(Math.sin(shared.time / 800)+1)/2 * 1 + 3;
 
             // ctx.save();
             ctx.beginPath();
@@ -4582,11 +4588,11 @@ window.obsArr.push(...[
             }
 
             
-            drawHorizontalSine(minX, maxX, interpolate(minY, maxY, 1/3.16), window.time / 800);
-            drawHorizontalSine(minX, maxX, interpolate(minY, maxY, 2.16/3.16), -window.time / 800);
+            drawHorizontalSine(minX, maxX, interpolate(minY, maxY, 1/3.16), shared.time / 800);
+            drawHorizontalSine(minX, maxX, interpolate(minY, maxY, 2.16/3.16), -shared.time / 800);
 
-            drawVerticalSine(minY, maxY, interpolate(minX, maxX, 1/3.16), window.time / 800);
-            drawVerticalSine(minY, maxY, interpolate(minX, maxX, 2.16/3.16), -window.time / 800);
+            drawVerticalSine(minY, maxY, interpolate(minX, maxX, 1/3.16), shared.time / 800);
+            drawVerticalSine(minY, maxY, interpolate(minX, maxX, 2.16/3.16), -shared.time / 800);
 
             // ctx.restore();
 
@@ -4596,7 +4602,7 @@ window.obsArr.push(...[
             const xv = p.pos.x - lastX;
             const yv = p.pos.y - lastY;
 
-            const scaleFac = (Math.sin(window.time / 100)+1)/10;
+            const scaleFac = (Math.sin(shared.time / 100)+1)/10;
 
             p.pos.x = lastX + xv * scaleFac;
             p.pos.y = lastY + yv * scaleFac;
@@ -4615,7 +4621,7 @@ window.obsArr.push(...[
     }})}`,
 
     // flashlight enemy
-    `C(0,[],[3],{x:10300,y:1600,r:42,cr:(o)=>{
+    `shared.C(0,[],[3],{x:10300,y:1600,r:42,cr:(o)=>{
         ctx.lineWidth = 4;
         ctx.strokeStyle = 'black';
         ctx.fillStyle = '#2b2b2b';
@@ -4629,7 +4635,7 @@ window.obsArr.push(...[
     }})`,
 
     // flashlight part of the flashlight
-    `{let angle=0;C(4,[],[1],{"r":100*2/3,boundPlayer:false,"innerRadius":0,"startSliceAngle":-Math.PI/4,"endSliceAngle":Math.PI/4,"startSliceAngleRotateSpeed":0,"endSliceAngleRotateSpeed":0,"x":10300,"y":1600,sf:(o,p)=>{
+    `{let angle=0;shared.C(4,[],[1],{"r":100*2/3,boundPlayer:false,"innerRadius":0,"startSliceAngle":-Math.PI/4,"endSliceAngle":Math.PI/4,"startSliceAngleRotateSpeed":0,"endSliceAngleRotateSpeed":0,"x":10300,"y":1600,sf:(o,p)=>{
         function shortAngleDist(a0,a1) {
             const max = Math.PI*2;
             const da = (a1 - a0) % max;
@@ -4660,7 +4666,7 @@ window.obsArr.push(...[
     }`,
 
     // obs you can rotate, rendering has a notch at the center (white circle stroked)
-    `var angularVel=0;C(1,[1],[0],{"w":200,"h":100-20,"x":8000,"y":3650+20/2,"initialRotation":0,"rotateSpeed":0,"pivotX":8100,"pivotY":3700,ef:(p,res,o)=>{
+    `var angularVel=0;shared.C(1,[1],[0],{"w":200,"h":100-20,"x":8000,"y":3650+20/2,"initialRotation":0,"rotateSpeed":0,"pivotX":8100,"pivotY":3700,ef:(p,res,o)=>{
         // p.pos.x += res.overlapV.x;
         // p.pos.y += res.overlapV.y;
 
@@ -4733,10 +4739,10 @@ window.obsArr.push(...[
     }})`,
 
     // one way door out the top
-    `{let collided=false;let lastCollided=false;let t=0;let lastY;C(1,[],[],{x:10400,y:4200,w:200,h:200,cr:(o)=>{
+    `{let collided=false;let lastCollided=false;let t=0;let lastY;shared.C(1,[],[],{x:10400,y:4200,w:200,h:200,cr:(o)=>{
         const grd = ctx.createLinearGradient(o.pos.x, o.pos.y, o.pos.x, o.pos.y + o.dimensions.y*2);
 
-        t = (Math.sin(window.time/600)+1)/2 * o.dimensions.y;// translation fac
+        t = (Math.sin(shared.time/600)+1)/2 * o.dimensions.y;// translation fac
 
         grd.addColorStop(0, "rgb(0,0,0)");
         grd.addColorStop(0.5, "rgb(255,255,255)");
@@ -4792,14 +4798,14 @@ window.obsArr.push(...[
 
     // eyeball that shoots lasers at you 10000 4900
     // also button for lasers
-    `{const res = new SAT.Response();let laserMirror;let cooldown=300;const detectionDist=0;let detected=false;let lastDetected=false;let eyeDist=0;let reusableInds=[];let friendly=false;let eyeObs;C(0,[],[0],{x: 10300, y: 4600, r: 58, cr:(o)=>{
+    `{const res = new SAT.Response();let laserMirror;let cooldown=300;const detectionDist=0;let detected=false;let lastDetected=false;let eyeDist=0;let reusableInds=[];let friendly=false;let eyeObs;shared.C(0,[],[0],{x: 10300, y: 4600, r: 58, cr:(o)=>{
         // intentionally using the gradient from last obs because it looks good
         ctx.beginPath();
         ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
         ctx.fill();
         ctx.closePath();
         
-        const p = window.players[window.selfId];
+        const p = shared.players[shared.selfId];
         const a = Math.atan2(p.pos.y - o.pos.y, p.pos.x - o.pos.x);
 
         const eyeX = o.pos.x + Math.cos(a) * eyeDist;
@@ -4909,7 +4915,7 @@ window.obsArr.push(...[
                 return a0 + shortAngleDist(a0,a1)*t;
             }
             
-            C(1,[1],[3],{x,y:y-h/2,w,h,pivotX:x,pivotY:y,initialRotation:angle*180/Math.PI,rotateSpeed:0,boundPlayer:false,sf:(o,p)=>{
+            shared.C(1,[1],[3],{x,y:y-h/2,w,h,pivotX:x,pivotY:y,initialRotation:angle*180/Math.PI,rotateSpeed:0,boundPlayer:false,sf:(o,p)=>{
                 o.pos.x += xv * dt;
                 o.pos.y += yv * dt;
                 o.pivotX += xv * dt;
@@ -4945,7 +4951,7 @@ window.obsArr.push(...[
                 if(collided === true){
                     collidedWMirror = true;
                     // angle in = angle out. 
-                    const mirrorAngle = Math.PI / 4 + Math.sin(window.time / 520) * 0.28 + Math.PI/2;
+                    const mirrorAngle = Math.PI / 4 + Math.sin(shared.time / 520) * 0.28 + Math.PI/2;
 
                     const newAngle = Math.PI - (mirrorAngle - angle*2);
                     angle = newAngle;
@@ -4991,13 +4997,13 @@ window.obsArr.push(...[
     
     // mirror for lasers
     const h = 20;
-    C(1,[1],[0],{
+    shared.C(1,[1],[0],{
         x: 9900, y: 4900-h/2, w: 200, h,
         initialRotation: 0,
         pivotX: 10000, pivotY: 4900,
         rotateSpeed: 0,
         sf:(o)=>{
-            const rotation = Math.PI / 4 + Math.sin(window.time / 520) * 0.28;
+            const rotation = Math.PI / 4 + Math.sin(shared.time / 520) * 0.28;
             o.rotateSpeed = (rotation - o.rotation) / dt;
         },
         cr:(o)=>{
@@ -5049,7 +5055,7 @@ window.obsArr.push(...[
     // scrapped button in favor of mirror
     // let steppedOn = false;
     // let angle = 0;
-    // C(1,[],[3],{
+    // shared.C(1,[],[3],{
     //     x: 9900, y: 4800, w: 200, h: 200,
     //     cr: (o) => {
     //         ctx.globalAlpha = 0.8;
@@ -5062,7 +5068,7 @@ window.obsArr.push(...[
     //         else if (friendly === false) {ctx.fillStyle = 'white'; if(ctx.globalAlpha !== 1){ctx.globalAlpha = 0.8;}}
     //         else if(friendly === true) {ctx.fillStyle = blendColor('#00FF00','#FFFFFF',0.5);}
 
-    //         if(window.players[window.selfId].dead === true) {ctx.globalAlpha = 0.1;ctx.fillStyle = blendColor('#FF0000','#FFFFFF',0.1);}
+    //         if(shared.players[shared.selfId].dead === true) {ctx.globalAlpha = 0.1;ctx.fillStyle = blendColor('#FF0000','#FFFFFF',0.1);}
 
     //         // outside
     //         ctx.fillRect(o.pos.x, o.pos.y, 200, 200);
@@ -5094,7 +5100,7 @@ window.obsArr.push(...[
     //         ctx.shadowBlur = 5;
     //         ctx.lineWidth = 4;
     //         ctx.beginPath();
-    //         angle += 0.0009 * dt;//Math.sin(window.time / 2000) / 300 * dt;
+    //         angle += 0.0009 * dt;//Math.sin(shared.time / 2000) / 300 * dt;
     //         const mag = 38;
     //         ctx.moveTo(o.pos.x + 100 - Math.cos(angle) * mag, o.pos.y + 100 - Math.sin(angle) * mag);
     //         ctx.lineTo(o.pos.x + 100 + Math.cos(angle) * mag, o.pos.y + 100 + Math.sin(angle) * mag);
@@ -5163,7 +5169,7 @@ window.obsArr.push(...[
     let colliding = false;
 
     const last = [];
-    C(2,[1],[0],{"points":pts,"x":0,"y":0,"initialRotation":0,"rotateSpeed":0.002,"pivotX":9200,"pivotY":4900,
+    shared.C(2,[1],[0],{"points":pts,"x":0,"y":0,"initialRotation":0,"rotateSpeed":0.002,"pivotX":9200,"pivotY":4900,
         cr:(o)=>{
             const vec = new SAT.Vector(0,0);
             ctx.font = '1000 30px Inter';
@@ -5221,12 +5227,12 @@ window.obsArr.push(...[
     // x,y,angle
     
     // simulator
-    window.obsArr.push(`var fourierLineSegments=[];var radii=[${radii}]; var spinSpeeds=[${spinSpeeds}];var baseX=9000;var baseY=4600;var fourierPts = [
+    shared.obsArr.push(`var fourierLineSegments=[];var radii=[${radii}]; var spinSpeeds=[${spinSpeeds}];var baseX=9000;var baseY=4600;var fourierPts = [
         [baseX, baseY, 0],
         [baseX+radii[1], baseY, 0],
         [baseX+radii[1]+radii[2], baseY, 0],
         [baseX+radii[1]+radii[2]+radii[3], baseY, 0],
-    ];C(0,[],[3],{x:-1E9,y:0,r:1,sf:()=>{
+    ];shared.C(0,[],[3],{x:-1E9,y:0,r:1,sf:()=>{
         for(let i = 1; i < fourierPts.length; i++){
             fourierPts[i][2] += spinSpeeds[i] * 1 / 60;
 
@@ -5258,13 +5264,13 @@ window.obsArr.push(...[
     }})`);
 
     for(let i = 1; i < radii.length; i++){
-        window.obsArr.push(`{
+        shared.obsArr.push(`{
             const p1 = fourierPts[${i-1}];
             const p2 = fourierPts[${i}];
 
             const h = 20;
 
-            C(1,[1],[0],{
+            shared.C(1,[1],[0],{
                 x: p1[0],
                 y: p1[1] - h/2,
                 w: p2[0] - p1[0],
@@ -5304,13 +5310,13 @@ window.obsArr.push(...[
     for(let i = 0; i < 10; i++){
         const x = interpolate(startX, endX, Math.random());
         const y = interpolate(startY, endY, Math.random());
-        window.obsArr.push(`${i === 0 ? 'var gravPositions=[[8700, 4300]];' : ''}{
+        shared.obsArr.push(`${i === 0 ? 'var gravPositions=[[8700, 4300]];' : ''}{
             const gravPos = [${x},${y}];
             let ang = Math.random() * Math.PI * 2;
             let mag = 0.009;
             let xv = Math.cos(ang) * mag;
             let yv = Math.sin(ang) * mag;
-            C(0,[],[0],{x:gravPos[0],y:gravPos[1],r:20,sf:(o)=>{
+            shared.C(0,[],[0],{x:gravPos[0],y:gravPos[1],r:20,sf:(o)=>{
                 for(let i = 0; i < gravPositions.length; i++){
                     // f prop. to 1/r^2
                     let rSq = (gravPos[0] - gravPositions[i][0])**2 + (gravPos[1] - gravPositions[i][1])**2;
@@ -5354,7 +5360,7 @@ window.obsArr.push(...[
                 xv *= 0.99;
                 yv *= 0.99;
 
-                ${i === 0 ? `const a = (window.time / 1000)%(Math.PI*2);gravPositions[0][0] = 8700 + Math.cos(a) * 50;gravPositions[0][1] = 4300 + Math.sin(a) * 50` : ''}
+                ${i === 0 ? `const a = (shared.time / 1000)%(Math.PI*2);gravPositions[0][0] = 8700 + Math.cos(a) * 50;gravPositions[0][1] = 4300 + Math.sin(a) * 50` : ''}
             }});
 
             // gravPositions.push(gravPos);
@@ -5374,7 +5380,7 @@ window.obsArr.push(...[
 // flower enemy from og eX
 
 // trapper spitting out traps that selfCollide forming a pile 9000, 4600
-// `{let reusableIndexes=[];let spawns=[];let timer=120;let curAngle=0;C(0,[],[0],{x: 8000, y: 3700, r: 20, sf:(o)=>{
+// `{let reusableIndexes=[];let spawns=[];let timer=120;let curAngle=0;shared.C(0,[],[0],{x: 8000, y: 3700, r: 20, sf:(o)=>{
 //     timer -= dt;
 
 //     if(timer < 0){
@@ -5386,7 +5392,7 @@ window.obsArr.push(...[
 //         let timeAlive = 2000;
 //         let pushedIndex = false;
 //         let index;
-//         C(0,[],[0],{x: o.pos.x, y: o.pos.y, r: o.sat.r, sf:(o)=>{
+//         shared.C(0,[],[0],{x: o.pos.x, y: o.pos.y, r: o.sat.r, sf:(o)=>{
 //             o.pos.x += Math.cos(angle) * vel * dt;
 //             o.pos.y += Math.sin(angle) * vel * dt;
 
@@ -5436,12 +5442,12 @@ ctx.closePath();
 }*/
 
 // cent scrapped rendering
-// // const t = (Math.sin(window.time / 800)+1)/2;
+// // const t = (Math.sin(shared.time / 800)+1)/2;
 // // ctx.fillStyle = '#808080'//blendColor('#0f0f0f', '#808080', 1-t);
 
 // const r = 30;
 
-// const s = Math.sin(window.time / 400) * o.sat.r;
+// const s = Math.sin(shared.time / 400) * o.sat.r;
 
 // offsetX = s;
 // offsetY = -s;
@@ -5459,7 +5465,7 @@ ctx.closePath();
 
 // ctx.restore();
 
-// // const s = Math.sin(window.time / 400) * 2;
+// // const s = Math.sin(shared.time / 400) * 2;
 // // offsetX -= 2.2 * dt / 16 / 2;
 // // offsetY += 3/100 * dt / 16 / 2;
 
@@ -5479,7 +5485,7 @@ ctx.closePath();
 // // }
 
 // // ctx.globalAlpha = 0.6;
-// // const a = Math.sin(window.time / 800);
+// // const a = Math.sin(shared.time / 800);
 // // ctx.fillStyle = 'white';
 // // ctx.globalAlpha = 1;
 // // ctx.font = (a*20+64) + "px Inter";
@@ -5496,7 +5502,7 @@ ctx.closePath();
 // let topY = 0;
 // let timer = 300;
 // const recyclableInds=[];
-// C(1,[],[0],{w:76,h:100,y:3650,x:7900,collidable:false,sf:(e)=>{
+// shared.C(1,[],[0],{w:76,h:100,y:3650,x:7900,collidable:false,sf:(e)=>{
 //     timer -= dt;
 //     if(timer < 0){
 //         timer += 300;
@@ -5508,9 +5514,9 @@ ctx.closePath();
 //         //     thisInd = obstacles.length;
 //         // }
 
-//         // C(0,[],[1],{x:e.pos.x+e.dimensions.x,y:e.pos.y+e.dimensions.y/2,r:20,sf:(e)=>{
+//         // shared.C(0,[],[1],{x:e.pos.x+e.dimensions.x,y:e.pos.y+e.dimensions.y/2,r:20,sf:(e)=>{
 //         //     e.pos.x += dt * 0.06;
-//         //     e.pos.y += Math.sin(window.time / 600) * 0.05 * dt;
+//         //     e.pos.y += Math.sin(shared.time / 600) * 0.05 * dt;
 
 //         //     if(e.pos.x > 8600){
 //         //         recyclableInds.push(thisInd);
@@ -5539,13 +5545,13 @@ ctx.closePath();
 //     }
 // }})}`,
 // // camera poly part
-// `C(2,[],[0],{x:0,y:0,points:[[7950,3700],[8050-50,3650],[8050-50,3750]]})`
+// `shared.C(2,[],[0],{x:0,y:0,points:[[7950,3700],[8050-50,3650],[8050-50,3750]]})`
 
 // slingshot
 // slingshot: white circles w/ black insides, rope is just an ellipse or parabola
 for(let i = 0; i < 10; i++){
     // rope
-    window.obsArr.push(`${i === 0 ? 'var ropeOffset = 0;var ropePolys=[];' : ''}{let colliding=false;let lastColliding=false;C(2,[],[3],{
+    shared.obsArr.push(`${i === 0 ? 'var ropeOffset = 0;var ropePolys=[];' : ''}{let colliding=false;let lastColliding=false;shared.C(2,[],[3],{
         x: 0, y: 0, points: [[10100, 1900], [10300, 1900]],
         ef:(p,res,o)=>{
             colliding = true;
@@ -5573,7 +5579,7 @@ for(let i = 0; i < 10; i++){
             }
 
             if(lastColliding === true && colliding === false){
-                const p = window.players[window.selfId];
+                const p = shared.players[shared.selfId];
 
                 p.forces.push(0, -ropeOffset, 0.4);
             }
@@ -5585,7 +5591,7 @@ for(let i = 0; i < 10; i++){
 }
 
 // rendering the rope
-window.obsArr.push(`C(0,[],[3],{x:0,y:0,r:1,cr:(o)=>{
+shared.obsArr.push(`shared.C(0,[],[3],{x:0,y:0,r:1,cr:(o)=>{
     ctx.strokeStyle = 'white';
     ctx.lineWidth = 8;
     
@@ -5600,8 +5606,8 @@ window.obsArr.push(`C(0,[],[3],{x:0,y:0,r:1,cr:(o)=>{
 }})`);
 
 // circles on the edges
-window.obsArr.push(
-`C(0,[],[0],{
+shared.obsArr.push(
+`shared.C(0,[],[0],{
     x: 10100, y: 1900, r: 25,
     cr:(o) => {
         ctx.strokeStyle = 'white';
@@ -5615,7 +5621,7 @@ window.obsArr.push(
         ctx.closePath();
     }
 })`,
-`C(0,[],[0],{
+`shared.C(0,[],[0],{
     x: 10300, y: 1900, r: 25,
     cr:(o) => {
         ctx.strokeStyle = 'white';
@@ -5631,8 +5637,8 @@ window.obsArr.push(
 })`);
 
 // // 4 corners one is empty rect idea
-// `C(1,[],[0],{"w":100,"h":200,"x":8000,"y":3700,sf:(o)=>{
-//     const a = (window.time / 1000) % (Math.PI * 2);
+// `shared.C(1,[],[0],{"w":100,"h":200,"x":8000,"y":3700,sf:(o)=>{
+//     const a = (shared.time / 1000) % (Math.PI * 2);
 
 //     // move 0-pi/2 rest pi/2-pi move pi-pi*3/2 rest pi*3/2-2pi
 //     o.pos.x = 8000;
@@ -5650,8 +5656,8 @@ window.obsArr.push(
 //     ctx.fill();
 //     ctx.closePath();
 // }})`,
-// `C(1,[],[0],{"w":200,"h":100,"x":8000,"y":3700,sf:(o)=>{
-//     const a = (window.time / 1000 + Math.PI/2) % (Math.PI * 2);
+// `shared.C(1,[],[0],{"w":200,"h":100,"x":8000,"y":3700,sf:(o)=>{
+//     const a = (shared.time / 1000 + Math.PI/2) % (Math.PI * 2);
 
 //     // move 0-pi/2 rest pi/2-pi move pi-pi*3/2 rest pi*3/2-2pi
 //     o.pos.y = 3700;
@@ -5671,14 +5677,14 @@ window.obsArr.push(
 // }})`,
 
 // 9600 1700 4 moving circles below top crystal 50 rad, moving across the 4x2 in the mirror pattern
-// C(3,[],[20],{x:9000,y:4000,fontSize:80,text:"Slip",hex:'#FFFFFF',alpha:1})
-// C(3,[],[20],{x:9300,y:4000,fontSize:80,text:"PointAccel",hex:'#FFFFFF',alpha:1})
+// shared.C(3,[],[20],{x:9000,y:4000,fontSize:80,text:"Slip",hex:'#FFFFFF',alpha:1})
+// shared.C(3,[],[20],{x:9300,y:4000,fontSize:80,text:"PointAccel",hex:'#FFFFFF',alpha:1})
 // lets get decoration working again or at least update defaults (it doesnt have a decofilepath default rn)
 
 // draw obstacle
 // draw obstacle. Draws from 10200, 4500 to 10400 4200
 // scrapped, just wasn't interesting enough
-// window.obsArr.push(`{const drawOffsetX=-300;const drawOffsetY=0;let activated=false;C(0,[],[3],{
+// shared.obsArr.push(`{const drawOffsetX=-300;const drawOffsetY=0;let activated=false;shared.C(0,[],[3],{
 //     x: 8050, y: 3350, r: 50,
 //     cr:(o) => {
 //         // ctx.save();
@@ -5687,9 +5693,9 @@ window.obsArr.push(
 //         ctx.strokeStyle = 'black';
 //         ctx.lineWidth = 4;
 //         ctx.setLineDash([30, 30]);
-//         ctx.lineDashOffset = -window.time / 15;
+//         ctx.lineDashOffset = -shared.time / 15;
 
-//         ctx.globalAlpha = (Math.sin(window.time/720)+1)/2 * 0.5 + 0.1;
+//         ctx.globalAlpha = (Math.sin(shared.time/720)+1)/2 * 0.5 + 0.1;
 //         ctx.fillStyle = '#680094';
 
 //         ctx.beginPath();
@@ -5702,7 +5708,7 @@ window.obsArr.push(
 //         ctx.setLineDash([]);
 
 //         // // draw transparent lava where spawn will be
-//         ctx.globalAlpha = (Math.sin(window.time/720)+1)/2 * 0.6;
+//         ctx.globalAlpha = (Math.sin(shared.time/720)+1)/2 * 0.6;
 
 //         ctx.fillStyle = '#c70000';
 //         ctx.strokeStyle = 'black';
@@ -5736,7 +5742,7 @@ window.obsArr.push(
 //         // // for(let i = 0; i < 30; i++){
 //         // //     ctx.lineTo(
 //         // //         o.pos.x + Math.cos(angle) * i/30 * mag,
-//         // //         o.pos.y + Math.sin(angle) * i/30 * mag + Math.sin(i / 2 - window.time / 220) * 14
+//         // //         o.pos.y + Math.sin(angle) * i/30 * mag + Math.sin(i / 2 - shared.time / 220) * 14
 //         // //     );
 //         // // }
 //         // // ctx.stroke();
@@ -5746,13 +5752,13 @@ window.obsArr.push(
 //         if(activated === true) return;
 //         activated = true;
         
-//         C(0,[],[1],{boundPlayer: true,x:o.pos.x + drawOffsetX, y: o.pos.y + drawOffsetY, r: 50});
+//         shared.C(0,[],[1],{boundPlayer: true,x:o.pos.x + drawOffsetX, y: o.pos.y + drawOffsetY, r: 50});
 //     }
 // })}`);
 
 // flowr.fun flower petals
 for(let i = 0; i < 5; i++){
-    window.obsArr.push(`C(0,[1],[2],{
+    shared.obsArr.push(`shared.C(0,[1],[2],{
         x: 8900, y: 1900, r: 10*40/25,
         "bounciness": 2, decay: 0.985,
         "initialRotation": ${i / 5 * Math.PI * 2},
@@ -5775,8 +5781,8 @@ for(let i = 0; i < 5; i++){
 
 // was going to be change friction but now the render just looks like a spinning table so im running with it
 for(let i = 0; i < 4; i++){
-    window.obsArr.push(`${
-        i === 0 ? `window.cfarcs = [];
+    shared.obsArr.push(`${
+        i === 0 ? `let cfarcs; cfarcs = shared.cfarcs = [];
         for(let i = 0; i < 5; i++){
             cfarcs.push({
                 radius: Math.random() * 98,
@@ -5788,7 +5794,7 @@ for(let i = 0; i < 4; i++){
                 thicknessOverTimeVariance: Math.random() * 0.3// sine wave
             }); // linedash?
         }` : ''
-    }C(4,[],[3],{
+    }shared.C(4,[],[3],{
         "r":100,"innerRadius":0,"startSliceAngle":${i/4 * Math.PI * 2},
         "endSliceAngle":${(i+.8)/4 * Math.PI * 2},"startSliceAngleRotateSpeed":0.005,
         "endSliceAngleRotateSpeed":0.005,"x":9200,"y":1600,
@@ -5796,7 +5802,7 @@ for(let i = 0; i < 4; i++){
             // some arcs orbiting the center
             ctx.save();
 
-            ctx.fillStyle = blendColor('#000000','#0000FF', (Math.sin(window.time / 300)+1)/2 * 0.1);
+            ctx.fillStyle = blendColor('#000000','#0000FF', (Math.sin(shared.time / 300)+1)/2 * 0.1);
             ctx.globalAlpha = 0.32;
             
             ctx.beginPath();
@@ -5810,10 +5816,10 @@ for(let i = 0; i < 4; i++){
 
             ctx.strokeStyle = 'white';
             ctx.globalAlpha = 1;
-            const arcs = window.cfarcs;
+            const arcs = shared.cfarcs;
             for(let i = 0; i < arcs.length; i++){
                 const a = arcs[i];
-                ctx.lineWidth = a.thickness + Math.sin(window.time / 1000) * a.thicknessOverTimeVariance;
+                ctx.lineWidth = a.thickness + Math.sin(shared.time / 1000) * a.thicknessOverTimeVariance;
                 ctx.beginPath();
                 ctx.arc(o.pos.x, o.pos.y, a.radius, a.startAngle, a.endAngle);
                 ctx.stroke();
@@ -5842,20 +5848,20 @@ for(let i = 0; i < 4; i++){
 let i = 1;
 const h = 60;
 for(let x = 11000 + 10 + w; x < 11200 - 10; x += w){
-    window.obsArr.push(`{const offset=${i};C(1,[],[0],{"w":${w},"h":${h},"x":${x-w/2},"y":2750,cr:()=>{},sf:(o)=>{
-        o.pos.y = 2800 - ${h}/2 + Math.sin(window.time / 1000 + offset * 0.4) * 25;
+    shared.obsArr.push(`{const offset=${i};shared.C(1,[],[0],{"w":${w},"h":${h},"x":${x-w/2},"y":2750,cr:()=>{},sf:(o)=>{
+        o.pos.y = 2800 - ${h}/2 + Math.sin(shared.time / 1000 + offset * 0.4) * 25;
     }});}`);
     i++;
 }
 
 // the renderer
-window.obsArr.push(`C(0,[],[3],{x:-1E9,y:0,cr:()=>{
+shared.obsArr.push(`shared.C(0,[],[3],{x:-1E9,y:0,cr:()=>{
     ctx.fillStyle = colors.tile;
     ctx.beginPath();
     
     function getY(x){
         const offset = (x - (11000 + 10)) / ${w};
-        return 2800 - ${h}/2 + Math.sin(window.time / 1000 + offset * 0.4) * 25;d
+        return 2800 - ${h}/2 + Math.sin(shared.time / 1000 + offset * 0.4) * 25;d
     }
     ctx.moveTo(11010, getY(11010));
     for(let x = 11000 + 10 + ${w}; x <= 11200 - 10; x += ${w}){
@@ -5879,7 +5885,7 @@ window.obsArr.push(`C(0,[],[3],{x:-1E9,y:0,cr:()=>{
         for(let y = 2700; y < 2900; y += w){
             const manhattan = Math.abs(x+w/2 - centerX) + Math.abs(y+w/2 - centerY);
             if(manhattan <= 130 - w){
-                window.obsArr.push(`C(1,[],[2,10],{x:${x},y:${y},w:${w},h:${w},bounciness:20,decay:0.95,maxStrength:100,regenTime:Infinity,healSpeed:0,ef:(p,res,o)=>{
+                shared.obsArr.push(`shared.C(1,[],[2,10],{x:${x},y:${y},w:${w},h:${w},bounciness:20,decay:0.95,maxStrength:100,regenTime:Infinity,healSpeed:0,ef:(p,res,o)=>{
                     o.pos.x = -1E9;
                 }})`);
             }
@@ -5887,33 +5893,33 @@ window.obsArr.push(`C(0,[],[3],{x:-1E9,y:0,cr:()=>{
     }
 }
 
-window.polyObs = [];
+shared.polyObs = [];
 // polygon w/ pushable sides
 {
-    window.polyObsPts = [[8600, 2200],[8650,2100],[8750,2100],[8800,2200],[8750,2300],[8650,2300]];
-    for(let i = 0; i < window.polyObsPts.length; i++){
-        window.obsArr.push(`{let f=${i};let l=${(i+1)%(window.polyObsPts.length)};C(2,[],[3],{"points":[window.polyObsPts[f], window.polyObsPts[l]],"x":0,"y":0,cr:(o)=>{o.f=f;o.l=l},ef:(p,res,o)=>{
+    shared.polyObsPts = [[8600, 2200],[8650,2100],[8750,2100],[8800,2200],[8750,2300],[8650,2300]];
+    for(let i = 0; i < shared.polyObsPts.length; i++){
+        shared.obsArr.push(`{let f=${i};let l=${(i+1)%(shared.polyObsPts.length)};shared.C(2,[],[3],{"points":[shared.polyObsPts[f], shared.polyObsPts[l]],"x":0,"y":0,cr:(o)=>{o.f=f;o.l=l},ef:(p,res,o)=>{
             // if(res.overlapV.x > 1E9 || res.overlapV.x < -1E9) return;
             // o.pos.x -= res.overlapV.x;
             // o.pos.y -= res.overlapV.y;
-            window.polyObsPts[f][0] -= res.overlapV.x;
-            window.polyObsPts[f][1] -= res.overlapV.y;
+            shared.polyObsPts[f][0] -= res.overlapV.x;
+            shared.polyObsPts[f][1] -= res.overlapV.y;
 
-            window.polyObsPts[l][0] -= res.overlapV.x;
-            window.polyObsPts[l][1] -= res.overlapV.y;
+            shared.polyObsPts[l][0] -= res.overlapV.x;
+            shared.polyObsPts[l][1] -= res.overlapV.y;
 
-            for(let i = 0; i < window.polyObs.length; i++){
-                const o2 = window.polyObs[i];
-                o2.sat.setPoints([new SAT.Vector(...window.polyObsPts[o2.f]), new SAT.Vector(...window.polyObsPts[o2.l])]);
+            for(let i = 0; i < shared.polyObs.length; i++){
+                const o2 = shared.polyObs[i];
+                o2.sat.setPoints([new SAT.Vector(...shared.polyObsPts[o2.f]), new SAT.Vector(...shared.polyObsPts[o2.l])]);
             }
             
-        }});window.polyObs.push(window.obstacles[window.obstacles.length-1])}`);
+        }});shared.polyObs.push(shared.obstacles[shared.obstacles.length-1])}`);
     }
 }
 // the one that renders (a separate obstacle that renders the obs above)
-window.obsArr.push(`C(0,[],[3],{x:0,y:0,r:1,cr:(o)=>{
-    for(let i = 0; i < window.polyObs.length; i++){
-        const p = window.polyObs[i];
+shared.obsArr.push(`shared.C(0,[],[3],{x:0,y:0,r:1,cr:(o)=>{
+    for(let i = 0; i < shared.polyObs.length; i++){
+        const p = shared.polyObs[i];
         ctx.strokeStyle = 'black';
         ctx.lineWidth = 5;
 
@@ -5925,10 +5931,10 @@ window.obsArr.push(`C(0,[],[3],{x:0,y:0,r:1,cr:(o)=>{
     }
 
     ctx.beginPath();
-    const p = window.polyObs[0];
+    const p = shared.polyObs[0];
     ctx.moveTo(p.sat.points[0].x + p.pos.x, p.sat.points[0].y + p.pos.y);
-    for(let i = 0; i < window.polyObs.length; i++){
-        const p = window.polyObs[i];
+    for(let i = 0; i < shared.polyObs.length; i++){
+        const p = shared.polyObs[i];
         ctx.lineTo(p.sat.points[1].x + p.pos.x, p.sat.points[1].y + p.pos.y);
     }
     ctx.fillStyle = 'black';
@@ -5976,7 +5982,7 @@ window.obsArr.push(`C(0,[],[3],{x:0,y:0,r:1,cr:(o)=>{
 // ctx.lineCap = 'butt';
 // ctx.lineJoin = 'round';
 // for(let i = 0; i < amt; i++){
-//     const t = Math.PI * 2 * i / amt + window.time / 3000;
+//     const t = Math.PI * 2 * i / amt + shared.time / 3000;
 //     const p = Math.max(Math.abs(Math.cos(t)),Math.abs(Math.sin(t)));
 //     let x = (o.dimensions.x-arrowW)/2*Math.cos(t) / p;
 //     let y = (o.dimensions.y-arrowH)/2*Math.sin(t) / p;
@@ -6008,14 +6014,14 @@ window.obsArr.push(`C(0,[],[3],{x:0,y:0,r:1,cr:(o)=>{
 
 // for(let i = 0; i < 3; i++){
 //     // selfCollide
-//     window.obsArr.push(`${i === 0 ? 'var scs=[];' : ''}{let ang = Math.random() * Math.PI * 2;
+//     shared.obsArr.push(`${i === 0 ? 'var scs=[];' : ''}{let ang = Math.random() * Math.PI * 2;
 //     let mag = 0.3;
 //     let ene;
 //     let xv = Math.cos(ang) * mag;
 //     let yv = Math.sin(ang) * mag;
 //     let topX = 0;
 //     let topY = 0;
-//     C(0,[],[1],{r:24,y:3700,x:8700,collidable:false,sf:(e)=>{
+//     shared.C(0,[],[1],{r:24,y:3700,x:8700,collidable:false,sf:(e)=>{
 //         e.pos.y += yv * dt;
 //         e.pos.x += xv * dt;
 //         topX = e.pos.x; topY = e.pos.y;
@@ -6080,7 +6086,7 @@ window.obsArr.push(`C(0,[],[3],{x:0,y:0,r:1,cr:(o)=>{
 // let topY = 0;
 // let timer = 300;
 // const recyclableInds=[];
-// C(0,[],[1],{r:30,y:4200,x:8300,collidable:false,sf:(e)=>{
+// shared.C(0,[],[1],{r:30,y:4200,x:8300,collidable:false,sf:(e)=>{
 //     e.pos.x = 8400; e.pos.y = 4300;
 //     // e.pos.y += yv * dt;
 //     // e.pos.x += xv * dt;
@@ -6107,9 +6113,9 @@ window.obsArr.push(`C(0,[],[3],{x:0,y:0,r:1,cr:(o)=>{
 //             thisInd = obstacles.length;
 //         }
 
-//         C(0,[],[1],{x:e.pos.x,y:e.pos.y,r:e.sat.r,sf:(e)=>{
+//         shared.C(0,[],[1],{x:e.pos.x,y:e.pos.y,r:e.sat.r,sf:(e)=>{
 //             e.pos.x += dt * 0.12;
-//             e.pos.y += Math.sin(window.time / 600) * 0.1 * dt;
+//             e.pos.y += Math.sin(shared.time / 600) * 0.1 * dt;
 
 //             if(e.pos.x > 8800){
 //                 recyclableInds.push(thisInd);
@@ -6149,11 +6155,11 @@ window.obsArr.push(`C(0,[],[3],{x:0,y:0,r:1,cr:(o)=>{
 
 // Scrapped - vertically oscillating enemies
 // for(let x = 8600+30; x <= 8700; x += 40){
-//     window.obsArr.push(`C(0,[],[1],{x:${x},y:4200,r:30,sf:(e)=>{
-//         e.pos.y = 4200 + Math.sin(window.time / 600 + ${x}/3) * (100 - 30)
+//     shared.obsArr.push(`shared.C(0,[],[1],{x:${x},y:4200,r:30,sf:(e)=>{
+//         e.pos.y = 4200 + Math.sin(shared.time / 600 + ${x}/3) * (100 - 30)
 //     },cr:(e)=>{
 //         ctx.lineWidth = 6;
-//         ctx.fillStyle = 'hsl(' + (window.time / 12 + ${x}/3) + ', 20%, 30%)';
+//         ctx.fillStyle = 'hsl(' + (shared.time / 12 + ${x}/3) + ', 20%, 30%)';
 //         ctx.strokeStyle = 'black';
 
 //         ctx.beginPath();
@@ -6165,11 +6171,11 @@ window.obsArr.push(`C(0,[],[3],{x:0,y:0,r:1,cr:(o)=>{
 //         ctx.globalAlpha = 1;
 //     }})`);
 
-//     window.obsArr.push(`C(0,[],[1],{x:${x},y:4200,r:30,sf:(e)=>{
-//         e.pos.y = 4200 - Math.sin(window.time / 600 + ${x}/3) * (100 - 30);
+//     shared.obsArr.push(`shared.C(0,[],[1],{x:${x},y:4200,r:30,sf:(e)=>{
+//         e.pos.y = 4200 - Math.sin(shared.time / 600 + ${x}/3) * (100 - 30);
 //     },cr:(e)=>{
 //         ctx.lineWidth = 6;
-//         ctx.fillStyle = 'hsl(' + (window.time / 12 + ${x}/3) + ', 20%, 30%)';
+//         ctx.fillStyle = 'hsl(' + (shared.time / 12 + ${x}/3) + ', 20%, 30%)';
 //         ctx.strokeStyle = 'black';
 
 //         ctx.beginPath();
@@ -6181,11 +6187,11 @@ window.obsArr.push(`C(0,[],[3],{x:0,y:0,r:1,cr:(o)=>{
 //         ctx.globalAlpha = 1;
 //     }})`);
 
-//     window.obsArr.push(`C(0,[],[1],{x:${8600+8800-x},y:4200,r:30,sf:(e)=>{
-//         e.pos.y = 4200 + Math.sin(window.time / 600 + ${x}/3) * (100 - 30)
+//     shared.obsArr.push(`shared.C(0,[],[1],{x:${8600+8800-x},y:4200,r:30,sf:(e)=>{
+//         e.pos.y = 4200 + Math.sin(shared.time / 600 + ${x}/3) * (100 - 30)
 //     },cr:(e)=>{
 //         ctx.lineWidth = 6;
-//         ctx.fillStyle = 'hsl(' + (window.time / 12 + ${x}/3) + ', 20%, 30%)';
+//         ctx.fillStyle = 'hsl(' + (shared.time / 12 + ${x}/3) + ', 20%, 30%)';
 //         ctx.strokeStyle = 'black';
 
 //         ctx.beginPath();
@@ -6197,11 +6203,11 @@ window.obsArr.push(`C(0,[],[3],{x:0,y:0,r:1,cr:(o)=>{
 //         ctx.globalAlpha = 1;
 //     }})`);
 
-//     window.obsArr.push(`C(0,[],[1],{x:${8600+8800-x},y:4200,r:30,sf:(e)=>{
-//         e.pos.y = 4200 - Math.sin(window.time / 600 + ${x}/3) * (100 - 30);
+//     shared.obsArr.push(`shared.C(0,[],[1],{x:${8600+8800-x},y:4200,r:30,sf:(e)=>{
+//         e.pos.y = 4200 - Math.sin(shared.time / 600 + ${x}/3) * (100 - 30);
 //     },cr:(e)=>{
 //         ctx.lineWidth = 6;
-//         ctx.fillStyle = 'hsl(' + (window.time / 12 + ${x}/3) + ', 20%, 30%)';
+//         ctx.fillStyle = 'hsl(' + (shared.time / 12 + ${x}/3) + ', 20%, 30%)';
 //         ctx.strokeStyle = 'black';
 
 //         ctx.beginPath();
@@ -6216,15 +6222,15 @@ window.obsArr.push(`C(0,[],[3],{x:0,y:0,r:1,cr:(o)=>{
 
 
 // IN USE
-// window.markerObs = ``;
+// shared.markerObs = ``;
 // function createMarkerAtPos(markerText='Hi',fontSize=80){
 //     const p = players[selfId];
 //     let x = Math.round(p.pos.x / 100) * 100;
 //     let y = Math.round(p.pos.y / 100) * 100;
 
-//     const add2str = `C(3,[],[20],{x:${x},y:${y},fontSize:${fontSize},text:"${markerText}",hex:'#FFFFFF',alpha:1})`;
+//     const add2str = `shared.C(3,[],[20],{x:${x},y:${y},fontSize:${fontSize},text:"${markerText}",hex:'#FFFFFF',alpha:1})`;
 
-//     window.markerObs += add2str + '\n';
+//     shared.markerObs += add2str + '\n';
 //     console.log(add2str);
 //     eval(add2str);
 // }
@@ -6248,8 +6254,8 @@ window.obsArr.push(`C(0,[],[3],{x:0,y:0,r:1,cr:(o)=>{
 
 //     // let [shape,simulate,effect,params] = t.split(',');
 
-//     // remove C( start
-//     t = t.split('C(')[1];
+//     // remove shared.C( start
+//     t = t.split('shared.C(')[1];
     
 //     // split into rough shape, simulate, effects param
 //     let split1 = splitTimes(t, ',[', 2);
@@ -6266,11 +6272,11 @@ window.obsArr.push(`C(0,[],[3],{x:0,y:0,r:1,cr:(o)=>{
 //     // console.log({shape, effects, params});
 
 //     // // eval doesn't return anything
-//     eval(`window.grabParams = ${params}`);
+//     eval(`shared.grabParams = ${params}`);
 
-//     let effectObj = window.grabParams;
+//     let effectObj = shared.grabParams;
 
-//     delete window.grabParams;
+//     delete shared.grabParams;
 
 //     effectObj.r = 1250 * Math.sqrt(2);
 //     effectObj.innerRadius = effectObj.r - 300;
@@ -6283,7 +6289,7 @@ window.obsArr.push(`C(0,[],[3],{x:0,y:0,r:1,cr:(o)=>{
 
 //     // console.log(effectObj);
 
-//     circleRingStr += `C(4,[],[${effects}],${JSON.stringify(effectObj)});\n`;
+//     circleRingStr += `shared.C(4,[],[${effects}],${JSON.stringify(effectObj)});\n`;
 
 //     ang += obsSize + gap;
 // }
@@ -6599,7 +6605,7 @@ var typeMap = {
     'timetrap': {
         type: [1,[],[17]],
         customMap: (params) => {
-            //C(1,[],[17],{h:200,w:300,y:700,x:300,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:1.5,timeTrapMaxTime:300,});
+            //shared.C(1,[],[17],{h:200,w:300,y:700,x:300,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:1.5,timeTrapMaxTime:300,});
             const p = {timeTrapToShowTenth:false,timeTrapToKill:true,timeTrapRecoverySpeed:params.cdmult};
 
             p.timeTrapMaxTime = params.maxTime * 1000;
@@ -6843,7 +6849,7 @@ var typeMap = {
                 sizeMult: params.size / 24.5
             }
         }
-        //C(1,[],[18],{h:200,w:300,y:700,x:300,sizeChangePermanent:false,sizeMult:1.5,});
+        //shared.C(1,[],[18],{h:200,w:300,y:700,x:300,sizeChangePermanent:false,sizeMult:1.5,});
     },
     'snap': {
         type: [1,[],[16]],
@@ -6956,7 +6962,7 @@ var typeMap = {
                 pushConversionRatio: 0.86
             }
         }
-    },//C(3,[],[20],{fontSize:80,text:'I am a text :D',y:800,x:450,hex:colourRgb(100,100,100),});
+    },//shared.C(3,[],[20],{fontSize:80,text:'I am a text :D',y:800,x:450,hex:colourRgb(100,100,100),});
     'text': {
         customMap: (params) => {
             // {
@@ -6982,7 +6988,7 @@ var typeMap = {
                     rotateSpeed: 0,
                     initialRotation: params.angle,
                 }
-            }//"C(3,[1],[20],{fontSize:80,text:'I am a text :D',y:800,x:450,pivotY:800,pivotX:450,rotateSpeed:0,initialRotation:45,hex:colourRgb(100,100,100),});"
+            }//"shared.C(3,[1],[20],{fontSize:80,text:'I am a text :D',y:800,x:450,pivotY:800,pivotX:450,rotateSpeed:0,initialRotation:45,hex:colourRgb(100,100,100),});"
             else {
                 return {
                     type: [3,[],[20]],
@@ -7043,7 +7049,7 @@ var typeMap = {
             }
         }
     },
-    // C(1,[],[10],{h:200,w:300,y:700,x:300,healSpeed:1,regenTime:100,maxStrength:60,});
+    // shared.C(1,[],[10],{h:200,w:300,y:700,x:300,healSpeed:1,regenTime:100,maxStrength:60,});
     // {
     //     "x": 2950,
     //     "y": 2650,
@@ -7165,7 +7171,7 @@ var enemyTypeMap = {
         return `
         var xv${counter} = ${params.xv/30};
         var yv${counter} = ${params.yv/30};
-        C(0,[3],[1],{r:${params.radius*2},y:${params.y*2},x:${params.x*2},sf:(e)=>{
+        shared.C(0,[3],[1],{r:${params.radius*2},y:${params.y*2},x:${params.x*2},sf:(e)=>{
         e.pos.y += yv${counter};
         e.pos.x += xv${counter};
         if ((e.pos.x - e.sat.r) < ${bounds.x} || e.pos.x + e.sat.r > ${bounds.x + bounds.w}) {
@@ -7209,7 +7215,7 @@ var enemyTypeMap = {
         return `
         var xv${counter} = ${params.xv/42};
         var yv${counter} = ${params.yv/42};
-        C(1,[3],[1],{w:${size},h:${size},y:${params.y*2},x:${params.x*2},sf:(e)=>{
+        shared.C(1,[3],[1],{w:${size},h:${size},y:${params.y*2},x:${params.x*2},sf:(e)=>{
         e.pos.y += yv${counter};
         e.pos.x += xv${counter};
         if ((e.pos.x) < ${bounds.x} || e.pos.x + ${size} > ${bounds.x + bounds.w}) {
@@ -7301,7 +7307,7 @@ var enemyTypeMap = {
         var yv${c} = ${params.yv/42};
         var shootDirectionIndex${c} = 0;
         var timer${c} = ${shootSpeed};
-        C(0,[3],[1],{r:${params.radius},y:${params.y*2},x:${params.x*2},sf:(e)=>{
+        shared.C(0,[3],[1],{r:${params.radius},y:${params.y*2},x:${params.x*2},sf:(e)=>{
         e.pos.y += yv${c};
         e.pos.x += xv${c};
         if ((e.pos.x - e.sat.r) < ${bounds.x} || e.pos.x + e.sat.r > ${bounds.x + bounds.w}) {
@@ -7326,17 +7332,17 @@ var enemyTypeMap = {
             /*scoped using let*/
             let xv${counter} = Math.cos(dir) * ${projectileParams.speed};
             let yv${counter} = Math.sin(dir) * ${projectileParams.speed};
-            C(0,[3],[1],{r:${projectileParams.radius},y:e.pos.y,x:e.pos.x,sf:(e)=>{
+            shared.C(0,[3],[1],{r:${projectileParams.radius},y:e.pos.y,x:e.pos.x,sf:(e)=>{
             e.pos.y += yv${counter};
             e.pos.x += xv${counter};
             /*delete obstacle*/
             if ((e.pos.x - e.sat.r) < ${bounds.x} || e.pos.x + e.sat.r > ${bounds.x + bounds.w} || (e.pos.y - e.sat.r) < ${bounds.y} || e.pos.y + e.sat.r > ${bounds.y + bounds.h}) {
-                window.tickFns.push(()=>{
+                shared.tickFns.push(()=>{
                     for(let i = 0; i < obstacles.length; i++){
                         if(obstacles[i] === e) {obstacles.splice(i,1); break;}
                     }
-                    /*for(let key in window.idToObs){
-                        if(window.idToObs[key] === e){delete window.idToObs[key]; break;}
+                    /*for(let key in shared.idToObs){
+                        if(shared.idToObs[key] === e){delete shared.idToObs[key]; break;}
                     }*/
                 });
             }
@@ -7385,7 +7391,7 @@ var enemyTypeMap = {
         var pos${counter} = {
             x: ${params.x*2}, y: ${params.y*2} 
         }
-        C(0,[3],[1],{r:${params.radius},y:${params.y*2},x:${params.x*2},sf:(e)=>{
+        shared.C(0,[3],[1],{r:${params.radius},y:${params.y*2},x:${params.x*2},sf:(e)=>{
             pos${counter}.y += yv${counter};
             pos${counter}.x += xv${counter};
             if ((pos${counter}.x - e.sat.r) < ${bounds.x} || pos${counter}.x + e.sat.r > ${bounds.x + bounds.w}) {
@@ -7413,7 +7419,7 @@ var enemyTypeMap = {
                 }
             }
         }});
-        C(0,[3],[0],{r:${params.radius},y:${params.y*2},x:${params.x*2},sf:(e)=>{
+        shared.C(0,[3],[0],{r:${params.radius},y:${params.y*2},x:${params.x*2},sf:(e)=>{
             if(switchState${counter} === true){
                 e.pos.x = -100000;
             } else {
@@ -7554,8 +7560,8 @@ for(let i = 0; i < obs.length; i++){
         // "inView": false
         str += `var minX${counter}, minY${counter}, maxX${counter}, maxY${counter};
         minX${counter} = ${minX};minY${counter} = ${minY};maxX${counter} = ${maxX};maxY${counter} = ${maxY};
-        C(1,[3],[0],{h:1,w:1,y:0,x:-10000,sf:(e)=>{
-            const player = window.players[window.selfId];
+        shared.C(1,[3],[0],{h:1,w:1,y:0,x:-10000,sf:(e)=>{
+            const player = shared.players[shared.selfId];
             if ((player.pos.x) > md(minX${counter}) && (player.pos.x) < md(maxX${counter}) && (player.pos.y) > md(minY${counter}) && (player.pos.y) < md(maxY${counter})) {
                 colors.background="${o.tileColor}"; colors.tile="${o.bgColor}";
             }
@@ -7580,7 +7586,7 @@ for(let i = 0; i < obs.length; i++){
         // let state = params.state;
         // let x = params.x * 2;
         str += `var timer${counter} = ${o.timer}; var state${counter} =${o.state}; var x${counter} = ${o.x}; 
-        C(1,[],[1],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},sf:(e)=>{
+        shared.C(1,[],[1],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},sf:(e)=>{
                 timer${counter} -= 1 / 60;
                 if(timer${counter} < 0){
                     state${counter} = !state${counter};
@@ -7637,7 +7643,7 @@ for(let i = 0; i < obs.length; i++){
     //         return {hex: '#000000', alpha: params.opaq};
     //     }
     // },
-        str += `C(1,[],[20],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},
+        str += `shared.C(1,[],[20],{h:${o.h},w:${o.w},y:${o.y},x:${o.x},
             cr:(e)=>{
                 ctx.beginPath();
                 ctx.lineWidth = 2;
@@ -7696,14 +7702,14 @@ for(let i = 0; i < obs.length; i++){
     let typeString = JSON.stringify(params.type);
     typeString = typeString.slice(1, typeString.length-1);
 
-    //C(1,[],[0],{h:100,w:1100,y:4300,x:4600,});
-    str += `C(${typeString},${paramString})\n`;
+    //shared.C(1,[],[0],{h:100,w:1100,y:4300,x:4600,});
+    str += `shared.C(${typeString},${paramString})\n`;
 }
 
 // cone render mapping
 // idea: first map everything to a circle and then use the 3d renderer to extrude it down with some h that's in a constant ratio to the w
-// C(0,[],[0],{x:-1000,y:0,r:10,cr:(e)=>{
-//     // cancelAnimationFrame(window.runRAF);
+// shared.C(0,[],[0],{x:-1000,y:0,r:10,cr:(e)=>{
+//     // cancelAnimationFrame(shared.runRAF);
 //     // const imgData = ctx.getImageData(0,0,canvas.w,canvas.h);
 //     // // console.log(canvas.w, canvas.h);
 
@@ -7744,7 +7750,7 @@ for(let i = 0; i < obs.length; i++){
 
 //     //     // ctx.putImageData(imgData, 0,0 );
 //     //     ctx.putImageData(newImgData,0,0);
-//     //     // requestAnimationFrame(window.runFn);
+//     //     // requestAnimationFrame(shared.runFn);
 //     //     // ctx.restore();
 //     // }, 100)
 
@@ -7771,16 +7777,16 @@ for(let i = 0; i < obs.length; i++){
 //     // ctx.fill();
 //     ctx.closePath();
 
-//     window.changeCameraScale(.2);
+//     shared.changeCameraScale(.2);
 
-//     // cancelAnimationFrame(window.runRAF)
+//     // cancelAnimationFrame(shared.runRAF)
 // }, 1000)
 
-// C(0,[],[0],{x:-1000,y:0,r:10,cr:(e)=>{
+// shared.C(0,[],[0],{x:-1000,y:0,r:10,cr:(e)=>{
 //     // ctx.save();
 //     ctx.beginPath();
 //     ctx.fillStyle = 'red';
-//     ctx.arc(window.camera.x, window.camera.y, canvas.w / 5, 0, Math.PI * 2);
+//     ctx.arc(shared.camera.x, shared.camera.y, canvas.w / 5, 0, Math.PI * 2);
 //     ctx.clip();
 //     ctx.closePath();
 // }})
@@ -7790,7 +7796,7 @@ for(let i = 0; i < obs.length; i++){
 // TODO: uncomment
 var initCanvases = () => {};
 var isSecond = false;
-if(window.importNoise !== undefined){
+if(shared.importNoise !== undefined){
     initCanvases = async() => {
         let animState = 'welcome';
         let animT = 0;
@@ -7801,15 +7807,15 @@ if(window.importNoise !== undefined){
             if(musicObs !== undefined) {musicObs.musicPath = 'https://www.youtube.com/watch?v=pM7xCwaCV6g'; musicObs.musicStartTime = 17;}
         }
 
-        let oldRender = window.render;
-        window.render = (...params) => {
+        let oldRender = shared.render;
+        shared.render = (...params) => {
             oldRender(...params);
             ctx.fillStyle = 'black';
             ctx.fillRect(0,0,canvas.w,canvas.h);
         }
         
         const THREE = await import("https://cdn.skypack.dev/pin/three@v0.129.0-XYKMzgCzb23GRdwfqj2I/mode=imports,min/optimized/three.js");
-        const noise = await window.importNoise();
+        const noise = await shared.importNoise();
 
         const starColors = [
             0xCCCCCC,
@@ -7987,11 +7993,11 @@ if(window.importNoise !== undefined){
 
             renderer.domElement.style.width = window.innerWidth + "px";
             renderer.domElement.style.height = window.innerHeight + "px";
-            // window.resizeElements([renderer.domElement]);
+            // shared.resizeElements([renderer.domElement]);
         }
 
         webglResize();
-        window.resizeFns.push(webglResize);
+        shared.resizeFns.push(webglResize);
 
         // second canvas that overlays the starfield and says things
         const canvas2 = document.createElement('canvas');
@@ -8029,7 +8035,7 @@ if(window.importNoise !== undefined){
         };
 
         canvas2resize();
-        window.resizeFns.push(canvas2resize);
+        shared.resizeFns.push(canvas2resize);
 
         function interpolateBetween(startPos, endPos, startT, endT){
             if(animT < startT) return startPos;
@@ -8126,9 +8132,9 @@ if(window.importNoise !== undefined){
                         stateEndTime += 1400;
 
                         scaleRenderApplied = true;
-                        scaleRenderStartTime = window.time;
+                        scaleRenderStartTime = shared.time;
 
-                        C(1,[],[0],{x:7500,y:1050,w:10000,h:5000});
+                        shared.C(1,[],[0],{x:7500,y:1050,w:10000,h:5000});
                     }
                 }
 
@@ -8139,12 +8145,12 @@ if(window.importNoise !== undefined){
                     const opaq = Math.min(1,Math.max(0,1 - (Date.now() - secondTimeDomElFade) / 2000));
                     releasePlayer = true;
                     if(scaleRenderApplied === true){
-                        window.render = (...params) => {
-                            changeCameraScale(Math.abs(Math.cos((window.time - scaleRenderStartTime) / 800)));
+                        shared.render = (...params) => {
+                            changeCameraScale(Math.abs(Math.cos((shared.time - scaleRenderStartTime) / 800)));
                             oldRender(...params);
                         }
                     }
-                    else window.render = oldRender;
+                    else shared.render = oldRender;
                     if(opaq <= 0 && alreadyInnittedCone === false){
                         let hasRefreshed = false;
                         const centerX = 3100;
@@ -8154,10 +8160,10 @@ if(window.importNoise !== undefined){
                         for(let a = 0; a < 8; a++){
                             const angleOffset = Math.PI * 2 * ((a%4)/4);
                             const sign = (a < 4) ? 1 : -1;
-                            C(0,[],[3],{x:0,y:0,r:100,cr:(o)=>{
+                            shared.C(0,[],[3],{x:0,y:0,r:100,cr:(o)=>{
                                 if(firstRenderTime < 50) return;
                                 ctx.globalAlpha = 1;
-                                ctx.fillStyle = `hsl(${window.time/12},50%,50%)`;
+                                ctx.fillStyle = `hsl(${shared.time/12},50%,50%)`;
                                 ctx.shadowColor = ctx.fillStyle;
                                 ctx.shadowBlur = 15;
                                 ctx.beginPath();
@@ -8168,10 +8174,9 @@ if(window.importNoise !== undefined){
                             },ef:()=>{
                                 if(hasRefreshed === true) return;
                                 hasRefreshed = true;
-                                localStorage.setItem('tutorialCompleted', 't');
                                 location.replace(location.origin + '/create');
                             },sf:(o)=>{
-                                const angle = angleOffset + window.time * 0.0026 * sign;
+                                const angle = angleOffset + shared.time * 0.0026 * sign;
                                 o.pos.x = centerX + Math.cos(angle) * rx;
                                 o.pos.y = centerY + Math.sin(angle) * ry;
                             }})
@@ -8187,8 +8192,8 @@ if(window.importNoise !== undefined){
                             const rx = 560;
                             const ry = 560;
                             const rotateSpeed = 0.00043 * 2.5;
-                            C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Taste the edge.",sf:(o)=>{
-                                const angle = window.time * rotateSpeed + Math.PI*3/2;
+                            shared.C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Taste the edge.",sf:(o)=>{
+                                const angle = shared.time * rotateSpeed + Math.PI*3/2;
                                 o.pos.x = centerX + Math.cos(angle) * rx - o.dimensions.x/2;
                                 o.pos.y = centerY + Math.sin(angle) * ry - o.dimensions.y/2;
                             },cr:(o)=>{
@@ -8204,8 +8209,8 @@ if(window.importNoise !== undefined){
                                 ctx.rotate(-a);
                                 ctx.translate(-o.pos.x, -o.pos.y);
                             }})
-                            C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Feed The X.",sf:(o)=>{
-                                const angle = window.time * rotateSpeed * -1 + Math.PI;
+                            shared.C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Feed The X.",sf:(o)=>{
+                                const angle = shared.time * rotateSpeed * -1 + Math.PI;
                                 o.pos.x = centerX + Math.cos(angle) * rx - o.dimensions.x/2;
                                 o.pos.y = centerY + Math.sin(angle) * ry - o.dimensions.y/2;
                             },cr:(o)=>{
@@ -8221,8 +8226,8 @@ if(window.importNoise !== undefined){
                                 ctx.rotate(-a);
                                 ctx.translate(-o.pos.x, -o.pos.y);
                             }})
-                            C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Feel the flame.",sf:(o)=>{
-                                const angle = window.time * rotateSpeed + Math.PI/2;
+                            shared.C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Feel the flame.",sf:(o)=>{
+                                const angle = shared.time * rotateSpeed + Math.PI/2;
                                 o.pos.x = centerX + Math.cos(angle) * rx - o.dimensions.x/2;
                                 o.pos.y = centerY + Math.sin(angle) * ry - o.dimensions.y/2;
                             },cr:(o)=>{
@@ -8238,8 +8243,8 @@ if(window.importNoise !== undefined){
                                 ctx.rotate(-a);
                                 ctx.translate(-o.pos.x, -o.pos.y);
                             }})
-                            C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Darkness Hold.",sf:(o)=>{
-                                const angle = window.time * rotateSpeed * -1;
+                            shared.C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Darkness Hold.",sf:(o)=>{
+                                const angle = shared.time * rotateSpeed * -1;
                                 o.pos.x = centerX + Math.cos(angle) * rx - o.dimensions.x/2;
                                 o.pos.y = centerY + Math.sin(angle) * ry - o.dimensions.y/2;
                             },cr:(o)=>{
@@ -8260,16 +8265,15 @@ if(window.importNoise !== undefined){
                         alreadyInnittedCone = true;
                         renderer.domElement.remove();
                         removedRendererDOMel = true;
-                        // window.resizeFns = window.resizeFns.filter(f => f !== webglResize);
+                        // shared.resizeFns = shared.resizeFns.filter(f => f !== webglResize);
 
                         // creating a new canvas
 
                         // CONE DISTORTION
                         (async()=>{
-                            obstacles = obstacles.filter(o => o.img === undefined && o.deathTime === undefined);
-                            window.stopRenderingGems = true;
-                            window.unTaintCanvas();
-                            await window.initDistortion(`#version 300 es
+                            obstacles = shared.obstacles = shared.obstacles.filter(o => o.img === undefined && o.deathTime === undefined);
+                            shared.stopRenderingGems = true;
+                            await shared.initDistortion(`#version 300 es
                                 in highp vec4 pos;
                                 
                                 uniform float uTime;
@@ -8349,9 +8353,9 @@ if(window.importNoise !== undefined){
                             // for(let a = 0; a < 8; a++){
                             //     const angleOffset = Math.PI * 2 * ((a%4)/4);
                             //     const sign = (a < 4) ? 1 : -1;
-                            //     C(0,[],[3],{x:0,y:0,r:100,cr:(o)=>{
+                            //     shared.C(0,[],[3],{x:0,y:0,r:100,cr:(o)=>{
                             //         ctx.globalAlpha = 1;
-                            //         ctx.fillStyle = `hsl(${window.time/12},50%,50%)`;
+                            //         ctx.fillStyle = `hsl(${shared.time/12},50%,50%)`;
                             //         ctx.shadowColor = ctx.fillStyle;
                             //         ctx.shadowBlur = 15;
                             //         ctx.beginPath();
@@ -8367,7 +8371,7 @@ if(window.importNoise !== undefined){
                             //         localStorage.setItem('tutorialCompleted', 't');
                             //         location.replace(location.origin + '/create');
                             //     },sf:(o)=>{
-                            //         const angle = angleOffset + window.time * 0.0026 * sign;
+                            //         const angle = angleOffset + shared.time * 0.0026 * sign;
                             //         o.pos.x = centerX + Math.cos(angle) * rx;
                             //         o.pos.y = centerY + Math.sin(angle) * ry;
                             //     }})
@@ -8383,33 +8387,33 @@ if(window.importNoise !== undefined){
                             //     const rx = 560;
                             //     const ry = 560;
                             //     const rotateSpeed = 0.00043 * 2.5;
-                            //     C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Taste the edge.",sf:(o)=>{
-                            //         const angle = window.time * rotateSpeed + Math.PI*3/2;
+                            //     shared.C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Taste the edge.",sf:(o)=>{
+                            //         const angle = shared.time * rotateSpeed + Math.PI*3/2;
                             //         o.pos.x = centerX + Math.cos(angle) * rx - o.dimensions.x/2;
                             //         o.pos.y = centerY + Math.sin(angle) * ry - o.dimensions.y/2;
                             //     }})
-                            //     C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Feed The X.",sf:(o)=>{
-                            //         const angle = window.time * rotateSpeed * -1 + Math.PI;
+                            //     shared.C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Feed The X.",sf:(o)=>{
+                            //         const angle = shared.time * rotateSpeed * -1 + Math.PI;
                             //         o.pos.x = centerX + Math.cos(angle) * rx - o.dimensions.x/2;
                             //         o.pos.y = centerY + Math.sin(angle) * ry - o.dimensions.y/2;
                             //     }})
-                            //     C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Feel the flame.",sf:(o)=>{
-                            //         const angle = window.time * rotateSpeed + Math.PI/2;
+                            //     shared.C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Feel the flame.",sf:(o)=>{
+                            //         const angle = shared.time * rotateSpeed + Math.PI/2;
                             //         o.pos.x = centerX + Math.cos(angle) * rx - o.dimensions.x/2;
                             //         o.pos.y = centerY + Math.sin(angle) * ry - o.dimensions.y/2;
                             //     }})
-                            //     C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Darkness Hold.",sf:(o)=>{
-                            //         const angle = window.time * rotateSpeed * -1;
+                            //     shared.C(3,[],[20],{hex:'#ffffff',alpha:1,x:0,y:0,fontSize:48,text:"Darkness Hold.",sf:(o)=>{
+                            //         const angle = shared.time * rotateSpeed * -1;
                             //         o.pos.x = centerX + Math.cos(angle) * rx - o.dimensions.x/2;
                             //         o.pos.y = centerY + Math.sin(angle) * ry - o.dimensions.y/2;
                             //     }})
                             // }
                             // safe in the middle
-                            // C(1,[],[11],{x:3100,y:3000,r:100});
+                            // shared.C(1,[],[11],{x:3100,y:3000,r:100});
                         })();
 
                         // canvas2.remove();
-                        // window.resizeFns = window.resizeFns.filter(f => f !== canvas2resize);
+                        // shared.resizeFns = shared.resizeFns.filter(f => f !== canvas2resize);
                             
                         // init nonlinear transform
                     }
@@ -8473,15 +8477,15 @@ if(window.importNoise !== undefined){
             //     c.setTransform(t1);
 
             //     if(animT > zoomCameraTime){
-            //         // if(window.input.up || window.input.down || window.input.left || window.input.right) movedAround = true;
+            //         // if(shared.input.up || shared.input.down || shared.input.left || shared.input.right) movedAround = true;
 
             //         // movePlayer();
             //         canvas2.style.opacity = interpolateBetween(1, 0, zoomCameraTime, canvasFadeOutTime);
-            //         window.render = oldRender;
+            //         shared.render = oldRender;
             //         if(animT > canvasFadeOutTime){
             //             canvas2.remove();
             //             obsAnimatingTutorial.cr = () => {};
-            //             window.resizeFns = window.resizeFns.filter(f => f !== canvas2resize);
+            //             shared.resizeFns = shared.resizeFns.filter(f => f !== canvas2resize);
             //         }
 
             //         if(!removedRendererDOMel){
@@ -8609,8 +8613,8 @@ if(window.importNoise !== undefined){
 
         const tileSize = 100;
         function renderTiles(x0,y0,w,h,offset=0,offsetX=0){
-            // c.fillStyle = window.defaultColors.background;
-            // c.strokeStyle = window.defaultColors.tile;
+            // c.fillStyle = shared.defaultColors.background;
+            // c.strokeStyle = shared.defaultColors.tile;
             c.fillStyle='#383838'; c.strokeStyle='#0d0d0d';
             c.save();
             c.beginPath();
@@ -8829,17 +8833,17 @@ if(window.importNoise !== undefined){
 
                 if(t > ts.wait3){
                     canvas2.style.opacity = interpolateBetween(1, 0, ts.wait3, ts.canvasFadeOut);
-                    window.render = oldRender;
+                    shared.render = oldRender;
                     if(t > ts.canvasFadeOut){
                         canvas2.remove();
                         obsAnimatingTutorial.cr = () => {};
-                        window.resizeFns = window.resizeFns.filter(f => f !== canvas2resize);
+                        shared.resizeFns = shared.resizeFns.filter(f => f !== canvas2resize);
                     }
 
                     if(!removedRendererDOMel){
                         renderer.domElement.remove();
                         removedRendererDOMel = true;
-                        window.resizeFns = window.resizeFns.filter(f => f !== webglResize);
+                        shared.resizeFns = shared.resizeFns.filter(f => f !== webglResize);
 
                         for(let i = 0; i < obsArr.length; i++){
                             eval(obsArr[i]);
@@ -8875,7 +8879,7 @@ if(window.importNoise !== undefined){
                                 return t * t * t * (t * (t * 6. - 15.) + 10.);
                             }
                             
-                            C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
+                            shared.C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
                                 if(justStarted === true){
                                     justStarted = false;
                                 }
@@ -8924,8 +8928,8 @@ if(window.importNoise !== undefined){
                                 ctx.globalAlpha = 1;
                                 // 1500 2100 | 4700 3900
                                 // 3100 3000
-                                if(window.numGemsCollected === 4){
-                                    const p = window.players[window.selfId];
+                                if(shared.numGemsCollected === 4){
+                                    const p = shared.players[shared.selfId];
 
                                     if(releasePlayer === false){
                                         p.pos.x = 3100;
@@ -8954,8 +8958,8 @@ if(window.importNoise !== undefined){
             
             const tileSize = 100;
             function renderTiles(x0,y0,w,h,offset=0,offsetX=0){
-                c.fillStyle = window.defaultColors.background;
-                c.strokeStyle = window.defaultColors.tile;
+                c.fillStyle = shared.defaultColors.background;
+                c.strokeStyle = shared.defaultColors.tile;
                 c.save();
                 c.beginPath();
                 c.rect(x0,y0,w,h);
@@ -8995,13 +8999,13 @@ if(window.importNoise !== undefined){
                     c.strokeStyle = 3;
                     c.strokeStyle = 'black';
             
-                    const x = /*window.ovrX || */interpolateBetween(-505, 359, ts.zoomCamera, ts.obsIn);
-                    const y = /*window.ovrY || */740;
+                    const x = /*shared.ovrX || */interpolateBetween(-505, 359, ts.zoomCamera, ts.obsIn);
+                    const y = /*shared.ovrY || */740;
                     
                     c.save();
                     c.translate(x,y);
             
-                    const scale = 0.6;//window.ovrS || 0.5;
+                    const scale = 0.6;//shared.ovrS || 0.5;
             
                     c.beginPath();
                     c.moveTo(0,0);
@@ -9017,9 +9021,9 @@ if(window.importNoise !== undefined){
                 () => {
                     c.fillStyle = '#38ab30';
             
-                    const r = /*window.ovrR || */100;
-                    const x = /*window.ovrX || */659;
-                    const y = /*window.ovrY || */interpolateBetween(-r-5, 238, ts.zoomCamera, ts.obsIn);
+                    const r = /*shared.ovrR || */100;
+                    const x = /*shared.ovrX || */659;
+                    const y = /*shared.ovrY || */interpolateBetween(-r-5, 238, ts.zoomCamera, ts.obsIn);
             
                     c.beginPath();
                     c.arc(x,y,r, 0, Math.PI * 2);
@@ -9029,8 +9033,8 @@ if(window.importNoise !== undefined){
                 () => {
                     c.fillStyle = 'blue';
             
-                    const x = /*window.ovrX ||*/ interpolateBetween(1925, 1207, ts.zoomCamera, ts.obsIn);
-                    const y = /*window.ovrY ||*/ interpolateBetween(1060, 638, ts.zoomCamera, ts.obsIn);
+                    const x = /*shared.ovrX ||*/ interpolateBetween(1925, 1207, ts.zoomCamera, ts.obsIn);
+                    const y = /*shared.ovrY ||*/ interpolateBetween(1060, 638, ts.zoomCamera, ts.obsIn);
             
                     c.beginPath();
                     c.fillRect(x,y,200,200);
@@ -9038,10 +9042,10 @@ if(window.importNoise !== undefined){
                 },
                 // timetrap
                 () => {
-                    const x = /*window.ovrX || */interpolateBetween(1050, 1411, ts.zoomCamera, ts.obsIn);
-                    const y = /*window.ovrY || */interpolateBetween(-300, 195, ts.zoomCamera, ts.obsIn);
+                    const x = /*shared.ovrX || */interpolateBetween(1050, 1411, ts.zoomCamera, ts.obsIn);
+                    const y = /*shared.ovrY || */interpolateBetween(-300, 195, ts.zoomCamera, ts.obsIn);
                     let middleX = x; let middleY = y;
-                    let hexR = /*window.ovrR || */120;
+                    let hexR = /*shared.ovrR || */120;
             
                     const hexSides = [];
             
@@ -9091,13 +9095,13 @@ if(window.importNoise !== undefined){
                     c.strokeStyle = 3;
                     c.strokeStyle = 'black';
             
-                    const scale = interpolateBetween(0.6, sorScaleFac*.6, ts.wait1, ts.blurAndObsCenter);//window.ovrS || 0.5;
+                    const scale = interpolateBetween(0.6, sorScaleFac*.6, ts.wait1, ts.blurAndObsCenter);//shared.ovrS || 0.5;
             
                     const thisW = 500*scale;
                     const thisH = 200*scale/.6;
             
-                    const x = /*window.ovrX || */interpolateBetween(359, w/2-thisW/2, ts.wait1, ts.blurAndObsCenter);
-                    const y = /*window.ovrY || */interpolateBetween(740, h/2-thisH/2, ts.wait1, ts.blurAndObsCenter);
+                    const x = /*shared.ovrX || */interpolateBetween(359, w/2-thisW/2, ts.wait1, ts.blurAndObsCenter);
+                    const y = /*shared.ovrY || */interpolateBetween(740, h/2-thisH/2, ts.wait1, ts.blurAndObsCenter);
                     
                     c.save();
                     c.translate(x,y);
@@ -9116,7 +9120,7 @@ if(window.importNoise !== undefined){
                     c.closePath();
             
                     c.globalAlpha = ga;
-                    c.fillStyle = window.defaultColors.tile;//'#1f2229'
+                    c.fillStyle = shared.defaultColors.tile;//'#1f2229'
             
                     c.beginPath();
                     c.moveTo(0,0);
@@ -9133,9 +9137,9 @@ if(window.importNoise !== undefined){
                 () => {
                     c.fillStyle = '#38ab30';
             
-                    const r = /*window.ovrR || */interpolateBetween(100, 100*sorScaleFac*1.05/**(window.ovrR||1)*/, ts.wait1, ts.blurAndObsCenter);
-                    const x = /*window.ovrX || */interpolateBetween(659, 459, ts.wait1, ts.blurAndObsCenter);
-                    const y = /*window.ovrY || */interpolateBetween(238, h/2, ts.wait1, ts.blurAndObsCenter);
+                    const r = /*shared.ovrR || */interpolateBetween(100, 100*sorScaleFac*1.05/**(shared.ovrR||1)*/, ts.wait1, ts.blurAndObsCenter);
+                    const x = /*shared.ovrX || */interpolateBetween(659, 459, ts.wait1, ts.blurAndObsCenter);
+                    const y = /*shared.ovrY || */interpolateBetween(238, h/2, ts.wait1, ts.blurAndObsCenter);
             
                     c.beginPath();
                     c.arc(x,y,r, 0, Math.PI * 2);
@@ -9143,7 +9147,7 @@ if(window.importNoise !== undefined){
                     c.closePath();
             
                     c.globalAlpha = interpolateBetween(0, 1, ts.wait1, ts.blurAndObsCenter);
-                    c.fillStyle = window.defaultColors.tile;//'#1f2229'
+                    c.fillStyle = shared.defaultColors.tile;//'#1f2229'
             
                     c.beginPath();
                     c.arc(x,y,r, 0, Math.PI * 2);
@@ -9160,15 +9164,15 @@ if(window.importNoise !== undefined){
                     const size = interpolateBetween(200, 200*sorScaleFac, ts.wait1, ts.blurAndObsCenter);
                     const thisH = size;
             
-                    const x = /*window.ovrX ||*/ interpolateBetween(1207, 1461-size/2, ts.wait1, ts.blurAndObsCenter);
-                    const y = /*window.ovrY ||*/ interpolateBetween(638, h/2-thisH/2, ts.wait1, ts.blurAndObsCenter);
+                    const x = /*shared.ovrX ||*/ interpolateBetween(1207, 1461-size/2, ts.wait1, ts.blurAndObsCenter);
+                    const y = /*shared.ovrY ||*/ interpolateBetween(638, h/2-thisH/2, ts.wait1, ts.blurAndObsCenter);
             
                     c.beginPath();
                     c.fillRect(x,y,size,size);
                     c.closePath();
             
                     c.globalAlpha = interpolateBetween(0, 1, ts.wait1, ts.blurAndObsCenter);
-                    c.fillStyle = window.defaultColors.tile;//'#1f2229'
+                    c.fillStyle = shared.defaultColors.tile;//'#1f2229'
             
                     c.beginPath();
                     c.fillRect(x,y,size,size);
@@ -9178,10 +9182,10 @@ if(window.importNoise !== undefined){
                 },
                 // timetrap
                 () => {
-                    const x = /*window.ovrX || */interpolateBetween(1411, 1050, ts.wait1, ts.blurAndObsCenter);
-                    const y = /*window.ovrY || */interpolateBetween(195, -300, ts.wait1, ts.blurAndObsCenter);
+                    const x = /*shared.ovrX || */interpolateBetween(1411, 1050, ts.wait1, ts.blurAndObsCenter);
+                    const y = /*shared.ovrY || */interpolateBetween(195, -300, ts.wait1, ts.blurAndObsCenter);
                     let middleX = x; let middleY = y;
-                    let hexR = /*window.ovrR || */120;
+                    let hexR = /*shared.ovrR || */120;
             
                     const hexSides = [];
             
@@ -9226,13 +9230,13 @@ if(window.importNoise !== undefined){
             const simulateObstacleRenders = [
                 // ts.wait2 - ts.obsMove
                 () => {
-                    const scale = interpolateBetween(sorScaleFac*.6, 0, ts.wait2, ts.obsMove);//window.ovrS || 0.5;
+                    const scale = interpolateBetween(sorScaleFac*.6, 0, ts.wait2, ts.obsMove);//shared.ovrS || 0.5;
             
                     const thisW = 500*scale;
                     const thisH = 200*scale/.6;
             
-                    const x = /*window.ovrX || */w/2-thisW/2;
-                    const y = /*window.ovrY || */h/2-thisH/2;
+                    const x = /*shared.ovrX || */w/2-thisW/2;
+                    const y = /*shared.ovrY || */h/2-thisH/2;
                     
                     c.save();
                     c.translate(x,y);
@@ -9240,7 +9244,7 @@ if(window.importNoise !== undefined){
                     // const ga = interpolateBetween(1, 0, ts.wait2, ts.obsMove);
             
                     // c.globalAlpha = ga;
-                    c.fillStyle = window.defaultColors.tile;//'#1f2229'
+                    c.fillStyle = shared.defaultColors.tile;//'#1f2229'
             
                     c.beginPath();
                     c.moveTo(0,0);
@@ -9255,13 +9259,13 @@ if(window.importNoise !== undefined){
                     c.restore();
                 },
                 () => {
-                    c.fillStyle = window.defaultColors.tile;
+                    c.fillStyle = shared.defaultColors.tile;
             
                     const completion = interpolateBetween(0,Math.PI,ts.wait2,ts.obsMove);
                     const pathRx = 501;//1920/2-459
                     const pathRy = 320;
             
-                    const r = /*window.ovrR || */100*sorScaleFac*1.05;
+                    const r = /*shared.ovrR || */100*sorScaleFac*1.05;
                     const x = w/2 - Math.cos(completion) * pathRx;
                     const y = h/2 + Math.sin(completion) * pathRy;
             
@@ -9290,15 +9294,15 @@ if(window.importNoise !== undefined){
                     c.shadowBlur = 0;
                 },
                 () => {
-                    c.fillStyle = window.defaultColors.tile;
+                    c.fillStyle = shared.defaultColors.tile;
             
                     // 1461 - w/2
             
                     const size = interpolateBetween(200*sorScaleFac, 0, ts.wait2, ts.obsMove);
                     const thisH = size;
             
-                    const x = /*window.ovrX ||*/ 1461-size/2;
-                    const y = /*window.ovrY ||*/ h/2-thisH/2;
+                    const x = /*shared.ovrX ||*/ 1461-size/2;
+                    const y = /*shared.ovrY ||*/ h/2-thisH/2;
             
                     c.beginPath();
                     c.fillRect(x,y,size,size);
@@ -9312,7 +9316,7 @@ if(window.importNoise !== undefined){
                 () => {
                     c.fillStyle = 'blue';
             
-                    const r = /*window.ovrR || */100*sorScaleFac*1.05;
+                    const r = /*shared.ovrR || */100*sorScaleFac*1.05;
                     const x = 1461 + addOff;
                     const y = h/2;
             
@@ -9374,7 +9378,7 @@ if(window.importNoise !== undefined){
 
         // rendering loop
         
-        C(0,[],[0],{x:-1000,y:0,r:10,cr:(e)=>{
+        shared.C(0,[],[0],{x:-1000,y:0,r:10,cr:(e)=>{
             let now = performance.now();
             dt = now - lastTime;
             lastTime = now;
@@ -9411,14 +9415,12 @@ if(window.importNoise !== undefined){
 // }
 // eval(str);
 
-}
-
 mapDimensions.x=20000;
 mapDimensions.y=6000;
 
 spawnPosition.x=4800*2;
 spawnPosition.y=1550*2;
-window.respawnPlayer();
+shared.respawnPlayer();
 colors.background='#383838'; colors.tile='#0d0d0d';
 
 // physical time - for physical time in the arena
@@ -9429,7 +9431,7 @@ var releasePlayer = false;
 var justStarted = true;
 
 var musicObs;
-if(window.isServer !== true){
+if(shared.isServer !== true){
     // npc (should render above)
     {let fadeState = -1;
     let lastInside = false;
@@ -9437,7 +9439,7 @@ if(window.isServer !== true){
     let alpha = 0;
     let canAdvance = false;
     let curText = 0;// if you're looking at this later to implement npcs, there are better names for the variables (dialogue, isFading, etc.) and a better system.
-    C(0,[],[0],{
+    shared.C(0,[],[0],{
         x: 8700, y: 1900, r: 50,
         cr:(o)=>{
             ctx.beginPath();
@@ -9446,7 +9448,7 @@ if(window.isServer !== true){
             ctx.fill();
             ctx.closePath();
     
-            const p = window.players[window.selfId];
+            const p = shared.players[shared.selfId];
             const dist = Math.sqrt((o.pos.y - p.pos.y) ** 2 + (o.pos.x - p.pos.x) ** 2);
     
             ctx.fillStyle = 'white';
@@ -9480,7 +9482,7 @@ if(window.isServer !== true){
     })}
 
     // music
-    C(1,[],[26],{x:0,y:0,w:1E6,h:1E6,musicPath:'https://www.youtube.com/watch?v=dHID5Yv-Z0s'});
+    shared.C(1,[],[26],{x:0,y:0,w:1E6,h:1E6,musicPath:'https://www.youtube.com/watch?v=dHID5Yv-Z0s'});
     musicObs = obstacles[obstacles.length-1];
 }
 setTimeout(() => {
@@ -9488,8 +9490,8 @@ setTimeout(() => {
     let textAngle = Math.random() * Math.PI * 2;
     let textXV = Math.cos(textAngle) * 16;
     let textYV = Math.sin(textAngle) * 16;
-    C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
-        const p = window.players[window.selfId];
+    shared.C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
+        const p = shared.players[shared.selfId];
         if(p.dead === true){
             if(textX === undefined){
                 textX = canvas.w/2;
@@ -9524,8 +9526,8 @@ setTimeout(() => {
     let textAngle = Math.random() * Math.PI * 2;
     let textXV = Math.cos(textAngle) * 16;
     let textYV = Math.sin(textAngle) * 16;
-    C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
-        const p = window.players[window.selfId];
+    shared.C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
+        const p = shared.players[shared.selfId];
         if(p.dead === true){
             if(textX === undefined){
                 textX = canvas.w/2;
@@ -9560,8 +9562,8 @@ setTimeout(() => {
     let textAngle = Math.random() * Math.PI * 2;
     let textXV = Math.cos(textAngle) * 16;
     let textYV = Math.sin(textAngle) * 16;
-    C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
-        const p = window.players[window.selfId];
+    shared.C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
+        const p = shared.players[shared.selfId];
         if(p.dead === true){
             if(textX === undefined){
                 textX = canvas.w/2;
@@ -9592,3 +9594,5 @@ setTimeout(() => {
         }
     }});}
 }, 1000)
+
+})

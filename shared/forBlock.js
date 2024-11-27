@@ -87,7 +87,7 @@ forBlock['create_obstacle'] = function(block, generator) {
     const originalPoints = generator.valueToCode(block, this.shapeParamToId['points'], Order.NONE);
     let parsedPoints;
     try {parsedPoints = JSON.parse(originalPoints);}catch(e){}
-    if(parsedPoints !== undefined) params += `points:${JSON.stringify(window.fixPolygon(parsedPoints))},`;
+    if(parsedPoints !== undefined) params += `points:${JSON.stringify(shared.fixPolygon(parsedPoints))},`;
     else params += `points:${originalPoints},fixPoly:true,`;
   } else {
     for(let key in block.shapeParamToId){
@@ -130,7 +130,7 @@ forBlock['create_obstacle'] = function(block, generator) {
 
   // console.log({shape, simulates, effects, params});
   
-  return `C(${shape},${simulates},${effects},${params});`;
+  return `shared.C(${shape},${simulates},${effects},${params});`;
 
   // console.log(shapeParams);
 
@@ -401,7 +401,7 @@ forBlock['player_spawn'] = function (block, generator) {
   const sy = block.getFieldValue('SPAWN_Y', Order.NONE);
   let str = `spawnPosition.x=${sx};spawnPosition.y=${sy};`;
   if(block.getFieldValue('TO_RESPAWN', Order.NONE) === "TRUE"){
-    str += "window.respawnPlayer();"
+    str += "shared.respawnPlayer();"
   }
   return str + '\n';
 };
@@ -409,7 +409,7 @@ forBlock['player_spawn'] = function (block, generator) {
 // forBlock['this_touching'] = function (block, generator) {
 //   const objectId = block.getFieldValue('SPRITE_ID', Order.NONE);
 //   if(objectId === 'mouse'){
-//     return ['((e.x-mouseX)**2+(e.y-mouseY)**2<e.r**2 && !window.mouseOut)', Order.NONE];
+//     return ['((e.x-mouseX)**2+(e.y-mouseY)**2<e.r**2 && !shared.mouseOut)', Order.NONE];
 //   }
 //   return [`(entities[${objectId}]!==undefined&&((e.x-entities[${objectId}].x)**2+(e.y-entities[${objectId}].y)**2<(e.r+entities[${objectId}].r)**2))`, Order.NONE];
 // };
@@ -451,7 +451,7 @@ forBlock['delete_obstacle'] = function (block, generator) {
   const id = generator.valueToCode(block, 'ID', Order.NONE)?.trim();
   if(id !== ''){
     
-    return `window.tickFns.push(() => {
+    return `shared.tickFns.push(() => {
   const o = idToObs[${id}];
   delete idToObs[${id}];
   for(let i = 0; i < obstacles.length; i++){
@@ -459,13 +459,13 @@ forBlock['delete_obstacle'] = function (block, generator) {
   }
 })\n`;
   } else {
-    if(window.getParentBlockOfType(block) === null) return '';
-    return `window.tickFns.push(()=>{
+    if(shared.getParentBlockOfType(block) === null) return '';
+    return `shared.tickFns.push(()=>{
   for(let i = 0; i < obstacles.length; i++){
     if(obstacles[i] === e) {obstacles.splice(i,1); break;}
   }
-  for(let key in window.idToObs){
-    if(window.idToObs[key] === e){delete window.idToObs[key]; break;}
+  for(let key in shared.idToObs){
+    if(shared.idToObs[key] === e){delete shared.idToObs[key]; break;}
   }
 });\n`;
   }
@@ -482,7 +482,7 @@ forBlock['collide_obstacles'] = function (block, generator) {// TODO!!!! Weight 
     } else {
       let parentBlock = block.getParent();
       if(parentBlock === null) return ['', Order.NONE];
-      if(window.getParentBlockOfType(parentBlock) === null) return ['false', Order.NONE];
+      if(shared.getParentBlockOfType(parentBlock) === null) return ['false', Order.NONE];
       return [`isABColliding(e,idToObs[${id2}])\n`, Order.NONE];
     }
   } else {
@@ -490,7 +490,7 @@ forBlock['collide_obstacles'] = function (block, generator) {// TODO!!!! Weight 
       const id = generator.valueToCode(block, 'ID', Order.NONE)?.trim();
       return `if(idToObs[${id}]!==undefined&&idToObs[${id2}]!==undefined){boundAB(idToObs[${id}],idToObs[${id2}])}\n`;
     } else {
-      if(window.getParentBlockOfType(block) === null) return '';
+      if(shared.getParentBlockOfType(block) === null) return '';
       return `if(idToObs[${id2}]!==undefined){boundAB(e,idToObs[${id2}])}\n`;
     }
   }
@@ -517,7 +517,7 @@ forBlock['get_parameter'] = function (block, generator) {
     // so just use the thing that it's attached to
     let parentBlock = block.getParent();
     if(parentBlock === null) return [getParameterDefaultValue(block.outputType), Order.NONE];
-    if(window.getParentBlockOfType(parentBlock) === null) return [getParameterDefaultValue(block.outputType), Order.NONE];
+    if(shared.getParentBlockOfType(parentBlock) === null) return [getParameterDefaultValue(block.outputType), Order.NONE];
   }
   
   const parameter = block.getFieldValue('INPUT', Order.NONE);
@@ -543,26 +543,26 @@ forBlock['set_parameter'] = function (block, generator) {
 
     // get the constraints the slow way: by looping over all the names
     let constraints;
-    for(let i = 0; i < window.satMapI2N.length; i++){
-      if(window.satMapI2N[i] === parameter){
-        constraints = window.satConstraintsMap[i];
+    for(let i = 0; i < shared.satMapI2N.length; i++){
+      if(shared.satMapI2N[i] === parameter){
+        constraints = shared.satConstraintsMap[i];
         break;
       }
     }
 
     if(constraints === undefined){
-      for(let i = 0; i < window.simulateMapI2N.length; i++){
-        if(window.simulateMapI2N[i] === parameter){
-          constraints = window.simulateConstraintsMap[i];
+      for(let i = 0; i < shared.simulateMapI2N.length; i++){
+        if(shared.simulateMapI2N[i] === parameter){
+          constraints = shared.simulateConstraintsMap[i];
           break;
         }
       }
     }
 
     if(constraints === undefined){
-      for(let i = 0; i < window.effectMapI2N.length; i++){
-        if(window.effectMapI2N[i] === parameter){
-          constraints = window.effectConstraintsMap[i];
+      for(let i = 0; i < shared.effectMapI2N.length; i++){
+        if(shared.effectMapI2N[i] === parameter){
+          constraints = shared.effectConstraintsMap[i];
           break;
         }
       }
@@ -585,7 +585,7 @@ forBlock['set_parameter'] = function (block, generator) {
   } else {
     delete block.obstacleId;
 
-    parentBlock = window.getParentBlockOfType(block);
+    parentBlock = shared.getParentBlockOfType(block);
     if(parentBlock === null) return '';
   }
   
@@ -611,13 +611,13 @@ forBlock['set_parameter'] = function (block, generator) {
     let simulatesLen = parentBlock.getFieldValue('NUM_SIMULATES_DROPDOWN', Order.NONE);
     let effectsLen = parentBlock.getFieldValue('NUM_EFFECTS_DROPDOWN', Order.NONE);
 
-    let constraintsMap = window.satConstraintsMap[shape];
+    let constraintsMap = shared.satConstraintsMap[shape];
     if(constraintsMap !== undefined)constraints = constraintsMap[parameter];
 
     if(constraints === undefined){
       for(let i = 0; i < simulatesLen; i++){
         const simulate = parentBlock.getFieldValue(`SIMULATE_DROPDOWN${i}`, Order.NONE);
-        constraintsMap = window.simulateConstraintsMap[simulate];
+        constraintsMap = shared.simulateConstraintsMap[simulate];
         if(constraintsMap !== undefined && constraintsMap[parameter] !== undefined){
           constraints = constraintsMap[parameter];
           break;
@@ -628,7 +628,7 @@ forBlock['set_parameter'] = function (block, generator) {
     if(constraints === undefined){
       for(let i = 0; i < effectsLen; i++){
         const effect = parentBlock.getFieldValue(`EFFECT_DROPDOWN${i}`, Order.NONE);
-        constraintsMap = window.effectConstraintsMap[effect];
+        constraintsMap = shared.effectConstraintsMap[effect];
         if(constraintsMap !== undefined && constraintsMap[parameter] !== undefined){
           constraints = constraintsMap[parameter];
           break;
@@ -645,7 +645,7 @@ forBlock['set_parameter'] = function (block, generator) {
 };
 
 // constrain-set
-window.cset = (e, key, c) => {
+shared.cset = (e, key, c) => {
   if(c[2] === true) e[key] = Math.round(e[key]);
   if(e[key] < c[0]) e[key] = c[0];
   else if(e[key] > c[1]) e[key] = c[1];

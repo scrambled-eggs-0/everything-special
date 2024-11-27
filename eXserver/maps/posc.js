@@ -1,6489 +1,3506 @@
-(async()=>{
+window.loadMap((shared)=>{
+    let counter = 0;
+    const md = (a) => {return a;}
+    const {C, colors, spawnPosition, mapDimensions, camera, generateDimensions, obstacles, difficultyImageColors, difficultyImageMap, blendColor, changeCameraScale, players, selfId, input} = shared;
 
-    if(window.isServer !== true) await import('/maps/_converter.js');
-    else require('./_converter.js');
-    {
-        let counter = 7000;
-    
-        const obs = [
-            {
-                "x": 1800,
-                "y": 0,
-                "w": 50,
-                "h": 50,
-                "renderAbove": false,
-                type: 'safe'
-            },
-            {
-                "x": 6600,
-                "y": 4150,
-                "w": 800,
-                "h": 100,
-                "renderAbove": false,
-                type: 'safe'
-            },
-            {
-                "x": 7325,
-                "y": 0,
-                "w": 75,
-                "h": 75,
-                "type": "tp",
-                "tpx": 8525,
-                "tpy": 1725,
-                "bgColor": "#27811b",
-                "tileColor": "#6ab95a",
-                "changeColor": false,
-                "inView": false
-            },
-            {
-                "x": 7300,
-                "y": 0,
-                "w": 25,
-                "h": 75,
-                "type": "breakable",
-                "maxStrength": 10,
-                "currentStrength": 10,
-                "time": 0.2,
-                "timer": 0.2,
-                "regenTime": 3,
-                "inView": false
-            },
-            {
-                "x": 0,
-                "y": 4750,
-                "w": 50,
-                "h": 250,
-                "type": "ship",
-                "state": false,
-                "shipAngle": 1.5707963267948966,
-                "inView": false
-            },
-            {
-                "x": 0,
-                "y": 4750,
-                "w": 50,
-                "h": 250,
-                "type": "zone",
-                "value": 6,
-                "inView": false
-            },
-            {
-                "x": 0,
-                "y": 4750,
-                "w": 50,
-                "h": 250,
-                "type": "color",
-                "bgColor": "#431c6b",
-                "tileColor": "#720b98",
-                "inView": false
-            },
-            {
-                "x": 0,
-                "y": 4750,
-                "w": 1350,
-                "h": 250,
-                "type": "grav",
-                "force": 2000,
-                "dir": {
-                    "x": 2000,
-                    "y": 0
-                },
-                "direction": "right",
-                "inView": false
-            },
-            {
-                "x": 0,
-                "y": 2250,
-                "w": 250,
-                "h": 250,
-                "type": "typing",
-                "text": "Relax. This planet will only get a little bit harder.",
-                "active": true,
-                "currentChar": 0,
-                "inView": false
-            },
-            {
-                "x": 6400,
-                "y": 0,
-                "w": 100,
-                "h": 100,
-                "type": "musicchange",
-                "musicPath": 'https://www.youtube.com/watch?v=5e-EvVDXNU0',// https://www.youtube.com/watch?v=5IOVkstxkdE old i liked
-                "volume": 1,
-                "startTime": 0,
-                "inView": false
-            },
-            {
-                "x": 6400,
-                "y": 2050,
-                "w": 100,
-                "h": 100,
-                "type": "grav",
-                "force": 5000,
-                "dir": {
-                    "x": 0,
-                    "y": 5000
-                },
-                "direction": "down",
-                "inView": false
-            },
-            {
-                "x": 6400,
-                "y": 2050,
-                "w": 100,
-                "h": 100,
-                "type": "zone",
-                "value": 9,
-                "inView": false
-            },
-            {
-                "x": 6400,
-                "y": 2050,
-                "w": 100,
-                "h": 50,
-                "spawn": {
-                    "x": 6450,
-                    "y": 2075
-                },
-                "type": "check",
-                "collected": false,
-                "inView": false
-            },
-            {
-                "x": 6400,
-                "y": 2050,
-                "w": 100,
-                "h": 50,
-                "type": "invpu",
-                "amount": 1,
-                "maxAmount": 1,
-                "inView": false
-            },
-            {
-                "x": 8550,
-                "y": 0,
-                "w": 1450,
-                "h": 350,
-                "type": "speed",
-                "speedInc": 1.5,
-                "inView": false
-            },
-            {
-                "x": 9550,
-                "y": 50,
-                "radius": 100,
-                "type": "circle-hollow-slice",
-                "startAngle": -3.141592653589793,
-                "endAngle": -1.5707963267948966,
-                "startPolygon": {
-                    "points": [
-                        [
-                            9500,
-                            49.99999999999999
-                        ],
-                        [
-                            9450,
-                            49.999999999999986
-                        ]
-                    ],
-                    "type": "poly",
-                    "props": {}
-                },
-                "endPolygon": {
-                    "points": [
-                        [
-                            9550,
-                            0
-                        ],
-                        [
-                            9550,
-                            -50
-                        ]
-                    ],
-                    "type": "poly",
-                    "props": {}
-                },
-                "innerRadius": 50,
-                "toRotate": false,
-                "rotateSpeed": 0,
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 9825,
-                "y": 175,
-                "radius": 300,
-                "type": "circle-hollow-slice",
-                "startAngle": -1.5707963267948966,
-                "endAngle": 1.5707963267948966,
-                "startPolygon": {
-                    "points": [
-                        [
-                            9825,
-                            0
-                        ],
-                        [
-                            9825,
-                            -125
-                        ]
-                    ],
-                    "type": "poly",
-                    "props": {}
-                },
-                "endPolygon": {
-                    "points": [
-                        [
-                            9825,
-                            350
-                        ],
-                        [
-                            9825,
-                            475
-                        ]
-                    ],
-                    "type": "poly",
-                    "props": {}
-                },
-                "innerRadius": 175,
-                "toRotate": false,
-                "rotateSpeed": 0,
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 6450,
-                "y": 750,
-                "w": 750,
-                "h": 100,
-                "type": "grav",
-                "force": 1750,
-                "dir": {
-                    "x": -1750,
-                    "y": 0
-                },
-                "direction": "left",
-                "inView": false
-            },
-            {
-                "x": 6500,
-                "y": 750,
-                "radius": 50,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 6400,
-                "y": 0,
-                "w": 100,
-                "h": 100,
-                "type": "zone",
-                "value": 7,
-                "inView": false
-            },
-            {
-                "x": 6400,
-                "y": 200,
-                "w": 700,
-                "h": 100,
-                "type": "timetrap",
-                "time": 0,
-                "maxTime": 3,
-                "cdmult": 3,
-                "trapType": "death",
-                "inView": false
-            },
-            {
-                "x": 6600,
-                "y": 300,
-                "w": 500,
-                "h": 350,
-                "type": "platformer",
-                "force": 1500,
-                "dir": {
-                    "x": 0,
-                    "y": 1500
-                },
-                "direction": "down",
-                "jumpHeight": 115,
-                "maxForce": 1000,
-                "variableJumpHeight": false,
-                "platformerFriction": 0.8,
-                "inView": false
-            },
-            {
-                "x": 6825,
-                "y": 675,
-                "r": 68,
-                "type": "circle-lava",
-                "renderType": "circleR",
-                "radius": 68,
-                "inView": false
-            },
-            {
-                "x": 6825,
-                "y": 375,
-                "r": 68,
-                "type": "circle-lava",
-                "renderType": "circleR",
-                "radius": 68,
-                "inView": false
-            },
-            {
-                "x": 1400,
-                "y": 3450,
-                "w": 1000,
-                "h": 1550,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 5000,
-                "y": -50,
-                "w": 50,
-                "h": 1250,
-                "type": "normal",
-                "canJump": false,
-                "inView": false
-            },
-            {
-                "x": 2400,
-                "y": 4800,
-                "w": 350,
-                "h": 50,
-                "type": "breakable",
-                "maxStrength": 33,
-                "currentStrength": 33,
-                "time": 0,
-                "timer": 0,
-                "regenTime": 4,
-                "inView": false
-            },
-            {
-                "x": 2547.5,
-                "y": 4900,
-                "w": 100,
-                "h": 50,
-                "type": "lavamove",
-                "points": [
-                    [
-                        2400,
-                        4900
-                    ],
-                    [
-                        2650,
-                        4900
-                    ]
-                ],
-                "speed": 60,
-                "currentPoint": 1,
-                "collidable": true,
-                "pointOn": {
-                    "x": 2650,
-                    "y": 4900
-                },
-                "pointTo": {
-                    "x": 2400,
-                    "y": 4900
-                },
-                "xv": -60,
-                "yv": 7.34788079488412e-15,
-                "inView": false
-            },
-            {
-                "x": 2650 - (2547.5 - 2400),//2400 + 102.5,//2547.5,
-                "y": 4850, //250-147.5 = 
-                "w": 100,
-                "h": 50,
-                "type": "lavamove",
-                "points": [
-                    [
-                        2650,
-                        4850
-                    ],
-                    [
-                        2400,
-                        4850
-                    ]
-                ],
-                "speed": 60,
-                "currentPoint": 1,
-                "collidable": true,
-                "pointOn": {
-                    "x": 2400,
-                    "y": 4850
-                },
-                "pointTo": {
-                    "x": 2650,
-                    "y": 4850
-                },
-                "xv": 60,
-                "yv": 7.34788079488412e-15,
-                "inView": false
-            },
-            {
-                "x": 2400,
-                "y": 3500,
-                "w": 375,
-                "h": 50,
-                "type": "zone",
-                "value": 5,
-                "inView": false
-            },
-            {
-                "x": 2400,
-                "y": 3500,
-                "w": 350,
-                "h": 50,
-                "type": "ship",
-                "state": true,
-                "shipAngle": 1.5707963267948966,
-                "inView": false
-            },
-            {
-                "x": 2400,
-                "y": 3500,
-                "w": 350,
-                "h": 50,
-                "spawn": {
-                    "x": 2575,
-                    "y": 3525
-                },
-                "type": "check",
-                "collected": false,
-                "inView": false
-            },
-            {
-                "x": 1400,
-                "y": 2950,
-                "w": 2350,
-                "h": 550,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 2950,
-                "y": 1850,
-                "w": 800,
-                "h": 1250,
-                "type": "normal",
-                "canJump": true,
-                "inView": true
-            },
-            {
-                "x": 4400,
-                "y": 2100,
-                "w": 600,
-                "h": 1500,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 4000,
-                "y": 2125,
-                "w": 150,
-                "h": 75,
-                "type": "zone",
-                "value": 4,
-                "inView": false
-            },
-            {
-                "x": 4000,
-                "y": 2150,
-                "w": 150,
-                "h": 50,
-                "spawn": {
-                    "x": 4075,
-                    "y": 2175
-                },
-                "type": "check",
-                "collected": false,
-                "inView": false
-            },
-            {
-                "x": 4350,
-                "y": 1150,
-                "w": 50,
-                "h": 50,
-                "type": "resetcoins",
-                "inView": false
-            },
-            {
-                "x": 3750,
-                "y": 0,
-                "w": 1250,
-                "h": 1200,
-                "type": "platformer",
-                "force": 1500,
-                "dir": {
-                    "x": 0,
-                    "y": 1500
-                },
-                "direction": "down",
-                "jumpHeight": 145,
-                "maxForce": 1000,
-                "variableJumpHeight": false,
-                "platformerFriction": 0.8,
-                "inView": false
-            },
-            {
-                "x": 125,
-                "y": 50,
-                "w": 400,
-                "h": 50,
-                "type": "zone",
-                "value": 1,
-                "inView": false
-            },
-            {
-                "x": 125,
-                "y": 50,
-                "w": 425,
-                "h": 50,
-                "spawn": {
-                    "x": 337.5,
-                    "y": 75
-                },
-                "type": "check",
-                "collected": false,
-                "inView": false
-            },
-            {
-                "x": 1800,
-                "y": 0,
-                "w": 50,
-                "h": 50,
-                "type": "zone",
-                "value": 2,
-                "inView": false
-            },
-            {
-                "x": 2775,
-                "y": 2450,
-                "w": 100,
-                "h": 100,
-                "type": "tp",
-                "tpx": 325,
-                "tpy": 75,
-                "bgColor": "#27811b",
-                "tileColor": "#6ab95a",
-                "changeColor": false,
-                "inView": true
-            },
-            {
-                "x": 2150,
-                "y": 2450,
-                "w": 300,
-                "h": 100,
-                "type": "timetrap",
-                "time": 0,
-                "maxTime": 5,
-                "cdmult": 3,
-                "trapType": "death",
-                "inView": true
-            },
-            {
-                "x": 2450,
-                "y": 2550,
-                "w": 100,
-                "h": 300,
-                "type": "size",
-                "size": 18.75,
-                "inView": true
-            },
-            {
-                "x": 2600,
-                "y": 2431.666666666408,
-                "w": 50,
-                "h": 50,
-                "type": "tpmove",
-                "points": [
-                    [
-                        2600,
-                        2400
-                    ],
-                    [
-                        2600,
-                        2550
-                    ]
-                ],
-                "speed": 40,
-                "currentPoint": 1,
-                "tpx": 2500,
-                "tpy": 2500,
-                "pointOn": {
-                    "x": 2600,
-                    "y": 2550
-                },
-                "pointTo": {
-                    "x": 2600,
-                    "y": 2400
-                },
-                "xv": 2.4492935982947065e-15,
-                "yv": -40,
-                "inView": true
-            },
-            {
-                "points": [
-                    [
-                        2450,
-                        2050
-                    ],
-                    [
-                        2450,
-                        2450
-                    ],
-                    [
-                        2050,
-                        2450
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 2050,
-                    "right": 2450,
-                    "top": 2050,
-                    "bottom": 2450
-                },
-                "renderType": "poly",
-                "inView": true
-            },
-            {
-                "points": [
-                    [
-                        2550,
-                        2050
-                    ],
-                    [
-                        2950,
-                        2450
-                    ],
-                    [
-                        2550,
-                        2450
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 2550,
-                    "right": 2950,
-                    "top": 2050,
-                    "bottom": 2450
-                },
-                "renderType": "poly",
-                "inView": true
-            },
-            {
-                "points": [
-                    [
-                        2550,
-                        2550
-                    ],
-                    [
-                        2950,
-                        2550
-                    ],
-                    [
-                        2550,
-                        2950
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 2550,
-                    "right": 2950,
-                    "top": 2550,
-                    "bottom": 2950
-                },
-                "renderType": "poly",
-                "inView": true
-            },
-            {
-                "points": [
-                    [
-                        2050,
-                        2550
-                    ],
-                    [
-                        2450,
-                        2550
-                    ],
-                    [
-                        2450,
-                        2950
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 2050,
-                    "right": 2450,
-                    "top": 2550,
-                    "bottom": 2950
-                },
-                "renderType": "poly",
-                "inView": true
-            },
-            {
-                "x": 2175,
-                "y": 2475,
-                "w": 50,
-                "h": 50,
-                "type": "coin",
-                "collected": false,
-                "inView": true
-            },
-            {
-                "x": 2050,
-                "y": 2450,
-                "w": 100,
-                "h": 100,
-                "type": "normal",
-                "canJump": true,
-                "inView": true
-            },
-            {
-                "x": 2450,
-                "y": 2850,
-                "w": 100,
-                "h": 100,
-                "type": "normal",
-                "canJump": true,
-                "inView": true
-            },
-            {
-                "x": 2850,
-                "y": 2450,
-                "w": 100,
-                "h": 100,
-                "type": "normal",
-                "canJump": true,
-                "inView": true
-            },
-            {
-                "x": 2450,
-                "y": 2050,
-                "w": 100,
-                "h": 100,
-                "type": "normal",
-                "canJump": true,
-                "inView": true
-            },
-            {
-                "x": 1400,
-                "y": 1750,
-                "w": 650,
-                "h": 1250,
-                "type": "normal",
-                "canJump": true,
-                "inView": true
-            },
-            {
-                "x": 1250,
-                "y": 1400,
-                "w": 2500,
-                "h": 650,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 2475,
-                "y": 2175,
-                "w": 50,
-                "h": 50,
-                "type": "coin",
-                "collected": false,
-                "inView": true
-            },
-            {
-                "x": 2675,
-                "y": 2475,
-                "w": 50,
-                "h": 50,
-                "type": "coin",
-                "collected": false,
-                "inView": true
-            },
-            {
-                "x": 2475,
-                "y": 2775,
-                "w": 50,
-                "h": 50,
-                "type": "coin",
-                "collected": false,
-                "inView": true
-            },
-            {
-                "x": 2450,
-                "y": 2360.416666666408,
-                "w": 50,
-                "h": 50,
-                "type": "move",
-                "points": [
-                    [
-                        2450,
-                        2250
-                    ],
-                    [
-                        2450,
-                        2400
-                    ]
-                ],
-                "speed": 50,
-                "currentPoint": 0,
-                "alongWith": false,
-                "pointOn": {
-                    "x": 2450,
-                    "y": 2250
-                },
-                "pointTo": {
-                    "x": 2450,
-                    "y": 2400
-                },
-                "xv": 3.061616997868383e-15,
-                "yv": 50,
-                "inView": true
-            },
-            {
-                "x": 2500,
-                "y": 2289.583333333592,
-                "w": 50,
-                "h": 50,
-                "type": "move",
-                "points": [
-                    [
-                        2500,
-                        2250
-                    ],
-                    [
-                        2500,
-                        2400
-                    ]
-                ],
-                "speed": 50,
-                "currentPoint": 1,
-                "alongWith": false,
-                "pointOn": {
-                    "x": 2500,
-                    "y": 2400
-                },
-                "pointTo": {
-                    "x": 2500,
-                    "y": 2250
-                },
-                "xv": 3.061616997868383e-15,
-                "yv": -50,
-                "inView": true
-            },
-            {
-                "x": 2500,
-                "y": 2700,
-                "w": 100,
-                "h": 25,
-                "type": "rotate-normal",
-                "angle": -710.4166666666579,
-                "rotateSpeed": -50,
-                "pivotX": 2500,
-                "pivotY": 2700,
-                "distToPivot": 0,
-                "canCollide": true,
-                "renderType": "rotating",
-                "cullingRadius": 51.53882032022076,
-                "unSim": 0,
-                "inView": true
-            },
-            {
-                "x": 2500,
-                "y": 2600,
-                "w": 100,
-                "h": 25,
-                "type": "rotate-normal",
-                "angle": -620.4166666666663,
-                "rotateSpeed": -50,
-                "pivotX": 2500,
-                "pivotY": 2600,
-                "distToPivot": 0,
-                "canCollide": true,
-                "renderType": "rotating",
-                "cullingRadius": 51.53882032022076,
-                "unSim": 0,
-                "inView": true
-            },
-            {
-                "x": 2250,
-                "y": 2525,
-                "w": 50,
-                "h": 25,
-                "type": "bounce",
-                "effect": 30,
-                "inView": true
-            },
-            {
-                "x": 2350,
-                "y": 2450,
-                "w": 50,
-                "h": 25,
-                "type": "bounce",
-                "effect": 30,
-                "inView": true
-            },
-            {
-                "x": 2450,
-                "y": 2450,
-                "w": 100,
-                "h": 100,
-                "type": "musicchange",
-                "musicPath": "https://www.youtube.com/watch?v=n3EIyZ8my8o",
-                "volume": 1,
-                "startTime": 0,
-                "inView": true
-            },
-            {
-                "x": 2750,
-                "y": 2450,
-                "w": 100,
-                "h": 100,
-                "type": "coindoor",
-                "coins": 4,
-                "currentCoins": 4,
-                "inView": true
-            },
-            {
-                "x": -50,
-                "y": 1400,
-                "w": 1500,
-                "h": 850,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": -75,
-                "y": 850,
-                "w": 1250,
-                "h": 825,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 650,
-                "y": -175,
-                "w": 850,
-                "h": 1625,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 50,
-                "y": -50,
-                "w": 650,
-                "h": 100,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 2425,
-                "y": 2425,
-                "w": 150,
-                "h": 150,
-                "type": "zone",
-                "value": 1,
-                "inView": true
-            },
-            {
-                "x": -200,
-                "y": -25,
-                "w": 200,
-                "h": 900,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 1400,
-                "y": 850,
-                "w": 2350,
-                "h": 700,
-                "type": "normal",
-                "canJump": false,
-                "inView": false
-            },
-            {
-                "x": 2150,
-                "y": -50,
-                "w": 1600,
-                "h": 900,
-                "type": "normal",
-                "canJump": false,
-                "inView": false
-            },
-            {
-                "x": 1500,
-                "y": 0,
-                "w": 300,
-                "h": 100,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 1850,
-                "y": 0,
-                "w": 300,
-                "h": 100,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 1800,
-                "y": 0,
-                "w": 50,
-                "h": 50,
-                "spawn": {
-                    "x": 1825,
-                    "y": 25
-                },
-                "type": "check",
-                "collected": false,
-                "inView": false
-            },
-            {
-                "x": 1500,
-                "y": 800,
-                "w": 650,
-                "h": 50,
-                "type": "tp",
-                "tpx": 4375,
-                "tpy": 1175,
-                "bgColor": "#27811b",
-                "tileColor": "#6ab95a",
-                "changeColor": false,
-                "inView": false
-            },
-            {
-                "x": 3750,
-                "y": 1200,
-                "w": 1350,
-                "h": 950,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 600,
-                "y": 50,
-                "w": 300,
-                "h": 825,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 50,
-                "y": 75,
-                "radius": 100,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 325,
-                "y": 200,
-                "radius": 100,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 600,
-                "y": 75,
-                "radius": 100,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 425,
-                "y": 675,
-                "radius": 35,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 100,
-                "y": 275,
-                "radius": 35,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 525,
-                "y": 350,
-                "radius": 56,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 300,
-                "y": 550,
-                "radius": 56,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 200,
-                "y": 400,
-                "radius": 79,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 50,
-                "y": 650,
-                "radius": 25,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 75,
-                "y": 525,
-                "radius": 50,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 200,
-                "y": 700,
-                "radius": 79,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 375,
-                "y": 400,
-                "radius": 35,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 500,
-                "y": 500,
-                "radius": 79,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 550,
-                "y": 700,
-                "radius": 25,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 0,
-                "y": 800,
-                "w": 600,
-                "h": 50,
-                "type": "tp",
-                "tpx": 1825,
-                "tpy": 25,
-                "bgColor": "#27811b",
-                "tileColor": "#6ab95a",
-                "changeColor": false,
-                "inView": false
-            },
-            {
-                "x": 1800,
-                "y": 50,
-                "w": 50,
-                "h": 50,
-                "type": "breakable",
-                "maxStrength": 23,
-                "currentStrength": 23,
-                "time": 0.016,
-                "timer": 0.016,
-                "regenTime": 8,
-                "inView": false
-            },
-            {
-                "x": 3750,
-                "y": 1150,
-                "w": 550,
-                "h": 50,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 4450,
-                "y": 1150,
-                "w": 550,
-                "h": 50,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 4300,
-                "y": 1200,
-                "radius": 50,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 4450,
-                "y": 1200,
-                "radius": 50,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 4200,
-                "y": 1000,
-                "w": 100,
-                "h": 50,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 4400,
-                "y": 900,
-                "w": 100,
-                "h": 50,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 4650,
-                "y": 600,
-                "w": 100,
-                "h": 300,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 4350,
-                "y": 500,
-                "w": 100,
-                "h": 50,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        3975,
-                        600
-                    ],
-                    [
-                        4025,
-                        600
-                    ],
-                    [
-                        4050,
-                        700
-                    ],
-                    [
-                        3950,
-                        700
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 3950,
-                    "right": 4050,
-                    "top": 600,
-                    "bottom": 700
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "x": 3875,
-                "y": 475,
-                "w": 50,
-                "h": 50,
-                "type": "rotate-normal",
-                "angle": 0.5833333333333334,
-                "rotateSpeed": 35,
-                "pivotX": 3875,
-                "pivotY": 475,
-                "distToPivot": 0,
-                "canCollide": true,
-                "renderType": "rotating",
-                "cullingRadius": 35.35533905932738,
-                "unSim": 14.191666666666501,
-                "inView": false
-            },
-            {
-                "x": 4025,
-                "y": 350,
-                "w": 50,
-                "h": 50,
-                "type": "rotate-normal",
-                "angle": -22.583333333333336,
-                "rotateSpeed": -35,
-                "pivotX": 4025,
-                "pivotY": 350,
-                "distToPivot": 0,
-                "canCollide": true,
-                "renderType": "rotating",
-                "cullingRadius": 35.35533905932738,
-                "unSim": 14.191666666666501,
-                "inView": false
-            },
-            {
-                "x": 4210.958333333747,
-                "y": 250,
-                "w": 150,
-                "h": 50,
-                "type": "move",
-                "points": [
-                    [
-                        4200,
-                        250
-                    ],
-                    [
-                        4300,
-                        250
-                    ]
-                ],
-                "speed": 43,
-                "currentPoint": 0,
-                "alongWith": false,
-                "pointOn": {
-                    "x": 4200,
-                    "y": 250
-                },
-                "pointTo": {
-                    "x": 4300,
-                    "y": 250
-                },
-                "xv": 43,
-                "yv": 0,
-                "inView": false
-            },
-            {
-                "x": 4600,
-                "y": 250,
-                "w": 50,
-                "h": 50,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 4750,
-                "y": 150,
-                "w": 50,
-                "h": 50,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 4825,
-                "y": 75,
-                "radius": 25,
-                "type": "circle-coin",
-                "collected": false,
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 3750,
-                "y": -49,
-                "w": 1250,
-                "h": 75,
-                "type": "tp",
-                "tpx": 4075,
-                "tpy": 2175,
-                "bgColor": "#27811b",
-                "tileColor": "#6ab95a",
-                "changeColor": false,
-                "inView": false
-            },
-            {
-                "x": 4300,
-                "y": 1100,
-                "w": 150,
-                "h": 100,
-                "type": "color",
-                "bgColor": "#6376c1",
-                "tileColor": "#9ec0ed",
-                "inView": false
-            },
-            {
-                "x": 3750,
-                "y": 2100,
-                "w": 250,
-                "h": 100,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 4150,
-                "y": 2100,
-                "w": 250,
-                "h": 100,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        4000,
-                        2150
-                    ],
-                    [
-                        4050,
-                        2150
-                    ],
-                    [
-                        4000,
-                        2200
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 4000,
-                    "right": 4050,
-                    "top": 2150,
-                    "bottom": 2200
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        4100,
-                        2150
-                    ],
-                    [
-                        4150,
-                        2150
-                    ],
-                    [
-                        4150,
-                        2200
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 4100,
-                    "right": 4150,
-                    "top": 2150,
-                    "bottom": 2200
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "x": 4400,
-                "y": 3525,
-                "w": 75,
-                "h": 125,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 2750,
-                "y": 3600,
-                "w": 2300,
-                "h": 1450,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 2925,
-                "y": 3400,
-                "w": 825,
-                "h": 250,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 3750,
-                "y": 3550,
-                "w": 650,
-                "h": 50,
-                "type": "tp",
-                "tpx": 2575,
-                "tpy": 3525,
-                "bgColor": "#27811b",
-                "tileColor": "#6ab95a",
-                "changeColor": false,
-                "inView": false
-            },
-            {
-                "x": 2750,
-                "y": 3475,
-                "w": 200,
-                "h": 175,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        2500,
-                        3650
-                    ],
-                    [
-                        2550,
-                        3700
-                    ],
-                    [
-                        2500,
-                        3750
-                    ],
-                    [
-                        2450,
-                        3700
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 2450,
-                    "right": 2550,
-                    "top": 3650,
-                    "bottom": 3750
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        2650,
-                        3800
-                    ],
-                    [
-                        2700,
-                        3850
-                    ],
-                    [
-                        2650,
-                        3900
-                    ],
-                    [
-                        2600,
-                        3850
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 2600,
-                    "right": 2700,
-                    "top": 3800,
-                    "bottom": 3900
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        2500,
-                        3950
-                    ],
-                    [
-                        2550,
-                        4000
-                    ],
-                    [
-                        2500,
-                        4050
-                    ],
-                    [
-                        2450,
-                        4000
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 2450,
-                    "right": 2550,
-                    "top": 3950,
-                    "bottom": 4050
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "x": 2400,
-                "y": 4950,
-                "w": 350,
-                "h": 50,
-                "type": "tp",
-                "tpx": 25,
-                "tpy": 4875,
-                "bgColor": "#27811b",
-                "tileColor": "#6ab95a",
-                "changeColor": false,
-                "inView": false
-            },
-            {
-                "x": 2400,
-                "y": 4100,
-                "w": 350,
-                "h": 50,
-                "type": "breakable",
-                "maxStrength": 33,
-                "currentStrength": 33,
-                "time": 0,
-                "timer": 0,
-                "regenTime": 4,
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        2400,
-                        3825
-                    ],
-                    [
-                        2425,
-                        3850
-                    ],
-                    [
-                        2400,
-                        3875
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 2400,
-                    "right": 2425,
-                    "top": 3825,
-                    "bottom": 3875
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        2750,
-                        3975
-                    ],
-                    [
-                        2750,
-                        4025
-                    ],
-                    [
-                        2725,
-                        4000
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 2725,
-                    "right": 2750,
-                    "top": 3975,
-                    "bottom": 4025
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        2750,
-                        3675
-                    ],
-                    [
-                        2750,
-                        3725
-                    ],
-                    [
-                        2725,
-                        3700
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 2725,
-                    "right": 2750,
-                    "top": 3675,
-                    "bottom": 3725
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "x": -25,
-                "y": 2950,
-                "w": 1425,
-                "h": 1800,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 0,
-                "y": 2500,
-                "w": 1450,
-                "h": 450,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 250,
-                "y": 2175,
-                "w": 1225,
-                "h": 350,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 1350,
-                "y": 4750,
-                "w": 50,
-                "h": 250,
-                "type": "tp",
-                "tpx": 125,
-                "tpy": 2275,
-                "bgColor": "#27811b",
-                "tileColor": "#6ab95a",
-                "changeColor": false,
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        -25,
-                        4725
-                    ],
-                    [
-                        75,
-                        4725
-                    ],
-                    [
-                        -25,
-                        4825
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": -25,
-                    "right": 75,
-                    "top": 4725,
-                    "bottom": 4825
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        -25,
-                        4925
-                    ],
-                    [
-                        75,
-                        5025
-                    ],
-                    [
-                        -25,
-                        5025
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": -25,
-                    "right": 75,
-                    "top": 4925,
-                    "bottom": 5025
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "x": 92,
-                "y": 2475,//2490,
-                "w": 66,
-                "h": 25,//0,
-                "type": "tp",
-                "tpx": 6450,
-                "tpy": 50,
-                "bgColor": "#27811b",
-                "tileColor": "#6ab95a",
-                "changeColor": false,
-                "inView": false
-            },
-            {
-                "x": 5000,
-                "y": -75,
-                "w": 1400,
-                "h": 5100,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 6400,
-                "y": 100,
-                "w": 725,
-                "h": 100,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 7100,
-                "y": 100,
-                "w": 100,
-                "h": 650,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 7300,
-                "y": 75,
-                "w": 100,
-                "h": 875,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 6400,
-                "y": 850,
-                "w": 900,
-                "h": 100,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 6500,
-                "y": 300,
-                "w": 100,
-                "h": 450,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 6600,
-                "y": 650,
-                "w": 500,
-                "h": 100,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 6600,
-                "y": 300,
-                "w": 400,
-                "h": 100,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        6400,
-                        200
-                    ],
-                    [
-                        6500,
-                        200
-                    ],
-                    [
-                        6400,
-                        300
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 6400,
-                    "right": 6500,
-                    "top": 200,
-                    "bottom": 300
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        6550,
-                        250
-                    ],
-                    [
-                        6550,
-                        300
-                    ],
-                    [
-                        6500,
-                        300
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 6500,
-                    "right": 6550,
-                    "top": 250,
-                    "bottom": 300
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        6625,
-                        200
-                    ],
-                    [
-                        6675,
-                        200
-                    ],
-                    [
-                        6675,
-                        250
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 6625,
-                    "right": 6675,
-                    "top": 200,
-                    "bottom": 250
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        6775,
-                        250
-                    ],
-                    [
-                        6775,
-                        300
-                    ],
-                    [
-                        6725,
-                        300
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 6725,
-                    "right": 6775,
-                    "top": 250,
-                    "bottom": 300
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        6850,
-                        200
-                    ],
-                    [
-                        6900,
-                        200
-                    ],
-                    [
-                        6900,
-                        250
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 6850,
-                    "right": 6900,
-                    "top": 200,
-                    "bottom": 250
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        6950,
-                        250
-                    ],
-                    [
-                        7000,
-                        300
-                    ],
-                    [
-                        6950,
-                        300
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 6950,
-                    "right": 7000,
-                    "top": 250,
-                    "bottom": 300
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        7000,
-                        200
-                    ],
-                    [
-                        7100,
-                        200
-                    ],
-                    [
-                        7100,
-                        300
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 7000,
-                    "right": 7100,
-                    "top": 200,
-                    "bottom": 300
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "x": 6400,
-                "y": 0,
-                "w": 100,
-                "h": 100,
-                "spawn": {
-                    "x": 6450,
-                    "y": 50
-                },
-                "type": "check",
-                "collected": false,
-                "inView": false
-            },
-            {
-                "x": 6450,
-                "y": 700,
-                "w": 50,
-                "h": 50,
-                "type": "lava",
-                "canCollide": true,
-                "inView": false
-            },
-            {
-                "x": 6400,
-                "y": 550,
-                "w": 50,
-                "h": 50,
-                "type": "lava",
-                "canCollide": true,
-                "inView": false
-            },
-            {
-                "x": 6400,
-                "y": 404.33333333337856,
-                "w": 50,
-                "h": 50,
-                "type": "lavamove",
-                "points": [
-                    [
-                        6400,
-                        300
-                    ],
-                    [
-                        6400,
-                        450
-                    ]
-                ],
-                "speed": 56,
-                "currentPoint": 1,
-                "collidable": true,
-                "pointOn": {
-                    "x": 6400,
-                    "y": 450
-                },
-                "pointTo": {
-                    "x": 6400,
-                    "y": 300
-                },
-                "xv": 3.429011037612589e-15,
-                "yv": -56,
-                "inView": false
-            },
-            {
-                "x": 6450,
-                "y": 345.66666666662144,
-                "w": 50,
-                "h": 50,
-                "type": "lavamove",
-                "points": [
-                    [
-                        6450,
-                        300
-                    ],
-                    [
-                        6450,
-                        450
-                    ]
-                ],
-                "speed": 56,
-                "currentPoint": 0,
-                "collidable": true,
-                "pointOn": {
-                    "x": 6450,
-                    "y": 300
-                },
-                "pointTo": {
-                    "x": 6450,
-                    "y": 450
-                },
-                "xv": 3.429011037612589e-15,
-                "yv": 56,
-                "inView": false
-            },
-            {
-                "x": 7200,
-                "y": 0,
-                "w": 100,
-                "h": 850,
-                "type": "size",
-                "size": 8,
-                "inView": false
-            },
-            {
-                "x": 7100,
-                "y": 750,
-                "w": 50,
-                "h": 50,
-                "type": "bounce",
-                "effect": 30,
-                "inView": false
-            },
-            {
-                "x": 6950,
-                "y": 800,
-                "w": 50,
-                "h": 50,
-                "type": "bounce",
-                "effect": 30,
-                "inView": false
-            },
-            {
-                "x": 6800,
-                "y": 750,
-                "w": 50,
-                "h": 50,
-                "type": "bounce",
-                "effect": 30,
-                "inView": false
-            },
-            {
-                "x": 6650,
-                "y": 800,
-                "w": 50,
-                "h": 50,
-                "type": "bounce",
-                "effect": 30,
-                "inView": false
-            },
-            {
-                "x": 6607.166666666253,
-                "y": 0,
-                "w": 50,
-                "h": 50,
-                "type": "move",
-                "points": [
-                    [
-                        6500,
-                        0
-                    ],
-                    [
-                        6700,
-                        0
-                    ]
-                ],
-                "speed": 92,
-                "currentPoint": 0,
-                "alongWith": false,
-                "pointOn": {
-                    "x": 6500,
-                    "y": 0
-                },
-                "pointTo": {
-                    "x": 6700,
-                    "y": 0
-                },
-                "xv": 92,
-                "yv": 0,
-                "inView": false
-            },
-            {
-                "x": 6592.833333333747,
-                "y": 50,
-                "w": 50,
-                "h": 50,
-                "type": "move",
-                "points": [
-                    [
-                        6500,
-                        50
-                    ],
-                    [
-                        6700,
-                        50
-                    ]
-                ],
-                "speed": 92,
-                "currentPoint": 1,
-                "alongWith": false,
-                "pointOn": {
-                    "x": 6700,
-                    "y": 50
-                },
-                "pointTo": {
-                    "x": 6500,
-                    "y": 50
-                },
-                "xv": -92,
-                "yv": 1.126675055215565e-14,
-                "inView": false
-            },
-            {
-                "x": 6857.166666666332,
-                "y": 0,
-                "w": 50,
-                "h": 50,
-                "type": "move",
-                "points": [
-                    [
-                        6800,
-                        0
-                    ],
-                    [
-                        7000,
-                        0
-                    ],
-                    [
-                        7000,
-                        50
-                    ],
-                    [
-                        6800,
-                        50
-                    ]
-                ],
-                "speed": 92,
-                "currentPoint": 0,
-                "alongWith": false,
-                "pointOn": {
-                    "x": 6800,
-                    "y": 0
-                },
-                "pointTo": {
-                    "x": 7000,
-                    "y": 0
-                },
-                "xv": 92,
-                "yv": 0,
-                "inView": false
-            },
-            {
-                "x": 6942.833333333668,
-                "y": 50,
-                "w": 50,
-                "h": 50,
-                "type": "move",
-                "points": [
-                    [
-                        6800,
-                        0
-                    ],
-                    [
-                        7000,
-                        0
-                    ],
-                    [
-                        7000,
-                        50
-                    ],
-                    [
-                        6800,
-                        50
-                    ]
-                ],
-                "speed": 92,
-                "currentPoint": 2,
-                "alongWith": false,
-                "pointOn": {
-                    "x": 7000,
-                    "y": 50
-                },
-                "pointTo": {
-                    "x": 6800,
-                    "y": 50
-                },
-                "xv": -92,
-                "yv": 1.126675055215565e-14,
-                "inView": false
-            },
-            {
-                "x": 7100,
-                "y": 7.166666666665339,
-                "w": 50,
-                "h": 50,
-                "type": "move",
-                "points": [
-                    [
-                        7100,
-                        0
-                    ],
-                    [
-                        7100,
-                        50
-                    ]
-                ],
-                "speed": 92,
-                "currentPoint": 0,
-                "alongWith": false,
-                "pointOn": {
-                    "x": 7100,
-                    "y": 0
-                },
-                "pointTo": {
-                    "x": 7100,
-                    "y": 50
-                },
-                "xv": 5.633375276077825e-15,
-                "yv": 92,
-                "inView": false
-            },
-            {
-                "x": 7150,
-                "y": 0,
-                "w": 50,
-                "h": 100,
-                "type": "grav",
-                "force": 500,
-                "dir": {
-                    "x": 500,
-                    "y": 0
-                },
-                "direction": "right",
-                "inView": false
-            },
-            {
-                "x": 6400,
-                "y": 300,
-                "w": 100,
-                "h": 550,
-                "type": "size",
-                "size": 22.5,
-                "inView": false
-            },
-            {
-                "x": 6600,
-                "y": 400,
-                "w": 50,
-                "h": 250,
-                "type": "tp",
-                "tpx": 8525,
-                "tpy": 325,
-                "bgColor": "#27811b",
-                "tileColor": "#6ab95a",
-                "changeColor": false,
-                "inView": false
-            },
-            {
-                "x": 7400,
-                "y": 0,
-                "w": 1100,
-                "h": 2150,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 6375,
-                "y": 950,
-                "w": 1025,
-                "h": 1100,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 8750,
-                "y": 300,
-                "w": 50,
-                "h": 50,
-                "type": "mark",
-                "time": 5.2,
-                "inView": false
-            },
-            {
-                "x": 8500,
-                "y": 350,
-                "w": 1500,
-                "h": 1350,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 8500,
-                "y": 0,
-                "w": 300,
-                "h": 300,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        8800,
-                        0
-                    ],
-                    [
-                        9100,
-                        0
-                    ],
-                    [
-                        8800,
-                        300
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 8800,
-                    "right": 9100,
-                    "top": 0,
-                    "bottom": 300
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        9150,
-                        50
-                    ],
-                    [
-                        9450,
-                        350
-                    ],
-                    [
-                        8850,
-                        350
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 8850,
-                    "right": 9450,
-                    "top": 50,
-                    "bottom": 350
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        9200,
-                        0
-                    ],
-                    [
-                        9500,
-                        0
-                    ],
-                    [
-                        9500,
-                        300
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 9200,
-                    "right": 9500,
-                    "top": 0,
-                    "bottom": 300
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "x": 9600,
-                "y": 50,
-                "w": 100,
-                "h": 300,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        9500,
-                        250
-                    ],
-                    [
-                        9550,
-                        300
-                    ],
-                    [
-                        9500,
-                        300
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 9500,
-                    "right": 9550,
-                    "top": 250,
-                    "bottom": 300
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        9600,
-                        175
-                    ],
-                    [
-                        9600,
-                        275
-                    ],
-                    [
-                        9550,
-                        225
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 9550,
-                    "right": 9600,
-                    "top": 175,
-                    "bottom": 275
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        9500,
-                        100
-                    ],
-                    [
-                        9550,
-                        150
-                    ],
-                    [
-                        9500,
-                        200
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 9500,
-                    "right": 9550,
-                    "top": 100,
-                    "bottom": 200
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "x": 9825,
-                "y": 175,
-                "radius": 125,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 9700,
-                "y": 50,
-                "w": 125,
-                "h": 250,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 9575,
-                "y": 50,
-                "w": 25,
-                "h": 50,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        9550,
-                        75
-                    ],
-                    [
-                        9600,
-                        75
-                    ],
-                    [
-                        9600,
-                        125
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 9550,
-                    "right": 9600,
-                    "top": 75,
-                    "bottom": 125
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "x": 9575,
-                "y": 75,
-                "radius": 25,
-                "type": "circle-slice",
-                "startAngle": -3.141592653589793,
-                "endAngle": -1.5707963267948966,
-                "startPolygon": {
-                    "points": [
-                        [
-                            9575,
-                            75
-                        ],
-                        [
-                            9550,
-                            75
-                        ]
-                    ],
-                    "type": "poly",
-                    "props": {}
-                },
-                "endPolygon": {
-                    "points": [
-                        [
-                            9575,
-                            75
-                        ],
-                        [
-                            9575,
-                            50
-                        ]
-                    ],
-                    "type": "poly",
-                    "props": {}
-                },
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 9750,
-                "y": 300,
-                "w": 50,
-                "h": 50,
-                "type": "cure",
-                "inView": false
-            },
-            {
-                "x": 8500,
-                "y": 300,
-                "w": 50,
-                "h": 50,
-                "type": "zone",
-                "value": 1,
-                "inView": false
-            },
-            {
-                "x": 8550,
-                "y": 300,
-                "w": 200,
-                "h": 50,
-                "type": "grav",
-                "force": 500,
-                "dir": {
-                    "x": 500,
-                    "y": 0
-                },
-                "direction": "right",
-                "inView": false
-            },
-            {
-                "x": 9700,
-                "y": 300,
-                "w": 50,
-                "h": 50,
-                "type": "tp",
-                "tpx": 6450,
-                "tpy": 2075,
-                "bgColor": "#27811b",
-                "tileColor": "#6ab95a",
-                "changeColor": false,
-                "inView": false
-            },
-            {
-                "x": 8500,
-                "y": 300,
-                "w": 50,
-                "h": 50,
-                "spawn": {
-                    "x": 8525,
-                    "y": 325
-                },
-                "type": "check",
-                "collected": false,
-                "inView": false
-            },
-            {
-                "x": 7000,
-                "y": 2150,
-                "w": 1500,
-                "h": 1450,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 6400,
-                "y": 2750,
-                "w": 600,
-                "h": 850,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 6500,
-                "y": 2050,
-                "w": 900,
-                "h": 100,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 6400,
-                "y": 2150,
-                "w": 600,
-                "h": 600,
-                "type": "tptrap",
-                "time": 0,
-                "maxTime": 10,
-                "cdmult": 3,
-                "trapType": "death",
-                "tpx": 7000,
-                "tpy": 3625,
-                "inView": false
-            },
-            {
-                "x": 7600,
-                "y": 2000,
-                "w": 2625,
-                "h": 3000,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 6400,
-                "y": 3600,
-                "w": 550,
-                "h": 50,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 7050,
-                "y": 3600,
-                "w": 550,
-                "h": 50,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 6400,
-                "y": 4950,
-                "w": 1200,
-                "h": 50,
-                "type": "winpad",
-                "inView": false
-            },
-            {
-                "x": 8500,
-                "y": 300,
-                "w": 50,
-                "h": 50,
-                "type": "color",
-                "bgColor": "#000000",
-                "tileColor": "#707070",
-                "inView": false
-            },
-            {
-                "x": 6400,
-                "y": 2100,
-                "w": 100,
-                "h": 50,
-                "type": "breakable",
-                "maxStrength": 55,
-                "currentStrength": 55,
-                "time": 0.016,
-                "timer": 0.016,
-                "regenTime": 10,
-                "inView": false
-            },
-            {
-                "x": 6375,
-                "y": 2050,
-                "w": 150,
-                "h": 100,
-                "type": "trans",
-                "collide": false,
-                "opaq": 1,
-                "inView": false
-            },
-            {
-                "x": 6950,
-                "y": 3600,
-                "w": 100,
-                "h": 50,
-                "type": "zone",
-                "value": 10,
-                "inView": false
-            },
-            {
-                "x": 6950,
-                "y": 3600,
-                "w": 100,
-                "h": 50,
-                "spawn": {
-                    "x": 7000,
-                    "y": 3625
-                },
-                "type": "check",
-                "collected": false,
-                "inView": false
-            },
-            {
-                "x": 6400,
-                "y": 3650,
-                "w": 550,
-                "h": 500,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 7050,
-                "y": 3650,
-                "w": 550,
-                "h": 500,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 6950,
-                "y": 3650,
-                "w": 100,
-                "h": 500,
-                "type": "grav",
-                "force": 500,
-                "dir": {
-                    "x": 0,
-                    "y": 500
-                },
-                "direction": "down",
-                "inView": false
-            },
-            {
-                "x": 6900,
-                "y": 3725,
-                "r": 36,
-                "angle": -270,
-                "type": "circle-sentry",
-                "speed": 108,
-                "laser": {
-                    "x": 6900,
-                    "y": 3725,
-                    "w": 200,
-                    "h": 25,
-                    "pivotX": 7000,
-                    "pivotY": 3737.5,
-                    "distToPivot": 0
-                },
-                "rest": 90,
-                "renderType": "circleSentry",
-                "lastNoticed": false,
-                "radius": 36,
-                "inView": false
-            },
-            {
-                "x": 6900,
-                "y": 3825,
-                "r": 36,
-                "angle": -270,
-                "type": "circle-sentry",
-                "speed": 108,
-                "laser": {
-                    "x": 6900,
-                    "y": 3825,
-                    "w": 200,
-                    "h": 25,
-                    "pivotX": 7000,
-                    "pivotY": 3837.5,
-                    "distToPivot": 0
-                },
-                "rest": 90,
-                "renderType": "circleSentry",
-                "lastNoticed": false,
-                "radius": 36,
-                "inView": false
-            },
-            {
-                "x": 6900,
-                "y": 3925,
-                "r": 36,
-                "angle": -270,
-                "type": "circle-sentry",
-                "speed": 108,
-                "laser": {
-                    "x": 6900,
-                    "y": 3925,
-                    "w": 200,
-                    "h": 25,
-                    "pivotX": 7000,
-                    "pivotY": 3937.5,
-                    "distToPivot": 0
-                },
-                "rest": 90,
-                "renderType": "circleSentry",
-                "lastNoticed": false,
-                "radius": 36,
-                "inView": false
-            },
-            {
-                "x": 6900,
-                "y": 4025,
-                "r": 36,
-                "angle": -270,
-                "type": "circle-sentry",
-                "speed": 108,
-                "laser": {
-                    "x": 6900,
-                    "y": 4025,
-                    "w": 200,
-                    "h": 25,
-                    "pivotX": 7000,
-                    "pivotY": 4037.5,
-                    "distToPivot": 0
-                },
-                "rest": 90,
-                "renderType": "circleSentry",
-                "lastNoticed": false,
-                "radius": 36,
-                "inView": false
-            },
-            {
-                "x": 7100,
-                "y": 3725,
-                "r": 36,
-                "angle": -270,
-                "type": "circle-sentry",
-                "speed": 108,
-                "laser": {
-                    "x": 7100,
-                    "y": 3725,
-                    "w": 200,
-                    "h": 25,
-                    "pivotX": 7200,
-                    "pivotY": 3737.5,
-                    "distToPivot": 0
-                },
-                "rest": 90,
-                "renderType": "circleSentry",
-                "lastNoticed": false,
-                "radius": 36,
-                "inView": false
-            },
-            {
-                "x": 7100,
-                "y": 3825,
-                "r": 36,
-                "angle": -270,
-                "type": "circle-sentry",
-                "speed": 108,
-                "laser": {
-                    "x": 7100,
-                    "y": 3825,
-                    "w": 200,
-                    "h": 25,
-                    "pivotX": 7200,
-                    "pivotY": 3837.5,
-                    "distToPivot": 0
-                },
-                "rest": 90,
-                "renderType": "circleSentry",
-                "lastNoticed": false,
-                "radius": 36,
-                "inView": false
-            },
-            {
-                "x": 7100,
-                "y": 3925,
-                "r": 36,
-                "angle": -270,
-                "type": "circle-sentry",
-                "speed": 108,
-                "laser": {
-                    "x": 7100,
-                    "y": 3925,
-                    "w": 200,
-                    "h": 25,
-                    "pivotX": 7200,
-                    "pivotY": 3937.5,
-                    "distToPivot": 0
-                },
-                "rest": 90,
-                "renderType": "circleSentry",
-                "lastNoticed": false,
-                "radius": 36,
-                "inView": false
-            },
-            {
-                "x": 7100,
-                "y": 4025,
-                "r": 36,
-                "angle": -270,
-                "type": "circle-sentry",
-                "speed": 108,
-                "laser": {
-                    "x": 7100,
-                    "y": 4025,
-                    "w": 200,
-                    "h": 25,
-                    "pivotX": 7200,
-                    "pivotY": 4037.5,
-                    "distToPivot": 0
-                },
-                "rest": 90,
-                "renderType": "circleSentry",
-                "lastNoticed": false,
-                "radius": 36,
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        7000,
-                        4250
-                    ],
-                    [
-                        7350,
-                        5025
-                    ],
-                    [
-                        6650,
-                        5025
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 6650,
-                    "right": 7350,
-                    "top": 4250,
-                    "bottom": 5025
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        6400,
-                        4150
-                    ],
-                    [
-                        6700,
-                        4150
-                    ],
-                    [
-                        6400,
-                        4850
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 6400,
-                    "right": 6700,
-                    "top": 4150,
-                    "bottom": 4850
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        7300,
-                        4150
-                    ],
-                    [
-                        7600,
-                        4150
-                    ],
-                    [
-                        7600,
-                        4850
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 7300,
-                    "right": 7600,
-                    "top": 4150,
-                    "bottom": 4850
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        250,
-                        4750
-                    ],
-                    [
-                        550,
-                        4750
-                    ],
-                    [
-                        400,
-                        4900
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 250,
-                    "right": 550,
-                    "top": 4750,
-                    "bottom": 4900
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        250,
-                        4900
-                    ],
-                    [
-                        350,
-                        5000
-                    ],
-                    [
-                        150,
-                        5000
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 150,
-                    "right": 350,
-                    "top": 4900,
-                    "bottom": 5000
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "points": [
-                    [
-                        550,
-                        4900
-                    ],
-                    [
-                        650,
-                        5000
-                    ],
-                    [
-                        450,
-                        5000
-                    ]
-                ],
-                "type": "poly",
-                "most": {
-                    "left": 450,
-                    "right": 650,
-                    "top": 4900,
-                    "bottom": 5000
-                },
-                "renderType": "poly",
-                "inView": false
-            },
-            {
-                "x": 775,
-                "y": 4875,
-                "radius": 50,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 950,
-                "y": 4775,
-                "radius": 50,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 950,
-                "y": 4975,
-                "radius": 50,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 900,
-                "y": 4975,
-                "w": 100,
-                "h": 50,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 900,
-                "y": 4725,
-                "w": 100,
-                "h": 50,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 1175,
-                "y": 4875,
-                "w": 250,
-                "h": 50,
-                "type": "rotate-normal",
-                "angle": 0.75,
-                "rotateSpeed": 45,
-                "pivotX": 1175,
-                "pivotY": 4875,
-                "distToPivot": 0,
-                "canCollide": true,
-                "renderType": "rotating",
-                "cullingRadius": 127.47548783981962,
-                "unSim": 14.191666666666501,
-                "inView": false
-            },
-            {
-                "x": 1175,
-                "y": 4875,
-                "radius": 75,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 7100,
-                "y": 0,
-                "w": 100,
-                "h": 100,
-                "type": "size",
-                "size": 8,
-                "inView": false
-            },
-            {
-                "x": 7300,
-                "y": -25,
-                "w": 100,
-                "h": 125,
-                "type": "trans",
-                "collide": false,
-                "opaq": 1,
-                "inView": false
-            },
-            {
-                "x": 8800,
-                "y": 1650,
-                "w": 1250,
-                "h": 475,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 8750,
-                "y": 1700,
-                "w": 50,
-                "h": 50,
-                "type": "button",
-                "id": 1,
-                "active": true,
-                "inView": false
-            },
-            {
-                "x": 8500,
-                "y": 1750,
-                "w": 50,
-                "h": 50,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 8600,
-                "y": 1750,
-                "w": 200,
-                "h": 50,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 8500,
-                "y": 1850,
-                "w": 200,
-                "h": 50,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 8750,
-                "y": 1850,
-                "w": 50,
-                "h": 150,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 8650,
-                "y": 1900,
-                "w": 50,
-                "h": 50,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 8500,
-                "y": 1950,
-                "w": 100,
-                "h": 50,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 8500,
-                "y": 1800,
-                "w": 50,
-                "h": 50,
-                "type": "button",
-                "id": 2,
-                "active": true,
-                "inView": false
-            },
-            {
-                "x": 8650,
-                "y": 1950,
-                "w": 50,
-                "h": 50,
-                "type": "button",
-                "id": 3,
-                "active": true,
-                "inView": false
-            },
-            {
-                "x": 8550,
-                "y": 1750,
-                "w": 50,
-                "h": 50,
-                "type": "door",
-                "id": 1,
-                "active": true,
-                "inView": false
-            },
-            {
-                "x": 8700,
-                "y": 1850,
-                "w": 50,
-                "h": 50,
-                "type": "door",
-                "id": 2,
-                "active": true,
-                "inView": false
-            },
-            {
-                "x": 8550,
-                "y": 1900,
-                "w": 50,
-                "h": 50,
-                "type": "door",
-                "id": 3,
-                "active": true,
-                "inView": false
-            },
-            {
-                "x": 8500,
-                "y": 1700,
-                "w": 50,
-                "h": 50,
-                "type": "zone",
-                "value": -1,
-                "inView": false
-            },
-            {
-                "x": 8500,
-                "y": 1700,
-                "w": 50,
-                "h": 50,
-                "spawn": {
-                    "x": 8525,
-                    "y": 1725
-                },
-                "type": "check",
-                "collected": false,
-                "inView": false
-            },
-            {
-                "x": 8600,
-                "y": 1800,
-                "w": 50,
-                "h": 50,
-                "type": "pushbox",
-                "weight": 22,
-                "initX": 8600,
-                "initY": 1800,
-                "pusherId": 0.00603314892176221,
-                "resetId": -1,
-                "lastPos": {
-                    "x": 8600,
-                    "y": 1800
-                },
-                "inView": false
-            },
-            {
-                "x": 8500,
-                "y": 1900,
-                "w": 50,
-                "h": 50,
-                "type": "tp",
-                "tpx": 8525,
-                "tpy": 325,
-                "bgColor": "#27811b",
-                "tileColor": "#6ab95a",
-                "changeColor": false,
-                "inView": false
-            },
-            {
-                "x": 7300,
-                "y": -20,
-                "w": 200,
-                "h": 220,
-                "type": "normal",
-                "canJump": true,
-                "inView": false
-            },
-            {
-                "x": 19150/2,
-                "y": 150/2,
-                "radius": 25,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 19000/2,
-                "y": 0,
-                "radius": 50,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 20000/2,
-                "y": 0,
-                "radius": 85,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-            {
-                "x": 20000/2,
-                "y": 350,
-                "radius": 85,
-                "type": "circle-normal",
-                "renderType": "circle",
-                "inView": false
-            },
-        ]
-        const enemies = [
-            {
-                "type": "square",
-                "angle": 2.096646552493198,
-                "size": 34,
-                "radius": 17,
-                "speed": 85,
-                "x": 7417.607700050056,
-                "y": 4427.6566883631895,
-                "renderX": 7417.607700050056,
-                "renderY": 4427.6566883631895,
-                "xv": 42.66562624665778,
-                "yv": -73.51628620231375,
-                "bound": {
-                    "x": 7000,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "inView": false
-            },
-            {
-                "type": "square",
-                "angle": 2.3581206337034444,
-                "size": 34,
-                "radius": 17,
-                "speed": 85,
-                "x": 7540.235631133861,
-                "y": 4381.9897254300795,
-                "renderX": 7540.235631133861,
-                "renderY": 4381.9897254300795,
-                "xv": -60.21973391212874,
-                "yv": 59.98819590179731,
-                "bound": {
-                    "x": 7000,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "inView": false
-            },
-            {
-                "type": "square",
-                "angle": 2.734495227935228,
-                "size": 34,
-                "radius": 17,
-                "speed": 85,
-                "x": 7170.590533228817,
-                "y": 4645.3589842442525,
-                "renderX": 7170.590533228817,
-                "renderY": 4645.3589842442525,
-                "xv": -78.05328584018666,
-                "yv": -33.65537950387895,
-                "bound": {
-                    "x": 7000,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "inView": false
-            },
-            {
-                "type": "square",
-                "angle": 0.2392916181642184,
-                "size": 34,
-                "radius": 17,
-                "speed": 85,
-                "x": 7482.484738222737,
-                "y": 4325.758256673077,
-                "renderX": 7482.484738222737,
-                "renderY": 4325.758256673077,
-                "xv": -82.57801980473252,
-                "yv": 20.14623153667217,
-                "bound": {
-                    "x": 7000,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "inView": false
-            },
-            {
-                "type": "square",
-                "angle": 0.13553030361071738,
-                "size": 34,
-                "radius": 17,
-                "speed": 85,
-                "x": 7074.145070260299,
-                "y": 4843.963680485092,
-                "renderX": 7074.145070260299,
-                "renderY": 4843.963680485092,
-                "xv": 84.22053454261524,
-                "yv": 11.484840501990167,
-                "bound": {
-                    "x": 7000,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "inView": false
-            },
-            {
-                "type": "square",
-                "angle": 3.949171239542174,
-                "size": 34,
-                "radius": 17,
-                "speed": 85,
-                "x": 7237.726335506365,
-                "y": 4816.587059714815,
-                "renderX": 7237.726335506365,
-                "renderY": 4816.587059714815,
-                "xv": 58.756267767378176,
-                "yv": -61.42231677532325,
-                "bound": {
-                    "x": 7000,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "inView": false
-            },
-            {
-                "type": "square",
-                "angle": 2.6997228135983145,
-                "size": 34,
-                "radius": 17,
-                "speed": 85,
-                "x": 7037.517897101272,
-                "y": 4287.187837520333,
-                "renderX": 7037.517897101272,
-                "renderY": 4287.187837520333,
-                "xv": -76.83605968869841,
-                "yv": -36.34858912688049,
-                "bound": {
-                    "x": 7000,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "inView": false
-            },
-            {
-                "type": "square",
-                "angle": 1.542492875873878,
-                "size": 34,
-                "radius": 17,
-                "speed": 85,
-                "x": 7121.5959229819355,
-                "y": 4760.01188767658,
-                "renderX": 7121.5959229819355,
-                "renderY": 4760.01188767658,
-                "xv": 2.405472133526731,
-                "yv": 84.96595614606375,
-                "bound": {
-                    "x": 7000,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "inView": false
-            },
-            {
-                "type": "square",
-                "angle": 4.539949726943346,
-                "size": 34,
-                "radius": 17,
-                "speed": 85,
-                "x": 7320.764334174726,
-                "y": 4361.965619210572,
-                "renderX": 7320.764334174726,
-                "renderY": 4361.965619210572,
-                "xv": 14.584804424318365,
-                "yv": 83.73937831094989,
-                "bound": {
-                    "x": 7000,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "inView": false
-            },
-            {
-                "type": "square",
-                "angle": 5.595379888482249,
-                "size": 34,
-                "radius": 17,
-                "speed": 85,
-                "x": 7311.254992375064,
-                "y": 4761.466819111731,
-                "renderX": 7311.254992375064,
-                "renderY": 4761.466819111731,
-                "xv": -65.67449258561585,
-                "yv": 53.96166253574744,
-                "bound": {
-                    "x": 7000,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "inView": false
-            },
-            {
-                "type": "square",
-                "angle": 3.1430531126446692,
-                "size": 34,
-                "radius": 17,
-                "speed": 85,
-                "x": 7165.11993977095,
-                "y": 4477.951050482923,
-                "renderX": 7165.11993977095,
-                "renderY": 4477.951050482923,
-                "xv": 84.99990935003844,
-                "yv": -0.12413897553427167,
-                "bound": {
-                    "x": 7000,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "inView": false
-            },
-            {
-                "type": "square",
-                "angle": 0.08941312146871278,
-                "size": 34,
-                "radius": 17,
-                "speed": 85,
-                "x": 7304.111555754083,
-                "y": 4308.934975125887,
-                "renderX": 7304.111555754083,
-                "renderY": 4308.934975125887,
-                "xv": 84.66045128911504,
-                "yv": -7.589992590469345,
-                "bound": {
-                    "x": 7000,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 3.7763201078201147,
-                "radius": 16,
-                "speed": 85,
-                "x": 6768.127461318194,
-                "y": 4567.139507862657,
-                "renderX": 6768.127461318194,
-                "renderY": 4567.139507862657,
-                "xv": 68.44483344038996,
-                "yv": -50.40143624260401,
-                "bound": {
-                    "x": 6400,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 5.874603837535309,
-                "radius": 16,
-                "speed": 85,
-                "x": 6898.622849512051,
-                "y": 4711.556031428228,
-                "renderX": 6898.622849512051,
-                "renderY": 4711.556031428228,
-                "xv": 78.00325384310767,
-                "yv": 33.77117691001763,
-                "bound": {
-                    "x": 6400,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 4.19865438043841,
-                "radius": 16,
-                "speed": 85,
-                "x": 6927.050615132404,
-                "y": 4675.876576032205,
-                "renderX": 6927.050615132404,
-                "renderY": 4675.876576032205,
-                "xv": 41.77182085589378,
-                "yv": -74.02779871361243,
-                "bound": {
-                    "x": 6400,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 3.2757029459489453,
-                "radius": 16,
-                "speed": 85,
-                "x": 6474.964920503516,
-                "y": 4477.664781319824,
-                "renderX": 6474.964920503516,
-                "renderY": 4477.664781319824,
-                "xv": 84.23675822739536,
-                "yv": -11.365234856321287,
-                "bound": {
-                    "x": 6400,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 2.1899255682959406,
-                "radius": 16,
-                "speed": 85,
-                "x": 6759.881704114504,
-                "y": 4893.4194746682015,
-                "renderX": 6759.881704114504,
-                "renderY": 4893.4194746682015,
-                "xv": 49.32773114521837,
-                "yv": -69.22264759502524,
-                "bound": {
-                    "x": 6400,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 3.528733988926158,
-                "radius": 16,
-                "speed": 85,
-                "x": 6944.122993949434,
-                "y": 4602.34109912099,
-                "renderX": 6944.122993949434,
-                "renderY": 4602.34109912099,
-                "xv": 78.70932938449752,
-                "yv": 32.091143137050686,
-                "bound": {
-                    "x": 6400,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 0.3230100206102309,
-                "radius": 16,
-                "speed": 85,
-                "x": 6755.790790177536,
-                "y": 4396.300141699274,
-                "renderX": 6755.790790177536,
-                "renderY": 4396.300141699274,
-                "xv": 80.60416274106414,
-                "yv": 26.98089970353187,
-                "bound": {
-                    "x": 6400,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 0.7090161382337469,
-                "radius": 16,
-                "speed": 85,
-                "x": 6542.651878726793,
-                "y": 4481.141897768519,
-                "renderX": 6542.651878726793,
-                "renderY": 4481.141897768519,
-                "xv": -64.51523996955737,
-                "yv": -55.34242325441151,
-                "bound": {
-                    "x": 6400,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 4.782396835894051,
-                "radius": 16,
-                "speed": 85,
-                "x": 6882.192966899127,
-                "y": 4836.820614019344,
-                "renderX": 6882.192966899127,
-                "renderY": 4836.820614019344,
-                "xv": -5.9458081065606185,
-                "yv": -84.79178831679373,
-                "bound": {
-                    "x": 6400,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 1.2181085672893186,
-                "radius": 16,
-                "speed": 85,
-                "x": 6786.022891275794,
-                "y": 4895.494186040433,
-                "renderX": 6786.022891275794,
-                "renderY": 4895.494186040433,
-                "xv": -29.360816772905828,
-                "yv": 79.76805399674642,
-                "bound": {
-                    "x": 6400,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 5.568760195085709,
-                "radius": 16,
-                "speed": 85,
-                "x": 6820.534770741167,
-                "y": 4543.34203963187,
-                "renderX": 6820.534770741167,
-                "renderY": 4543.34203963187,
-                "xv": 64.21495194964585,
-                "yv": 55.69057322478081,
-                "bound": {
-                    "x": 6400,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 1.0675705995691476,
-                "radius": 16,
-                "speed": 85,
-                "x": 6915.2311732372855,
-                "y": 4829.822415244738,
-                "renderX": 6915.2311732372855,
-                "renderY": 4829.822415244738,
-                "xv": 40.99157991667556,
-                "yv": -74.46267773814476,
-                "bound": {
-                    "x": 6400,
-                    "y": 4250,
-                    "w": 600,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "turret",
-                "angle": 3.6232766945442836,
-                "shootSpeed": 3.58,
-                "timer": 2.2316666666694256,
-                "pRadius": 32,
-                "pSpeed": 120,
-                "projectiles": [
-                    {
-                        "x": 4291,
-                        "y": 3450,
-                        "angle": 0
-                    },
-                    {
-                        "x": 3862,
-                        "y": 3450,
-                        "angle": 0
-                    }
-                ],
-                "shootDirections": [
-                    0
-                ],
-                "csd": 0,
-                "deadProjectiles": [],
-                "radius": 32,
-                "speed": 0,
-                "x": 3700,
-                "y": 3450,
-                "renderX": 3700,
-                "renderY": 3450,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 3650,
-                    "y": 3400,
-                    "w": 850,
-                    "h": 100
-                },
-                "inView": true
-            },
-            {
-                "type": "turret",
-                "angle": 5.902169559299281,
-                "shootSpeed": 3.58,
-                "timer": 2.2316666666694256,
-                "pRadius": 32,
-                "pSpeed": 120,
-                "projectiles": [
-                    {
-                        "x": 3859,
-                        "y": 3450,
-                        "angle": 3.141592653589793
-                    },
-                    {
-                        "x": 4288,
-                        "y": 3450,
-                        "angle": 3.141592653589793
-                    }
-                ],
-                "shootDirections": [
-                    3.141592653589793
-                ],
-                "csd": 0,
-                "deadProjectiles": [],
-                "radius": 32,
-                "speed": 0,
-                "x": 4450,
-                "y": 3450,
-                "renderX": 4450,
-                "renderY": 3450,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 3650,
-                    "y": 3400,
-                    "w": 850,
-                    "h": 100
-                },
-                "inView": false
-            },
-            {
-                "type": "turret",
-                "angle": 3.745942870474324,
-                "shootSpeed": 2.12,
-                "timer": 0.09166666666895476,
-                "pRadius": 32,
-                "pSpeed": 110,
-                "projectiles": [
-                    {
-                        "x": 3760.666666666605,
-                        "y": 2550,
-                        "angle": 3.141592653589793
-                    },
-                    {
-                        "x": 3993.4999999999,
-                        "y": 2550,
-                        "angle": 3.141592653589793
-                    },
-                    {
-                        "x": 4226.333333333259,
-                        "y": 2550,
-                        "angle": 3.141592653589793
-                    }
-                ],
-                "shootDirections": [
-                    3.141592653589793
-                ],
-                "csd": 0,
-                "deadProjectiles": [],
-                "radius": 32,
-                "speed": 0,
-                "x": 4450,
-                "y": 2550,
-                "renderX": 4450,
-                "renderY": 2550,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 3650,
-                    "y": 2500,
-                    "w": 850,
-                    "h": 100
-                },
-                "inView": false
-            },
-            {
-                "type": "turret",
-                "angle": 0.8875579133425956,
-                "shootSpeed": 2.28,
-                "timer": 0.7316666666689096,
-                "pRadius": 32,
-                "pSpeed": 100,
-                "projectiles": [
-                    {
-                        "x": 4309.9999999999945,
-                        "y": 2350,
-                        "angle": 0
-                    },
-                    {
-                        "x": 4083.333333333403,
-                        "y": 2350,
-                        "angle": 0
-                    },
-                    {
-                        "x": 3855.000000000028,
-                        "y": 2350,
-                        "angle": 0
-                    }
-                ],
-                "shootDirections": [
-                    0
-                ],
-                "csd": 0,
-                "deadProjectiles": [],
-                "radius": 32,
-                "speed": 0,
-                "x": 3700,
-                "y": 2350,
-                "renderX": 3700,
-                "renderY": 2350,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 3650,
-                    "y": 2300,
-                    "w": 850,
-                    "h": 100
-                },
-                "inView": true
-            },
-            {
-                "type": "normal",
-                "angle": 0.26456994994512156,
-                "radius": 18,
-                "speed": 60,
-                "x": 1998.7690079685906,
-                "y": 401.88924484184935,
-                "renderX": 1998.7690079685906,
-                "renderY": 401.88924484184935,
-                "xv": 57.91230274376554,
-                "yv": -15.6896523516121,
-                "bound": {
-                    "x": 1500,
-                    "y": 100,
-                    "w": 650,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 1.291673582371732,
-                "radius": 18,
-                "speed": 60,
-                "x": 1725.2692197455503,
-                "y": 754.8476401236654,
-                "renderX": 1725.2692197455503,
-                "renderY": 754.8476401236654,
-                "xv": 16.5307470654497,
-                "yv": -57.67785018062069,
-                "bound": {
-                    "x": 1500,
-                    "y": 100,
-                    "w": 650,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 2.3695999873588156,
-                "radius": 18,
-                "speed": 60,
-                "x": 1683.1990756583866,
-                "y": 378.05226779243844,
-                "renderX": 1683.1990756583866,
-                "renderY": 378.05226779243844,
-                "xv": 42.99132480219314,
-                "yv": 41.853864717040565,
-                "bound": {
-                    "x": 1500,
-                    "y": 100,
-                    "w": 650,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 1.0466600331371079,
-                "radius": 18,
-                "speed": 60,
-                "x": 1580.5192003171876,
-                "y": 764.38381743579,
-                "renderX": 1580.5192003171876,
-                "renderY": 764.38381743579,
-                "xv": -30.02792592244085,
-                "yv": 51.94539117954937,
-                "bound": {
-                    "x": 1500,
-                    "y": 100,
-                    "w": 650,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 5.673386369963326,
-                "radius": 18,
-                "speed": 60,
-                "x": 1697.4747014900893,
-                "y": 294.17253590217115,
-                "renderX": 1697.4747014900893,
-                "renderY": 294.17253590217115,
-                "xv": 49.185791016197996,
-                "yv": -34.36215886859988,
-                "bound": {
-                    "x": 1500,
-                    "y": 100,
-                    "w": 650,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 2.0726790153402064,
-                "radius": 18,
-                "speed": 60,
-                "x": 2115.125801935219,
-                "y": 430.6152985552246,
-                "renderX": 2115.125801935219,
-                "renderY": 430.6152985552246,
-                "xv": 28.864614155967256,
-                "yv": -52.600703889084365,
-                "bound": {
-                    "x": 1500,
-                    "y": 100,
-                    "w": 650,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 1.2329961690917228,
-                "radius": 32,
-                "speed": 45,
-                "x": 2100.6663982983177,
-                "y": 168.0478675100702,
-                "renderX": 2100.6663982983177,
-                "renderY": 168.0478675100702,
-                "xv": -14.913556888591376,
-                "yv": 42.45687012640886,
-                "bound": {
-                    "x": 1500,
-                    "y": 100,
-                    "w": 650,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 1.6772982573084705,
-                "radius": 32,
-                "speed": 45,
-                "x": 1939.5381862865593,
-                "y": 592.747141481084,
-                "renderX": 1939.5381862865593,
-                "renderY": 592.747141481084,
-                "xv": -4.783531895149346,
-                "yv": -44.74503126167294,
-                "bound": {
-                    "x": 1500,
-                    "y": 100,
-                    "w": 650,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 4.3853166306507845,
-                "radius": 32,
-                "speed": 45,
-                "x": 1549.373556602237,
-                "y": 455.66998017220686,
-                "renderX": 1549.373556602237,
-                "renderY": 455.66998017220686,
-                "xv": 14.457238313633866,
-                "yv": 42.6144137627493,
-                "bound": {
-                    "x": 1500,
-                    "y": 100,
-                    "w": 650,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 5.102020348924363,
-                "radius": 11,
-                "speed": 80,
-                "x": 1622.6077685626592,
-                "y": 244.850513539631,
-                "renderX": 1622.6077685626592,
-                "renderY": 244.850513539631,
-                "xv": -30.387795097739016,
-                "yv": 74.0039317137801,
-                "bound": {
-                    "x": 1500,
-                    "y": 100,
-                    "w": 650,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 4.5375375610811295,
-                "radius": 11,
-                "speed": 80,
-                "x": 1981.4700341013618,
-                "y": 442.22149798169966,
-                "renderX": 1981.4700341013618,
-                "renderY": 442.22149798169966,
-                "xv": -13.916945945388491,
-                "yv": 78.7801917714925,
-                "bound": {
-                    "x": 1500,
-                    "y": 100,
-                    "w": 650,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 4.16173596558015,
-                "radius": 11,
-                "speed": 80,
-                "x": 1762.5534091541228,
-                "y": 562.3390242904336,
-                "renderX": 1762.5534091541228,
-                "renderY": 562.3390242904336,
-                "xv": 41.85950628647299,
-                "yv": -68.1746414251863,
-                "bound": {
-                    "x": 1500,
-                    "y": 100,
-                    "w": 650,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 3.3675033541797488,
-                "radius": 11,
-                "speed": 80,
-                "x": 1973.5069929339286,
-                "y": 339.525544016842,
-                "renderX": 1973.5069929339286,
-                "renderY": 339.525544016842,
-                "xv": 77.96724158129875,
-                "yv": -17.91952120463598,
-                "bound": {
-                    "x": 1500,
-                    "y": 100,
-                    "w": 650,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 2.474648564958841,
-                "radius": 11,
-                "speed": 80,
-                "x": 1841.3673327021029,
-                "y": 113.20962366339029,
-                "renderX": 1841.3673327021029,
-                "renderY": 113.20962366339029,
-                "xv": -62.857254493730125,
-                "yv": 49.48702413270012,
-                "bound": {
-                    "x": 1500,
-                    "y": 100,
-                    "w": 650,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 6.260618802527029,
-                "radius": 11,
-                "speed": 80,
-                "x": 1763.8046646809703,
-                "y": 208.23353141551803,
-                "renderX": 1763.8046646809703,
-                "renderY": 208.23353141551803,
-                "xv": 79.97963097913811,
-                "yv": 1.8051671504023326,
-                "bound": {
-                    "x": 1500,
-                    "y": 100,
-                    "w": 650,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 3.357677300090449,
-                "radius": 11,
-                "speed": 80,
-                "x": 1751.5293341797988,
-                "y": 234.60237039821882,
-                "renderX": 1751.5293341797988,
-                "renderY": 234.60237039821882,
-                "xv": 78.13955304199192,
-                "yv": 17.152558129845584,
-                "bound": {
-                    "x": 1500,
-                    "y": 100,
-                    "w": 650,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 0.15167868187611241,
-                "radius": 11,
-                "speed": 80,
-                "x": 2073.0355759061285,
-                "y": 227.0657345141039,
-                "renderX": 2073.0355759061285,
-                "renderY": 227.0657345141039,
-                "xv": 79.08150606436665,
-                "yv": -12.08782025807556,
-                "bound": {
-                    "x": 1500,
-                    "y": 100,
-                    "w": 650,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 4.694867355728471,
-                "radius": 11,
-                "speed": 80,
-                "x": 1875.2313599069112,
-                "y": 757.6923567650093,
-                "renderX": 1875.2313599069112,
-                "renderY": 757.6923567650093,
-                "xv": -1.4016582500356367,
-                "yv": 79.98772002095139,
-                "bound": {
-                    "x": 1500,
-                    "y": 100,
-                    "w": 650,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 6.206776394797365,
-                "radius": 11,
-                "speed": 80,
-                "x": 1612.0575837609508,
-                "y": 205.2408728562712,
-                "renderX": 1612.0575837609508,
-                "renderY": 205.2408728562712,
-                "xv": 79.76658072224163,
-                "yv": -6.106766728974464,
-                "bound": {
-                    "x": 1500,
-                    "y": 100,
-                    "w": 650,
-                    "h": 700
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "turret",
-                "angle": 2.803410860152458,
-                "shootSpeed": 3.68,
-                "timer": 0.09166666666946768,
-                "pRadius": 64,
-                "pSpeed": 88,
-                "projectiles": [
-                    {
-                        "x": 3910.533333333237,
-                        "y": 2800,
-                        "angle": 3.141592653589793
-                    },
-                    {
-                        "x": 4233.933333333229,
-                        "y": 2800,
-                        "angle": 3.141592653589793
-                    }
-                ],
-                "shootDirections": [
-                    3.141592653589793
-                ],
-                "csd": 0,
-                "deadProjectiles": [
-                    {
-                        "x": 3586.3999999999974,
-                        "y": 2800,
-                        "angle": 3.141592653589793,
-                        "life": 0.9125
-                    }
-                ],
-                "radius": 64,
-                "speed": 0,
-                "x": 4550,
-                "y": 2800,
-                "renderX": 4550,
-                "renderY": 2800,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 3525,
-                    "y": 2725,
-                    "w": 1125,
-                    "h": 150
-                },
-                "inView": false
-            },
-            {
-                "type": "turret",
-                "angle": 1.5542473806477388,
-                "shootSpeed": 0.364,
-                "timer": 0.047666666665839824,
-                "pRadius": 14,
-                "pSpeed": 155,
-                "projectiles": [
-                    {
-                        "x": 3950.124999999934,
-                        "y": 3175,
-                        "angle": 3.141592653589793
-                    },
-                    {
-                        "x": 4006.749040334551,
-                        "y": 3144.0048734997436,
-                        "angle": 3.211405823669566
-                    },
-                    {
-                        "x": 4062.155410292732,
-                        "y": 3202.1207356877244,
-                        "angle": 3.07177948351002
-                    },
-                    {
-                        "x": 4118.041666666589,
-                        "y": 3175,
-                        "angle": 3.141592653589793
-                    },
-                    {
-                        "x": 4175.545190672266,
-                        "y": 3155.8082501611784,
-                        "angle": 3.211405823669566
-                    },
-                    {
-                        "x": 4230.951560630447,
-                        "y": 3190.3173590262895,
-                        "angle": 3.07177948351002
-                    },
-                    {
-                        "x": 4287.249999999962,
-                        "y": 3175,
-                        "angle": 3.141592653589793
-                    },
-                    {
-                        "x": 4344.34134100998,
-                        "y": 3167.6116268226133,
-                        "angle": 3.211405823669566
-                    },
-                    {
-                        "x": 4401.036231199747,
-                        "y": 3178.4238802529353,
-                        "angle": 3.07177948351002
-                    }
-                ],
-                "shootDirections": [
-                    3.141592653589793,
-                    3.211405823669566,
-                    3.07177948351002
-                ],
-                "csd": 0,
-                "deadProjectiles": [
-                    {
-                        "x": 3895.9363004181887,
-                        "y": 3213.7439081253206,
-                        "angle": 3.07177948351002,
-                        "life": 0.12499999999999978
-                    }
-                ],
-                "radius": 14,
-                "speed": 0,
-                "x": 4450,
-                "y": 3175,
-                "renderX": 4450,
-                "renderY": 3175,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 3850,
-                    "y": 3125,
-                    "w": 650,
-                    "h": 100
-                },
-                "inView": false
-            },
-            {
-                "type": "turret",
-                "angle": 2.0820217151858125,
-                "shootSpeed": 0.922,
-                "timer": 0.36766666666747516,
-                "pRadius": 14,
-                "pSpeed": 155,
-                "projectiles": [
-                    {
-                        "x": 4214.083333333315,
-                        "y": 2975,
-                        "angle": 0
-                    },
-                    {
-                        "x": 4071.9999999999563,
-                        "y": 2975,
-                        "angle": 0
-                    },
-                    {
-                        "x": 3929.9166666666397,
-                        "y": 2975,
-                        "angle": 0
-                    },
-                    {
-                        "x": 3786.5416666666565,
-                        "y": 2975,
-                        "angle": 0
-                    }
-                ],
-                "shootDirections": [
-                    0
-                ],
-                "csd": 0,
-                "deadProjectiles": [],
-                "radius": 14,
-                "speed": 0,
-                "x": 3700,
-                "y": 2975,
-                "renderX": 3700,
-                "renderY": 2975,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 3650,
-                    "y": 2925,
-                    "w": 650,
-                    "h": 100
-                },
-                "inView": true
-            },
-            {
-                "type": "turret",
-                "angle": 1.3200476689814697,
-                "shootSpeed": 0.436,
-                "timer": 0.005666666665495031,
-                "pRadius": 14,
-                "pSpeed": 155,
-                "projectiles": [
-                    {
-                        "x": 3832.5354029586033,
-                        "y": 3361.595345274729,
-                        "angle": 0.08726646259971647
-                    },
-                    {
-                        "x": 3766.911077221819,
-                        "y": 3355.8539607212224,
-                        "angle": 0.08726646259971647
-                    }
-                ],
-                "shootDirections": [
-                    0.08726646259971647
-                ],
-                "csd": 0,
-                "deadProjectiles": [
-                    {
-                        "x": 3902.0199831504924,
-                        "y": 3367.674458331383,
-                        "angle": 0.08726646259971647,
-                        "life": 0.6499999999999999
-                    }
-                ],
-                "radius": 14,
-                "speed": 0,
-                "x": 3700,
-                "y": 3350,
-                "renderX": 3700,
-                "renderY": 3350,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 3450,
-                    "y": 3300,
-                    "w": 450,
-                    "h": 100
-                },
-                "inView": true
-            },
-            {
-                "type": "turret",
-                "angle": 6.249158814296417,
-                "shootSpeed": 0.436,
-                "timer": 0.2236666666654944,
-                "pRadius": 14,
-                "pSpeed": 155,
-                "projectiles": [
-                    {
-                        "x": 4282.722306945452,
-                        "y": 3364.634901803056,
-                        "angle": 3.0543261909900763
-                    },
-                    {
-                        "x": 4349.633384167271,
-                        "y": 3358.7809410818336,
-                        "angle": 3.0543261909900763
-                    },
-                    {
-                        "x": 4416.54446138909,
-                        "y": 3352.926980360611,
-                        "angle": 3.0543261909900763
-                    }
-                ],
-                "shootDirections": [
-                    3.0543261909900763
-                ],
-                "csd": 0,
-                "deadProjectiles": [],
-                "radius": 14,
-                "speed": 0,
-                "x": 4450,
-                "y": 3350,
-                "renderX": 4450,
-                "renderY": 3350,
-                "xv": 0,
-                "yv": 0,
-                "bound": {
-                    "x": 4250,
-                    "y": 3300,
-                    "w": 300,
-                    "h": 100
-                },
-                "inView": false
-            },
-            {
-                "type": "switch",
-                "angle": 0.6586898029125109,
-                "switchTime": 3.2,
-                "switchTimer": 2.3083333333306277,
-                "currentSwitch": true,
-                "radius": 25,
-                "speed": 22,
-                "x": 2557.5655869230604,
-                "y": 4628.602260600484,
-                "renderX": 2557.5655869230604,
-                "renderY": 4628.602260600484,
-                "xv": -17.397486856740482,
-                "yv": 13.465788171122483,
-                "bound": {
-                    "x": 2400,
-                    "y": 4150,
-                    "w": 350,
-                    "h": 650
-                },
-                "inView": false
-            },
-            {
-                "type": "switch",
-                "angle": 4.734094126232346,
-                "switchTime": 3.2,
-                "switchTimer": 2.3083333333306277,
-                "currentSwitch": false,
-                "radius": 25,
-                "speed": 22,
-                "x": 2576.5905493852115,
-                "y": 4590.669720385718,
-                "renderX": 2576.5905493852115,
-                "renderY": 4590.669720385718,
-                "xv": 0.4774757157232222,
-                "yv": -21.99481795653,
-                "bound": {
-                    "x": 2400,
-                    "y": 4150,
-                    "w": 350,
-                    "h": 650
-                },
-                "inView": false
-            },
-            {
-                "type": "switch",
-                "angle": 6.21012038917064,
-                "switchTime": 3.2,
-                "switchTimer": 2.3083333333306277,
-                "currentSwitch": false,
-                "radius": 25,
-                "speed": 22,
-                "x": 2528.147219232508,
-                "y": 4317.977602727014,
-                "renderX": 2528.147219232508,
-                "renderY": 4317.977602727014,
-                "xv": 21.941302815114696,
-                "yv": -1.6059983734238152,
-                "bound": {
-                    "x": 2400,
-                    "y": 4150,
-                    "w": 350,
-                    "h": 650
-                },
-                "inView": false
-            },
-            {
-                "type": "switch",
-                "angle": 6.147365126941647,
-                "switchTime": 3.2,
-                "switchTimer": 2.3083333333306277,
-                "currentSwitch": true,
-                "radius": 25,
-                "speed": 22,
-                "x": 2699.8199605411173,
-                "y": 4279.283296943154,
-                "renderX": 2699.8199605411173,
-                "renderY": 4279.283296943154,
-                "xv": 21.797393411555138,
-                "yv": -2.9788656334069037,
-                "bound": {
-                    "x": 2400,
-                    "y": 4150,
-                    "w": 350,
-                    "h": 650
-                },
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 1.8732321000895242,
-                "radius": 8,
-                "speed": 70,
-                "x": 7268.730619400048,
-                "y": 441.63343528568953,
-                "renderX": 7268.730619400048,
-                "renderY": 441.63343528568953,
-                "xv": -20.849241756625137,
-                "yv": 66.82296849268072,
-                "bound": {
-                    "x": 7200,
-                    "y": 0,
-                    "w": 100,
-                    "h": 850
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 1.9640979081033831,
-                "radius": 8,
-                "speed": 70,
-                "x": 7241.036232000743,
-                "y": 396.0348152216952,
-                "renderX": 7241.036232000743,
-                "renderY": 396.0348152216952,
-                "xv": 26.826799995174998,
-                "yv": 64.65541587538416,
-                "bound": {
-                    "x": 7200,
-                    "y": 0,
-                    "w": 100,
-                    "h": 850
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 3.0742550997158578,
-                "radius": 8,
-                "speed": 70,
-                "x": 7227.109956155404,
-                "y": 390.825947546476,
-                "renderX": 7227.109956155404,
-                "renderY": 390.825947546476,
-                "xv": -69.84135784280399,
-                "yv": 4.7100673746138915,
-                "bound": {
-                    "x": 7200,
-                    "y": 0,
-                    "w": 100,
-                    "h": 850
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 5.787007169247565,
-                "radius": 8,
-                "speed": 70,
-                "x": 7260.295317975704,
-                "y": 279.25431352159114,
-                "renderX": 7260.295317975704,
-                "renderY": 279.25431352159114,
-                "xv": 61.55859125193613,
-                "yv": 33.32476321111754,
-                "bound": {
-                    "x": 7200,
-                    "y": 0,
-                    "w": 100,
-                    "h": 850
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 5.679101931953879,
-                "radius": 8,
-                "speed": 70,
-                "x": 7237.432614599957,
-                "y": 52.84736191730232,
-                "renderX": 7237.432614599957,
-                "renderY": 52.84736191730232,
-                "xv": -57.611616540495,
-                "yv": 39.76055381393679,
-                "bound": {
-                    "x": 7200,
-                    "y": 0,
-                    "w": 100,
-                    "h": 850
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 0.7004560618629558,
-                "radius": 8,
-                "speed": 70,
-                "x": 7212.21961603305,
-                "y": 302.45280937619884,
-                "renderX": 7212.21961603305,
-                "renderY": 302.45280937619884,
-                "xv": 53.51838132447758,
-                "yv": -45.11965049075412,
-                "bound": {
-                    "x": 7200,
-                    "y": 0,
-                    "w": 100,
-                    "h": 850
-                },
-                "isLava": false,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 2.1418200453149727,
-                "radius": 32,
-                "speed": 200,
-                "x": 6492.9696056310595,
-                "y": 2627.8907488977316,
-                "renderX": 6492.9696056310595,
-                "renderY": 2627.8907488977316,
-                "xv": 108.09872708734201,
-                "yv": -168.26962055610736,
-                "bound": {
-                    "x": 6400,
-                    "y": 2150,
-                    "w": 600,
-                    "h": 600
-                },
-                "isLava": true,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 2.959779525230282,
-                "radius": 32,
-                "speed": 200,
-                "x": 6949.783374058934,
-                "y": 2550.474667121217,
-                "renderX": 6949.783374058934,
-                "renderY": 2550.474667121217,
-                "xv": -196.7034944417647,
-                "yv": 36.16262261505169,
-                "bound": {
-                    "x": 6400,
-                    "y": 2150,
-                    "w": 600,
-                    "h": 600
-                },
-                "isLava": true,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 2.328611668278748,
-                "radius": 32,
-                "speed": 200,
-                "x": 6837.532492158779,
-                "y": 2583.091752863586,
-                "renderX": 6837.532492158779,
-                "renderY": 2583.091752863586,
-                "xv": -137.4672566376295,
-                "yv": -145.26786758441835,
-                "bound": {
-                    "x": 6400,
-                    "y": 2150,
-                    "w": 600,
-                    "h": 600
-                },
-                "isLava": true,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 2.5702558979670442,
-                "radius": 32,
-                "speed": 200,
-                "x": 6565.89539308412,
-                "y": 2401.6720847706215,
-                "renderX": 6565.89539308412,
-                "renderY": 2401.6720847706215,
-                "xv": -168.23577339977257,
-                "yv": -108.15139642455098,
-                "bound": {
-                    "x": 6400,
-                    "y": 2150,
-                    "w": 600,
-                    "h": 600
-                },
-                "isLava": true,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 1.0466248333283024,
-                "radius": 32,
-                "speed": 200,
-                "x": 6872.545785870411,
-                "y": 2606.1562708793567,
-                "renderX": 6872.545785870411,
-                "renderY": 2606.1562708793567,
-                "xv": 100.09918123891872,
-                "yv": -173.14778056705808,
-                "bound": {
-                    "x": 6400,
-                    "y": 2150,
-                    "w": 600,
-                    "h": 600
-                },
-                "isLava": true,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 4.722859366579719,
-                "radius": 32,
-                "speed": 200,
-                "x": 6526.085142907754,
-                "y": 2363.023249574991,
-                "renderX": 6526.085142907754,
-                "renderY": 2363.023249574991,
-                "xv": -2.094038977287831,
-                "yv": -199.98903720144662,
-                "bound": {
-                    "x": 6400,
-                    "y": 2150,
-                    "w": 600,
-                    "h": 600
-                },
-                "isLava": true,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 5.4284796560212,
-                "radius": 32,
-                "speed": 200,
-                "x": 6699.8623859403915,
-                "y": 2359.0014774324923,
-                "renderX": 6699.8623859403915,
-                "renderY": 2359.0014774324923,
-                "xv": -131.2881176765759,
-                "yv": 150.8755452581417,
-                "bound": {
-                    "x": 6400,
-                    "y": 2150,
-                    "w": 600,
-                    "h": 600
-                },
-                "isLava": true,
-                "inView": false
-            },
-            {
-                "type": "normal",
-                "angle": 4.3763730196206865,
-                "radius": 32,
-                "speed": 200,
-                "x": 6911.801531146729,
-                "y": 2644.2370900667884,
-                "renderX": 6911.801531146729,
-                "renderY": 2644.2370900667884,
-                "xv": -65.94569677093939,
-                "yv": 188.8151611428365,
-                "bound": {
-                    "x": 6400,
-                    "y": 2150,
-                    "w": 600,
-                    "h": 600
-                },
-                "isLava": true,
-                "inView": false
-            }
-        ]
-        const safes = [];
-        const texts = [
-            {
-                "x": 2325,
-                "y": 2325,
-                "angle": -45,
-                "text": "Planet",
-                "size": 45,
-                "story": false
-            },
-            {
-                "x": 2675,
-                "y": 2325,
-                "angle": 45,
-                "text": "of",
-                "size": 45,
-                "story": false
-            },
-            {
-                "x": 2325,
-                "y": 2675,
-                "angle": 45,
-                "text": "Simple",
-                "size": 45,
-                "story": false
-            },
-            {
-                "x": 2675,
-                "y": 2675,
-                "angle": -45,
-                "text": "Challenges",
-                "size": 45,
-                "story": false
-            },
-            {
-                "x": 2500,
-                "y": 2500,
-                "angle": 0,
-                "text": "Welcome!",
-                "size": 30,
-                "story": false
-            },
-            {
-                "x": 1825,
-                "y": -50,
-                "angle": 0,
-                "text": "Challenge 2: Dodge!",
-                "size": 30,
-                "story": false
-            },
-            {
-                "x": 325,
-                "y": -50,
-                "angle": 0,
-                "text": "Challenge 1: Navigate!",
-                "size": 30,
-                "story": false
-            },
-            {
-                "x": 4375,
-                "y": 1250,
-                "angle": 0,
-                "text": "Challenge 3: platform!",
-                "size": 30,
-                "story": false
-            },
-            {
-                "x": 4700,
-                "y": 750,
-                "angle": 0,
-                "text": "Walljump!",
-                "size": 18,
-                "story": false
-            },
-            {
-                "x": 4400,
-                "y": 525,
-                "angle": 0,
-                "text": "<-",
-                "size": 24,
-                "story": false
-            },
-            {
-                "x": 4250,
-                "y": 1025,
-                "angle": 90,
-                "text": "<-",
-                "size": 24,
-                "story": false
-            },
-            {
-                "x": 4450,
-                "y": 925,
-                "angle": 135,
-                "text": "<-",
-                "size": 24,
-                "story": false
-            },
-            {
-                "x": 4075,
-                "y": 2100,
-                "angle": 0,
-                "text": "Challenge 4: Cross!",
-                "size": 30,
-                "story": false
-            },
-            {
-                "x": 2575,
-                "y": 3450,
-                "angle": 180,
-                "text": "Challenge 5: Drive!",
-                "size": 30,
-                "story": false
-            },
-            {
-                "x": 250,
-                "y": 4725,
-                "angle": 0,
-                "text": "Challenge 6: Fall!",
-                "size": 30,
-                "story": false
-            },
-            {
-                "x": 125,
-                "y": 2225,
-                "angle": 0,
-                "text": "Challenge 6: Typing!",
-                "size": 30,
-                "story": false
-            },
-            {
-                "x": 6525,
-                "y": -25,
-                "angle": 0,
-                "text": "Challenge 7: Spiral!",
-                "size": 30,
-                "story": false
-            },
-            {
-                "x": 8625,
-                "y": 275,
-                "angle": 0,
-                "text": "Challenge 8: Speedrun!",
-                "size": 30,
-                "story": false
-            },
-            {
-                "x": 6675,
-                "y": 2100,
-                "angle": 0,
-                "text": "Challenge 9: Survive!",
-                "size": 30,
-                "story": false
-            },
-            {
-                "x": 7000,
-                "y": 3550,
-                "angle": 0,
-                "text": "FINAL CHALLENGE: Escape!",
-                "size": 30,
-                "story": false
-            },
-            {
-                "x": 6450,
-                "y": 2100,
-                "angle": 90,
-                "text": "->",
-                "size": 30,
-                "story": false
-            },
-            {
-                "x": 8650,
-                "y": 1675,
-                "angle": 0,
-                "text": "Secret Challenge -1: Push!",
-                "size": 30,
-                "story": false
-            }
-        ]
+    shared.linkDoors = {};
+    shared.linkButtons = {};
+    shared.morphsTriggered = {};
 
-        window.linkDoors = {};
-        window.linkButtons = {};
-        window.morphsTriggered = {};
+    shared.C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
+        // render links
+        ctx.strokeStyle = '#969696';
+        ctx.setLineDash([50, 70]);
+        ctx.lineDashOffset = -window.frames / 60 * 100 * 2;
+        ctx.lineWidth = 10;
+        for(let id in shared.linkButtons){
+            if(shared.linkDoors[id] === undefined) continue;
+            const btnPos = {x: shared.linkButtons[id].pos.x + shared.linkButtons[id].dimensions.x/2, y: shared.linkButtons[id].pos.y + shared.linkButtons[id].dimensions.y/2};
+            const doorPos = {x: shared.linkDoors[id].pos.x + shared.linkDoors[id].dimensions.x/2, y: shared.linkDoors[id].pos.y + shared.linkDoors[id].dimensions.y/2};
+            
+            ctx.globalAlpha = shared.morphsTriggered[id] === true ? 0.3 : 0.8;
+            
+            ctx.beginPath();
+            ctx.lineTo(btnPos.x, btnPos.y);
+            ctx.lineTo(doorPos.x, doorPos.y);
+            ctx.stroke();
+            ctx.closePath();
+        }
+        ctx.globalAlpha = 1;
+        ctx.setLineDash([]);
+    }});
+
+    var xv7001 = 1.3333008202080556;
+    var yv7001 = -2.2973839438223047;
+    C(1,[3],[1],{w:68,h:68,y:8855.313376726379,x:14835.215400100113,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7001;
+    e.pos.x += xv7001;
+    if ((e.pos.x) < 14000) {
+        xv7001 = xv7001 * -1;
+        e.pos.x = 14000;
+    } else if(e.pos.x + 68 > 15200){
+        xv7001 = xv7001 * -1;
+        e.pos.x = 15200 - 68;
+    }
+    if ((e.pos.y) < 8500) {
+        yv7001 = yv7001 * -1;
+        e.pos.y = 8500;
+    } else if(e.pos.y + 68 > 9900){
+        yv7001 = yv7001 * -1;
+        e.pos.y = 9900 - 68;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#ff4000';
+        ctx.beginPath();
+        ctx.rect(o.pos.x, o.pos.y, 68, 68);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
     
-        const str = `C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
-            // render links
-            ctx.strokeStyle = '#969696';
-            ctx.setLineDash([50, 70]);
-            ctx.lineDashOffset = -window.frames / 60 * 100 * 2;
-            ctx.lineWidth = 10;
-            for(let id in window.linkButtons){
-                if(window.linkDoors[id] === undefined) continue;
-                const btnPos = {x: window.linkButtons[id].pos.x + window.linkButtons[id].dimensions.x/2, y: window.linkButtons[id].pos.y + window.linkButtons[id].dimensions.y/2};
-                const doorPos = {x: window.linkDoors[id].pos.x + window.linkDoors[id].dimensions.x/2, y: window.linkDoors[id].pos.y + window.linkDoors[id].dimensions.y/2};
-                
-                ctx.globalAlpha = window.morphsTriggered[id] === true ? 0.3 : 0.8;
-                
+
+    var xv7002 = -1.881866684754023;
+    var yv7002 = 1.874631121931166;
+    C(1,[3],[1],{w:68,h:68,y:8763.979450860159,x:15080.471262267722,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7002;
+    e.pos.x += xv7002;
+    if ((e.pos.x) < 14000) {
+        xv7002 = xv7002 * -1;
+        e.pos.x = 14000;
+    } else if(e.pos.x + 68 > 15200){
+        xv7002 = xv7002 * -1;
+        e.pos.x = 15200 - 68;
+    }
+    if ((e.pos.y) < 8500) {
+        yv7002 = yv7002 * -1;
+        e.pos.y = 8500;
+    } else if(e.pos.y + 68 > 9900){
+        yv7002 = yv7002 * -1;
+        e.pos.y = 9900 - 68;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#ff4000';
+        ctx.beginPath();
+        ctx.rect(o.pos.x, o.pos.y, 68, 68);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+    
+
+    var xv7003 = -2.439165182505833;
+    var yv7003 = -1.051730609496217;
+    C(1,[3],[1],{w:68,h:68,y:9290.717968488505,x:14341.181066457633,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7003;
+    e.pos.x += xv7003;
+    if ((e.pos.x) < 14000) {
+        xv7003 = xv7003 * -1;
+        e.pos.x = 14000;
+    } else if(e.pos.x + 68 > 15200){
+        xv7003 = xv7003 * -1;
+        e.pos.x = 15200 - 68;
+    }
+    if ((e.pos.y) < 8500) {
+        yv7003 = yv7003 * -1;
+        e.pos.y = 8500;
+    } else if(e.pos.y + 68 > 9900){
+        yv7003 = yv7003 * -1;
+        e.pos.y = 9900 - 68;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#ff4000';
+        ctx.beginPath();
+        ctx.rect(o.pos.x, o.pos.y, 68, 68);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+    
+
+    var xv7004 = -2.5805631188978913;
+    var yv7004 = 0.6295697355210053;
+    C(1,[3],[1],{w:68,h:68,y:8651.516513346154,x:14964.969476445474,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7004;
+    e.pos.x += xv7004;
+    if ((e.pos.x) < 14000) {
+        xv7004 = xv7004 * -1;
+        e.pos.x = 14000;
+    } else if(e.pos.x + 68 > 15200){
+        xv7004 = xv7004 * -1;
+        e.pos.x = 15200 - 68;
+    }
+    if ((e.pos.y) < 8500) {
+        yv7004 = yv7004 * -1;
+        e.pos.y = 8500;
+    } else if(e.pos.y + 68 > 9900){
+        yv7004 = yv7004 * -1;
+        e.pos.y = 9900 - 68;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#ff4000';
+        ctx.beginPath();
+        ctx.rect(o.pos.x, o.pos.y, 68, 68);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+    
+
+    var xv7005 = 2.6318917044567263;
+    var yv7005 = 0.3589012656871927;
+    C(1,[3],[1],{w:68,h:68,y:9687.927360970183,x:14148.290140520598,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7005;
+    e.pos.x += xv7005;
+    if ((e.pos.x) < 14000) {
+        xv7005 = xv7005 * -1;
+        e.pos.x = 14000;
+    } else if(e.pos.x + 68 > 15200){
+        xv7005 = xv7005 * -1;
+        e.pos.x = 15200 - 68;
+    }
+    if ((e.pos.y) < 8500) {
+        yv7005 = yv7005 * -1;
+        e.pos.y = 8500;
+    } else if(e.pos.y + 68 > 9900){
+        yv7005 = yv7005 * -1;
+        e.pos.y = 9900 - 68;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#ff4000';
+        ctx.beginPath();
+        ctx.rect(o.pos.x, o.pos.y, 68, 68);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+    
+
+    var xv7006 = 1.836133367730568;
+    var yv7006 = -1.9194473992288517;
+    C(1,[3],[1],{w:68,h:68,y:9633.17411942963,x:14475.45267101273,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7006;
+    e.pos.x += xv7006;
+    if ((e.pos.x) < 14000) {
+        xv7006 = xv7006 * -1;
+        e.pos.x = 14000;
+    } else if(e.pos.x + 68 > 15200){
+        xv7006 = xv7006 * -1;
+        e.pos.x = 15200 - 68;
+    }
+    if ((e.pos.y) < 8500) {
+        yv7006 = yv7006 * -1;
+        e.pos.y = 8500;
+    } else if(e.pos.y + 68 > 9900){
+        yv7006 = yv7006 * -1;
+        e.pos.y = 9900 - 68;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#ff4000';
+        ctx.beginPath();
+        ctx.rect(o.pos.x, o.pos.y, 68, 68);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+    
+
+    var xv7007 = -2.4011268652718254;
+    var yv7007 = -1.1358934102150153;
+    C(1,[3],[1],{w:68,h:68,y:8574.375675040666,x:14075.035794202544,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7007;
+    e.pos.x += xv7007;
+    if ((e.pos.x) < 14000) {
+        xv7007 = xv7007 * -1;
+        e.pos.x = 14000;
+    } else if(e.pos.x + 68 > 15200){
+        xv7007 = xv7007 * -1;
+        e.pos.x = 15200 - 68;
+    }
+    if ((e.pos.y) < 8500) {
+        yv7007 = yv7007 * -1;
+        e.pos.y = 8500;
+    } else if(e.pos.y + 68 > 9900){
+        yv7007 = yv7007 * -1;
+        e.pos.y = 9900 - 68;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#ff4000';
+        ctx.beginPath();
+        ctx.rect(o.pos.x, o.pos.y, 68, 68);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+    
+
+    var xv7008 = 0.07517100417271035;
+    var yv7008 = 2.655186129564492;
+    C(1,[3],[1],{w:68,h:68,y:9520.02377535316,x:14243.191845963871,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7008;
+    e.pos.x += xv7008;
+    if ((e.pos.x) < 14000) {
+        xv7008 = xv7008 * -1;
+        e.pos.x = 14000;
+    } else if(e.pos.x + 68 > 15200){
+        xv7008 = xv7008 * -1;
+        e.pos.x = 15200 - 68;
+    }
+    if ((e.pos.y) < 8500) {
+        yv7008 = yv7008 * -1;
+        e.pos.y = 8500;
+    } else if(e.pos.y + 68 > 9900){
+        yv7008 = yv7008 * -1;
+        e.pos.y = 9900 - 68;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#ff4000';
+        ctx.beginPath();
+        ctx.rect(o.pos.x, o.pos.y, 68, 68);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+    
+
+    var xv7009 = 0.4557751382599489;
+    var yv7009 = 2.616855572217184;
+    C(1,[3],[1],{w:68,h:68,y:8723.931238421144,x:14641.528668349452,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7009;
+    e.pos.x += xv7009;
+    if ((e.pos.x) < 14000) {
+        xv7009 = xv7009 * -1;
+        e.pos.x = 14000;
+    } else if(e.pos.x + 68 > 15200){
+        xv7009 = xv7009 * -1;
+        e.pos.x = 15200 - 68;
+    }
+    if ((e.pos.y) < 8500) {
+        yv7009 = yv7009 * -1;
+        e.pos.y = 8500;
+    } else if(e.pos.y + 68 > 9900){
+        yv7009 = yv7009 * -1;
+        e.pos.y = 9900 - 68;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#ff4000';
+        ctx.beginPath();
+        ctx.rect(o.pos.x, o.pos.y, 68, 68);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+    
+
+    var xv7010 = -2.0523278933004954;
+    var yv7010 = 1.6863019542421076;
+    C(1,[3],[1],{w:68,h:68,y:9522.933638223461,x:14622.509984750128,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7010;
+    e.pos.x += xv7010;
+    if ((e.pos.x) < 14000) {
+        xv7010 = xv7010 * -1;
+        e.pos.x = 14000;
+    } else if(e.pos.x + 68 > 15200){
+        xv7010 = xv7010 * -1;
+        e.pos.x = 15200 - 68;
+    }
+    if ((e.pos.y) < 8500) {
+        yv7010 = yv7010 * -1;
+        e.pos.y = 8500;
+    } else if(e.pos.y + 68 > 9900){
+        yv7010 = yv7010 * -1;
+        e.pos.y = 9900 - 68;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#ff4000';
+        ctx.beginPath();
+        ctx.rect(o.pos.x, o.pos.y, 68, 68);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+    
+
+    var xv7011 = 2.656247167188701;
+    var yv7011 = -0.0038793429854459896;
+    C(1,[3],[1],{w:68,h:68,y:8955.902100965846,x:14330.2398795419,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7011;
+    e.pos.x += xv7011;
+    if ((e.pos.x) < 14000) {
+        xv7011 = xv7011 * -1;
+        e.pos.x = 14000;
+    } else if(e.pos.x + 68 > 15200){
+        xv7011 = xv7011 * -1;
+        e.pos.x = 15200 - 68;
+    }
+    if ((e.pos.y) < 8500) {
+        yv7011 = yv7011 * -1;
+        e.pos.y = 8500;
+    } else if(e.pos.y + 68 > 9900){
+        yv7011 = yv7011 * -1;
+        e.pos.y = 9900 - 68;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#ff4000';
+        ctx.beginPath();
+        ctx.rect(o.pos.x, o.pos.y, 68, 68);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+    
+
+    var xv7012 = 2.645639102784845;
+    var yv7012 = -0.23718726845216703;
+    C(1,[3],[1],{w:68,h:68,y:8617.869950251774,x:14608.223111508167,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7012;
+    e.pos.x += xv7012;
+    if ((e.pos.x) < 14000) {
+        xv7012 = xv7012 * -1;
+        e.pos.x = 14000;
+    } else if(e.pos.x + 68 > 15200){
+        xv7012 = xv7012 * -1;
+        e.pos.x = 15200 - 68;
+    }
+    if ((e.pos.y) < 8500) {
+        yv7012 = yv7012 * -1;
+        e.pos.y = 8500;
+    } else if(e.pos.y + 68 > 9900){
+        yv7012 = yv7012 * -1;
+        e.pos.y = 9900 - 68;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#ff4000';
+        ctx.beginPath();
+        ctx.rect(o.pos.x, o.pos.y, 68, 68);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+    
+
+    var xv7013 = 2.2814944480129986;
+    var yv7013 = -1.6800478747534668;
+    C(0,[3],[1],{r:32,y:9134.279015725315,x:13536.254922636388,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7013;
+    e.pos.x += xv7013;
+    if ((e.pos.x - e.sat.r) < 12800 || e.pos.x + e.sat.r > 14000) {
+        xv7013 = xv7013 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 8500 || e.pos.y + e.sat.r > 9900) {
+        yv7013 = yv7013 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7014 = 2.6001084614369225;
+    var yv7014 = 1.1257058970005878;
+    C(0,[3],[1],{r:32,y:9423.112062856457,x:13797.245699024103,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7014;
+    e.pos.x += xv7014;
+    if ((e.pos.x - e.sat.r) < 12800 || e.pos.x + e.sat.r > 14000) {
+        xv7014 = xv7014 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 8500 || e.pos.y + e.sat.r > 9900) {
+        yv7014 = yv7014 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7015 = 1.3923940285297927;
+    var yv7015 = -2.4675932904537476;
+    C(0,[3],[1],{r:32,y:9351.75315206441,x:13854.101230264809,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7015;
+    e.pos.x += xv7015;
+    if ((e.pos.x - e.sat.r) < 12800 || e.pos.x + e.sat.r > 14000) {
+        xv7015 = xv7015 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 8500 || e.pos.y + e.sat.r > 9900) {
+        yv7015 = yv7015 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7016 = 2.8078919409131786;
+    var yv7016 = -0.3788411618773762;
+    C(0,[3],[1],{r:32,y:8955.329562639648,x:12949.929841007031,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7016;
+    e.pos.x += xv7016;
+    if ((e.pos.x - e.sat.r) < 12800 || e.pos.x + e.sat.r > 14000) {
+        xv7016 = xv7016 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 8500 || e.pos.y + e.sat.r > 9900) {
+        yv7016 = yv7016 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7017 = 1.6442577048406124;
+    var yv7017 = -2.3074215865008414;
+    C(0,[3],[1],{r:32,y:9786.838949336403,x:13519.763408229008,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7017;
+    e.pos.x += xv7017;
+    if ((e.pos.x - e.sat.r) < 12800 || e.pos.x + e.sat.r > 14000) {
+        xv7017 = xv7017 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 8500 || e.pos.y + e.sat.r > 9900) {
+        yv7017 = yv7017 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7018 = 2.6236443128165843;
+    var yv7018 = 1.069704771235023;
+    C(0,[3],[1],{r:32,y:9204.68219824198,x:13888.245987898868,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7018;
+    e.pos.x += xv7018;
+    if ((e.pos.x - e.sat.r) < 12800 || e.pos.x + e.sat.r > 14000) {
+        xv7018 = xv7018 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 8500 || e.pos.y + e.sat.r > 9900) {
+        yv7018 = yv7018 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7019 = 2.686805424702138;
+    var yv7019 = 0.8993633234510623;
+    C(0,[3],[1],{r:32,y:8792.600283398548,x:13511.581580355072,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7019;
+    e.pos.x += xv7019;
+    if ((e.pos.x - e.sat.r) < 12800 || e.pos.x + e.sat.r > 14000) {
+        xv7019 = xv7019 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 8500 || e.pos.y + e.sat.r > 9900) {
+        yv7019 = yv7019 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7020 = -2.150507998985246;
+    var yv7020 = -1.8447474418137169;
+    C(0,[3],[1],{r:32,y:8962.283795537038,x:13085.303757453587,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7020;
+    e.pos.x += xv7020;
+    if ((e.pos.x - e.sat.r) < 12800 || e.pos.x + e.sat.r > 14000) {
+        xv7020 = xv7020 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 8500 || e.pos.y + e.sat.r > 9900) {
+        yv7020 = yv7020 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7021 = -0.19819360355202062;
+    var yv7021 = -2.8263929438931243;
+    C(0,[3],[1],{r:32,y:9673.641228038688,x:13764.385933798254,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7021;
+    e.pos.x += xv7021;
+    if ((e.pos.x - e.sat.r) < 12800 || e.pos.x + e.sat.r > 14000) {
+        xv7021 = xv7021 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 8500 || e.pos.y + e.sat.r > 9900) {
+        yv7021 = yv7021 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7022 = -0.9786938924301942;
+    var yv7022 = 2.6589351332248805;
+    C(0,[3],[1],{r:32,y:9790.988372080867,x:13572.045782551588,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7022;
+    e.pos.x += xv7022;
+    if ((e.pos.x - e.sat.r) < 12800 || e.pos.x + e.sat.r > 14000) {
+        xv7022 = xv7022 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 8500 || e.pos.y + e.sat.r > 9900) {
+        yv7022 = yv7022 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7023 = 2.140498398321528;
+    var yv7023 = 1.856352440826027;
+    C(0,[3],[1],{r:32,y:9086.68407926374,x:13641.069541482335,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7023;
+    e.pos.x += xv7023;
+    if ((e.pos.x - e.sat.r) < 12800 || e.pos.x + e.sat.r > 14000) {
+        xv7023 = xv7023 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 8500 || e.pos.y + e.sat.r > 9900) {
+        yv7023 = yv7023 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7024 = 1.3663859972225187;
+    var yv7024 = -2.4820892579381586;
+    C(0,[3],[1],{r:32,y:9659.644830489477,x:13830.462346474571,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7024;
+    e.pos.x += xv7024;
+    if ((e.pos.x - e.sat.r) < 12800 || e.pos.x + e.sat.r > 14000) {
+        xv7024 = xv7024 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 8500 || e.pos.y + e.sat.r > 9900) {
+        yv7024 = yv7024 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7025 = 0;
+    var yv7025 = 0;
+    var shootDirectionIndex7025 = 0;
+    var timer7025 = 148.7777777779617;{
+    let reusableIndexes = [];
+    C(0,[3],[1],{r:64,y:6900,x:7400,sf:(e)=>{
+    e.pos.y += yv7025;
+    e.pos.x += xv7025;
+    if ((e.pos.x - e.sat.r) < 7300 || e.pos.x + e.sat.r > 9000) {
+        xv7025 = xv7025 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 6800 || e.pos.y + e.sat.r > 7000) {
+        yv7025 = yv7025 * -1;
+    }
+
+    timer7025--;
+    if(timer7025 < 0){
+        timer7025 = 238.66666666666666;
+
+        shootDirectionIndex7025++;
+        const shootDirections = [0];
+        if(shootDirectionIndex7025 >= shootDirections.length){
+            shootDirectionIndex7025 = 0;
+        }
+        let dir = shootDirections[shootDirectionIndex7025];
+
+        counter++;
+        /*scoped using let*/
+        let xv7025 = Math.cos(dir) * 3.6363636363636362;
+        let yv7025 = Math.sin(dir) * 3.6363636363636362;
+
+        let dyingTimer = 30;
+
+        let index;
+
+        C(0,[3],[1],{r:64,y:e.pos.y,x:e.pos.x,sf:(e)=>{
+        e.pos.y += yv7025;
+        e.pos.x += xv7025;
+        /*delete obstacle*/
+        if ((e.pos.x - e.sat.r) < 7300 || e.pos.x + e.sat.r > 9000 || (e.pos.y - e.sat.r) < 6800 || e.pos.y + e.sat.r > 7000) {
+            // shared.tickFns.push(()=>{
+            //     for(let i = 0; i < obstacles.length; i++){
+            //         if(obstacles[i] === e) {obstacles.splice(i,1); break;}
+            //     }
+            //     /*for(let key in shared.idToObs){
+            //         if(shared.idToObs[key] === e){delete shared.idToObs[key]; break;}
+            //     }*/
+            // });
+            dyingTimer--;
+
+            if(dyingTimer <= 0 && dyingTimer !== -Infinity){
+                e.pos.x = -1E9;
+                reusableIndexes.push(index);
+                dyingTimer = -Infinity;
+            }
+        }
+        },cr:(o)=>{
+            if(dyingTimer < 0) return;
+
+            if(false){
+                shared.renderBelowFunctions.push(() => {
+                    ctx.globalAlpha = dyingTimer / 30;
+                    ctx.lineWidth = 4;
+                    ctx.strokeStyle = 'black';
+                    ctx.fillStyle = '#107691';
+
+                    ctx.beginPath();
+                    ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.closePath();
+                    ctx.globalAlpha = 1;
+                });
+                return;
+            }
+
+            
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(7500,4400,1300,3800);
+            ctx.clip();
+            ctx.closePath();
+            
+
+            ctx.globalAlpha = dyingTimer / 30;
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = 'black';
+            ctx.fillStyle = '#107691';
+
+            ctx.beginPath();
+            ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();
+            ctx.globalAlpha = 1;
+
+            ctx.restore();
+        }});
+
+        if(reusableIndexes.length === 0){
+            index = obstacles.length-1;
+        } else {
+            index = reusableIndexes.pop();
+            obstacles[index] = obstacles.pop(); 
+        }
+    }
+
+    },cr:(o)=>{
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = 'black';
+        ctx.fillStyle = '#053564';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }})};
+    
+
+    var xv7026 = 0;
+    var yv7026 = 0;
+    var shootDirectionIndex7026 = 0;
+    var timer7026 = 148.7777777779617;{
+    let reusableIndexes = [];
+    C(0,[3],[1],{r:64,y:6900,x:8900,sf:(e)=>{
+    e.pos.y += yv7026;
+    e.pos.x += xv7026;
+    if ((e.pos.x - e.sat.r) < 7300 || e.pos.x + e.sat.r > 9000) {
+        xv7026 = xv7026 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 6800 || e.pos.y + e.sat.r > 7000) {
+        yv7026 = yv7026 * -1;
+    }
+
+    timer7026--;
+    if(timer7026 < 0){
+        timer7026 = 238.66666666666666;
+
+        shootDirectionIndex7026++;
+        const shootDirections = [3.141592653589793];
+        if(shootDirectionIndex7026 >= shootDirections.length){
+            shootDirectionIndex7026 = 0;
+        }
+        let dir = shootDirections[shootDirectionIndex7026];
+
+        counter++;
+        /*scoped using let*/
+        let xv7026 = Math.cos(dir) * 3.6363636363636362;
+        let yv7026 = Math.sin(dir) * 3.6363636363636362;
+
+        let dyingTimer = 30;
+
+        let index;
+
+        C(0,[3],[1],{r:64,y:e.pos.y,x:e.pos.x,sf:(e)=>{
+        e.pos.y += yv7026;
+        e.pos.x += xv7026;
+        /*delete obstacle*/
+        if ((e.pos.x - e.sat.r) < 7300 || e.pos.x + e.sat.r > 9000 || (e.pos.y - e.sat.r) < 6800 || e.pos.y + e.sat.r > 7000) {
+            // shared.tickFns.push(()=>{
+            //     for(let i = 0; i < obstacles.length; i++){
+            //         if(obstacles[i] === e) {obstacles.splice(i,1); break;}
+            //     }
+            //     /*for(let key in shared.idToObs){
+            //         if(shared.idToObs[key] === e){delete shared.idToObs[key]; break;}
+            //     }*/
+            // });
+            dyingTimer--;
+
+            if(dyingTimer <= 0 && dyingTimer !== -Infinity){
+                e.pos.x = -1E9;
+                reusableIndexes.push(index);
+                dyingTimer = -Infinity;
+            }
+        }
+        },cr:(o)=>{
+            if(dyingTimer < 0) return;
+
+            if(false){
+                shared.renderBelowFunctions.push(() => {
+                    ctx.globalAlpha = dyingTimer / 30;
+                    ctx.lineWidth = 4;
+                    ctx.strokeStyle = 'black';
+                    ctx.fillStyle = '#107691';
+
+                    ctx.beginPath();
+                    ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.closePath();
+                    ctx.globalAlpha = 1;
+                });
+                return;
+            }
+
+            
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(7500,4400,1300,3800);
+            ctx.clip();
+            ctx.closePath();
+            
+
+            ctx.globalAlpha = dyingTimer / 30;
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = 'black';
+            ctx.fillStyle = '#107691';
+
+            ctx.beginPath();
+            ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();
+            ctx.globalAlpha = 1;
+
+            ctx.restore();
+        }});
+
+        if(reusableIndexes.length === 0){
+            index = obstacles.length-1;
+        } else {
+            index = reusableIndexes.pop();
+            obstacles[index] = obstacles.pop(); 
+        }
+    }
+
+    },cr:(o)=>{
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = 'black';
+        ctx.fillStyle = '#053564';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }})};
+    
+
+    var xv7027 = 0;
+    var yv7027 = 0;
+    var shootDirectionIndex7027 = 0;
+    var timer7027 = 6.111111111263651;{
+    let reusableIndexes = [];
+    C(0,[3],[1],{r:64,y:5100,x:8900,sf:(e)=>{
+    e.pos.y += yv7027;
+    e.pos.x += xv7027;
+    if ((e.pos.x - e.sat.r) < 7300 || e.pos.x + e.sat.r > 9000) {
+        xv7027 = xv7027 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 5000 || e.pos.y + e.sat.r > 5200) {
+        yv7027 = yv7027 * -1;
+    }
+
+    timer7027--;
+    if(timer7027 < 0){
+        timer7027 = 141.33333333333334;
+
+        shootDirectionIndex7027++;
+        const shootDirections = [3.141592653589793];
+        if(shootDirectionIndex7027 >= shootDirections.length){
+            shootDirectionIndex7027 = 0;
+        }
+        let dir = shootDirections[shootDirectionIndex7027];
+
+        counter++;
+        /*scoped using let*/
+        let xv7027 = Math.cos(dir) * 3.3333333333333335;
+        let yv7027 = Math.sin(dir) * 3.3333333333333335;
+
+        let dyingTimer = 30;
+
+        let index;
+
+        C(0,[3],[1],{r:64,y:e.pos.y,x:e.pos.x,sf:(e)=>{
+        e.pos.y += yv7027;
+        e.pos.x += xv7027;
+        /*delete obstacle*/
+        if ((e.pos.x - e.sat.r) < 7300 || e.pos.x + e.sat.r > 9000 || (e.pos.y - e.sat.r) < 5000 || e.pos.y + e.sat.r > 5200) {
+            // shared.tickFns.push(()=>{
+            //     for(let i = 0; i < obstacles.length; i++){
+            //         if(obstacles[i] === e) {obstacles.splice(i,1); break;}
+            //     }
+            //     /*for(let key in shared.idToObs){
+            //         if(shared.idToObs[key] === e){delete shared.idToObs[key]; break;}
+            //     }*/
+            // });
+            dyingTimer--;
+
+            if(dyingTimer <= 0 && dyingTimer !== -Infinity){
+                e.pos.x = -1E9;
+                reusableIndexes.push(index);
+                dyingTimer = -Infinity;
+            }
+        }
+        },cr:(o)=>{
+            if(dyingTimer < 0) return;
+
+            if(false){
+                shared.renderBelowFunctions.push(() => {
+                    ctx.globalAlpha = dyingTimer / 30;
+                    ctx.lineWidth = 4;
+                    ctx.strokeStyle = 'black';
+                    ctx.fillStyle = '#107691';
+
+                    ctx.beginPath();
+                    ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.closePath();
+                    ctx.globalAlpha = 1;
+                });
+                return;
+            }
+
+            
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(7500,4400,1300,3800);
+            ctx.clip();
+            ctx.closePath();
+            
+
+            ctx.globalAlpha = dyingTimer / 30;
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = 'black';
+            ctx.fillStyle = '#107691';
+
+            ctx.beginPath();
+            ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();
+            ctx.globalAlpha = 1;
+
+            ctx.restore();
+        }});
+
+        if(reusableIndexes.length === 0){
+            index = obstacles.length-1;
+        } else {
+            index = reusableIndexes.pop();
+            obstacles[index] = obstacles.pop(); 
+        }
+    }
+
+    },cr:(o)=>{
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = 'black';
+        ctx.fillStyle = '#053564';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }})};
+    
+
+    var xv7028 = 0;
+    var yv7028 = 0;
+    var shootDirectionIndex7028 = 0;
+    var timer7028 = 48.777777777927305;{
+    let reusableIndexes = [];
+    C(0,[3],[1],{r:64,y:4700,x:7400,sf:(e)=>{
+    e.pos.y += yv7028;
+    e.pos.x += xv7028;
+    if ((e.pos.x - e.sat.r) < 7300 || e.pos.x + e.sat.r > 9000) {
+        xv7028 = xv7028 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 4600 || e.pos.y + e.sat.r > 4800) {
+        yv7028 = yv7028 * -1;
+    }
+
+    timer7028--;
+    if(timer7028 < 0){
+        timer7028 = 152;
+
+        shootDirectionIndex7028++;
+        const shootDirections = [0];
+        if(shootDirectionIndex7028 >= shootDirections.length){
+            shootDirectionIndex7028 = 0;
+        }
+        let dir = shootDirections[shootDirectionIndex7028];
+
+        counter++;
+        /*scoped using let*/
+        let xv7028 = Math.cos(dir) * 3.0303030303030303;
+        let yv7028 = Math.sin(dir) * 3.0303030303030303;
+
+        let dyingTimer = 30;
+
+        let index;
+
+        C(0,[3],[1],{r:64,y:e.pos.y,x:e.pos.x,sf:(e)=>{
+        e.pos.y += yv7028;
+        e.pos.x += xv7028;
+        /*delete obstacle*/
+        if ((e.pos.x - e.sat.r) < 7300 || e.pos.x + e.sat.r > 9000 || (e.pos.y - e.sat.r) < 4600 || e.pos.y + e.sat.r > 4800) {
+            // shared.tickFns.push(()=>{
+            //     for(let i = 0; i < obstacles.length; i++){
+            //         if(obstacles[i] === e) {obstacles.splice(i,1); break;}
+            //     }
+            //     /*for(let key in shared.idToObs){
+            //         if(shared.idToObs[key] === e){delete shared.idToObs[key]; break;}
+            //     }*/
+            // });
+            dyingTimer--;
+
+            if(dyingTimer <= 0 && dyingTimer !== -Infinity){
+                e.pos.x = -1E9;
+                reusableIndexes.push(index);
+                dyingTimer = -Infinity;
+            }
+        }
+        },cr:(o)=>{
+            if(dyingTimer < 0) return;
+
+            if(false){
+                shared.renderBelowFunctions.push(() => {
+                    ctx.globalAlpha = dyingTimer / 30;
+                    ctx.lineWidth = 4;
+                    ctx.strokeStyle = 'black';
+                    ctx.fillStyle = '#107691';
+
+                    ctx.beginPath();
+                    ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.closePath();
+                    ctx.globalAlpha = 1;
+                });
+                return;
+            }
+
+            
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(7500,4400,1300,3800);
+            ctx.clip();
+            ctx.closePath();
+            
+
+            ctx.globalAlpha = dyingTimer / 30;
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = 'black';
+            ctx.fillStyle = '#107691';
+
+            ctx.beginPath();
+            ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();
+            ctx.globalAlpha = 1;
+
+            ctx.restore();
+        }});
+
+        if(reusableIndexes.length === 0){
+            index = obstacles.length-1;
+        } else {
+            index = reusableIndexes.pop();
+            obstacles[index] = obstacles.pop(); 
+        }
+    }
+
+    },cr:(o)=>{
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = 'black';
+        ctx.fillStyle = '#053564';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }})};
+    
+
+    var xv7029 = 1.9304100914588511;
+    var yv7029 = -0.5229884117204033;
+    C(0,[3],[1],{r:36,y:803.7784896836987,x:3997.538015937181,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7029;
+    e.pos.x += xv7029;
+    if ((e.pos.x - e.sat.r) < 3000 || e.pos.x + e.sat.r > 4300) {
+        xv7029 = xv7029 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 200 || e.pos.y + e.sat.r > 1600) {
+        yv7029 = yv7029 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7030 = 0.5510249021816567;
+    var yv7030 = -1.9225950060206896;
+    C(0,[3],[1],{r:36,y:1509.6952802473309,x:3450.5384394911007,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7030;
+    e.pos.x += xv7030;
+    if ((e.pos.x - e.sat.r) < 3000 || e.pos.x + e.sat.r > 4300) {
+        xv7030 = xv7030 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 200 || e.pos.y + e.sat.r > 1600) {
+        yv7030 = yv7030 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7031 = 1.4330441600731048;
+    var yv7031 = 1.3951288239013522;
+    C(0,[3],[1],{r:36,y:756.1045355848769,x:3366.3981513167732,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7031;
+    e.pos.x += xv7031;
+    if ((e.pos.x - e.sat.r) < 3000 || e.pos.x + e.sat.r > 4300) {
+        xv7031 = xv7031 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 200 || e.pos.y + e.sat.r > 1600) {
+        yv7031 = yv7031 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7032 = -1.0009308640813617;
+    var yv7032 = 1.7315130393183122;
+    C(0,[3],[1],{r:36,y:1528.76763487158,x:3161.038400634375,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7032;
+    e.pos.x += xv7032;
+    if ((e.pos.x - e.sat.r) < 3000 || e.pos.x + e.sat.r > 4300) {
+        xv7032 = xv7032 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 200 || e.pos.y + e.sat.r > 1600) {
+        yv7032 = yv7032 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7033 = 1.6395263672065998;
+    var yv7033 = -1.1454052956199958;
+    C(0,[3],[1],{r:36,y:588.3450718043423,x:3394.9494029801785,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7033;
+    e.pos.x += xv7033;
+    if ((e.pos.x - e.sat.r) < 3000 || e.pos.x + e.sat.r > 4300) {
+        xv7033 = xv7033 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 200 || e.pos.y + e.sat.r > 1600) {
+        yv7033 = yv7033 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7034 = 0.9621538051989086;
+    var yv7034 = -1.753356796302812;
+    C(0,[3],[1],{r:36,y:861.2305971104493,x:4230.251603870438,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7034;
+    e.pos.x += xv7034;
+    if ((e.pos.x - e.sat.r) < 3000 || e.pos.x + e.sat.r > 4300) {
+        xv7034 = xv7034 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 200 || e.pos.y + e.sat.r > 1600) {
+        yv7034 = yv7034 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7035 = -0.49711856295304585;
+    var yv7035 = 1.4152290042136286;
+    C(0,[3],[1],{r:64,y:336.0957350201404,x:4201.3327965966355,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7035;
+    e.pos.x += xv7035;
+    if ((e.pos.x - e.sat.r) < 3000 || e.pos.x + e.sat.r > 4300) {
+        xv7035 = xv7035 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 200 || e.pos.y + e.sat.r > 1600) {
+        yv7035 = yv7035 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7036 = -0.15945106317164487;
+    var yv7036 = -1.4915010420557648;
+    C(0,[3],[1],{r:64,y:1185.494282962168,x:3879.0763725731185,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7036;
+    e.pos.x += xv7036;
+    if ((e.pos.x - e.sat.r) < 3000 || e.pos.x + e.sat.r > 4300) {
+        xv7036 = xv7036 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 200 || e.pos.y + e.sat.r > 1600) {
+        yv7036 = yv7036 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7037 = 0.4819079437877955;
+    var yv7037 = 1.42048045875831;
+    C(0,[3],[1],{r:64,y:911.3399603444137,x:3098.747113204474,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7037;
+    e.pos.x += xv7037;
+    if ((e.pos.x - e.sat.r) < 3000 || e.pos.x + e.sat.r > 4300) {
+        xv7037 = xv7037 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 200 || e.pos.y + e.sat.r > 1600) {
+        yv7037 = yv7037 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7038 = -1.0129265032579673;
+    var yv7038 = 2.4667977237926704;
+    C(0,[3],[1],{r:22,y:489.701027079262,x:3245.2155371253184,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7038;
+    e.pos.x += xv7038;
+    if ((e.pos.x - e.sat.r) < 3000 || e.pos.x + e.sat.r > 4300) {
+        xv7038 = xv7038 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 200 || e.pos.y + e.sat.r > 1600) {
+        yv7038 = yv7038 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7039 = -0.46389819817961636;
+    var yv7039 = 2.626006392383083;
+    C(0,[3],[1],{r:22,y:884.4429959633993,x:3962.9400682027235,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7039;
+    e.pos.x += xv7039;
+    if ((e.pos.x - e.sat.r) < 3000 || e.pos.x + e.sat.r > 4300) {
+        xv7039 = xv7039 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 200 || e.pos.y + e.sat.r > 1600) {
+        yv7039 = yv7039 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7040 = 1.3953168762157664;
+    var yv7040 = -2.2724880475062097;
+    C(0,[3],[1],{r:22,y:1124.6780485808672,x:3525.1068183082457,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7040;
+    e.pos.x += xv7040;
+    if ((e.pos.x - e.sat.r) < 3000 || e.pos.x + e.sat.r > 4300) {
+        xv7040 = xv7040 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 200 || e.pos.y + e.sat.r > 1600) {
+        yv7040 = yv7040 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7041 = 2.5989080527099584;
+    var yv7041 = -0.5973173734878661;
+    C(0,[3],[1],{r:22,y:679.051088033684,x:3947.013985867857,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7041;
+    e.pos.x += xv7041;
+    if ((e.pos.x - e.sat.r) < 3000 || e.pos.x + e.sat.r > 4300) {
+        xv7041 = xv7041 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 200 || e.pos.y + e.sat.r > 1600) {
+        yv7041 = yv7041 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7042 = -2.095241816457671;
+    var yv7042 = 1.6495674710900041;
+    C(0,[3],[1],{r:22,y:226.41924732678058,x:3682.7346654042058,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7042;
+    e.pos.x += xv7042;
+    if ((e.pos.x - e.sat.r) < 3000 || e.pos.x + e.sat.r > 4300) {
+        xv7042 = xv7042 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 200 || e.pos.y + e.sat.r > 1600) {
+        yv7042 = yv7042 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7043 = 2.6659876993046034;
+    var yv7043 = 0.06017223834674442;
+    C(0,[3],[1],{r:22,y:416.46706283103606,x:3527.6093293619406,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7043;
+    e.pos.x += xv7043;
+    if ((e.pos.x - e.sat.r) < 3000 || e.pos.x + e.sat.r > 4300) {
+        xv7043 = xv7043 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 200 || e.pos.y + e.sat.r > 1600) {
+        yv7043 = yv7043 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7044 = 2.604651768066397;
+    var yv7044 = 0.5717519376615194;
+    C(0,[3],[1],{r:22,y:469.20474079643765,x:3503.0586683595975,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7044;
+    e.pos.x += xv7044;
+    if ((e.pos.x - e.sat.r) < 3000 || e.pos.x + e.sat.r > 4300) {
+        xv7044 = xv7044 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 200 || e.pos.y + e.sat.r > 1600) {
+        yv7044 = yv7044 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7045 = 2.636050202145555;
+    var yv7045 = -0.402927341935852;
+    C(0,[3],[1],{r:22,y:454.1314690282078,x:4146.071151812257,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7045;
+    e.pos.x += xv7045;
+    if ((e.pos.x - e.sat.r) < 3000 || e.pos.x + e.sat.r > 4300) {
+        xv7045 = xv7045 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 200 || e.pos.y + e.sat.r > 1600) {
+        yv7045 = yv7045 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7046 = -0.04672194166785456;
+    var yv7046 = 2.666257334031713;
+    C(0,[3],[1],{r:22,y:1515.3847135300186,x:3750.4627198138223,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7046;
+    e.pos.x += xv7046;
+    if ((e.pos.x - e.sat.r) < 3000 || e.pos.x + e.sat.r > 4300) {
+        xv7046 = xv7046 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 200 || e.pos.y + e.sat.r > 1600) {
+        yv7046 = yv7046 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7047 = 2.6588860240747207;
+    var yv7047 = -0.20355889096581548;
+    C(0,[3],[1],{r:22,y:410.4817457125424,x:3224.1151675219016,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7047;
+    e.pos.x += xv7047;
+    if ((e.pos.x - e.sat.r) < 3000 || e.pos.x + e.sat.r > 4300) {
+        xv7047 = xv7047 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 200 || e.pos.y + e.sat.r > 1600) {
+        yv7047 = yv7047 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7048 = 0;
+    var yv7048 = 0;
+    var shootDirectionIndex7048 = 0;
+    var timer7048 = 6.111111111297846;{
+    let reusableIndexes = [];
+    C(0,[3],[1],{r:128,y:5600,x:9100,sf:(e)=>{
+    e.pos.y += yv7048;
+    e.pos.x += xv7048;
+    if ((e.pos.x - e.sat.r) < 7050 || e.pos.x + e.sat.r > 9300) {
+        xv7048 = xv7048 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 5450 || e.pos.y + e.sat.r > 5750) {
+        yv7048 = yv7048 * -1;
+    }
+
+    timer7048--;
+    if(timer7048 < 0){
+        timer7048 = 245.33333333333334;
+
+        shootDirectionIndex7048++;
+        const shootDirections = [3.141592653589793];
+        if(shootDirectionIndex7048 >= shootDirections.length){
+            shootDirectionIndex7048 = 0;
+        }
+        let dir = shootDirections[shootDirectionIndex7048];
+
+        counter++;
+        /*scoped using let*/
+        let xv7048 = Math.cos(dir) * 2.6666666666666665;
+        let yv7048 = Math.sin(dir) * 2.6666666666666665;
+
+        let dyingTimer = 30;
+
+        let index;
+
+        C(0,[3],[1],{r:128,y:e.pos.y,x:e.pos.x,sf:(e)=>{
+        e.pos.y += yv7048;
+        e.pos.x += xv7048;
+        /*delete obstacle*/
+        if ((e.pos.x - e.sat.r) < 7050 || e.pos.x + e.sat.r > 9300 || (e.pos.y - e.sat.r) < 5450 || e.pos.y + e.sat.r > 5750) {
+            // shared.tickFns.push(()=>{
+            //     for(let i = 0; i < obstacles.length; i++){
+            //         if(obstacles[i] === e) {obstacles.splice(i,1); break;}
+            //     }
+            //     /*for(let key in shared.idToObs){
+            //         if(shared.idToObs[key] === e){delete shared.idToObs[key]; break;}
+            //     }*/
+            // });
+            dyingTimer--;
+
+            if(dyingTimer <= 0 && dyingTimer !== -Infinity){
+                e.pos.x = -1E9;
+                reusableIndexes.push(index);
+                dyingTimer = -Infinity;
+            }
+        }
+        },cr:(o)=>{
+            if(dyingTimer < 0) return;
+
+            if(false){
+                shared.renderBelowFunctions.push(() => {
+                    ctx.globalAlpha = dyingTimer / 30;
+                    ctx.lineWidth = 4;
+                    ctx.strokeStyle = 'black';
+                    ctx.fillStyle = '#107691';
+
+                    ctx.beginPath();
+                    ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.closePath();
+                    ctx.globalAlpha = 1;
+                });
+                return;
+            }
+
+            
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(7500,4400,1300,3800);
+            ctx.clip();
+            ctx.closePath();
+            
+
+            ctx.globalAlpha = dyingTimer / 30;
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = 'black';
+            ctx.fillStyle = '#107691';
+
+            ctx.beginPath();
+            ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();
+            ctx.globalAlpha = 1;
+
+            ctx.restore();
+        }});
+
+        if(reusableIndexes.length === 0){
+            index = obstacles.length-1;
+        } else {
+            index = reusableIndexes.pop();
+            obstacles[index] = obstacles.pop(); 
+        }
+    }
+
+    },cr:(o)=>{
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = 'black';
+        ctx.fillStyle = '#053564';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }})};
+    
+
+    var xv7049 = 0;
+    var yv7049 = 0;
+    var shootDirectionIndex7049 = 0;
+    var timer7049 = 3.177777777722655;{
+    let reusableIndexes = [];
+    C(0,[3],[1],{r:28,y:6350,x:8900,sf:(e)=>{
+    e.pos.y += yv7049;
+    e.pos.x += xv7049;
+    if ((e.pos.x - e.sat.r) < 7700 || e.pos.x + e.sat.r > 9000) {
+        xv7049 = xv7049 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 6250 || e.pos.y + e.sat.r > 6450) {
+        yv7049 = yv7049 * -1;
+    }
+
+    timer7049--;
+    if(timer7049 < 0){
+        timer7049 = 24.266666666666666;
+
+        shootDirectionIndex7049++;
+        const shootDirections = [3.141592653589793,3.211405823669566,3.07177948351002];
+        if(shootDirectionIndex7049 >= shootDirections.length){
+            shootDirectionIndex7049 = 0;
+        }
+        let dir = shootDirections[shootDirectionIndex7049];
+
+        counter++;
+        /*scoped using let*/
+        let xv7049 = Math.cos(dir) * 4.696969696969697;
+        let yv7049 = Math.sin(dir) * 4.696969696969697;
+
+        let dyingTimer = 30;
+
+        let index;
+
+        C(0,[3],[1],{r:28,y:e.pos.y,x:e.pos.x,sf:(e)=>{
+        e.pos.y += yv7049;
+        e.pos.x += xv7049;
+        /*delete obstacle*/
+        if ((e.pos.x - e.sat.r) < 7700 || e.pos.x + e.sat.r > 9000 || (e.pos.y - e.sat.r) < 6250 || e.pos.y + e.sat.r > 6450) {
+            // shared.tickFns.push(()=>{
+            //     for(let i = 0; i < obstacles.length; i++){
+            //         if(obstacles[i] === e) {obstacles.splice(i,1); break;}
+            //     }
+            //     /*for(let key in shared.idToObs){
+            //         if(shared.idToObs[key] === e){delete shared.idToObs[key]; break;}
+            //     }*/
+            // });
+            dyingTimer--;
+
+            if(dyingTimer <= 0 && dyingTimer !== -Infinity){
+                e.pos.x = -1E9;
+                reusableIndexes.push(index);
+                dyingTimer = -Infinity;
+            }
+        }
+        },cr:(o)=>{
+            if(dyingTimer < 0) return;
+
+            if(false){
+                shared.renderBelowFunctions.push(() => {
+                    ctx.globalAlpha = dyingTimer / 30;
+                    ctx.lineWidth = 4;
+                    ctx.strokeStyle = 'black';
+                    ctx.fillStyle = '#107691';
+
+                    ctx.beginPath();
+                    ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.closePath();
+                    ctx.globalAlpha = 1;
+                });
+                return;
+            }
+
+            
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(7500,4400,1300,3800);
+            ctx.clip();
+            ctx.closePath();
+            
+
+            ctx.globalAlpha = dyingTimer / 30;
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = 'black';
+            ctx.fillStyle = '#107691';
+
+            ctx.beginPath();
+            ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();
+            ctx.globalAlpha = 1;
+
+            ctx.restore();
+        }});
+
+        if(reusableIndexes.length === 0){
+            index = obstacles.length-1;
+        } else {
+            index = reusableIndexes.pop();
+            obstacles[index] = obstacles.pop(); 
+        }
+    }
+
+    },cr:(o)=>{
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = 'black';
+        ctx.fillStyle = '#053564';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }})};
+    
+
+    var xv7050 = 0;
+    var yv7050 = 0;
+    var shootDirectionIndex7050 = 0;
+    var timer7050 = 24.51111111116501;{
+    let reusableIndexes = [];
+    C(0,[3],[1],{r:28,y:5950,x:7400,sf:(e)=>{
+    e.pos.y += yv7050;
+    e.pos.x += xv7050;
+    if ((e.pos.x - e.sat.r) < 7300 || e.pos.x + e.sat.r > 8600) {
+        xv7050 = xv7050 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 5850 || e.pos.y + e.sat.r > 6050) {
+        yv7050 = yv7050 * -1;
+    }
+
+    timer7050--;
+    if(timer7050 < 0){
+        timer7050 = 61.46666666666667;
+
+        shootDirectionIndex7050++;
+        const shootDirections = [0];
+        if(shootDirectionIndex7050 >= shootDirections.length){
+            shootDirectionIndex7050 = 0;
+        }
+        let dir = shootDirections[shootDirectionIndex7050];
+
+        counter++;
+        /*scoped using let*/
+        let xv7050 = Math.cos(dir) * 4.696969696969697;
+        let yv7050 = Math.sin(dir) * 4.696969696969697;
+
+        let dyingTimer = 30;
+
+        let index;
+
+        C(0,[3],[1],{r:28,y:e.pos.y,x:e.pos.x,sf:(e)=>{
+        e.pos.y += yv7050;
+        e.pos.x += xv7050;
+        /*delete obstacle*/
+        if ((e.pos.x - e.sat.r) < 7300 || e.pos.x + e.sat.r > 8600 || (e.pos.y - e.sat.r) < 5850 || e.pos.y + e.sat.r > 6050) {
+            // shared.tickFns.push(()=>{
+            //     for(let i = 0; i < obstacles.length; i++){
+            //         if(obstacles[i] === e) {obstacles.splice(i,1); break;}
+            //     }
+            //     /*for(let key in shared.idToObs){
+            //         if(shared.idToObs[key] === e){delete shared.idToObs[key]; break;}
+            //     }*/
+            // });
+            dyingTimer--;
+
+            if(dyingTimer <= 0 && dyingTimer !== -Infinity){
+                e.pos.x = -1E9;
+                reusableIndexes.push(index);
+                dyingTimer = -Infinity;
+            }
+        }
+        },cr:(o)=>{
+            if(dyingTimer < 0) return;
+
+            if(false){
+                shared.renderBelowFunctions.push(() => {
+                    ctx.globalAlpha = dyingTimer / 30;
+                    ctx.lineWidth = 4;
+                    ctx.strokeStyle = 'black';
+                    ctx.fillStyle = '#107691';
+
+                    ctx.beginPath();
+                    ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.closePath();
+                    ctx.globalAlpha = 1;
+                });
+                return;
+            }
+
+            
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(7500,4400,1300,3800);
+            ctx.clip();
+            ctx.closePath();
+            
+
+            ctx.globalAlpha = dyingTimer / 30;
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = 'black';
+            ctx.fillStyle = '#107691';
+
+            ctx.beginPath();
+            ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();
+            ctx.globalAlpha = 1;
+
+            ctx.restore();
+        }});
+
+        if(reusableIndexes.length === 0){
+            index = obstacles.length-1;
+        } else {
+            index = reusableIndexes.pop();
+            obstacles[index] = obstacles.pop(); 
+        }
+    }
+
+    },cr:(o)=>{
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = 'black';
+        ctx.fillStyle = '#053564';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }})};
+    
+
+    var xv7051 = 0;
+    var yv7051 = 0;
+    var shootDirectionIndex7051 = 0;
+    var timer7051 = 0.3777777776996688;{
+    let reusableIndexes = [];
+    C(0,[3],[1],{r:28,y:6700,x:7400,sf:(e)=>{
+    e.pos.y += yv7051;
+    e.pos.x += xv7051;
+    if ((e.pos.x - e.sat.r) < 6900 || e.pos.x + e.sat.r > 7800) {
+        xv7051 = xv7051 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 6600 || e.pos.y + e.sat.r > 6800) {
+        yv7051 = yv7051 * -1;
+    }
+
+    timer7051--;
+    if(timer7051 < 0){
+        timer7051 = 29.066666666666666;
+
+        shootDirectionIndex7051++;
+        const shootDirections = [0.08726646259971647];
+        if(shootDirectionIndex7051 >= shootDirections.length){
+            shootDirectionIndex7051 = 0;
+        }
+        let dir = shootDirections[shootDirectionIndex7051];
+
+        counter++;
+        /*scoped using let*/
+        let xv7051 = Math.cos(dir) * 4.696969696969697;
+        let yv7051 = Math.sin(dir) * 4.696969696969697;
+
+        let dyingTimer = 30;
+
+        let index;
+
+        C(0,[3],[1],{r:28,y:e.pos.y,x:e.pos.x,sf:(e)=>{
+        e.pos.y += yv7051;
+        e.pos.x += xv7051;
+        /*delete obstacle*/
+        if ((e.pos.x - e.sat.r) < 6900 || e.pos.x + e.sat.r > 7800 || (e.pos.y - e.sat.r) < 6600 || e.pos.y + e.sat.r > 6800) {
+            // shared.tickFns.push(()=>{
+            //     for(let i = 0; i < obstacles.length; i++){
+            //         if(obstacles[i] === e) {obstacles.splice(i,1); break;}
+            //     }
+            //     /*for(let key in shared.idToObs){
+            //         if(shared.idToObs[key] === e){delete shared.idToObs[key]; break;}
+            //     }*/
+            // });
+            dyingTimer--;
+
+            if(dyingTimer <= 0 && dyingTimer !== -Infinity){
+                e.pos.x = -1E9;
+                reusableIndexes.push(index);
+                dyingTimer = -Infinity;
+            }
+        }
+        },cr:(o)=>{
+            if(dyingTimer < 0) return;
+
+            if(false){
+                shared.renderBelowFunctions.push(() => {
+                    ctx.globalAlpha = dyingTimer / 30;
+                    ctx.lineWidth = 4;
+                    ctx.strokeStyle = 'black';
+                    ctx.fillStyle = '#107691';
+
+                    ctx.beginPath();
+                    ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.closePath();
+                    ctx.globalAlpha = 1;
+                });
+                return;
+            }
+
+            
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(7500,4400,1300,3800);
+            ctx.clip();
+            ctx.closePath();
+            
+
+            ctx.globalAlpha = dyingTimer / 30;
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = 'black';
+            ctx.fillStyle = '#107691';
+
+            ctx.beginPath();
+            ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();
+            ctx.globalAlpha = 1;
+
+            ctx.restore();
+        }});
+
+        if(reusableIndexes.length === 0){
+            index = obstacles.length-1;
+        } else {
+            index = reusableIndexes.pop();
+            obstacles[index] = obstacles.pop(); 
+        }
+    }
+
+    },cr:(o)=>{
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = 'black';
+        ctx.fillStyle = '#053564';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }})};
+    
+
+    var xv7052 = 0;
+    var yv7052 = 0;
+    var shootDirectionIndex7052 = 0;
+    var timer7052 = 14.91111111103296;{
+    let reusableIndexes = [];
+    C(0,[3],[1],{r:28,y:6700,x:8900,sf:(e)=>{
+    e.pos.y += yv7052;
+    e.pos.x += xv7052;
+    if ((e.pos.x - e.sat.r) < 8500 || e.pos.x + e.sat.r > 9100) {
+        xv7052 = xv7052 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 6600 || e.pos.y + e.sat.r > 6800) {
+        yv7052 = yv7052 * -1;
+    }
+
+    timer7052--;
+    if(timer7052 < 0){
+        timer7052 = 29.066666666666666;
+
+        shootDirectionIndex7052++;
+        const shootDirections = [3.0543261909900763];
+        if(shootDirectionIndex7052 >= shootDirections.length){
+            shootDirectionIndex7052 = 0;
+        }
+        let dir = shootDirections[shootDirectionIndex7052];
+
+        counter++;
+        /*scoped using let*/
+        let xv7052 = Math.cos(dir) * 4.696969696969697;
+        let yv7052 = Math.sin(dir) * 4.696969696969697;
+
+        let dyingTimer = 30;
+
+        let index;
+
+        C(0,[3],[1],{r:28,y:e.pos.y,x:e.pos.x,sf:(e)=>{
+        e.pos.y += yv7052;
+        e.pos.x += xv7052;
+        /*delete obstacle*/
+        if ((e.pos.x - e.sat.r) < 8500 || e.pos.x + e.sat.r > 9100 || (e.pos.y - e.sat.r) < 6600 || e.pos.y + e.sat.r > 6800) {
+            // shared.tickFns.push(()=>{
+            //     for(let i = 0; i < obstacles.length; i++){
+            //         if(obstacles[i] === e) {obstacles.splice(i,1); break;}
+            //     }
+            //     /*for(let key in shared.idToObs){
+            //         if(shared.idToObs[key] === e){delete shared.idToObs[key]; break;}
+            //     }*/
+            // });
+            dyingTimer--;
+
+            if(dyingTimer <= 0 && dyingTimer !== -Infinity){
+                e.pos.x = -1E9;
+                reusableIndexes.push(index);
+                dyingTimer = -Infinity;
+            }
+        }
+        },cr:(o)=>{
+            if(dyingTimer < 0) return;
+
+            if(false){
+                shared.renderBelowFunctions.push(() => {
+                    ctx.globalAlpha = dyingTimer / 30;
+                    ctx.lineWidth = 4;
+                    ctx.strokeStyle = 'black';
+                    ctx.fillStyle = '#107691';
+
+                    ctx.beginPath();
+                    ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.closePath();
+                    ctx.globalAlpha = 1;
+                });
+                return;
+            }
+
+            
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(7500,4400,1300,3800);
+            ctx.clip();
+            ctx.closePath();
+            
+
+            ctx.globalAlpha = dyingTimer / 30;
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = 'black';
+            ctx.fillStyle = '#107691';
+
+            ctx.beginPath();
+            ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();
+            ctx.globalAlpha = 1;
+
+            ctx.restore();
+        }});
+
+        if(reusableIndexes.length === 0){
+            index = obstacles.length-1;
+        } else {
+            index = reusableIndexes.pop();
+            obstacles[index] = obstacles.pop(); 
+        }
+    }
+
+    },cr:(o)=>{
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = 'black';
+        ctx.fillStyle = '#053564';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }})};
+    
+
+    var xv7053 = -1.65690351016576;
+    var yv7053 = 1.2824560162973793;
+    var switchTime7053 = 57.177434010599825;
+    var switchState7053 = true;
+    var pos7053 = {
+        x: 5115.131173846121, y: 9257.204521200969 
+    }
+    C(0,[3],[1],{r:50,y:9257.204521200969,x:5115.131173846121,sf:(e)=>{
+        pos7053.y += yv7053;
+        pos7053.x += xv7053;
+        if ((pos7053.x - e.sat.r) < 4800 || pos7053.x + e.sat.r > 5500) {
+            xv7053 = xv7053 * -1;
+        }
+        if ((pos7053.y - e.sat.r) < 8300 || pos7053.y + e.sat.r > 9600) {
+            yv7053 = yv7053 * -1;
+        }
+
+        if(switchState7053 === true){
+            e.pos.x = pos7053.x;
+            e.pos.y = pos7053.y;
+        } else {
+            e.pos.x = -100000;
+        }
+
+        switchTime7053--;
+        if(switchTime7053 <= 0){
+            switchTime7053 = 192;
+            switchState7053 = !switchState7053;
+            if(switchState7053 === true){
+                /*if we're switching on, reset to pos we were on. This wasn't how the enemy worked before but it's ok*/
+                e.pos.x = pos7053.x;
+                e.pos.y = pos7053.y;
+            }
+        }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#8304cc';
+        ctx.globalAlpha = 1;
+        if (switchState7053 === false) {
+            ctx.globalAlpha = 0.4;
+        }
+        ctx.beginPath();
+        ctx.arc(pos7053.x, pos7053.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+        ctx.globalAlpha = 1;
+    }});
+    
+
+    var xv7054 = 0.04547387768792593;
+    var yv7054 = -2.094744567288571;
+    var switchTime7054 = 376.2012721638722;
+    var switchState7054 = true;
+    var pos7054 = {
+        x: 5153.181098770423, y: 9181.339440771437 
+    }
+    C(0,[3],[1],{r:50,y:9181.339440771437,x:5153.181098770423,sf:(e)=>{
+        pos7054.y += yv7054;
+        pos7054.x += xv7054;
+        if ((pos7054.x - e.sat.r) < 4800 || pos7054.x + e.sat.r > 5500) {
+            xv7054 = xv7054 * -1;
+        }
+        if ((pos7054.y - e.sat.r) < 8300 || pos7054.y + e.sat.r > 9600) {
+            yv7054 = yv7054 * -1;
+        }
+
+        if(switchState7054 === true){
+            e.pos.x = pos7054.x;
+            e.pos.y = pos7054.y;
+        } else {
+            e.pos.x = -100000;
+        }
+
+        switchTime7054--;
+        if(switchTime7054 <= 0){
+            switchTime7054 = 192;
+            switchState7054 = !switchState7054;
+            if(switchState7054 === true){
+                /*if we're switching on, reset to pos we were on. This wasn't how the enemy worked before but it's ok*/
+                e.pos.x = pos7054.x;
+                e.pos.y = pos7054.y;
+            }
+        }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#8304cc';
+        ctx.globalAlpha = 1;
+        if (switchState7054 === false) {
+            ctx.globalAlpha = 0.4;
+        }
+        ctx.beginPath();
+        ctx.arc(pos7054.x, pos7054.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+        ctx.globalAlpha = 1;
+    }});
+    
+
+    var xv7055 = 2.0896478871537805;
+    var yv7055 = -0.15295222604036335;
+    var switchTime7055 = 61.48306063066204;
+    var switchState7055 = true;
+    var pos7055 = {
+        x: 5056.294438465016, y: 8635.955205454027 
+    }
+    C(0,[3],[1],{r:50,y:8635.955205454027,x:5056.294438465016,sf:(e)=>{
+        pos7055.y += yv7055;
+        pos7055.x += xv7055;
+        if ((pos7055.x - e.sat.r) < 4800 || pos7055.x + e.sat.r > 5500) {
+            xv7055 = xv7055 * -1;
+        }
+        if ((pos7055.y - e.sat.r) < 8300 || pos7055.y + e.sat.r > 9600) {
+            yv7055 = yv7055 * -1;
+        }
+
+        if(switchState7055 === true){
+            e.pos.x = pos7055.x;
+            e.pos.y = pos7055.y;
+        } else {
+            e.pos.x = -100000;
+        }
+
+        switchTime7055--;
+        if(switchTime7055 <= 0){
+            switchTime7055 = 192;
+            switchState7055 = !switchState7055;
+            if(switchState7055 === true){
+                /*if we're switching on, reset to pos we were on. This wasn't how the enemy worked before but it's ok*/
+                e.pos.x = pos7055.x;
+                e.pos.y = pos7055.y;
+            }
+        }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#8304cc';
+        ctx.globalAlpha = 1;
+        if (switchState7055 === false) {
+            ctx.globalAlpha = 0.4;
+        }
+        ctx.beginPath();
+        ctx.arc(pos7055.x, pos7055.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+        ctx.globalAlpha = 1;
+    }});
+    
+
+    var xv7056 = 2.075942229671918;
+    var yv7056 = -0.2837014888958956;
+    var switchTime7056 = 233.9483316741026;
+    var switchState7056 = true;
+    var pos7056 = {
+        x: 5399.639921082235, y: 8558.566593886308 
+    }
+    C(0,[3],[1],{r:50,y:8558.566593886308,x:5399.639921082235,sf:(e)=>{
+        pos7056.y += yv7056;
+        pos7056.x += xv7056;
+        if ((pos7056.x - e.sat.r) < 4800 || pos7056.x + e.sat.r > 5500) {
+            xv7056 = xv7056 * -1;
+        }
+        if ((pos7056.y - e.sat.r) < 8300 || pos7056.y + e.sat.r > 9600) {
+            yv7056 = yv7056 * -1;
+        }
+
+        if(switchState7056 === true){
+            e.pos.x = pos7056.x;
+            e.pos.y = pos7056.y;
+        } else {
+            e.pos.x = -100000;
+        }
+
+        switchTime7056--;
+        if(switchTime7056 <= 0){
+            switchTime7056 = 192;
+            switchState7056 = !switchState7056;
+            if(switchState7056 === true){
+                /*if we're switching on, reset to pos we were on. This wasn't how the enemy worked before but it's ok*/
+                e.pos.x = pos7056.x;
+                e.pos.y = pos7056.y;
+            }
+        }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#8304cc';
+        ctx.globalAlpha = 1;
+        if (switchState7056 === false) {
+            ctx.globalAlpha = 0.4;
+        }
+        ctx.beginPath();
+        ctx.arc(pos7056.x, pos7056.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+        ctx.globalAlpha = 1;
+    }});
+    
+
+    var xv7057 = -0.6949747252208379;
+    var yv7057 = 2.227432283089357;
+    C(0,[3],[1],{r:16,y:883.2668705713791,x:14537.461238800097,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7057;
+    e.pos.x += xv7057;
+    if ((e.pos.x - e.sat.r) < 14400 || e.pos.x + e.sat.r > 14600) {
+        xv7057 = xv7057 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 0 || e.pos.y + e.sat.r > 1700) {
+        yv7057 = yv7057 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7058 = 0.8942266665058333;
+    var yv7058 = 2.1551805291794723;
+    C(0,[3],[1],{r:16,y:792.0696304433905,x:14482.072464001487,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7058;
+    e.pos.x += xv7058;
+    if ((e.pos.x - e.sat.r) < 14400 || e.pos.x + e.sat.r > 14600) {
+        xv7058 = xv7058 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 0 || e.pos.y + e.sat.r > 1700) {
+        yv7058 = yv7058 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7059 = -2.3280452614267997;
+    var yv7059 = 0.15700224582046304;
+    C(0,[3],[1],{r:16,y:781.651895092952,x:14454.219912310808,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7059;
+    e.pos.x += xv7059;
+    if ((e.pos.x - e.sat.r) < 14400 || e.pos.x + e.sat.r > 14600) {
+        xv7059 = xv7059 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 0 || e.pos.y + e.sat.r > 1700) {
+        yv7059 = yv7059 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7060 = 2.0519530417312044;
+    var yv7060 = 1.1108254403705848;
+    C(0,[3],[1],{r:16,y:558.5086270431823,x:14520.590635951408,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7060;
+    e.pos.x += xv7060;
+    if ((e.pos.x - e.sat.r) < 14400 || e.pos.x + e.sat.r > 14600) {
+        xv7060 = xv7060 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 0 || e.pos.y + e.sat.r > 1700) {
+        yv7060 = yv7060 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7061 = -1.9203872180165;
+    var yv7061 = 1.325351793797893;
+    C(0,[3],[1],{r:16,y:105.69472383460464,x:14474.865229199913,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7061;
+    e.pos.x += xv7061;
+    if ((e.pos.x - e.sat.r) < 14400 || e.pos.x + e.sat.r > 14600) {
+        xv7061 = xv7061 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 0 || e.pos.y + e.sat.r > 1700) {
+        yv7061 = yv7061 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7062 = 1.7839460441492527;
+    var yv7062 = -1.5039883496918038;
+    C(0,[3],[1],{r:16,y:604.9056187523977,x:14424.4392320661,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7062;
+    e.pos.x += xv7062;
+    if ((e.pos.x - e.sat.r) < 14400 || e.pos.x + e.sat.r > 14600) {
+        xv7062 = xv7062 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 0 || e.pos.y + e.sat.r > 1700) {
+        yv7062 = yv7062 * -1;
+    }
+    },cr:(o)=>{
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        ctx.fillStyle = '#7d7d7d';
+        ctx.beginPath();
+        ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }});
+
+    
+
+    var xv7063 = 3.6032909029114006;
+    var yv7063 = -5.608987351870245;
+    C(0,[3],[1],{r:64,y:5255.781497795463,x:12985.939211262119,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7063;
+    e.pos.x += xv7063;
+    if ((e.pos.x - e.sat.r) < 12800 || e.pos.x + e.sat.r > 14000) {
+        xv7063 = xv7063 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 4300 || e.pos.y + e.sat.r > 5500) {
+        yv7063 = yv7063 * -1;
+    }
+    }});
+
+    
+
+    var xv7064 = -6.556783148058823;
+    var yv7064 = 1.2054207538350563;
+    C(0,[3],[1],{r:64,y:5100.949334242434,x:13899.566748117868,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7064;
+    e.pos.x += xv7064;
+    if ((e.pos.x - e.sat.r) < 12800 || e.pos.x + e.sat.r > 14000) {
+        xv7064 = xv7064 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 4300 || e.pos.y + e.sat.r > 5500) {
+        yv7064 = yv7064 * -1;
+    }
+    }});
+
+    
+
+    var xv7065 = -4.582241887920984;
+    var yv7065 = -4.842262252813945;
+    C(0,[3],[1],{r:64,y:5166.183505727172,x:13675.064984317558,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7065;
+    e.pos.x += xv7065;
+    if ((e.pos.x - e.sat.r) < 12800 || e.pos.x + e.sat.r > 14000) {
+        xv7065 = xv7065 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 4300 || e.pos.y + e.sat.r > 5500) {
+        yv7065 = yv7065 * -1;
+    }
+    }});
+
+    
+
+    var xv7066 = -5.607859113325753;
+    var yv7066 = -3.6050465474850326;
+    C(0,[3],[1],{r:64,y:4803.344169541243,x:13131.79078616824,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7066;
+    e.pos.x += xv7066;
+    if ((e.pos.x - e.sat.r) < 12800 || e.pos.x + e.sat.r > 14000) {
+        xv7066 = xv7066 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 4300 || e.pos.y + e.sat.r > 5500) {
+        yv7066 = yv7066 * -1;
+    }
+    }});
+
+    
+
+    var xv7067 = 3.3366393746306238;
+    var yv7067 = -5.771592685568603;
+    C(0,[3],[1],{r:64,y:5212.312541758713,x:13745.091571740822,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7067;
+    e.pos.x += xv7067;
+    if ((e.pos.x - e.sat.r) < 12800 || e.pos.x + e.sat.r > 14000) {
+        xv7067 = xv7067 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 4300 || e.pos.y + e.sat.r > 5500) {
+        yv7067 = yv7067 * -1;
+    }
+    }});
+
+    
+
+    var xv7068 = -0.0698012992429277;
+    var yv7068 = -6.666301240048221;
+    C(0,[3],[1],{r:64,y:4726.046499149982,x:13052.170285815508,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7068;
+    e.pos.x += xv7068;
+    if ((e.pos.x - e.sat.r) < 12800 || e.pos.x + e.sat.r > 14000) {
+        xv7068 = xv7068 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 4300 || e.pos.y + e.sat.r > 5500) {
+        yv7068 = yv7068 * -1;
+    }
+    }});
+
+    
+
+    var xv7069 = -4.376270589219197;
+    var yv7069 = 5.029184841938057;
+    C(0,[3],[1],{r:64,y:4718.0029548649845,x:13399.724771880783,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7069;
+    e.pos.x += xv7069;
+    if ((e.pos.x - e.sat.r) < 12800 || e.pos.x + e.sat.r > 14000) {
+        xv7069 = xv7069 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 4300 || e.pos.y + e.sat.r > 5500) {
+        yv7069 = yv7069 * -1;
+    }
+    }});
+
+    
+
+    var xv7070 = -2.1981898923646463;
+    var yv7070 = 6.2938387047612165;
+    C(0,[3],[1],{r:64,y:5288.474180133577,x:13823.603062293458,boundPlayer:false,sf:(e)=>{
+    e.pos.y += yv7070;
+    e.pos.x += xv7070;
+    if ((e.pos.x - e.sat.r) < 12800 || e.pos.x + e.sat.r > 14000) {
+        xv7070 = xv7070 * -1;
+    }
+    if ((e.pos.y - e.sat.r) < 4300 || e.pos.y + e.sat.r > 5500) {
+        yv7070 = yv7070 * -1;
+    }
+    }});
+
+    C(1,[],[18],{type:[1,[],[18]],x:4900,y:5100,w:200,h:600,size:18.75,inView:true,sizeChangePermanent:false,sizeMult:0.7653061224489796,})
+C(1,[],[18],{type:[1,[],[18]],x:14400,y:0,w:200,h:1700,size:8,inView:false,sizeChangePermanent:false,sizeMult:0.32653061224489793,})
+C(1,[],[18],{type:[1,[],[18]],x:12800,y:600,w:200,h:1100,size:22.5,inView:false,sizeChangePermanent:false,sizeMult:0.9183673469387755,})
+C(1,[],[18],{type:[1,[],[18]],x:14200,y:0,w:200,h:200,size:8,inView:false,sizeChangePermanent:false,sizeMult:0.32653061224489793,})
+C(1,[],[11],{type:[1,[],[11]],x:3600,y:0,w:100,h:100,renderAbove:false,})
+C(1,[],[11],{type:[1,[],[11]],x:13200,y:8300,w:1600,h:200,renderAbove:false,})
+C(1,[],[12],{type:[1,[],[12]],x:14650,y:0,w:150,h:150,tpx:17050,tpy:3450,bgColor:"#27811b",tileColor:"#6ab95a",changeColor:false,inView:false,})
+C(1,[],[10],{type:[1,[],[10]],x:14600,y:0,w:50,h:150,maxStrength:14,currentStrength:10,time:0.2,timer:0.2,regenTime:200,inView:false,healSpeed:1,})
+C(1,[],[27],{type:[1,[],[27]],x:0,y:9500,w:100,h:500,state:false,shipAngle:1.5707963267948966,inView:false,changeShipStateTo:false,initialShipAngle:1.5707963267948966,shipTurnSpeed:0.0032724923474893677,})
+var minX7070, minY7070, maxX7070, maxY7070;
+    minX7070 = -100;minY7070 = 9400;maxX7070 = 200;maxY7070 = 10100;
+    C(1,[3],[0],{h:1,w:1,y:0,x:-10000,sf:(e)=>{
+        const player = shared.players[shared.selfId];
+        if ((player.pos.x) > md(minX7070) && (player.pos.x) < md(maxX7070) && (player.pos.y) > md(minY7070) && (player.pos.y) < md(maxY7070)) {
+            colors.background="#720b98"; colors.tile="#431c6b";
+        }
+    },});
+C(1,[],[13],{type:[1,[],[13]],x:0,y:9500,w:2700,h:500,force:2000,dir:{"x":2000,"y":0},direction:"right",inView:false,conveyorAngle:0,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorForce:1.4165666266506605,})
+var typingVinette7071;
+    C(1,[],[24],{x:0,y:4500,w: 500,h:500,innerR: 0, innerG: 0, innerB: 0, innerSize: 0, innerOpacity: 0, outerR: 0, outerG: 0, outerB: 0, outerSize: 0.42, outerOpacity: 0.9});typingVinette7071=shared.obstacles[shared.obstacles.length-1];
+{let completed = false;let active = false;let curChar = 0;let text="Relax. This planet will only get a little bit harder.";let freezeX, freezeY;
+    C(1,[],[3],{"x":0,"y":4500,w:500,h:500,ef:(p)=>{
+        if(completed === true) return;
+        if(active === true) {
+            p.pos.x = freezeX;
+            p.pos.y = freezeY;
+            return;
+        }
+        active = true;
+
+        freezeX = p.pos.x;
+        freezeY = p.pos.y;
+
+        let oldKeyDown = window.onkeydown;
+        let oldKeyUp = window.onkeyup;
+
+        for(let key in shared.input){shared.input[key] = false;}
+
+        window.onkeyup = () => {};
+        window.onkeydown = (e) => {
+            if(e.type !== 'keydown') return;
+            if(text[curChar] === e.key) curChar++;
+            if(curChar >= text.length) {window.onkeydown = oldKeyDown; window.onkeyup = oldKeyUp; completed = true; active = false;typingVinette7071.pos.x = -1E9;}
+        }
+    },cr:(o)=>{
+        if (completed === true) ctx.globalAlpha = 0.2;
+        ctx.fillStyle = 'white';
+        ctx.font = (o.dimensions.x / 10) + "px Inter";
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        const aheadChar = Math.min(
+            text.length,
+            curChar + 15
+        );
+        const textToDisplay = text.slice(curChar, aheadChar);
+        ctx.fillText(
+            textToDisplay,
+            250, 4750,
+        );
+        ctx.fillStyle = 'black';
+        ctx.globalAlpha = 0.17;
+        if (completed === true) ctx.globalAlpha = 0.05;
+
+        // ctx.beginPath();
+        // for(let i = 0; i < o.sat.points.length; i++){
+        //     ctx.lineTo(o.pos.x + o.sat.points[i].x, o.pos.y + o.sat.points[i].y);
+        // }
+        // ctx.lineTo(o.pos.x + o.sat.points[0].x, o.pos.y + o.sat.points[0].y);
+        // ctx.fill();
+        // ctx.closePath();
+        ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y);
+
+        ctx.globalAlpha = 1;
+    }})};
+C(1,[],[26],{type:[1,[],[26]],x:12800,y:0,w:200,h:200,musicPath:"https://www.youtube.com/watch?v=5e-EvVDXNU0",volume:1,startTime:0,inView:false,})
+C(1,[],[13],{type:[1,[],[13]],x:12800,y:4100,w:200,h:200,force:5000,dir:{"x":0,"y":5000},direction:"down",inView:false,conveyorAngle:90,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorForce:3.54141656662665,})
+C(1,[],[9],{type:[1,[],[9]],x:12800,y:4100,w:200,h:100,spawn:{"x":6450,"y":2075},collected:false,inView:false,checkpointOffsetX:0,checkpointOffsetY:0,})
+C(1,[],[19],{type:[1,[],[19]],x:17100,y:0,w:2900,h:700,speedInc:1.5,inView:false,speedChangePermanent:false,speedMult:1.5,})
+C(4,[],[0],{type:[4,[],[0]],x:19100,y:100,radius:100,startAngle:-3.141592653589793,endAngle:-1.5707963267948966,startPolygon:{"points":[[9500,49.99999999999999],[9450,49.999999999999986]],"type":"poly","props":{}},endPolygon:{"points":[[9550,0],[9550,-50]],"type":"poly","props":{}},innerRadius:100,toRotate:false,rotateSpeed:0,renderType:"circle",inView:false,r:200,startSliceAngle:-3.141592653589793,endSliceAngle:-1.5707963267948966,startSliceAngleRotateSpeed:0,endSliceAngleRotateSpeed:0,})
+C(4,[],[0],{type:[4,[],[0]],x:19650,y:350,radius:300,startAngle:-1.5707963267948966,endAngle:1.5707963267948966,startPolygon:{"points":[[9825,0],[9825,-125]],"type":"poly","props":{}},endPolygon:{"points":[[9825,350],[9825,475]],"type":"poly","props":{}},innerRadius:350,toRotate:false,rotateSpeed:0,renderType:"circle",inView:false,r:600,startSliceAngle:-1.5707963267948966,endSliceAngle:1.5707963267948966,startSliceAngleRotateSpeed:0,endSliceAngleRotateSpeed:0,})
+C(1,[],[13],{type:[1,[],[13]],x:12900,y:1500,w:1500,h:200,force:1750,dir:{"x":-1750,"y":0},direction:"left",inView:false,conveyorAngle:180,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorForce:1.2394957983193275,})
+C(0,[],[0],{type:[0,[],[0]],x:13000,y:1500,r:100,renderType:"circle",inView:false,})
+C(1,[],[17],{type:[1,[],[17]],x:12800,y:400,w:1400,h:200,time:0,maxTime:3,cdmult:3,trapType:"death",inView:false,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:180,})
+C(1,[],[14],{type:[1,[],[14]],x:13200,y:600,w:1000,h:700,force:1500,dir:{"x":0,"y":1500},direction:"down",jumpHeight:115,maxForce:1000,variableJumpHeight:false,platformerFriction:0.972,inView:false,platformerAngle:90,platformerAngleRotateSpeed:0,platformerForce:0.32412965186074433,jumpForce:33.35,jumpDecay:0.96,maxJumpCooldown:20,canJumpMidair:false,})
+C(0,[],[1],{type:[0,[],[1]],x:13650,y:1350,r:136,renderType:"circleR",inView:false,boundPlayer:true,})
+C(0,[],[1],{type:[0,[],[1]],x:13650,y:750,r:136,renderType:"circleR",inView:false,boundPlayer:true,})
+C(1,[],[0],{type:[1,[],[0]],x:2800,y:6900,w:2000,h:3100,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:10000,y:-100,w:100,h:2500,canJump:false,inView:false,})
+C(1,[],[10],{type:[1,[],[10]],x:4800,y:9600,w:700,h:100,maxStrength:33,currentStrength:33,time:0,timer:0,regenTime:266.6666666666667,inView:false,healSpeed:1,})
+C(1,[0],[1],{type:[1,[0],[1]],x:4800,y:9800,w:200,h:100,points:[[2400,4900],[2650,4900]],speed:60,currentPoint:1.41,collidable:true,pointOn:{"x":2650,"y":4900},pointTo:{"x":2400,"y":4900},xv:-60,yv:7.34788079488412e-15,inView:false,path:[[4800,9800,2],[5300,9800,2]],boundPlayer:true,})
+C(1,[0],[1],{type:[1,[0],[1]],x:5300,y:9700,w:200,h:100,points:[[2650,4850],[2400,4850]],speed:60,currentPoint:1.41,collidable:true,pointOn:{"x":2400,"y":4850},pointTo:{"x":2650,"y":4850},xv:60,yv:7.34788079488412e-15,inView:false,path:[[5300,9700,2],[4800,9700,2]],boundPlayer:true,})
+C(1,[],[27],{type:[1,[],[27]],x:4800,y:7000,w:700,h:100,state:true,shipAngle:1.5707963267948966,inView:false,changeShipStateTo:true,initialShipAngle:1.5707963267948966,shipTurnSpeed:0.0032724923474893677,})
+C(1,[],[9],{type:[1,[],[9]],x:4800,y:7000,w:700,h:100,spawn:{"x":2575,"y":3525},collected:false,inView:false,checkpointOffsetX:0,checkpointOffsetY:0,})
+C(1,[],[0],{type:[1,[],[0]],x:2800,y:5900,w:4700,h:1100,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:5900,y:3700,w:1600,h:2500,canJump:true,inView:true,})
+C(1,[],[0],{type:[1,[],[0]],x:8800,y:4200,w:1200,h:3000,canJump:true,inView:false,})
+C(1,[],[9],{type:[1,[],[9]],x:8000,y:4300,w:300,h:100,spawn:{"x":4075,"y":2175},collected:false,inView:false,checkpointOffsetX:0,checkpointOffsetY:0,})
+C(1,[],[20],{x:8700,y:2300,w:100,h:100,hex:'#000000',alpha:0,cr:()=>{},ef:()=>{
+        for(let i = 0; i < obstacles.length; i++){
+            if(obstacles[i].collected !== undefined){
+                obstacles[i].collected = false;
+            } else if(obstacles[i].isCoindoor === true){
+                obstacles[i].coins = obstacles[i].maxCoins; 
+            }
+        }    
+    }});C(1,[],[14],{type:[1,[],[14]],x:7500,y:0,w:2500,h:2400,force:1500,dir:{"x":0,"y":1500},direction:"down",jumpHeight:145,maxForce:1000,variableJumpHeight:false,platformerFriction:0.972,inView:false,platformerAngle:90,platformerAngleRotateSpeed:0,platformerForce:0.32412965186074433,jumpForce:42.05,jumpDecay:0.96,maxJumpCooldown:20,canJumpMidair:false,})
+C(1,[],[9],{type:[1,[],[9]],x:250,y:100,w:850,h:100,spawn:{"x":337.5,"y":75},collected:false,inView:false,checkpointOffsetX:0,checkpointOffsetY:0,})
+C(1,[],[12],{type:[1,[],[12]],x:5550,y:4900,w:200,h:200,tpx:650,tpy:150,bgColor:"#27811b",tileColor:"#6ab95a",changeColor:false,inView:true,})
+C(1,[],[17],{type:[1,[],[17]],x:4300,y:4900,w:600,h:200,time:0,maxTime:5,cdmult:3,trapType:"death",inView:true,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:300,})
+C(1,[0],[12],{type:[1,[0],[12]],x:5200,y:4800,w:100,h:100,points:[[2600,2400],[2600,2550]],speed:40,currentPoint:1.7888888888906118,tpx:5000,tpy:5000,pointOn:{"x":2600,"y":2550},pointTo:{"x":2600,"y":2400},xv:2.4492935982947065e-15,yv:-40,inView:true,path:[[5200,4800,1.3333333333333333],[5200,5100,1.3333333333333333]],})
+C(2,[],[0],{type:[2,[],[0]],points:[[4900,4100],[4900,4900],[4100,4900]],most:{"left":2050,"right":2450,"top":2050,"bottom":2450},renderType:"poly",inView:true,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[5100,4100],[5900,4900],[5100,4900]],most:{"left":2550,"right":2950,"top":2050,"bottom":2450},renderType:"poly",inView:true,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[5100,5100],[5900,5100],[5100,5900]],most:{"left":2550,"right":2950,"top":2550,"bottom":2950},renderType:"poly",inView:true,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[4100,5100],[4900,5100],[4900,5900]],most:{"left":2050,"right":2450,"top":2550,"bottom":2950},renderType:"poly",inView:true,x:null,y:null,})
+C(1,[],[7],{type:[1,[],[7]],x:4350,y:4950,w:100,h:100,collected:false,inView:true,color:"#d5d612",coinAmount:1,})
+C(1,[],[0],{type:[1,[],[0]],x:4100,y:4900,w:200,h:200,canJump:true,inView:true,})
+C(1,[],[0],{type:[1,[],[0]],x:4900,y:5700,w:200,h:200,canJump:true,inView:true,})
+C(1,[],[0],{type:[1,[],[0]],x:5700,y:4900,w:200,h:200,canJump:true,inView:true,})
+C(1,[],[0],{type:[1,[],[0]],x:4900,y:4100,w:200,h:200,canJump:true,inView:true,})
+C(1,[],[0],{type:[1,[],[0]],x:2800,y:3500,w:1300,h:2500,canJump:true,inView:true,})
+C(1,[],[0],{type:[1,[],[0]],x:2500,y:2800,w:5000,h:1300,canJump:true,inView:false,})
+C(1,[],[7],{type:[1,[],[7]],x:4950,y:4350,w:100,h:100,collected:false,inView:true,color:"#d5d612",coinAmount:1,})
+C(1,[],[7],{type:[1,[],[7]],x:5350,y:4950,w:100,h:100,collected:false,inView:true,color:"#d5d612",coinAmount:1,})
+C(1,[],[7],{type:[1,[],[7]],x:4950,y:5550,w:100,h:100,collected:false,inView:true,color:"#d5d612",coinAmount:1,})
+C(1,[0],[0],{type:[1,[0],[0]],x:4900,y:4500,w:100,h:100,points:[[2450,2250],[2450,2400]],speed:50,currentPoint:0.7361111111093881,alongWith:false,pointOn:{"x":2450,"y":2250},pointTo:{"x":2450,"y":2400},xv:3.061616997868383e-15,yv:50,inView:true,path:[[4900,4500,1.6666666666666667],[4900,4800,1.6666666666666667]],})
+C(1,[0],[0],{type:[1,[0],[0]],x:5000,y:4500,w:100,h:100,points:[[2500,2250],[2500,2400]],speed:50,currentPoint:1.736111111109388,alongWith:false,pointOn:{"x":2500,"y":2400},pointTo:{"x":2500,"y":2250},xv:3.061616997868383e-15,yv:-50,inView:true,path:[[5000,4500,1.6666666666666667],[5000,4800,1.6666666666666667]],})
+C(1,[1],[0],{type:[1,[1],[0]],x:4900,y:5375,w:200,h:50,angle:-710.4166666666579,rotateSpeed:-0.01430976430976431,pivotX:5000,pivotY:5400,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:51.53882032022076,unSim:0,inView:true,initialRotation:-12.399109894376227,})
+C(1,[1],[0],{type:[1,[1],[0]],x:4900,y:5175,w:200,h:50,angle:-620.4166666666663,rotateSpeed:-0.01430976430976431,pivotX:5000,pivotY:5200,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:51.53882032022076,unSim:0,inView:true,initialRotation:-10.82831356758148,})
+C(1,[],[2],{type:[1,[],[2]],x:4500,y:5050,w:100,h:50,effect:30,inView:true,bounciness:20,decay:0.5,})
+C(1,[],[2],{type:[1,[],[2]],x:4700,y:4900,w:100,h:50,effect:30,inView:true,bounciness:20,decay:0.5,})
+C(1,[],[26],{type:[1,[],[26]],x:4900,y:4900,w:200,h:200,musicPath:"https://www.youtube.com/watch?v=n3EIyZ8my8o",volume:1,startTime:0,inView:true,})
+C(1,[],[8],{type:[1,[],[8]],x:5500,y:4900,w:200,h:200,coins:4,currentCoins:4,inView:true,coinDoorColor:"#d5d612",coindoorCoinAmount:4,})
+C(1,[],[0],{type:[1,[],[0]],x:-100,y:2800,w:3000,h:1700,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:-150,y:1700,w:2500,h:1650,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:1300,y:-350,w:1700,h:3250,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:100,y:-100,w:1300,h:200,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:-400,y:-50,w:400,h:1800,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:2800,y:1700,w:4700,h:1400,canJump:false,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:4300,y:-100,w:3200,h:1800,canJump:false,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:3000,y:0,w:600,h:200,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:3700,y:0,w:600,h:200,canJump:true,inView:false,})
+C(1,[],[9],{type:[1,[],[9]],x:3600,y:0,w:100,h:100,spawn:{"x":1825,"y":25},collected:false,inView:false,checkpointOffsetX:0,checkpointOffsetY:0,})
+C(1,[],[12],{type:[1,[],[12]],x:3000,y:1600,w:1300,h:100,tpx:8750,tpy:2350,bgColor:"#27811b",tileColor:"#6ab95a",changeColor:false,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:7500,y:2400,w:2700,h:1900,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:1200,y:100,w:600,h:1650,canJump:true,inView:false,})
+C(0,[],[0],{type:[0,[],[0]],x:100,y:150,r:200,renderType:"circle",inView:false,})
+C(0,[],[0],{type:[0,[],[0]],x:650,y:400,r:200,renderType:"circle",inView:false,})
+C(0,[],[0],{type:[0,[],[0]],x:1200,y:150,r:200,renderType:"circle",inView:false,})
+C(0,[],[0],{type:[0,[],[0]],x:850,y:1350,r:70,renderType:"circle",inView:false,})
+C(0,[],[0],{type:[0,[],[0]],x:200,y:550,r:70,renderType:"circle",inView:false,})
+C(0,[],[0],{type:[0,[],[0]],x:1050,y:700,r:112,renderType:"circle",inView:false,})
+C(0,[],[0],{type:[0,[],[0]],x:600,y:1100,r:112,renderType:"circle",inView:false,})
+C(0,[],[0],{type:[0,[],[0]],x:400,y:800,r:158,renderType:"circle",inView:false,})
+C(0,[],[0],{type:[0,[],[0]],x:100,y:1300,r:50,renderType:"circle",inView:false,})
+C(0,[],[0],{type:[0,[],[0]],x:150,y:1050,r:100,renderType:"circle",inView:false,})
+C(0,[],[0],{type:[0,[],[0]],x:400,y:1400,r:158,renderType:"circle",inView:false,})
+C(0,[],[0],{type:[0,[],[0]],x:750,y:800,r:70,renderType:"circle",inView:false,})
+C(0,[],[0],{type:[0,[],[0]],x:1000,y:1000,r:158,renderType:"circle",inView:false,})
+C(0,[],[0],{type:[0,[],[0]],x:1100,y:1400,r:50,renderType:"circle",inView:false,})
+C(1,[],[12],{type:[1,[],[12]],x:0,y:1600,w:1200,h:100,tpx:3650,tpy:50,bgColor:"#27811b",tileColor:"#6ab95a",changeColor:false,inView:false,})
+C(1,[],[10],{type:[1,[],[10]],x:3600,y:100,w:100,h:100,maxStrength:23,currentStrength:23,time:0.016,timer:0.016,regenTime:533.3333333333334,inView:false,healSpeed:1,})
+C(1,[],[0],{type:[1,[],[0]],x:7500,y:2300,w:1100,h:100,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:8900,y:2300,w:1100,h:100,canJump:true,inView:false,})
+C(0,[],[0],{type:[0,[],[0]],x:8600,y:2400,r:100,renderType:"circle",inView:false,})
+C(0,[],[0],{type:[0,[],[0]],x:8900,y:2400,r:100,renderType:"circle",inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:8400,y:2000,w:200,h:100,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:8800,y:1800,w:200,h:100,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:9300,y:1200,w:200,h:600,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:8700,y:1000,w:200,h:100,canJump:true,inView:false,})
+C(2,[],[0],{type:[2,[],[0]],points:[[7950,1200],[8050,1200],[8100,1400],[7900,1400]],most:{"left":3950,"right":4050,"top":600,"bottom":700},renderType:"poly",inView:false,x:null,y:null,})
+C(1,[1],[0],{type:[1,[1],[0]],x:7700,y:900,w:100,h:100,angle:0.5833333333333334,rotateSpeed:0.010016835016835018,pivotX:7750,pivotY:950,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:35.35533905932738,unSim:14.191666666666501,inView:false,initialRotation:0.010181087303300257,})
+C(1,[1],[0],{type:[1,[1],[0]],x:8000,y:650,w:100,h:100,angle:-22.583333333333336,rotateSpeed:-0.010016835016835018,pivotX:8050,pivotY:700,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:35.35533905932738,unSim:14.191666666666501,inView:false,initialRotation:-0.3941535227420528,})
+C(1,[0],[0],{type:[1,[0],[0]],x:8400,y:500,w:300,h:100,points:[[4200,250],[4300,250]],speed:43,currentPoint:0.1095833333374685,alongWith:false,pointOn:{"x":4200,"y":250},pointTo:{"x":4300,"y":250},xv:43,yv:0,inView:false,path:[[8400,500,1.4333333333333333],[8600,500,1.4333333333333333]],})
+C(1,[],[0],{type:[1,[],[0]],x:9200,y:500,w:100,h:100,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:9500,y:300,w:100,h:100,canJump:true,inView:false,})
+C(0,[],[7],{type:[0,[],[7]],x:9650,y:150,r:50,collected:false,renderType:"circle",inView:false,color:"#d5d612",coinAmount:1,})
+C(1,[],[12],{type:[1,[],[12]],x:7500,y:-98,w:2500,h:150,tpx:8150,tpy:4350,bgColor:"#27811b",tileColor:"#6ab95a",changeColor:false,inView:false,})
+var minX7072, minY7072, maxX7072, maxY7072;
+    minX7072 = 8500;minY7072 = 2100;maxX7072 = 9000;maxY7072 = 2500;
+    C(1,[3],[0],{h:1,w:1,y:0,x:-10000,sf:(e)=>{
+        const player = shared.players[shared.selfId];
+        if ((player.pos.x) > md(minX7072) && (player.pos.x) < md(maxX7072) && (player.pos.y) > md(minY7072) && (player.pos.y) < md(maxY7072)) {
+            colors.background="#9ec0ed"; colors.tile="#6376c1";
+        }
+    },});
+C(1,[],[0],{type:[1,[],[0]],x:7500,y:4200,w:500,h:200,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:8300,y:4200,w:500,h:200,canJump:true,inView:false,})
+C(2,[],[0],{type:[2,[],[0]],points:[[8000,4300],[8100,4300],[8000,4400]],most:{"left":4000,"right":4050,"top":2150,"bottom":2200},renderType:"poly",inView:false,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[8200,4300],[8300,4300],[8300,4400]],most:{"left":4100,"right":4150,"top":2150,"bottom":2200},renderType:"poly",inView:false,x:null,y:null,})
+C(1,[],[0],{type:[1,[],[0]],x:8800,y:7050,w:150,h:250,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:5500,y:7200,w:4600,h:2900,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:5850,y:6800,w:1650,h:500,canJump:true,inView:false,})
+C(1,[],[12],{type:[1,[],[12]],x:7500,y:7100,w:1300,h:100,tpx:5150,tpy:7050,bgColor:"#27811b",tileColor:"#6ab95a",changeColor:false,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:5500,y:6950,w:400,h:350,canJump:true,inView:false,})
+C(2,[],[0],{type:[2,[],[0]],points:[[5000,7300],[5100,7400],[5000,7500],[4900,7400]],most:{"left":2450,"right":2550,"top":3650,"bottom":3750},renderType:"poly",inView:false,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[5300,7600],[5400,7700],[5300,7800],[5200,7700]],most:{"left":2600,"right":2700,"top":3800,"bottom":3900},renderType:"poly",inView:false,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[5000,7900],[5100,8000],[5000,8100],[4900,8000]],most:{"left":2450,"right":2550,"top":3950,"bottom":4050},renderType:"poly",inView:false,x:null,y:null,})
+C(1,[],[12],{type:[1,[],[12]],x:4800,y:9900,w:700,h:100,tpx:50,tpy:9750,bgColor:"#27811b",tileColor:"#6ab95a",changeColor:false,inView:false,})
+C(1,[],[10],{type:[1,[],[10]],x:4800,y:8200,w:700,h:100,maxStrength:33,currentStrength:33,time:0,timer:0,regenTime:266.6666666666667,inView:false,healSpeed:1,})
+C(2,[],[0],{type:[2,[],[0]],points:[[4800,7650],[4850,7700],[4800,7750]],most:{"left":2400,"right":2425,"top":3825,"bottom":3875},renderType:"poly",inView:false,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[5500,7950],[5500,8050],[5450,8000]],most:{"left":2725,"right":2750,"top":3975,"bottom":4025},renderType:"poly",inView:false,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[5500,7350],[5500,7450],[5450,7400]],most:{"left":2725,"right":2750,"top":3675,"bottom":3725},renderType:"poly",inView:false,x:null,y:null,})
+C(1,[],[0],{type:[1,[],[0]],x:-50,y:5900,w:2850,h:3600,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:0,y:5000,w:2900,h:900,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:500,y:4350,w:2450,h:700,canJump:true,inView:false,})
+C(1,[],[12],{type:[1,[],[12]],x:2700,y:9500,w:100,h:500,tpx:250,tpy:4550,bgColor:"#27811b",tileColor:"#6ab95a",changeColor:false,inView:false,})
+C(2,[],[0],{type:[2,[],[0]],points:[[-50,9450],[150,9450],[-50,9650]],most:{"left":-25,"right":75,"top":4725,"bottom":4825},renderType:"poly",inView:false,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[-50,9850],[150,10050],[-50,10050]],most:{"left":-25,"right":75,"top":4925,"bottom":5025},renderType:"poly",inView:false,x:null,y:null,})
+C(1,[],[12],{type:[1,[],[12]],x:184,y:4950,w:132,h:50,tpx:12900,tpy:100,bgColor:"#27811b",tileColor:"#6ab95a",changeColor:false,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:10000,y:-150,w:2800,h:10200,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:12800,y:200,w:1450,h:200,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:14200,y:200,w:200,h:1300,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:14600,y:150,w:200,h:1750,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:12800,y:1700,w:1800,h:200,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:13000,y:600,w:200,h:900,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:13200,y:1300,w:1000,h:200,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:13200,y:600,w:800,h:200,canJump:true,inView:false,})
+C(2,[],[0],{type:[2,[],[0]],points:[[12800,400],[13000,400],[12800,600]],most:{"left":6400,"right":6500,"top":200,"bottom":300},renderType:"poly",inView:false,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[13100,500],[13100,600],[13000,600]],most:{"left":6500,"right":6550,"top":250,"bottom":300},renderType:"poly",inView:false,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[13250,400],[13350,400],[13350,500]],most:{"left":6625,"right":6675,"top":200,"bottom":250},renderType:"poly",inView:false,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[13550,500],[13550,600],[13450,600]],most:{"left":6725,"right":6775,"top":250,"bottom":300},renderType:"poly",inView:false,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[13700,400],[13800,400],[13800,500]],most:{"left":6850,"right":6900,"top":200,"bottom":250},renderType:"poly",inView:false,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[13900,500],[14000,600],[13900,600]],most:{"left":6950,"right":7000,"top":250,"bottom":300},renderType:"poly",inView:false,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[14000,400],[14200,400],[14200,600]],most:{"left":7000,"right":7100,"top":200,"bottom":300},renderType:"poly",inView:false,x:null,y:null,})
+C(1,[],[9],{type:[1,[],[9]],x:12800,y:0,w:200,h:200,spawn:{"x":6450,"y":50},collected:false,inView:false,checkpointOffsetX:0,checkpointOffsetY:0,})
+C(1,[],[1],{type:[1,[],[1]],x:12900,y:1400,w:100,h:100,canCollide:true,inView:false,boundPlayer:true,})
+C(1,[],[1],{type:[1,[],[1]],x:12800,y:1100,w:100,h:100,canCollide:true,inView:false,boundPlayer:true,})
+C(1,[0],[1],{type:[1,[0],[1]],x:12800,y:600,w:100,h:100,points:[[6400,300],[6400,450]],speed:56,currentPoint:1.304444444444143,collidable:true,pointOn:{"x":6400,"y":450},pointTo:{"x":6400,"y":300},xv:3.429011037612589e-15,yv:-56,inView:false,path:[[12800,600,1.8666666666666667],[12800,900,1.8666666666666667]],boundPlayer:true,})
+C(1,[0],[1],{type:[1,[0],[1]],x:12900,y:600,w:100,h:100,points:[[6450,300],[6450,450]],speed:56,currentPoint:0.3044444444441429,collidable:true,pointOn:{"x":6450,"y":300},pointTo:{"x":6450,"y":450},xv:3.429011037612589e-15,yv:56,inView:false,path:[[12900,600,1.8666666666666667],[12900,900,1.8666666666666667]],boundPlayer:true,})
+C(1,[],[2],{type:[1,[],[2]],x:14200,y:1500,w:100,h:100,effect:30,inView:false,bounciness:20,decay:0.5,})
+C(1,[],[2],{type:[1,[],[2]],x:13900,y:1600,w:100,h:100,effect:30,inView:false,bounciness:20,decay:0.5,})
+C(1,[],[2],{type:[1,[],[2]],x:13600,y:1500,w:100,h:100,effect:30,inView:false,bounciness:20,decay:0.5,})
+C(1,[],[2],{type:[1,[],[2]],x:13300,y:1600,w:100,h:100,effect:30,inView:false,bounciness:20,decay:0.5,})
+C(1,[0],[0],{type:[1,[0],[0]],x:13000,y:0,w:100,h:100,points:[[6500,0],[6700,0]],speed:92,currentPoint:0.5358333333312657,alongWith:false,pointOn:{"x":6500,"y":0},pointTo:{"x":6700,"y":0},xv:92,yv:0,inView:false,path:[[13000,0,3.066666666666667],[13400,0,3.066666666666667]],})
+C(1,[0],[0],{type:[1,[0],[0]],x:13000,y:100,w:100,h:100,points:[[6500,50],[6700,50]],speed:92,currentPoint:1.5358333333312657,alongWith:false,pointOn:{"x":6700,"y":50},pointTo:{"x":6500,"y":50},xv:-92,yv:1.126675055215565e-14,inView:false,path:[[13000,100,3.066666666666667],[13400,100,3.066666666666667]],})
+C(1,[0],[0],{type:[1,[0],[0]],x:13600,y:0,w:100,h:100,points:[[6800,0],[7000,0],[7000,50],[6800,50]],speed:92,currentPoint:0.2858333333316614,alongWith:false,pointOn:{"x":6800,"y":0},pointTo:{"x":7000,"y":0},xv:92,yv:0,inView:false,path:[[13600,0,3.066666666666667],[14000,0,3.066666666666667],[14000,100,3.066666666666667],[13600,100,3.066666666666667]],})
+C(1,[0],[0],{type:[1,[0],[0]],x:13600,y:0,w:100,h:100,points:[[6800,0],[7000,0],[7000,50],[6800,50]],speed:92,currentPoint:2.285833333331661,alongWith:false,pointOn:{"x":7000,"y":50},pointTo:{"x":6800,"y":50},xv:-92,yv:1.126675055215565e-14,inView:false,path:[[13600,0,3.066666666666667],[14000,0,3.066666666666667],[14000,100,3.066666666666667],[13600,100,3.066666666666667]],})
+C(1,[0],[0],{type:[1,[0],[0]],x:14200,y:0,w:100,h:100,points:[[7100,0],[7100,50]],speed:92,currentPoint:0.14333333333330678,alongWith:false,pointOn:{"x":7100,"y":0},pointTo:{"x":7100,"y":50},xv:5.633375276077825e-15,yv:92,inView:false,path:[[14200,0,3.066666666666667],[14200,100,3.066666666666667]],})
+C(1,[],[13],{type:[1,[],[13]],x:14300,y:0,w:100,h:200,force:500,dir:{"x":500,"y":0},direction:"right",inView:false,conveyorAngle:0,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorForce:0.3541416566626651,})
+C(1,[],[12],{type:[1,[],[12]],x:13200,y:800,w:100,h:500,tpx:17050,tpy:650,bgColor:"#27811b",tileColor:"#6ab95a",changeColor:false,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:14800,y:0,w:2200,h:4300,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:12750,y:1900,w:2050,h:2200,canJump:true,inView:false,})
+C(1,[],[29],{type:[1,[],[29]],x:17500,y:600,w:100,h:100,time:5.2,inView:false,changeDeathTimerStateTo:true,deathTime:312,drainAmountWhileStandingOn:0,})
+C(1,[],[0],{type:[1,[],[0]],x:17000,y:700,w:3000,h:2700,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:17000,y:0,w:600,h:600,canJump:true,inView:false,})
+C(2,[],[0],{type:[2,[],[0]],points:[[17600,0],[18200,0],[17600,600]],most:{"left":8800,"right":9100,"top":0,"bottom":300},renderType:"poly",inView:false,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[18300,100],[18900,700],[17700,700]],most:{"left":8850,"right":9450,"top":50,"bottom":350},renderType:"poly",inView:false,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[18400,0],[19000,0],[19000,600]],most:{"left":9200,"right":9500,"top":0,"bottom":300},renderType:"poly",inView:false,x:null,y:null,})
+C(1,[],[0],{type:[1,[],[0]],x:19200,y:100,w:200,h:600,canJump:true,inView:false,})
+C(2,[],[0],{type:[2,[],[0]],points:[[19000,500],[19100,600],[19000,600]],most:{"left":9500,"right":9550,"top":250,"bottom":300},renderType:"poly",inView:false,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[19200,350],[19200,550],[19100,450]],most:{"left":9550,"right":9600,"top":175,"bottom":275},renderType:"poly",inView:false,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[19000,200],[19100,300],[19000,400]],most:{"left":9500,"right":9550,"top":100,"bottom":200},renderType:"poly",inView:false,x:null,y:null,})
+C(0,[],[0],{type:[0,[],[0]],x:19650,y:350,r:250,renderType:"circle",inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:19400,y:100,w:250,h:500,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:19150,y:100,w:50,h:100,canJump:true,inView:false,})
+C(2,[],[0],{type:[2,[],[0]],points:[[19100,150],[19200,150],[19200,250]],most:{"left":9550,"right":9600,"top":75,"bottom":125},renderType:"poly",inView:false,x:null,y:null,})
+C(4,[],[0],{type:[4,[],[0]],x:19150,y:150,radius:25,startAngle:-3.141592653589793,endAngle:-1.5707963267948966,startPolygon:{"points":[[9575,75],[9550,75]],"type":"poly","props":{}},endPolygon:{"points":[[9575,75],[9575,50]],"type":"poly","props":{}},renderType:"circle",inView:false,r:50,innerRadius:0,startSliceAngle:-3.141592653589793,endSliceAngle:-1.5707963267948966,startSliceAngleRotateSpeed:0,endSliceAngleRotateSpeed:0,})
+C(1,[],[29],{type:[1,[],[29]],x:19500,y:600,w:100,h:100,inView:false,changeDeathTimerStateTo:false,deathTime:null,drainAmountWhileStandingOn:0,})
+C(1,[],[13],{type:[1,[],[13]],x:17100,y:600,w:400,h:100,force:500,dir:{"x":500,"y":0},direction:"right",inView:false,conveyorAngle:0,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorForce:0.3541416566626651,})
+C(1,[],[12],{type:[1,[],[12]],x:19400,y:600,w:100,h:100,tpx:12900,tpy:4150,bgColor:"#27811b",tileColor:"#6ab95a",changeColor:false,inView:false,})
+C(1,[],[9],{type:[1,[],[9]],x:17000,y:600,w:100,h:100,spawn:{"x":8525,"y":325},collected:false,inView:false,checkpointOffsetX:0,checkpointOffsetY:0,})
+C(1,[],[0],{type:[1,[],[0]],x:14000,y:4300,w:3000,h:2900,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:12800,y:5500,w:1200,h:1700,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:13000,y:4100,w:1800,h:200,canJump:true,inView:false,})
+C(1,[],[17],{x:12800,y:4300,w:1200,h:1200,timeTrapToShowTenth:false,timeTrapToKill:false,timeTrapRecoverySpeed:3,timeTrapMaxTime:600,
+        sf:(e)=>{
+            if(e.timeTrapTime <= 0){
+                players[selfId].pos.x = 14000;
+                players[selfId].pos.y = 7250;
+            }
+        },
+        cr:(o)=>{
+            let middleX = o.topLeft.x + o.dimensions.x/2;
+            let middleY = o.topLeft.y + o.dimensions.y/2;
+
+            let grd = ctx.createRadialGradient(middleX, middleY, 0, middleX, middleY, Math.min(100, (o.dimensions.x + o.dimensions.y)/3));
+
+            grd.addColorStop(0, "rgba(56, 171, 48,0)");
+            grd.addColorStop(1, "rgba(56, 171, 48,1)");
+
+            ctx.fillStyle = grd;
+            ctx.globalAlpha = Math.max(0.24, 1 - o.timeTrapTime / o.timeTrapMaxTime);
+
+            ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y);
+            
+            ctx.globalAlpha = Math.max(0.3, o.timeTrapTime / o.timeTrapMaxTime / 3);
+            ctx.fillStyle = 'white';
+            ctx.font = Math.min(o.dimensions.x, o.dimensions.y)/2 + "px Inter";
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            ctx.fillText(o.timeTrapToShowTenth === true ? Math.round(o.timeTrapTime/60 * 10) / 10 : Math.round(o.timeTrapTime/60), middleX, middleY);
+            ctx.globalAlpha = 1;
+
+            
+                if(o.timeTrapTime === o.timeTrapMaxTime){ return; }
+                const v = shared.colors.vignette;
+
+                const interpolate = (s,e,t) => {return (1-t)*s + e*t};
+                let t = Math.sqrt(Math.max(0,o.timeTrapTime) / o.timeTrapMaxTime);
+                let r = interpolate(56,0,t);
+                let g = interpolate(171,0,t);
+                let b = interpolate(48,0,t);
+                v.inner.r = r;
+                v.inner.g = g;
+                v.inner.b = b;
+                v.inner.size = 0;
+                v.inner.opacity = 0;
+
+                v.outer.r = r;
+                v.outer.g = g;
+                v.outer.b = b;
+                v.outer.size = interpolate(0.4,0.6,t);
+                v.outer.opacity = 1;
+            
+        }
+    });C(1,[],[0],{type:[1,[],[0]],x:15200,y:4000,w:5250,h:6000,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:12800,y:7200,w:1100,h:100,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:14100,y:7200,w:1100,h:100,canJump:true,inView:false,})
+C(1,[],[6],{type:[1,[],[6]],x:12800,y:9900,w:2400,h:100,inView:false,})
+var minX7074, minY7074, maxX7074, maxY7074;
+    minX7074 = 16900;minY7074 = 500;maxX7074 = 17200;maxY7074 = 800;
+    C(1,[3],[0],{h:1,w:1,y:0,x:-10000,sf:(e)=>{
+        const player = shared.players[shared.selfId];
+        if ((player.pos.x) > md(minX7074) && (player.pos.x) < md(maxX7074) && (player.pos.y) > md(minY7074) && (player.pos.y) < md(maxY7074)) {
+            colors.background="#707070"; colors.tile="#000000";
+        }
+    },});
+C(1,[],[10],{type:[1,[],[10]],x:12800,y:4200,w:200,h:100,maxStrength:55,currentStrength:55,time:0.016,timer:0.016,regenTime:666.6666666666666,inView:false,healSpeed:1,})
+C(1,[],[20],{h:200,w:300,y:4100,x:12750,hex:'#FFFFFF',alpha:1,
+        cr:(e)=>{
+            ctx.beginPath();
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = ctx.fillStyle = colors.tile;
+            ctx.globalAlpha = 1;
+            ctx.rect(e.pos.x, e.pos.y, e.dimensions.x, e.dimensions.y);
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();
+            ctx.globalAlpha = 1;
+        }
+    });
+C(1,[],[9],{type:[1,[],[9]],x:13900,y:7200,w:200,h:100,spawn:{"x":7000,"y":3625},collected:false,inView:false,checkpointOffsetX:0,checkpointOffsetY:0,})
+C(1,[],[0],{type:[1,[],[0]],x:12800,y:7300,w:1100,h:1000,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:14100,y:7300,w:1100,h:1000,canJump:true,inView:false,})
+C(1,[],[13],{type:[1,[],[13]],x:13900,y:7300,w:200,h:1000,force:500,dir:{"x":0,"y":500},direction:"down",inView:false,conveyorAngle:90,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorForce:0.3541416566626651,})
+C(1,[5],[1],{h:50,w:400,y:7425,x:13600,
+        boundPlayer: true,
+        restAngles: [1.5707963267948966, 4.71238898038469],
+        toRest: true,
+        homingRotateSpeed: 0.020930232558139535,
+        detectionRadius: 201.55644370746373,
+        spokeAngles: [0, Math.PI],
+        pivotX: 13800,
+        pivotY: 7450
+    });
+    C(0,[],[0],{x:13800,y:7450,r:72,cr:(e)=>{
+        ctx.fillStyle = shared.colors.tile;
+        ctx.beginPath();
+        ctx.arc(e.pos.x, e.pos.y, e.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 15;
+        ctx.beginPath();
+        ctx.arc(
+            e.pos.x,
+            e.pos.y,
+            Math.max(e.sat.r - 30, 0),
+            0,
+            Math.PI * 2
+        );
+        ctx.stroke();
+        ctx.closePath();
+    }});C(1,[5],[1],{h:50,w:400,y:7625,x:13600,
+        boundPlayer: true,
+        restAngles: [1.5707963267948966, 4.71238898038469],
+        toRest: true,
+        homingRotateSpeed: 0.020930232558139535,
+        detectionRadius: 201.55644370746373,
+        spokeAngles: [0, Math.PI],
+        pivotX: 13800,
+        pivotY: 7650
+    });
+    C(0,[],[0],{x:13800,y:7650,r:72,cr:(e)=>{
+        ctx.fillStyle = shared.colors.tile;
+        ctx.beginPath();
+        ctx.arc(e.pos.x, e.pos.y, e.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 15;
+        ctx.beginPath();
+        ctx.arc(
+            e.pos.x,
+            e.pos.y,
+            Math.max(e.sat.r - 30, 0),
+            0,
+            Math.PI * 2
+        );
+        ctx.stroke();
+        ctx.closePath();
+    }});C(1,[5],[1],{h:50,w:400,y:7825,x:13600,
+        boundPlayer: true,
+        restAngles: [1.5707963267948966, 4.71238898038469],
+        toRest: true,
+        homingRotateSpeed: 0.020930232558139535,
+        detectionRadius: 201.55644370746373,
+        spokeAngles: [0, Math.PI],
+        pivotX: 13800,
+        pivotY: 7850
+    });
+    C(0,[],[0],{x:13800,y:7850,r:72,cr:(e)=>{
+        ctx.fillStyle = shared.colors.tile;
+        ctx.beginPath();
+        ctx.arc(e.pos.x, e.pos.y, e.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 15;
+        ctx.beginPath();
+        ctx.arc(
+            e.pos.x,
+            e.pos.y,
+            Math.max(e.sat.r - 30, 0),
+            0,
+            Math.PI * 2
+        );
+        ctx.stroke();
+        ctx.closePath();
+    }});C(1,[5],[1],{h:50,w:400,y:8025,x:13600,
+        boundPlayer: true,
+        restAngles: [1.5707963267948966, 4.71238898038469],
+        toRest: true,
+        homingRotateSpeed: 0.020930232558139535,
+        detectionRadius: 201.55644370746373,
+        spokeAngles: [0, Math.PI],
+        pivotX: 13800,
+        pivotY: 8050
+    });
+    C(0,[],[0],{x:13800,y:8050,r:72,cr:(e)=>{
+        ctx.fillStyle = shared.colors.tile;
+        ctx.beginPath();
+        ctx.arc(e.pos.x, e.pos.y, e.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 15;
+        ctx.beginPath();
+        ctx.arc(
+            e.pos.x,
+            e.pos.y,
+            Math.max(e.sat.r - 30, 0),
+            0,
+            Math.PI * 2
+        );
+        ctx.stroke();
+        ctx.closePath();
+    }});C(1,[5],[1],{h:50,w:400,y:7425,x:14000,
+        boundPlayer: true,
+        restAngles: [1.5707963267948966, 4.71238898038469],
+        toRest: true,
+        homingRotateSpeed: 0.020930232558139535,
+        detectionRadius: 201.55644370746373,
+        spokeAngles: [0, Math.PI],
+        pivotX: 14200,
+        pivotY: 7450
+    });
+    C(0,[],[0],{x:14200,y:7450,r:72,cr:(e)=>{
+        ctx.fillStyle = shared.colors.tile;
+        ctx.beginPath();
+        ctx.arc(e.pos.x, e.pos.y, e.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 15;
+        ctx.beginPath();
+        ctx.arc(
+            e.pos.x,
+            e.pos.y,
+            Math.max(e.sat.r - 30, 0),
+            0,
+            Math.PI * 2
+        );
+        ctx.stroke();
+        ctx.closePath();
+    }});C(1,[5],[1],{h:50,w:400,y:7625,x:14000,
+        boundPlayer: true,
+        restAngles: [1.5707963267948966, 4.71238898038469],
+        toRest: true,
+        homingRotateSpeed: 0.020930232558139535,
+        detectionRadius: 201.55644370746373,
+        spokeAngles: [0, Math.PI],
+        pivotX: 14200,
+        pivotY: 7650
+    });
+    C(0,[],[0],{x:14200,y:7650,r:72,cr:(e)=>{
+        ctx.fillStyle = shared.colors.tile;
+        ctx.beginPath();
+        ctx.arc(e.pos.x, e.pos.y, e.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 15;
+        ctx.beginPath();
+        ctx.arc(
+            e.pos.x,
+            e.pos.y,
+            Math.max(e.sat.r - 30, 0),
+            0,
+            Math.PI * 2
+        );
+        ctx.stroke();
+        ctx.closePath();
+    }});C(1,[5],[1],{h:50,w:400,y:7825,x:14000,
+        boundPlayer: true,
+        restAngles: [1.5707963267948966, 4.71238898038469],
+        toRest: true,
+        homingRotateSpeed: 0.020930232558139535,
+        detectionRadius: 201.55644370746373,
+        spokeAngles: [0, Math.PI],
+        pivotX: 14200,
+        pivotY: 7850
+    });
+    C(0,[],[0],{x:14200,y:7850,r:72,cr:(e)=>{
+        ctx.fillStyle = shared.colors.tile;
+        ctx.beginPath();
+        ctx.arc(e.pos.x, e.pos.y, e.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 15;
+        ctx.beginPath();
+        ctx.arc(
+            e.pos.x,
+            e.pos.y,
+            Math.max(e.sat.r - 30, 0),
+            0,
+            Math.PI * 2
+        );
+        ctx.stroke();
+        ctx.closePath();
+    }});C(1,[5],[1],{h:50,w:400,y:8025,x:14000,
+        boundPlayer: true,
+        restAngles: [1.5707963267948966, 4.71238898038469],
+        toRest: true,
+        homingRotateSpeed: 0.020930232558139535,
+        detectionRadius: 201.55644370746373,
+        spokeAngles: [0, Math.PI],
+        pivotX: 14200,
+        pivotY: 8050
+    });
+    C(0,[],[0],{x:14200,y:8050,r:72,cr:(e)=>{
+        ctx.fillStyle = shared.colors.tile;
+        ctx.beginPath();
+        ctx.arc(e.pos.x, e.pos.y, e.sat.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 15;
+        ctx.beginPath();
+        ctx.arc(
+            e.pos.x,
+            e.pos.y,
+            Math.max(e.sat.r - 30, 0),
+            0,
+            Math.PI * 2
+        );
+        ctx.stroke();
+        ctx.closePath();
+    }});C(2,[],[0],{type:[2,[],[0]],points:[[14000,8500],[14700,10050],[13300,10050]],most:{"left":6650,"right":7350,"top":4250,"bottom":5025},renderType:"poly",inView:false,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[12800,8300],[13400,8300],[12800,9700]],most:{"left":6400,"right":6700,"top":4150,"bottom":4850},renderType:"poly",inView:false,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[14600,8300],[15200,8300],[15200,9700]],most:{"left":7300,"right":7600,"top":4150,"bottom":4850},renderType:"poly",inView:false,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[500,9500],[1100,9500],[800,9800]],most:{"left":250,"right":550,"top":4750,"bottom":4900},renderType:"poly",inView:false,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[500,9800],[700,10000],[300,10000]],most:{"left":150,"right":350,"top":4900,"bottom":5000},renderType:"poly",inView:false,x:null,y:null,})
+C(2,[],[0],{type:[2,[],[0]],points:[[1100,9800],[1300,10000],[900,10000]],most:{"left":450,"right":650,"top":4900,"bottom":5000},renderType:"poly",inView:false,x:null,y:null,})
+C(0,[],[0],{type:[0,[],[0]],x:1550,y:9750,r:100,renderType:"circle",inView:false,})
+C(0,[],[0],{type:[0,[],[0]],x:1900,y:9550,r:100,renderType:"circle",inView:false,})
+C(0,[],[0],{type:[0,[],[0]],x:1900,y:9950,r:100,renderType:"circle",inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:1800,y:9950,w:200,h:100,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:1800,y:9450,w:200,h:100,canJump:true,inView:false,})
+C(1,[1],[0],{type:[1,[1],[0]],x:2100,y:9700,w:500,h:100,angle:0.75,rotateSpeed:0.012878787878787878,pivotX:2350,pivotY:9750,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:127.47548783981962,unSim:14.191666666666501,inView:false,initialRotation:0.01308996938995747,})
+C(0,[],[0],{type:[0,[],[0]],x:2350,y:9750,r:150,renderType:"circle",inView:false,})
+C(1,[],[20],{h:250,w:200,y:-50,x:14600,hex:'#FFFFFF',alpha:1,
+        cr:(e)=>{
+            ctx.beginPath();
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = ctx.fillStyle = colors.tile;
+            ctx.globalAlpha = 1;
+            ctx.rect(e.pos.x, e.pos.y, e.dimensions.x, e.dimensions.y);
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();
+            ctx.globalAlpha = 1;
+        }
+    });
+C(1,[],[0],{type:[1,[],[0]],x:17600,y:3300,w:2500,h:950,canJump:true,inView:false,})
+shared.morphsTriggered[1]=false;C(1,[],[3],{h:100,w:100,y:3400,x:17500,
+            cr:(e)=>{
+                ctx.globalAlpha = 0.8;
+                if (shared.morphsTriggered[1] === true) {
+                    ctx.globalAlpha = 0.3;
+                }
+
+                ctx.strokeStyle = ctx.fillStyle = 'white';
+
+                ctx.fillRect(e.topLeft.x, e.topLeft.y, e.dimensions.x, e.dimensions.y);
+                ctx.globalAlpha *= 1 / 0.8;
+                ctx.strokeRect(e.topLeft.x, e.topLeft.y, e.dimensions.x, e.dimensions.y);
+
+                ctx.fillStyle = colors.tile;
+                ctx.fillRect(
+                    e.topLeft.x + 15,
+                    e.topLeft.y + 15,
+                    e.dimensions.x - 30,
+                    e.dimensions.y - 30
+                );
+
+                ctx.globalAlpha = 1;
+            },
+            ef:(e) => {
+                shared.morphsTriggered[1] = true;
+            }
+        }); var c = shared.obstacles[shared.obstacles.length-1]; shared.linkButtons[1] = {pos: {x: c.pos.x, y: c.pos.y}, dimensions: {x: c.dimensions.x, y: c.dimensions.y}};
+C(1,[],[0],{type:[1,[],[0]],x:17000,y:3500,w:100,h:100,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:17200,y:3500,w:400,h:100,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:17000,y:3700,w:400,h:100,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:17500,y:3700,w:100,h:300,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:17300,y:3800,w:100,h:100,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:17000,y:3900,w:200,h:100,canJump:true,inView:false,})
+shared.morphsTriggered[2]=false;C(1,[],[3],{h:100,w:100,y:3600,x:17000,
+            cr:(e)=>{
+                ctx.globalAlpha = 0.8;
+                if (shared.morphsTriggered[2] === true) {
+                    ctx.globalAlpha = 0.3;
+                }
+
+                ctx.strokeStyle = ctx.fillStyle = 'white';
+
+                ctx.fillRect(e.topLeft.x, e.topLeft.y, e.dimensions.x, e.dimensions.y);
+                ctx.globalAlpha *= 1 / 0.8;
+                ctx.strokeRect(e.topLeft.x, e.topLeft.y, e.dimensions.x, e.dimensions.y);
+
+                ctx.fillStyle = colors.tile;
+                ctx.fillRect(
+                    e.topLeft.x + 15,
+                    e.topLeft.y + 15,
+                    e.dimensions.x - 30,
+                    e.dimensions.y - 30
+                );
+
+                ctx.globalAlpha = 1;
+            },
+            ef:(e) => {
+                shared.morphsTriggered[2] = true;
+            }
+        }); var c = shared.obstacles[shared.obstacles.length-1]; shared.linkButtons[2] = {pos: {x: c.pos.x, y: c.pos.y}, dimensions: {x: c.dimensions.x, y: c.dimensions.y}};
+shared.morphsTriggered[3]=false;C(1,[],[3],{h:100,w:100,y:3900,x:17300,
+            cr:(e)=>{
+                ctx.globalAlpha = 0.8;
+                if (shared.morphsTriggered[3] === true) {
+                    ctx.globalAlpha = 0.3;
+                }
+
+                ctx.strokeStyle = ctx.fillStyle = 'white';
+
+                ctx.fillRect(e.topLeft.x, e.topLeft.y, e.dimensions.x, e.dimensions.y);
+                ctx.globalAlpha *= 1 / 0.8;
+                ctx.strokeRect(e.topLeft.x, e.topLeft.y, e.dimensions.x, e.dimensions.y);
+
+                ctx.fillStyle = colors.tile;
+                ctx.fillRect(
+                    e.topLeft.x + 15,
+                    e.topLeft.y + 15,
+                    e.dimensions.x - 30,
+                    e.dimensions.y - 30
+                );
+
+                ctx.globalAlpha = 1;
+            },
+            ef:(e) => {
+                shared.morphsTriggered[3] = true;
+            }
+        }); var c = shared.obstacles[shared.obstacles.length-1]; shared.linkButtons[3] = {pos: {x: c.pos.x, y: c.pos.y}, dimensions: {x: c.dimensions.x, y: c.dimensions.y}};
+shared.morphsTriggered[1]=false;var x1=17100;C(1,[],[0],{y:3500,x:17100,w:100,h:100,
+            cr:(o)=>{
                 ctx.beginPath();
-                ctx.lineTo(btnPos.x, btnPos.y);
-                ctx.lineTo(doorPos.x, doorPos.y);
+                ctx.rect(x1, o.pos.y, o.dimensions.x, o.dimensions.y);// 5 and -10
+
+                ctx.globalAlpha = 1;
+                if(shared.morphsTriggered[1] === true){
+                    o.pos.x = -1E9;
+                    ctx.globalAlpha = 0.3;
+                }
+                ctx.fillStyle = '#787878';
+
+                ctx.fill();
+
+                ctx.strokeStyle = 'rgb(0, 0, 0)';
+                ctx.lineWidth = 8;
+                ctx.globalAlpha = shared.morphsTriggered[1] === true ? 0.5 : 1;
+
                 ctx.stroke();
                 ctx.closePath();
+                ctx.globalAlpha = 1;// maybe a light effect like mirror?
             }
-            ctx.globalAlpha = 1;
-            ctx.setLineDash([]);
-        }});\n` + convertOldExMap(obs, enemies, safes, texts, counter, 'posc');
-        
-        eval(str);
+        }); var c = shared.obstacles[shared.obstacles.length-1]; shared.linkDoors[1] = {pos: {x: c.pos.x, y: c.pos.y}, dimensions: {x: c.dimensions.x, y: c.dimensions.y}};
+shared.morphsTriggered[2]=false;var x2=17400;C(1,[],[0],{y:3700,x:17400,w:100,h:100,
+            cr:(o)=>{
+                ctx.beginPath();
+                ctx.rect(x2, o.pos.y, o.dimensions.x, o.dimensions.y);// 5 and -10
 
-        if(window.isServer !== true) obstacles.splice(319,4);
-        
-        mapDimensions.x=20000;
-        mapDimensions.y=10000;
+                ctx.globalAlpha = 1;
+                if(shared.morphsTriggered[2] === true){
+                    o.pos.x = -1E9;
+                    ctx.globalAlpha = 0.3;
+                }
+                ctx.fillStyle = '#787878';
 
-        spawnPosition.x=5000;
-        spawnPosition.y=5000;
-        window.respawnPlayer();
-        colors.background='#6ab95a'; colors.tile='#27811b';
-    }
-})();
+                ctx.fill();
 
-// var counter = 2000;// add 1000 for every new map so color changers dont conflict
-// var flashLava = false;
-// var lavaType = flashLava === true ? [0,1] : [1];
+                ctx.strokeStyle = 'rgb(0, 0, 0)';
+                ctx.lineWidth = 8;
+                ctx.globalAlpha = shared.morphsTriggered[2] === true ? 0.5 : 1;
 
-// var typeMap = {
-//     'normal': {
-//         type: [1,[],[0]],
-//     },
-//     'grav': {
-//         type: [1,[],[13]],
-//         customMap: (params) => {
-//             const p = {};
-//             if(params.direction === 'right'){
-//                 p.conveyorAngle = 0
-//             } else if(params.direction === 'down'){
-//                 p.conveyorAngle = 90;
-//             } else if(params.direction === 'left'){
-//                 p.conveyorAngle = 180;
-//             } else {
-//                 p.conveyorAngle = 270;
-//             }
-//             p.conveyorFriction = 0.8;
-//             p.conveyorAngleRotateSpeed = 0;
-//             p.conveyorForce = params.force / 10000 * 1.5 * 5 / 16.66;
-//             return p;
-//         }
-//     },
-//     // 'trans': {
-//     //     type: [1,[],[20]],
-//     //     customMap: () => {
-//     //         return {hex: '#000000'}
-//     //     }
-//     // },
-//     'block': {
-//         type: [1,[],[20]],
-//         customMap: (params) => {
-//             return {hex: params.color};
-//         }
-//     },
-//     'circle-normal': {
-//         type: [0,[],[0]],
-//         radius: 'r' // this means map radius to r
-//         // all other params filled in 1:1, so x will be filled in from x, y from y, etc.
-//     },
-//     'circle-lava': {
-//         type: [0,[],lavaType],
-//         radius: 'r',
-//     },
-//     'circle-tp': {
-//         type: [0,[],[12]],
-//         customMap: (params) => {
-//             return {
-//                 tpx: params.tpx * 2,
-//                 tpy: params.tpy * 2
-//             }
-//         }
-//     },
-//     'lava': {
-//         customMap: (params) => {
-//             if(params.canCollide === false){
-//                 return {type: [1,[],[1]]};
-//             }
-//             const upper = {
-//                 "x": 11793.206102995191,
-//                 "y": 5413.695972970335
-//             };
-//             const lower = {
-//                 "x": 13407.869308854297,
-//                 "y": 6437.125547622557
-//             }
-//             const x = params.x * 2;
-//             const y = params.y * 2;
-//             if(x > upper.x && x < lower.x && y > upper.y && y < lower.y){
-//                 return {type: [1,[],[0,1]]};
-//             }
-//             return {type: [1,[],lavaType]};
-//         }
-//     },
-//     'poly': {
-//         type: [2,[],[0]],
-//         customMap: (params) => {
-//             const p = {points: []};
-//             for(let i = 0; i < params.points.length; i++){
-//                 p.points.push([
-//                     params.points[i][0]*2,
-//                     params.points[i][1]*2
-//                 ])
-//             }
-//             return p;
-//         }
-//     },
-//     'poly-tp': {
-//         type: [2,[],[12]],
-//         customMap: (params) => {
-//             const p = {points: []};
-//             for(let i = 0; i < params.points.length; i++){
-//                 p.points.push([
-//                     params.points[i][0]*2,
-//                     params.points[i][1]*2
-//                 ])
-//             }
-//             p.tpx = params.tpx * 2;
-//             p.tpy = params.tpy * 2;
-//             return p;
-//         }
-//     },
-//     'poly-safe': {
-//         type: [2,[],[11]],
-//         customMap: (params) => {
-//             const p = {points: []};
-//             for(let i = 0; i < params.points.length; i++){
-//                 p.points.push([
-//                     params.points[i][0]*2,
-//                     params.points[i][1]*2
-//                 ])
-//             }
-//             return p;
-//         }
-//     },
-//     'poly-lava': {
-//         type: [2,[],lavaType],
-//         customMap: (params) => {
-//             const p = {points: []};
-//             for(let i = 0; i < params.points.length; i++){
-//                 p.points.push([
-//                     params.points[i][0]*2,
-//                     params.points[i][1]*2
-//                 ])
-//             }
-//             const upper = {
-//                 "x": 11793.206102995191,
-//                 "y": 5413.695972970335
-//             };
-//             const lower = {
-//                 "x": 13407.869308854297,
-//                 "y": 6437.125547622557
-//             }
+                ctx.stroke();
+                ctx.closePath();
+                ctx.globalAlpha = 1;// maybe a light effect like mirror?
+            }
+        }); var c = shared.obstacles[shared.obstacles.length-1]; shared.linkDoors[2] = {pos: {x: c.pos.x, y: c.pos.y}, dimensions: {x: c.dimensions.x, y: c.dimensions.y}};
+shared.morphsTriggered[3]=false;var x3=17100;C(1,[],[0],{y:3800,x:17100,w:100,h:100,
+            cr:(o)=>{
+                ctx.beginPath();
+                ctx.rect(x3, o.pos.y, o.dimensions.x, o.dimensions.y);// 5 and -10
 
-//             const upper2 = {
-//                 "x": 8809.477705153893,
-//                 "y": 5885.871786067637
-//             }
-//             const lower2 = {
-//                 "x": 8982.848374859475,
-//                 "y": 6257.883149949322
-//             }
-//             const x = params.points[0][0] * 2;
-//             const y = params.points[0][1] * 2;
-//             if(x > upper.x && x < lower.x && y > upper.y && y < lower.y){
-//                 p.type = [2,[],[0,1]];
-//             } else if(x > upper2.x && x < lower2.x && y > upper2.y && y < lower2.y){
-//                 p.type = [2,[],[0,1]];
-//             }
-//             return p;
-//         }
-//     },
-//     'move': {
-//         type: [1,[0],[0]],
-//         customMap: (params) => {
-//             const p = {path: []};
-//             for(let i = 0; i < params.points.length; i++){
-//                 p.path.push([
-//                     params.points[i][0]*2,
-//                     params.points[i][1]*2,
-//                     params.speed * 2 / 1000
-//                 ])
-//             }
+                ctx.globalAlpha = 1;
+                if(shared.morphsTriggered[3] === true){
+                    o.pos.x = -1E9;
+                    ctx.globalAlpha = 0.3;
+                }
+                ctx.fillStyle = '#787878';
 
-//             p.currentPoint = params.currentPoint;
-//             p.x = p.path[0][0];
-//             p.y = p.path[0][1];
-//             return p;
-//         }
-//     },
-//     'lavamove': {
-//         customMap: (params) => {
-//             const p = {path: []};
-//             for(let i = 0; i < params.points.length; i++){
-//                 p.path.push([
-//                     params.points[i][0]*2,
-//                     params.points[i][1]*2,
-//                     params.speed * 2 / 1000
-//                 ])
-//             }
+                ctx.fill();
 
-//             p.currentPoint = params.currentPoint;
+                ctx.strokeStyle = 'rgb(0, 0, 0)';
+                ctx.lineWidth = 8;
+                ctx.globalAlpha = shared.morphsTriggered[3] === true ? 0.5 : 1;
 
-//             const currentPoint = p.path[p.currentPoint];
-//             let nextPointIndex = p.currentPoint+1;
-//             if(nextPointIndex === p.path.length) nextPointIndex = 0;
-//             const nextPoint = p.path[nextPointIndex];
+                ctx.stroke();
+                ctx.closePath();
+                ctx.globalAlpha = 1;// maybe a light effect like mirror?
+            }
+        }); var c = shared.obstacles[shared.obstacles.length-1]; shared.linkDoors[3] = {pos: {x: c.pos.x, y: c.pos.y}, dimensions: {x: c.dimensions.x, y: c.dimensions.y}};
+C(1,[],[9],{type:[1,[],[9]],x:17000,y:3400,w:100,h:100,spawn:{"x":8525,"y":1725},collected:false,inView:false,checkpointOffsetX:0,checkpointOffsetY:0,})
+C(1,[],[3],{w:100,h:100,"x":17200,"y":3600,ef:(p, res, o)=>{
+        p.pos.x += res.overlapV.x * 0.6;
+        p.pos.y += res.overlapV.y * 0.6;
+        o.pos.x -= res.overlapV.x * 0.4;
+        o.pos.y -= res.overlapV.y * 0.4;
 
-//             const totalDist = Math.sqrt((nextPoint[0]-currentPoint[0])**2+(nextPoint[1]-currentPoint[1])**2);
-//             const fractionCovered = Math.sqrt((params.x*2-currentPoint[0])**2+(params.y*2-currentPoint[1])**2);
-            
-//             p.currentPoint += fractionCovered / totalDist;
+        o.pos.x = Math.min(o.pos.x, 17500);
+    },cr:(e)=>{
+        ctx.lineJoin = 'miter';
+        ctx.fillStyle = shared.colors.tile;
+        ctx.fillRect(e.pos.x, e.pos.y, e.dimensions.x, e.dimensions.y);
 
-//             p.x = p.path[0][0];
-//             p.y = p.path[0][1];
+        ctx.globalAlpha = 0.3;
+        ctx.lineWidth = 10;
+        ctx.strokeStyle = 'white';
+        ctx.strokeRect(e.pos.x+8, e.pos.y+8, e.dimensions.x-8*2, e.dimensions.y-8*2);
+        ctx.globalAlpha = 1;
+        ctx.lineJoin = 'round';
+    }});
+C(1,[],[12],{type:[1,[],[12]],x:17000,y:3800,w:100,h:100,tpx:17050,tpy:650,bgColor:"#27811b",tileColor:"#6ab95a",changeColor:false,inView:false,})
+// C(1,[],[0],{type:[1,[],[0]],x:14600,y:-40,w:400,h:440,canJump:true,inView:false,})
+C(0,[],[0],{type:[0,[],[0]],x:19150,y:150,r:50,renderType:"circle",inView:false,})
+C(0,[],[0],{type:[0,[],[0]],x:19000,y:0,r:100,renderType:"circle",inView:false,})
+C(0,[],[0],{type:[0,[],[0]],x:20000,y:0,r:170,renderType:"circle",inView:false,})
+C(0,[],[0],{type:[0,[],[0]],x:20000,y:700,r:170,renderType:"circle",inView:false,})
+C(3,[1],[20],{type:[3,[1],[20]],x:4650,y:4650,angle:-45,text:"Planet",size:45,story:false,fontSize:90,hex:"#FFFFFF",pivotX:4650,pivotY:4650,rotateSpeed:0,initialRotation:-0.7853981633974483,})
+C(3,[1],[20],{type:[3,[1],[20]],x:5350,y:4650,angle:45,text:"of",size:45,story:false,fontSize:90,hex:"#FFFFFF",pivotX:5350,pivotY:4650,rotateSpeed:0,initialRotation:0.7853981633974483,})
+C(3,[1],[20],{type:[3,[1],[20]],x:4650,y:5350,angle:45,text:"Simple",size:45,story:false,fontSize:90,hex:"#FFFFFF",pivotX:4650,pivotY:5350,rotateSpeed:0,initialRotation:0.7853981633974483,})
+C(3,[1],[20],{type:[3,[1],[20]],x:5350,y:5350,angle:-45,text:"Challenges",size:45,story:false,fontSize:90,hex:"#FFFFFF",pivotX:5350,pivotY:5350,rotateSpeed:0,initialRotation:-0.7853981633974483,})
+C(3,[],[20],{type:[3,[],[20]],x:5000,y:5000,angle:0,text:"Welcome!",size:30,story:false,fontSize:60,hex:"#FFFFFF",})
+C(3,[],[20],{type:[3,[],[20]],x:3650,y:-100,angle:0,text:"Challenge 2: Dodge!",size:30,story:false,fontSize:60,hex:"#FFFFFF",})
+C(3,[],[20],{type:[3,[],[20]],x:650,y:-100,angle:0,text:"Challenge 1: Navigate!",size:30,story:false,fontSize:60,hex:"#FFFFFF",})
+C(3,[],[20],{type:[3,[],[20]],x:8750,y:2500,angle:0,text:"Challenge 3: platform!",size:30,story:false,fontSize:60,hex:"#FFFFFF",})
+C(3,[],[20],{type:[3,[],[20]],x:9400,y:1500,angle:0,text:"Walljump!",size:18,story:false,fontSize:36,hex:"#FFFFFF",})
+C(3,[],[20],{type:[3,[],[20]],x:8800,y:1050,angle:0,text:"<-",size:24,story:false,fontSize:48,hex:"#FFFFFF",})
+C(3,[1],[20],{type:[3,[1],[20]],x:8500,y:2050,angle:90,text:"<-",size:24,story:false,fontSize:48,hex:"#FFFFFF",pivotX:8500,pivotY:2050,rotateSpeed:0,initialRotation:1.5707963267948966,})
+C(3,[1],[20],{type:[3,[1],[20]],x:8900,y:1850,angle:135,text:"<-",size:24,story:false,fontSize:48,hex:"#FFFFFF",pivotX:8900,pivotY:1850,rotateSpeed:0,initialRotation:2.356194490192345,})
+C(3,[],[20],{type:[3,[],[20]],x:8150,y:4200,angle:0,text:"Challenge 4: Cross!",size:30,story:false,fontSize:60,hex:"#FFFFFF",})
+C(3,[1],[20],{type:[3,[1],[20]],x:5150,y:6900,angle:180,text:"Challenge 5: Drive!",size:30,story:false,fontSize:60,hex:"#FFFFFF",pivotX:5150,pivotY:6900,rotateSpeed:0,initialRotation:3.141592653589793,})
+C(3,[],[20],{type:[3,[],[20]],x:500,y:9450,angle:0,text:"Challenge 6: Fall!",size:30,story:false,fontSize:60,hex:"#FFFFFF",})
+C(3,[],[20],{type:[3,[],[20]],x:250,y:4450,angle:0,text:"Challenge 6: Typing!",size:30,story:false,fontSize:60,hex:"#FFFFFF",})
+C(3,[],[20],{type:[3,[],[20]],x:13050,y:-50,angle:0,text:"Challenge 7: Spiral!",size:30,story:false,fontSize:60,hex:"#FFFFFF",})
+C(3,[],[20],{type:[3,[],[20]],x:17250,y:550,angle:0,text:"Challenge 8: Speedrun!",size:30,story:false,fontSize:60,hex:"#FFFFFF",})
+C(3,[],[20],{type:[3,[],[20]],x:13350,y:4200,angle:0,text:"Challenge 9: Survive!",size:30,story:false,fontSize:60,hex:"#FFFFFF",})
+C(3,[],[20],{type:[3,[],[20]],x:14000,y:7100,angle:0,text:"FINAL CHALLENGE: Escape!",size:30,story:false,fontSize:60,hex:"#FFFFFF",})
+C(3,[1],[20],{type:[3,[1],[20]],x:12900,y:4200,angle:90,text:"->",size:30,story:false,fontSize:60,hex:"#FFFFFF",pivotX:12900,pivotY:4200,rotateSpeed:0,initialRotation:1.5707963267948966,})
+C(3,[],[20],{type:[3,[],[20]],x:17300,y:3350,angle:0,text:"Secret Challenge -1: Push!",size:30,story:false,fontSize:60,hex:"#FFFFFF",})
 
-//             if(params.collidable) p.type = [1,[0],lavaType]
-//             else p.type = [1,[0],[1]]
-//             return p;
-//         }
-//     },
-//     'tornado': {
-//         type: [1,[],[23]],
-//         spinRadius: 'tornadoStrength' 
-//     },
-//     'vinette': {
-//         type: [1,[],[24]],
-//         customMap: (params) => {
-//             return {
-//                 innerR: params.vc.r,
-//                 innerG: params.vc.g,
-//                 innerB: params.vc.b,
-//                 innerSize: params.ir,
-//                 outerR: params.vc.r,
-//                 outerG: params.vc.g,
-//                 outerB: params.vc.b,
-//                 outerSize: params.or,
-//                 innerOpacity: 0,
-//                 outerOpacity: params.o
-//             }
-//         }
-//     },
-//     'tpmove': {
-//         type: [1,[0],[12]],
-//         customMap: (params) => {
-//             const p = {path: []};
-//             for(let i = 0; i < params.points.length; i++){
-//                 p.path.push([
-//                     params.points[i][0]*2,
-//                     params.points[i][1]*2,
-//                     params.speed * 2 / 1000
-//                 ])
-//             }
-            
-//             p.currentPoint = params.currentPoint;
-//             p.x = p.path[0][0];
-//             p.y = p.path[0][1];
-//             p.tpx = params.tpx * 2; p.tpy = params.tpy * 2;
-//             return p;
-//         }
-//     },
-//     'movingsafe': {
-//         type: [1,[0],[11]],
-//         customMap: (params) => {
-//             const p = {path: []};
-//             for(let i = 0; i < params.points.length; i++){
-//                 p.path.push([
-//                     params.points[i][0]*2,
-//                     params.points[i][1]*2,
-//                     params.speed * 2 / 1000
-//                 ])
-//             }
-//             p.currentPoint = params.currentPoint;
-//             p.x = p.path[0][0];
-//             p.y = p.path[0][1];
-//             return p;
-//         }
-//     },
-//     'timetrap': {
-//         type: [1,[],[17]],
-//         customMap: (params) => {
-//             //C(1,[],[17],{h:200,w:300,y:700,x:300,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:1.5,timeTrapMaxTime:300,});
-//             const p = {timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:params.cdmult};
-
-//             p.timeTrapMaxTime = params.maxTime * 1000;
-//             return p;
-//         }
-//     },
-//     'oval': {
-//         type: [0,[],[0]],
-//         customMap: (params) => {
-//             return {r: Math.min(params.radius, params.radius2)*2};
-//         }
-//     },
-//     'lava-oval': {
-//         type: [0,[],lavaType],
-//         customMap: (params) => {
-//             return {r: Math.min(params.radius, params.radius2)*2};
-//         }
-//     },
-//     'safe': {
-//         type: [1,[],[11]],
-//     },
-//     'circle-safe': {
-//         type: [0,[],[11]],
-//         r: 'r'
-//     },
-//     'circle-coin': {
-//         radius: 'r',
-//         type: [0,[],[7]],
-//         customMap: (params) => {
-//             return {
-//                 color: '#d5d612',
-//                 coinAmount: 1
-//             }
-//         }
-//     },
-//     'bounce': {
-//         type: [1,[],[2]],
-//         customMap: (params) => {
-//             return {bounciness: params.effect/3/10, decay: 0.5};
-//         }
-//     },
-//     'rotate-normal': {
-//         type: [1,[1],[0]],
-//         customMap: (params) => {
-//             return {
-//                 x: params.x * 2 - params.w,
-//                 y: params.y * 2 - params.h,
-//                 initialRotation: params.angle * 180 / Math.PI,
-//                 rotateSpeed: params.rotateSpeed / 360 / 220,
-//                 pivotX: params.pivotX * 2,
-//                 pivotY: params.pivotY * 2
-//             };
-//         }
-//     },
-//     'rotate-lava': {
-//         type: [1,[1],[0,1]],
-//         customMap: (params) => {
-//             return {
-//                 x: params.x * 2 - params.w,
-//                 y: params.y * 2 - params.h,
-//                 initialRotation: params.angle * 180 / Math.PI,
-//                 rotateSpeed: params.rotateSpeed / 360 / 220,
-//                 pivotX: params.pivotX * 2,
-//                 pivotY: params.pivotY * 2
-//             };
-//         }
-//     },
-//     'rotatingsafe': {
-//         type: [1,[1],[11]],
-//         customMap: (params) => {
-//             return {
-//                 x: params.x * 2 - params.w,
-//                 y: params.y * 2 - params.h,
-//                 initialRotation: params.angle * 180 / Math.PI,
-//                 rotateSpeed: params.rotateSpeed / 360 / 220,
-//                 pivotX: params.pivotX * 2,
-//                 pivotY: params.pivotY * 2
-//             };
-//         }
-//     },
-//     'check': {
-//         type: [1,[],[9]],
-//         customMap: (params) => {
-//             return {
-//                 checkpointOffsetX: 0,
-//                 checkpointOffsetY: 0
-//             }
-//         }
-//     },
-//     'tp': {
-//         type: [1,[],[12]],
-//         customMap: (params) => {
-//             return {
-//                 tpx: params.tpx * 2,
-//                 tpy: params.tpy * 2
-//             }
-//         }
-//     },
-//     'winpad': {
-//         type: [1,[],[6]]
-//     },
-//     'speed': {
-//         type: [1,[],[19]],
-//         customMap: (params) => {
-//             return {
-//                 speedChangePermanent: false,
-//                 speedMult: params.speedInc
-//             }
-//         }
-//     },
-//     'size': {
-//         type: [1,[],[18]],
-//         customMap: (params) => {
-//             return {
-//                 sizeChangePermanent: false,
-//                 sizeMult: params.size / 24.5
-//             }
-//         }
-//         //C(1,[],[18],{h:200,w:300,y:700,x:300,sizeChangePermanent:false,sizeMult:1.5,});
-//     },
-//     'snap': {
-//         type: [1,[],[16]],
-//         customMap: (params) => {
-//             return {
-//                 snapAngleRotateSpeed: 0,
-//                 snapAngle: 0,
-//                 snapCooldown: params.snapWait,
-//                 snapDistanceY: params.snapDistance,
-//                 snapDistanceX: params.snapDistance,
-//                 toSnapX: params.toSnapX,
-//                 toSnapY: params.toSnapY
-//             }
-//         }
-//     },
-//     'coin': {
-//         type: [1,[],[7]],
-//         customMap: (params) => {
-//             return {
-//                 color: '#d5d612',
-//                 coinAmount: 1
-//             }
-//         }
-//     },
-//     'coindoor': {
-//         type: [1,[],[8]],
-//         customMap: (params) => {
-//             return {
-//                 coinDoorColor: '#d5d612',
-//                 coindoorCoinAmount: params.coins
-//             }
-//         }
-//     },
-//     'button': {
-//         type: [1,[],[7]],
-//         customMap: (params) => {
-//             return {
-//                 color: '#d6d612',
-//                 coinAmount: 1
-//             }
-//         }
-//     },
-//     'door': {
-//         type: [1,[],[8]],
-//         customMap: (params) => {
-//             const id = params.id;
-//             let coinAmount = 0;
-//             for(let i = 0; i < obs.length; i++){
-//                 if(obs[i].type === 'button' && obs[i].id === id){
-//                     coinAmount++;
-//                 }
-//             }
-//             return {
-//                 coinDoorColor: '#d6d612',
-//                 coindoorCoinAmount: coinAmount
-//             }
-//         }
-//     },
-//     'raxis': {
-//         type: [1,[],[15]],
-//         customMap: (params) => {
-//             return {
-//                 axisSpeedMultY: params.ry === true ? 0 : 1,
-//                 axisSpeedMultX: params.rx === true ? 0 : 1
-//             }
-//         }
-//     },
-//     'push': {
-//         type: [1,[],[25]],
-//         customMap: (params) => {
-//             return {
-//                 pushAngle: {'right': 180, 'down': 270, 'left': 0, 'right': 90}[params.dir],
-//                 maxPushDistance: params.max * 2,
-//                 idlePushBackSpeed: params.pushBack / 20,
-//                 positiveDirectionOnly: true,
-//                 pushConversionRatio: 0.86
-//             }
-//         }
-//     },//C(3,[],[20],{fontSize:80,text:'I am a text :D',y:800,x:450,hex:colourRgb(100,100,100),});
-//     'text': {
-//         customMap: (params) => {
-//             // {
-//             //     "x": 300,
-//             //     "y": 75,
-//             //     "angle": 0,
-//             //     "text": "Welcome to the",
-//             //     "size": 30,
-//             //     "story": false,
-//             //     "element": {
-//             //         "tWidth": 0,
-//             //         "tHeight": 0
-//             //     }
-//             // },
-//             if(params.angle !== 0) {
-//                 return {
-//                     type: [3,[1],[20]],
-//                     fontSize: params.size * 2,
-//                     text: params.text,
-//                     hex: '#FFFFFF',
-//                     pivotX: params.x * 2,
-//                     pivotY: params.y * 2,
-//                     rotateSpeed: 0,
-//                     initialRotation: params.angle,
-//                 }
-//             }//"C(3,[1],[20],{fontSize:80,text:'I am a text :D',y:800,x:450,pivotY:800,pivotX:450,rotateSpeed:0,initialRotation:45,hex:colourRgb(100,100,100),});"
-//             else {
-//                 return {
-//                     type: [3,[],[20]],
-//                     fontSize: params.size * 2,
-//                     text: params.text,
-//                     hex: '#FFFFFF'
-//                 }
-//             }
-//         }
-//     },
-//     'platformer': {
-//         type: [1,[],[14]],
-//         customMap: (params) => {
-//             const p = {};
-//             if(params.direction === 'right'){
-//                 p.platformerAngle = 0
-//             } else if(params.direction === 'down'){
-//                 p.platformerAngle = 90;
-//             } else if(params.direction === 'left'){
-//                 p.platformerAngle = 180;
-//             } else {
-//                 p.platformerAngle = 270;
-//             }
-//             p.platformerFriction = 0.98;
-//             p.platformerAngleRotateSpeed = 0;
-//             p.platformerForce = params.force / 10000 * 1.5 * 1.8 * 1.6 * 5 / 16.66;
-//             p.jumpForce = params.jumpHeight / 8.2 * 2.32;
-//             p.jumpDecay = 0.98;
-//             p.maxJumpCooldown = 32 * 16.6;
-//             return p;
-//         }
-//         // {
-//         //     "x": 6600,
-//         //     "y": 300,
-//         //     "w": 500,
-//         //     "h": 350,
-//         //     "type": "platformer",
-//         //     "force": 1500,
-//         //     "dir": {
-//         //         "x": 0,
-//         //         "y": 1500
-//         //     },
-//         //     "direction": "down",
-//         //     "jumpHeight": 145,
-//         //     "maxForce": 1000,
-//         //     "variableJumpHeight": false,
-//         //     "platformerFriction": 0.8,
-//         //     "inView": false
-//         // },
-//     },
-//     'musicchange': {
-//         type: [1,[],[26]],
-//         customMap: (params) => {
-//             return {
-//                 x: params.x * 2,
-//                 y: params.y * 2,
-//                 w: params.w * 2,
-//                 h: params.h * 2,
-//                 musicPath: params.musicPath
-//             };
-//         }
-//     }
-// }
-
-// var enemyTypeMap = {
-//     normal: (params) => {
-//         const bounds = {
-//             x: params.bound.x * 2,
-//             y: params.bound.y * 2,
-//             w: params.bound.w * 2,
-//             h: params.bound.h * 2
-//         };
-//         counter++;
-//         return `
-//         var xv${counter} = ${params.xv/42*1.5};
-//         var yv${counter} = ${params.yv/42*1.5};
-//         C(0,[3],[1],{r:${params.radius*2},y:${params.y*2},x:${params.x*2},sf:(e)=>{
-//         e.pos.y += yv${counter};
-//         e.pos.x += xv${counter};
-//         if ((e.pos.x - e.sat.r) < ${bounds.x} || e.pos.x + e.sat.r > ${bounds.x + bounds.w}) {
-//             xv${counter} = xv${counter} * -1;
-//         }
-//         if ((e.pos.y - e.sat.r) < ${bounds.y} || e.pos.y + e.sat.r > ${bounds.y + bounds.h}) {
-//             yv${counter} = yv${counter} * -1;
-//         }
-//         },});
-//         `
-//         // {
-//         //     "type": "normal",
-//         //     "angle": 5.874603837535309,
-//         //     "radius": 16,
-//         //     "speed": 85,
-//         //     "x": 6898.622849512051,
-//         //     "y": 4711.556031428228,
-//         //     "renderX": 6898.622849512051,
-//         //     "renderY": 4711.556031428228,
-//         //     "xv": 78.00325384310767,
-//         //     "yv": 33.77117691001763,
-//         //     "bound": {
-//         //         "x": 6400,
-//         //         "y": 4250,
-//         //         "w": 600,
-//         //         "h": 700
-//         //     },
-//         //     "isLava": false,
-//         //     "inView": false
-//         // },
-//     },
-//     square: (params) => {
-//         const bounds = {
-//             x: params.bound.x * 2,
-//             y: params.bound.y * 2,
-//             w: params.bound.w * 2,
-//             h: params.bound.h * 2
-//         };
-//         const size = params.size;
-//         counter++;
-//         return `
-//         var xv${counter} = ${params.xv/42};
-//         var yv${counter} = ${params.yv/42};
-//         C(1,[3],[1],{w:${size},h:${size},y:${params.y*2},x:${params.x*2},sf:(e)=>{
-//         e.pos.y += yv${counter};
-//         e.pos.x += xv${counter};
-//         if ((e.pos.x) < ${bounds.x} || e.pos.x + ${size} > ${bounds.x + bounds.w}) {
-//             xv${counter} = xv${counter} * -1;
-//         }
-//         if ((e.pos.y) < ${bounds.y} || e.pos.y + ${size} > ${bounds.y + bounds.h}) {
-//             yv${counter} = yv${counter} * -1;
-//         }
-//         },});
-//         `
-//         // {
-//         //     "type": "normal",
-//         //     "angle": 5.874603837535309,
-//         //     "radius": 16,
-//         //     "speed": 85,
-//         //     "x": 6898.622849512051,
-//         //     "y": 4711.556031428228,
-//         //     "renderX": 6898.622849512051,
-//         //     "renderY": 4711.556031428228,
-//         //     "xv": 78.00325384310767,
-//         //     "yv": 33.77117691001763,
-//         //     "bound": {
-//         //         "x": 6400,
-//         //         "y": 4250,
-//         //         "w": 600,
-//         //         "h": 700
-//         //     },
-//         //     "isLava": false,
-//         //     "inView": false
-//         // },
-//     },
-//     turret: (params) => {
-//         // {
-//         //     "type": "turret",
-//         //     "angle": 3.6232766945442836,
-//         //     "shootSpeed": 3.58,
-//         //     "timer": 2.2316666666694256,
-//         //     "pRadius": 32,
-//         //     "pSpeed": 120,
-//         //     "projectiles": [
-//         //         {
-//         //             "x": 4291,
-//         //             "y": 3450,
-//         //             "angle": 0
-//         //         },
-//         //         {
-//         //             "x": 3862,
-//         //             "y": 3450,
-//         //             "angle": 0
-//         //         }
-//         //     ],
-//         //     "shootDirections": [
-//         //         0
-//         //     ],
-//         //     "csd": 0,
-//         //     "deadProjectiles": [],
-//         //     "radius": 32,
-//         //     "speed": 0,
-//         //     "x": 3700,
-//         //     "y": 3450,
-//         //     "renderX": 3700,
-//         //     "renderY": 3450,
-//         //     "xv": 0,
-//         //     "yv": 0,
-//         //     "bound": {
-//         //         "x": 3650,
-//         //         "y": 3400,
-//         //         "w": 850,
-//         //         "h": 100
-//         //     },
-//         //     "inView": true
-//         // },
-//         const bounds = {
-//             x: params.bound.x * 2,
-//             y: params.bound.y * 2,
-//             w: params.bound.w * 2,
-//             h: params.bound.h * 2
-//         };
-//         counter++;
-//         const shootSpeed = params.shootSpeed * 1000 / 15;
-//         const projectileParams = {
-//             speed: params.pSpeed / 42,
-//             radius: params.pRadius * 2,
-//             shootDirections: params.shootDirections,
-//         }
-//         const c = counter;
-//         return `
-//         var xv${c} = ${params.xv/42};
-//         var yv${c} = ${params.yv/42};
-//         var shootDirectionIndex${c} = 0;
-//         var timer${c} = ${shootSpeed};
-//         C(0,[3],[1],{r:${params.radius},y:${params.y*2},x:${params.x*2},sf:(e)=>{
-//         e.pos.y += yv${c};
-//         e.pos.x += xv${c};
-//         if ((e.pos.x - e.sat.r) < ${bounds.x} || e.pos.x + e.sat.r > ${bounds.x + bounds.w}) {
-//             xv${c} = xv${c} * -1;
-//         }
-//         if ((e.pos.y - e.sat.r) < ${bounds.y} || e.pos.y + e.sat.r > ${bounds.y + bounds.h}) {
-//             yv${c} = yv${c} * -1;
-//         }
-
-//         timer${c}--;
-//         if(timer${c} < 0){
-//             timer${c} = ${shootSpeed};
-
-//             shootDirectionIndex${c}++;
-//             const shootDirections = [${projectileParams.shootDirections.toString()}];
-//             if(shootDirectionIndex${c} >= shootDirections.length){
-//                 shootDirectionIndex${c} = 0;
-//             }
-//             let dir = shootDirections[shootDirectionIndex${c}];
-
-//             counter++;
-//             /*scoped using let*/
-//             let xv${counter} = Math.cos(dir) * ${projectileParams.speed};
-//             let yv${counter} = Math.sin(dir) * ${projectileParams.speed};
-//             C(0,[3],[1],{r:${projectileParams.radius},y:${params.y*2},x:${params.x*2},sf:(e)=>{
-//             e.pos.y += yv${counter};
-//             e.pos.x += xv${counter};
-//             /*delete obstacle*/
-//             if ((e.pos.x - e.sat.r) < ${bounds.x} || e.pos.x + e.sat.r > ${bounds.x + bounds.w} || (e.pos.y - e.sat.r) < ${bounds.y} || e.pos.y + e.sat.r > ${bounds.y + bounds.h}) {
-//                 window.tickFns.push(()=>{
-//                     for(let i = 0; i < obstacles.length; i++){
-//                         if(obstacles[i] === e) {obstacles.splice(i,1); break;}
-//                     }
-//                     /*for(let key in window.idToObs){
-//                         if(window.idToObs[key] === e){delete window.idToObs[key]; break;}
-//                     }*/
-//                 });
-//             }
-//             },});
-//         }
-
-//         },});
-//         `
-//     },
-//     switch: (params) => {
-//         // {
-//         //     "type": "switch",
-//         //     "angle": 0.6586898029125109,
-//         //     "switchTime": 3.2,
-//         //     "switchTimer": 2.3083333333306277,
-//         //     "currentSwitch": true,
-//         //     "radius": 25,
-//         //     "speed": 22,
-//         //     "x": 2557.5655869230604,
-//         //     "y": 4628.602260600484,
-//         //     "renderX": 2557.5655869230604,
-//         //     "renderY": 4628.602260600484,
-//         //     "xv": -17.397486856740482,
-//         //     "yv": 13.465788171122483,
-//         //     "bound": {
-//         //         "x": 2400,
-//         //         "y": 4150,
-//         //         "w": 350,
-//         //         "h": 650
-//         //     },
-//         //     "inView": false
-//         // },
-//         const bounds = {
-//             x: params.bound.x * 2,
-//             y: params.bound.y * 2,
-//             w: params.bound.w * 2,
-//             h: params.bound.h * 2
-//         };
-//         counter++;
-//         const maxSwitchTime = params.switchTime*1000/16; 
-//         return `
-//         var xv${counter} = ${params.xv/42*4};
-//         var yv${counter} = ${params.yv/42*4};
-//         var switchTime${counter} = ${maxSwitchTime*Math.random()*2};
-//         var switchState${counter} = true;
-//         var pos${counter} = {
-//             x: ${params.x*2}, y: ${params.y*2} 
-//         }
-//         C(0,[3],[1],{r:${params.radius},y:${params.y*2},x:${params.x*2},sf:(e)=>{
-
-//             if(switchState${counter} === true){
-//                 e.pos.y += yv${counter};
-//                 e.pos.x += xv${counter};
-//                 if ((e.pos.x - e.sat.r) < ${bounds.x} || e.pos.x + e.sat.r > ${bounds.x + bounds.w}) {
-//                     xv${counter} = xv${counter} * -1;
-//                 }
-//                 if ((e.pos.y - e.sat.r) < ${bounds.y} || e.pos.y + e.sat.r > ${bounds.y + bounds.h}) {
-//                     yv${counter} = yv${counter} * -1;
-//                 }
-//             } else {
-//                 e.pos.x = -100000;
-//             }
-
-//             switchTime${counter}--;
-//             if(switchTime${counter} <= 0){
-//                 switchTime${counter} = ${params.switchTimer*1000/15};
-//                 switchState${counter} = !switchState${counter};
-//                 if(switchState${counter} === true){
-//                     /*if we're switching on, reset to pos we were on. This wasn't how the enemy worked before but it's ok*/
-//                     e.pos.x = pos${counter}.x;
-//                     e.pos.y = pos${counter}.y;
-//                 }
-//                 pos${counter} = {
-//                     x: e.pos.x,
-//                     y: e.pos.y
-//                 }
-//             }
-//         }});
-//         `
-//         // {
-//         //     "type": "normal",
-//         //     "angle": 5.874603837535309,
-//         //     "radius": 16,
-//         //     "speed": 85,
-//         //     "x": 6898.622849512051,
-//         //     "y": 4711.556031428228,
-//         //     "renderX": 6898.622849512051,
-//         //     "renderY": 4711.556031428228,
-//         //     "xv": 78.00325384310767,
-//         //     "yv": 33.77117691001763,
-//         //     "bound": {
-//         //         "x": 6400,
-//         //         "y": 4250,
-//         //         "w": 600,
-//         //         "h": 700
-//         //     },
-//         //     "isLava": false,
-//         //     "inView": false
-//         // },
-//     },
-// }
-
-// var safes =.map(p => {
-//     p.type = "safe";
-//     return p;
-// });
-
-// var texts = .map(p => {
-//     p.type = "text";
-//     return p;
-// });
-
-// var enemies = 
-
-// obs.unshift(...safes);
-// obs.push(...texts);
-
-// var alreadyLogged = {color: true, resetcoins: true, roundedcorners: true, roundedlava: true};// already covered by special if statements
-
-// var str = '';
-
-// var alreadyLoggedEnemy = {};
-// for(let i = 0; i < enemies.length; i++){
-//     if(enemyTypeMap[enemies[i].type] !== undefined){
-//         str += '\n' + enemyTypeMap[enemies[i].type](enemies[i]);
-//     } else if(alreadyLoggedEnemy[enemies[i].type] === undefined){
-//         alreadyLoggedEnemy[enemies[i].type] = true;
-//         console.log(`no enemy type def for ${enemies[i].type}`);
-//     }
-// }
-
-// for(let i = 0; i < obs.length; i++){
-//     const o = obs[i];
-//     const typeDef = typeMap[o.type];
-
-//     if(o.type === 'roundedcorners' || o.type === 'roundedlava'){
-//         const circleType = o.type === 'roundedcorners' ? 'circle-normal' : 'circle-lava';
-//         for(let i = 0; i < o.circles.length; i++){
-//             obs.push({
-//                 x: o.circles[i].x,
-//                 y: o.circles[i].y,
-//                 radius: o.circles[i].radius,
-//                 "renderType": "circle",
-//                 "inView": false,
-//                 type: circleType
-//             })
-//         }
-//         const rectType = o.type === 'roundedcorners' ? 'normal' : 'lava';
-//         for(let i = 0; i < o.rects.length; i++){
-//             obs.push({
-//                 x: o.rects[i].x,
-//                 y: o.rects[i].y,
-//                 w: o.rects[i].w,
-//                 h: o.rects[i].h,
-//                 type: rectType
-//             })
-//         }
-//         continue;
-//     } else if(o.type === 'color'){
-//         counter++;
-//         o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
-//         const minX = o.x - 100;
-//         const minY = o.y - 100;
-//         const maxX = o.x + o.w + 100;
-//         const maxY = o.y + o.h + 100;
-//         // "type": "color",
-//         // "bgColor": "#201813",
-//         // "tileColor": "#5c4337",
-//         // "inView": false
-//         str += `var minX${counter}, minY${counter}, maxX${counter}, maxY${counter};
-//         minX${counter} = ${minX};minY${counter} = ${minY};maxX${counter} = ${maxX};maxY${counter} = ${maxY};
-//         C(1,[3],[0],{h:1,w:1,y:0,x:-10000,sf:(e)=>{
-//             const player = window.players[window.selfId];
-//             if ((player.pos.x) > md(minX${counter}) && (player.pos.x) < md(maxX${counter}) && (player.pos.y) > md(minY${counter}) && (player.pos.y) < md(maxY${counter})) {
-//                 colors.background="${o.tileColor}"; colors.tile="${o.bgColor}";
-//             }
-//         },});\n`;
-//     } else if(o.type === 'resetcoins'){
-//         o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
-//         const minX = o.x - 100;
-//         const minY = o.y - 100;
-//         const maxX = o.x + o.w + 100;
-//         const maxY = o.y + o.h + 100;
-        
-//         counter++;
-//         let c = counter;
-//         str += `var insideResetCoins${c} = false;
-//         var minX${c}, minY${c}, maxX${c}, maxY${c};
-//         minX${c} = ${minX};minY${c} = ${minY};maxX${c} = ${maxX};maxY${c} = ${maxY};
-//         minX${c} = ${minX};minY${c} = ${minY};maxX${c} = ${maxX};maxY${c} = ${maxY};
-//         C(1,[3],[0],{h:1,w:1,y:0,x:-10000,sf:(e)=>{
-//             const player = window.players[window.selfId];
-//             if ((player.pos.x) > md(minX${c}) && (player.pos.x) < md(maxX${c}) && (player.pos.y) > md(minY${c}) && (player.pos.y) < md(maxY${c})) {
-//                 if(insideResetCoins${c} === false){
-//                     insideResetCoins${c} = true;
-//                     for(let z = 0; z < window.obstacles.length; z++){
-//                         const obz = window.obstacles[z];
-//                         if(obz.isCoindoor === true){
-//                             // coindoor
-//                             obz.coins = obz.maxCoins
-//                         } else if(obz.coinAmount !== undefined){
-//                             // coin
-//                             obz.collected = false;
-//                         }
-//                     }
-//                 }
-//             } else {
-//                 insideResetCoins${c} = false;
-//             }
-//         },});\n`;
-//     } else if(o.type === 'tptrap'){
-//         o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;
-//         counter++;
-
-//         str += `C(1,[],[17],{x:${o.x},y:${o.y},w:${o.w},h:${o.h},timeTrapToShowTenth:false,timeTrapToKill:false,timeTrapRecoverySpeed:3,timeTrapMaxTime:${o.maxTime*1000},sf:(e)=>{
-//             if(e.timeTrapTime <= 0){
-//                 players[selfId].pos.x = ${o.tpx*2};
-//                 players[selfId].pos.y = ${o.tpy*2};
-//             }
-//         },});`;
-//         continue;
-//     }
-
-//     if(typeDef === undefined) {
-//         if(alreadyLogged[o.type] === undefined){
-//             alreadyLogged[o.type] = true;
-//             console.log('no type def for ' + o.type);
-//         }
-        
-//         continue;
-//     }
-
-//     const params = {type: typeDef.type};
-
-//     for(let key in o){
-//         if(key === 'type') continue;
-//         if(typeDef[key] !== undefined) {
-//             params[typeDef[key]] = o[key];// o.r instead of o.radius set to o[key] 
-//         } else {
-//             params[key] = o[key];
-//         }
-//     }
-
-//     params.x *= 2;
-//     params.y *= 2;
-//     if(params.w) params.w *= 2;
-//     if(params.h) params.h *= 2;
-//     if(params.r !== undefined) params.r *= 2;
-
-//     if(typeDef.customMap !== undefined){
-//         const moreParams = typeDef.customMap(o);
-//         for(let key in moreParams){
-//             params[key] = moreParams[key];
-//         }
-//     }
+    obstacles.splice(319,4);
     
-//     let paramString = `{`;
-//     for(let key in params){
-//         paramString += `${key}:${JSON.stringify(params[key])},`;
-//     }
-//     paramString += '}';
+    mapDimensions.x=20000;
+    mapDimensions.y=10000;
 
-//     let typeString = JSON.stringify(params.type);
-//     typeString = typeString.slice(1, typeString.length-1);
-
-//     //C(1,[],[0],{h:100,w:1100,y:4300,x:4600,});
-//     str += `C(${typeString},${paramString})\n`;
-// }
-
-// // console.log(str);
-// eval(str);
-
-// obstacles todo
-// breakable, tptrap, square enemy, turret enemy, switch enemy
-
-// maybe typing, circleSlice (circle-slice and circle-hollow-slice), sentry (circle-sentry two obs, one with customCode), tptrap (custom code + nokill tt), pusher
+    spawnPosition.x=5000;
+    spawnPosition.y=5000;
+    shared.respawnPlayer();
+    colors.background='#6ab95a'; colors.tile='#27811b';
+});
