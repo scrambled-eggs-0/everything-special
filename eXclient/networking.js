@@ -158,8 +158,6 @@ const messageMap = [
         const chatMsg = decodeText(data, 2);
         const type = ['normal', 'system', 'dev', 'guest'][data[1]];
 
-        console.log('recieved chat message', chatMsg, type);
-
         const div = document.createElement('div');
         if (type !== 'system') {
             div.classList.add('chat-message');

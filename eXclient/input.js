@@ -73,7 +73,7 @@ function handleKey(e){
             if(msg === '/reset'){
                 shared.changeMap('/maps/hub');
             }
-            else if(shared.isProd === true){
+            else if(shared.isProd === false){
                 if(msg.slice(0,6) === '/tpmap'){
                     shared.changeMap(`/maps/` + msg.slice(7).toLowerCase());
                 }
@@ -85,19 +85,18 @@ function handleKey(e){
                     shared.initImportMap(msg.slice(5));
                 }
             }
-            else if(shared.zones !== undefined && msg.slice(0,7).toLowerCase() === '/tpzone'){
-                const num = parseInt(msg.slice(8));
-                for(let i = 0; i < shared.zones.length; i++){
-                    if(shared.zones[i].zone === num){
-                        shared.players[shared.selfId].pos.x = shared.zones[i].x;
-                        shared.players[shared.selfId].pos.y = shared.zones[i].y;
-                        break;
-                    }
-                }
-            }
+            // else if(shared.zones !== undefined && msg.slice(0,7).toLowerCase() === '/tpzone'){
+            //     const num = parseInt(msg.slice(8));
+            //     for(let i = 0; i < shared.zones.length; i++){
+            //         if(shared.zones[i].zone === num){
+            //             shared.players[shared.selfId].pos.x = shared.zones[i].x;
+            //             shared.players[shared.selfId].pos.y = shared.zones[i].y;
+            //             break;
+            //         }
+            //     }
+            // }
             else if(msg.length !== 0){
                 msg = shared.username + ': ' + msg;
-                console.log('send chat msg', msg);
                 const buf = new Uint8Array(msg.length + 2);
                 buf[0] = 7;// type 0 - set username and join game
                 // ['normal', 'system', 'dev', 'guest']
