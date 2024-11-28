@@ -331,7 +331,7 @@ let areas = [
 	}],
 	[{ //1.4
 		type: "normal",
-		count: 70,
+		count: 60,
 		radius: 18,
 		speed: 2
 	}, {
@@ -368,7 +368,7 @@ let areas = [
 	}],
 	[{ //2.2
 		type: "dasher",
-		count: 25,
+		count: 22,
 		radius: 18,
 		speed: 9
 	}, {
@@ -394,22 +394,22 @@ let areas = [
 	}],
 	[{ //2.3
 		type: "homing",
-		count: 20,
+		count: 16,
 		radius: 18,
 		speed: 8
 	}, {
 		type: "normal",
-		count: 7,
+		count: 5,
 		radius: 12,
 		speed: 8
 	}, {
 		type: "normal",
-		count: 7,
+		count: 6,
 		radius: 18,
 		speed: 8
 	}, {
 		type: "normal",
-		count: 7,
+		count: 5,
 		radius: 24,
 		speed: 8
 	}, {
@@ -420,7 +420,7 @@ let areas = [
 	}],
 	[{ //2.4
 		type: "homing",
-		count: 20,
+		count: 17,
 		radius: 24,
 		speed: 4
 	}, {
@@ -441,7 +441,7 @@ let areas = [
 	}],
 	[{ //3.1
 		type: "normal",
-		count: 110,
+		count: 90,
 		radius: 12,
 		speed: 6
 	}, {
@@ -452,9 +452,9 @@ let areas = [
 	}],
 	[{ //3.2
 		type: "normal",
-		count: 36,
+		count: 25,
 		radius: 12,
-		speed: 12
+		speed: 11
 	}, {
 		type: "normal",
 		count: 15,
@@ -468,12 +468,12 @@ let areas = [
 	}],
 	[{ //3.3
 		type: "normal",
-		count: 20,
+		count: 18,
 		radius: 18,
 		speed: 12
 	}, {
 		type: "homing",
-		count: 25,
+		count: 20,
 		radius: 15,
 		speed: 6
 	}, {
@@ -484,19 +484,19 @@ let areas = [
 	}],
 	[{ //3.4
 		type: "normal",
-		count: 15,
+		count: 14,
 		radius: 18,
 		speed: 15
 	}, {
 		type: "normal",
-		count: 15,
+		count: 14,
 		radius: 12,
 		speed: 15
 	}, {
 		type: "wall",
 		count: 8,
 		radius: 30,
-		speed: 4
+		speed: 15
 	}],
 
 	//Welcome to Evades 2!
@@ -515,7 +515,7 @@ let areas = [
 		type: "rain",
 		count: 30,
 		radius: 12,
-		speed: 10
+		speed: 8
 	}, {
 		type: "warp",
 		count: 12,
@@ -529,9 +529,9 @@ let areas = [
 	}],
 	[{ //4.3
 		type: "tired",
-		count: 25,
+		count: 18,
 		radius: 18,
-		speed: 25
+		speed: 18
 	}, {
 		type: "stop",
 		count: 12,
@@ -592,7 +592,7 @@ let areas = [
 		speed: 7
 	}, {
 		type: "blackhole",
-		count: 10,
+		count: 7,
 		radius: 9,
 		speed: 7
 	}, {
@@ -1407,7 +1407,7 @@ let areas = [
 		type: 13,
 		extraParams: {
 			conveyorAngle: 90,
-			conveyorForce: 0.3 * 5/3,
+			conveyorForce: 3,
 			conveyorAngleRotateSpeed: 0,
 			conveyorFriction: 0.8
 		}
@@ -1496,13 +1496,13 @@ let areas = [
 		// },
 		{
 			type: "slower",
-			count: 16,
+			count: 7,
 			radius: 12,
 			speed: 4
 		}, {
 			type: "homing",
-			count: 26,
-			radius: 24,
+			count: 13,
+			radius: 18,
 			speed: 3
 		}, {
 			type: "wall",
@@ -1543,37 +1543,37 @@ let areas = [
 	[// 8.2 - cc z10 w/ homing and soldier enemies
 		{
 			type: "wall",
-			count: 42,
+			count: 36,
 			radius: 24,
 			speed: 8
 		},
 		{
 			type: "immune",
-			count: 19,
+			count: 14,
 			radius: 26,
 			speed: 6
 		}, 
 		{
 			type: "homing",
-			count: 18,
+			count: 13,
 			radius: 26,
 			speed: 6
 		}, {
 			type: "creeper",
 			count: 2,
-			radius: 62,
-			speed: 12
+			radius: 48,
+			speed: 9
 		}
 	],
 	[// 8.3 - cc z20 w/ pulsing enemies
 		{
 			type: "snake",
-			count: 20,
+			count: 12,
 			radius: 18,
 			speed: 4
 		}, {
 			type: "oscillating",
-			count: 20,
+			count: 12,
 			radius: 18,
 			speed: 3.2
 		}, {
@@ -1615,7 +1615,7 @@ let areas = [
 	[
 		{
 			type: "normal",
-			count: 128,
+			count: 120,
 			radius: 12,
 			speed: 2.8 * 2
 		}
@@ -1662,9 +1662,9 @@ let areas = [
 		},
 		{
 			type: "turning",
-			count: 34,
+			count: 30,
 			radius: 26,
-			speed: 2.8
+			speed: 1.5
 		},
 		// {
 		// 	extraobs: true,
@@ -1675,19 +1675,19 @@ let areas = [
 	[
 		{
 			type: "turning",
-			count: 3,
+			count: 2,
 			radius: 22,
 			speed: 3
 		},
 		{
 			type: "liquid",
-			count: 3,
+			count: 2,
 			radius: 22,
 			speed: 3
 		},
 		{
 			type: "warp",
-			count: 3,
+			count: 2,
 			radius: 22,
 			speed: 3
 		},
@@ -1705,7 +1705,7 @@ let areas = [
 		},
 		{
 			type: "freezing",
-			count: 3,
+			count: 2,
 			radius: 22,
 			speed: 3
 		},
@@ -1735,19 +1735,19 @@ let areas = [
 		},
 		{
 			type: "snake",
-			count: 3,
+			count: 2,
 			radius: 22,
 			speed: 3
 		},
 		{
 			type: "oscillating",
-			count: 3,
+			count: 2,
 			radius: 22,
 			speed: 3
 		},
 		{
 			type: "slower",
-			count: 3,
+			count: 2,
 			radius: 22,
 			speed: 3
 		},
@@ -1765,19 +1765,19 @@ let areas = [
 		},
 		{
 			type: "killmoving",
-			count: 3,
+			count: 2,
 			radius: 22,
 			speed: 3
 		},
 		{
 			type: "tpotherside",
-			count: 3,
+			count: 2,
 			radius: 22,
 			speed: 3
 		},
 		{
 			type: "outofbounds",
-			count: 3,
+			count: 4,
 			radius: 22,
 			speed: 3
 		},
@@ -1789,19 +1789,19 @@ let areas = [
 		},
 		{
 			type: "stop",
-			count: 3,
+			count: 2,
 			radius: 22,
 			speed: 3
 		},
 		{
 			type: "rain",
-			count: 3,
+			count: 2,
 			radius: 22,
 			speed: 3
 		},
 		{
 			type: "blackhole",
-			count: 3,
+			count: 1,
 			radius: 22,
 			speed: 3
 		},
@@ -1813,7 +1813,7 @@ let areas = [
 		},
 		{
 			type: "tornado",
-			count: 3,
+			count: 2,
 			radius: 22,
 			speed: 3
 		}

@@ -3,15 +3,15 @@ shared.mapDifficulties = Object.freeze({
     winroom: 0,
     hub: 0,
     popb: 0.2,
-    poca: 1.2,
+    poca: 1.05,
     pospd: 2.8,
     pos: 3.3,
     pols: 5.01,
-    povv: 1.8,
-    poqt: 4.3,
-    podc: 6.2,
+    povv: 1.99,
+    poqt: 4.5,
+    podc: 6.1,
     posc: 0.6,
-    poph: 4.7,
+    poph: 4.5,
 });
 
 shared.mapLeaderboardNames = Object.freeze({
