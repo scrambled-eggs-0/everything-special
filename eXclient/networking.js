@@ -335,7 +335,6 @@ const messageMap = [
 
         for(let mapName in lb){
             for(let id in lb[mapName]){
-                console.log('adding to leaderboard', lb[mapName][id], mapName)
                 addToLeaderboard(lb[mapName][id], mapName);
             }
         }
