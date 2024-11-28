@@ -1,6 +1,6 @@
 window.loadMap((shared)=>{
-    const {C, colors, spawnPosition, mapDimensions, camera, generateDimensions, obstacles, difficultyImageColors, difficultyImageMap, blendColor, changeCameraScale, players, selfId, generateTopLeftCoordinates, input} = shared;
-
+    const {C, colors, spawnPosition, mapDimensions, camera, generateDimensions, obstacles, difficultyImageColors, difficultyImageMap, blendColor, changeCameraScale, players, generateTopLeftCoordinates, input} = shared;
+	let selfId = shared.selfId;
 let counter = 5000; // add 1000 for every new map so color changers dont conflict
 let flashLava = false;
 let lavaType = flashLava === true ? [0, 1] : [1];
@@ -5368,6 +5368,7 @@ shared.C(1, [3], [3], {
 		}
 	},
 	sf: (e) => {
+		selfId = shared.selfId;
 		if (e.timeDead > 120 && players[selfId].pos.y > 5000){
 			players[selfId].pos.x = 540250;
 			players[selfId].pos.y = 750;
