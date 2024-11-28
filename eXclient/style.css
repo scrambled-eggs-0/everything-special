@@ -163,8 +163,8 @@ canvas, .gui {
 }
 
 .leaderboard-div {
-    position: absolute;
-    left: calc(1600px - 299px);
+    position: fixed;
+    left: calc(100% - 299px);
     transition: left 0.2s linear, opacity 0.2s linear;
     opacity: 1;
     top: -1px;
@@ -180,7 +180,7 @@ canvas, .gui {
     overflow-y: auto;
     overflow-x: hidden;
     user-select: none;
-    font-family: 'Inter-Thicke', Inter;
+    font-family: 'Inter-Thick', Inter;
 }
 
 .hide {
@@ -246,7 +246,67 @@ canvas, .gui {
     overflow-x: hidden;
     /* 	word-break: break-all; */
     font-family: Inter-Thick, Inter;
+
+    transition: all 0.1s linear, padding 0.1s linear;
     /*
     /*background-image: url(https://i1.sndcdn.com/artworks-Uii8SMJvNPxy8ePA-romBoQ-t500x500.jpg);*/
     /*    opacity: 0.7; */
+}
+
+.lb-group {
+    /* background: rgba(255, 255, 255, 0.1); */
+    /*background: rgb(55, 55, 55);*/
+    background: transparent;
+    padding: 5px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    margin: 0px;
+    /*min-width: 150px;*/
+    width: 300px;
+}
+
+
+.lb-name {
+    /* color: rgb(47, 250, 213); */
+    /* filter: saturate(150%); */
+    font-size: 1rem;
+}
+
+.lb-players {
+    margin: 5px;
+    font-size: 0.9rem;
+    /* background: rgba(255, 255, 255, 0.12); */
+    /* background: rgba(77, 77, 77, 0.7); */
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+}
+
+.lb-players div {
+    margin: 2px;
+	cursor: pointer;
+	background: transparent;
+	padding: 0px;
+	transition: all 0.1s linear, padding 0.1s linear;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.lb-players div:hover {
+	background: rgba(255, 255, 255, 0.3);
+	padding: 6px;
+}
+
+.hideLB {
+    left: 100% !important;
+    opacity: 0;
+}
+
+.hideChat {
+    left: -175px !important;
+    opacity: 0; 
 }

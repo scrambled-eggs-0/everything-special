@@ -15,6 +15,7 @@ global.tutorialMapName = 'potb';
 
 shared.isServer = true;
 
+global.leaderboard = {/*mapName: {id: playerName, ...}*/};
 global.maps = {};
 
 const validPaths = {};
@@ -35,9 +36,8 @@ directory.closeSync();
 function createMap(name){
     const path = `./maps/${name}.js`;
     if(validPaths[path] === undefined) return console.error('Trying to load undefined map name!', name);
-    const map = new Map();
-    map.name = name;
-    return map;
+    global.leaderboard[name] = {};
+    return new Map(name);
 }
 
 function mapExists(name){
@@ -69,7 +69,7 @@ function removeFromMap(me, isConnected=true){
     global.maps[me.mapName].removePlayer(me.player);
     if(isConnected === true) global.maps[me.mapName].removeClient(me);
 
-    if(global.maps[me.mapName].players.length === 0) delete global.maps[me.mapName];
+    if(global.maps[me.mapName].players.length === 0) {delete global.maps[me.mapName]; delete global.leaderboard[me.mapName]}
     else {
         // send to all other clients removePlayer
         u8[0] = 6;// message type 6 - remove player
@@ -78,7 +78,7 @@ function removeFromMap(me, isConnected=true){
     }
 }
 
-let str;
+const encoder = new TextEncoder();
 class Map {
     constructor(name){
         this.players = [];
@@ -91,10 +91,28 @@ class Map {
         const id = this.reusablePlayerIds.length === 0 ? this.players.length : this.reusablePlayerIds.pop();
         p.id = id;
         this.players[id] = p;
+
+        global.leaderboard[this.name][p.id] = p.name;
+
+        const buf = new Uint8Array(this.name.length + p.name.length + 2);
+        buf[0] = 16;// 16 - add to lb
+        buf[1] = this.name.length;
+        encoder.encodeInto(this.name, buf.subarray(2 | 0));
+        encoder.encodeInto(p.name, buf.subarray((this.name.length+2) | 0));
+        global.broadcastEveryone(buf);
     }
     removePlayer(p){
         this.players[p.id] = undefined;
         this.reusablePlayerIds.push(p.id);
+
+        delete global.leaderboard[this.name][p.id];
+
+        const buf = new Uint8Array(this.name.length + p.name.length + 2);
+        buf[0] = 17;// 17 - remove from lb
+        buf[1] = this.name.length;
+        encoder.encodeInto(this.name, buf.subarray(2 | 0));
+        encoder.encodeInto(p.name, buf.subarray((this.name.length+2) | 0));
+        global.broadcastEveryone(buf);
     }
     addClient(me){
         me.ws.subscribe(this.name);

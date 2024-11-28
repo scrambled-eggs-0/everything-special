@@ -132,8 +132,15 @@ function encodeAtPosition(string, u8array, position) {
 	);
 }
 const decoder = new TextDecoder();
-function decodeText(u8array, startPos=0){
-	return decoder.decode(u8array).slice(startPos);
+function decodeText(u8array, startPos=0, endPos=Infinity){
+	return decoder.decode(u8array).slice(startPos, endPos);
 }
 
-export default { until, SCROLL_PARAMS, blendColor, environment, encodeAtPosition, decodeText };
+function stringHTMLSafe(str) {
+	return str.replace(/&/g, '&amp;')
+		.replace(/ /g, '&nbsp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;');
+};
+
+export default { until, SCROLL_PARAMS, blendColor, environment, encodeAtPosition, decodeText, stringHTMLSafe };

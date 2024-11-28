@@ -65,6 +65,7 @@ const {encodeAtPosition} = Utils;
 const chat = document.querySelector('.chat');
 const chatDiv = document.querySelector('.chatDiv');
 const visChatDiv = document.querySelector('.chat-div');
+const lbDiv = document.querySelector('.leaderboard-div');
 
 function handleKey(e){
     if(chatOpen === true){
@@ -131,20 +132,20 @@ function handleKey(e){
             } else if (e.code === 'KeyZ') {
                 if (!zenMode) {
                     chat.blur();
-                    if (!visChatDiv.classList.contains('hidden')) {
-                        visChatDiv.classList.add('hidden');
+                    if (!visChatDiv.classList.contains('hideChat')) {
+                        visChatDiv.classList.add('hideChat');
                     }
-                    // if (!ref.lb.classList.contains('hide')) {
-                    //     ref.lb.classList.add('hide');
-                    // }
+                    if (!lbDiv.classList.contains('hideLB')) {
+                        lbDiv.classList.add('hideLB');
+                    }
                 } else {
-                    if (visChatDiv.classList.contains('hidden')) {
-                        visChatDiv.classList.remove('hidden');
+                    if (visChatDiv.classList.contains('hideChat')) {
+                        visChatDiv.classList.remove('hideChat');
                         visChatDiv.scrollTop = visChatDiv.scrollHeight;
                     }
-                    // if (ref.lb.classList.contains('hide')) {
-                    //     ref.lb.classList.remove('hide');
-                    // }
+                    if (lbDiv.classList.contains('hideLB')) {
+                        lbDiv.classList.remove('hideLB');
+                    }
                 }
                 zenMode = !zenMode;
             } else if (e.code === 'KeyU' && shared.isProd === false){
