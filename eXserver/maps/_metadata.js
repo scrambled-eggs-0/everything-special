@@ -11,7 +11,7 @@ shared.mapDifficulties = Object.freeze({
     poqt: 4.5,
     podc: 6.1,
     posc: 0.6,
-    poph: 4.5,
+    poph: 4.05,
 });
 
 shared.mapLeaderboardNames = Object.freeze({
