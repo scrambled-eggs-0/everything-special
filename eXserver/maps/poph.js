@@ -6,6 +6,9 @@ let flashLava = false;
 let lavaType = flashLava === true ? [0, 1] : [1];
 let dt = 1000/60;
 
+C(0,[],[3],{x:-1E9,y:0,r:1,sf:()=>{
+	selfId = shared.selfId;
+}})
 
 mapDimensions.x = 700000;
 mapDimensions.y = 20000;
