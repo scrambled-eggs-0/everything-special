@@ -5,6 +5,8 @@ class Player {
         
         this.pos = {x: 0, y: 0};
 
+        this.r = 49.5;
+
         this.name = '';
 
         this.reset();

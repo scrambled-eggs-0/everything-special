@@ -2308,6 +2308,20 @@ for (let i = 0; i < areas.length; i++) {
 									vy = 0;
 								}
 							}
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = init.vx;
+							vy = init.vy;
 						}
 					})
 				} else if (data.type == "normal") {
@@ -2346,6 +2360,20 @@ for (let i = 0; i < areas.length; i++) {
 									e.pos.y = bound[1] + bound[3] - e.sat.r;
 								}
 							}
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = init.vx;
+							vy = init.vy;
 						}
 					})
 				} else if (data.type == "immune") {
@@ -2385,6 +2413,20 @@ for (let i = 0; i < areas.length; i++) {
 									e.pos.y = bound[1] + bound[3] - e.sat.r;
 								}
 							}
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = init.vx;
+							vy = init.vy;
 						}
 					})
 				} else if (data.type == "pentagon") {
@@ -2430,6 +2472,20 @@ for (let i = 0; i < areas.length; i++) {
 							e.dimensions = generateDimensions(e);
 							e.pivotX = e.topLeft.x + e.dimensions.x/2;
 							e.pivotY = e.topLeft.y + e.dimensions.y/2;
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = init.vx;
+							vy = init.vy;
 						}
 					})
 				} else if (data.type == "killmoving") {
@@ -2481,6 +2537,20 @@ for (let i = 0; i < areas.length; i++) {
 							if (input.up || input.right || input.left || input.down) {
 								players[selfId].dead = true
 							}
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = init.vx;
+							vy = init.vy;
 						}
 					})
 				} else if (data.type == "tpotherside") {
@@ -2533,6 +2603,20 @@ for (let i = 0; i < areas.length; i++) {
 							e.pos.x = o.pos.x + Math.cos(angle) * (o.dimensions.x/2 + e.dimensions.x/2 * 1.1);
 							e.pos.y = o.pos.y + Math.sin(angle) * (o.dimensions.y/2 + e.dimensions.y/2 * 1.1);
 							
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = init.vx;
+							vy = init.vy;
 						}
 					})
 				} else if (data.type == "outofbounds") {
@@ -2571,6 +2655,20 @@ for (let i = 0; i < areas.length; i++) {
 									e.pos.y = bound[1] + bound[3] - e.sat.r + 1500;
 								}
 							}
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = init.vx;
+							vy = init.vy;
 						}
 					})
 				} else if (data.type == "tired") {
@@ -2631,6 +2729,22 @@ for (let i = 0; i < areas.length; i++) {
 								}
 								angle = Math.atan2(vy, vx);
 							}
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,angle,mag
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = Math.cos(angle) * mag;
+							vy = Math.sin(angle) * mag;
+							angle = angle;
+							mag = mag;
 						}
 					})
 				} else if (data.type == "stop") {
@@ -2680,6 +2794,22 @@ for (let i = 0; i < areas.length; i++) {
 								}
 								angle = Math.atan2(vy, vx);
 							}
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,angle,mag
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = Math.cos(angle) * mag;
+							vy = Math.sin(angle) * mag;
+							angle = angle;
+							mag = mag;
 						}
 					})
 				} else if (data.type == "warp") {
@@ -2717,6 +2847,20 @@ for (let i = 0; i < areas.length; i++) {
 									e.pos.y = bound[1] - e.sat.r;
 								}
 							}
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = init.vx;
+							vy = init.vy;
 						}
 					})
 				} else if (data.type == "rain") {
@@ -2754,6 +2898,20 @@ for (let i = 0; i < areas.length; i++) {
 									e.pos.y = bound[1] - e.sat.r;
 								}
 							}
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = init.vx;
+							vy = init.vy;
 						}
 					})
 				} else if (data.type == "homing") {
@@ -2825,6 +2983,21 @@ for (let i = 0; i < areas.length; i++) {
 								}
 								angle = Math.atan2(vy, vx);
 							}
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy,angle
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = init.vx;
+							vy = init.vy;
+							angle = init.angle;
 						}
 					})
 				} else if (data.type == "blackhole") {
@@ -2871,7 +3044,7 @@ for (let i = 0; i < areas.length; i++) {
 								if (e.pos.x + e.sat.r > bound[0] + bound[2]) {
 									e.pos.x = bound[0] + bound[2] - e.sat.r;
 								}
-								angle = Math.atan2(vy, vx);
+								// angle = Math.atan2(vy, vx);
 							}
 							if ((e.pos.y - e.sat.r) < bound[1] || e.pos.y + e.sat.r > bound[1] + bound[3]) {
 								vy *= -1
@@ -2881,8 +3054,22 @@ for (let i = 0; i < areas.length; i++) {
 								if (e.pos.y + e.sat.r > bound[1] + bound[3]) {
 									e.pos.y = bound[1] + bound[3] - e.sat.r;
 								}
-								angle = Math.atan2(vy, vx);
+								// angle = Math.atan2(vy, vx);
 							}
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = init.vx;
+							vy = init.vy;
 						}
 					})
 				} else if (data.type == "push") {
@@ -2941,6 +3128,20 @@ for (let i = 0; i < areas.length; i++) {
 								}
 								angle = Math.atan2(vy, vx);
 							}
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = init.vx;
+							vy = init.vy;
 						}
 					})
 				} else if (data.type == "dasher") {
@@ -3027,6 +3228,29 @@ for (let i = 0; i < areas.length; i++) {
 								}
 								angle = Math.atan2(vy, vx);
 							}
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy, angle,
+								timePreparing,
+								timeDashing,
+								timeSinceLastDash,
+								baseSpeed
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							angle = init.angle;
+							vx = init.vx;
+							vy = init.vy;
+							timePreparing = init.timePreparing;
+							timeDashing = init.timeDashing;
+							timeSinceLastDash = init.timeSinceLastDash;
+							baseSpeed = init.baseSpeed;
 						}
 					})
 				} else if (data.type === 'slower'){
@@ -3077,6 +3301,20 @@ for (let i = 0; i < areas.length; i++) {
 									e.pos.y = bound[1] + bound[3] - e.sat.r;
 								}
 							}
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = init.vx;
+							vy = init.vy;
 						}
 					});
 					mainObs = obstacles[obstacles.length-1];
@@ -3093,6 +3331,20 @@ for (let i = 0; i < areas.length; i++) {
 						ef: (p,res,o) => {
 							p.axisSpeedMultX = .7;
 							p.axisSpeedMultY = .7;
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = init.vx;
+							vy = init.vy;
 						}
 					});
 				} else if (data.type === 'freezing'){
@@ -3143,6 +3395,20 @@ for (let i = 0; i < areas.length; i++) {
 									e.pos.y = bound[1] + bound[3] - e.sat.r;
 								}
 							}
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = init.vx;
+							vy = init.vy;
 						}
 					});
 					mainObs = obstacles[obstacles.length-1];
@@ -3159,6 +3425,20 @@ for (let i = 0; i < areas.length; i++) {
 						ef: (p,res,o) => {
 							p.axisSpeedMultX = .3;
 							p.axisSpeedMultY = .3;
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = init.vx;
+							vy = init.vy;
 						}
 					});
 				} else if(data.type === 'creeper'){
@@ -3214,6 +3494,22 @@ for (let i = 0; i < areas.length; i++) {
 								onWall = true;
 								vx = vy = 0;
 							}
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy,stop,onWall
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = init.vx;
+							vy = init.vy;
+							stop = init.stop;
+							onWall = init.onWall;
 						}
 					});
 				} else if(data.type === "snake"){
@@ -3266,6 +3562,21 @@ for (let i = 0; i < areas.length; i++) {
 									e.pos.y = bound[1] + bound[3] - e.sat.r;
 								}
 							}
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy,angle
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = init.vx;
+							vy = init.vy;
+							angle = init.angle;
 						}
 					});
 				} else if(data.type === 'oscillating'){
@@ -3312,6 +3623,21 @@ for (let i = 0; i < areas.length; i++) {
 									e.pos.y = bound[1] + bound[3] - e.sat.r;
 								}
 							}
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy,timer
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = init.vx;
+							vy = init.vy;
+							timer = init.timer;
 						}
 					});
 				} else if(data.type === "icicle"){
@@ -3368,6 +3694,22 @@ for (let i = 0; i < areas.length; i++) {
 								onWall = true;
 								timer = 120;
 							}
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy,timer,onWall
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = init.vx;
+							vy = init.vy;
+							timer = init.timer;
+							onWall = init.onWall;
 						}
 					});
 				} else if(data.type === "liquid"){
@@ -3414,6 +3756,20 @@ for (let i = 0; i < areas.length; i++) {
 									e.pos.y = bound[1] + bound[3] - e.sat.r;
 								}
 							}
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = init.vx;
+							vy = init.vy;
 						}
 					});
 				} else if(data.type === "turning"){
@@ -3459,6 +3815,21 @@ for (let i = 0; i < areas.length; i++) {
 								}
 								turnDir *= -1;
 							}
+						},
+						customSync: (o) => {
+							return {
+								px:o.pos.x,py:o.pos.y,
+								x,y,vx,vy,turnDir
+							}
+						},
+						applyCustomSync: (o, init) => {
+							o.pos.x = init.px;
+							o.pos.y = init.py;
+							x = init.x;
+							y = init.y;
+							vx = init.vx;
+							vy = init.vy;
+							turnDir = init.turnDir;
 						}
 					})
 				}
@@ -5473,108 +5844,108 @@ shared.C(1, [], [9], {
 
 
 // Evades 1 - Evades X that plays at the beginning
-{
-	function smootherStep(t){
-		return t * t * t * (t * (t * 6. - 15.) + 10.);
-	}
+// {
+// 	function smootherStep(t){
+// 		return t * t * t * (t * (t * 6. - 15.) + 10.);
+// 	}
 
-	function interpolateBetween(startPos, endPos, startT, endT){
-		if(t < startT) return startPos;
-		else if(t > endT) return endPos;
+// 	function interpolateBetween(startPos, endPos, startT, endT){
+// 		if(t < startT) return startPos;
+// 		else if(t > endT) return endPos;
 	
-		const ratio = (t - startT) / (endT - startT);
+// 		const ratio = (t - startT) / (endT - startT);
 	
-		return interpolate(startPos, endPos, smootherStep(ratio));
-	}
+// 		return interpolate(startPos, endPos, smootherStep(ratio));
+// 	}
 
-	const interpolate = (s,e,t) => {return (1-t) * s + t * e;}
+// 	const interpolate = (s,e,t) => {return (1-t) * s + t * e;}
 
-	let textYOff = 0;
-	const ts = {
-		"wait3": 1070 - 1170,
-		"e2in": 1370 - 1170,
-		"wait4": 1380 - 1170,
-		"e3e4in": 1480 - 1170,
-		"wait5": 1490 - 1170,
-		"eXin": 1590 - 1170,
-		"end": 1640 - 1170
-	}
+// 	let textYOff = 0;
+// 	const ts = {
+// 		"wait3": 1070 - 1170,
+// 		"e2in": 1370 - 1170,
+// 		"wait4": 1380 - 1170,
+// 		"e3e4in": 1480 - 1170,
+// 		"wait5": 1490 - 1170,
+// 		"eXin": 1590 - 1170,
+// 		"end": 1640 - 1170
+// 	}
 
-	shared.C(1, [], [26], {
-		x: 0,
-		y: 0,
-		w: 174800,
-		h: 1500,
-		musicPath: 'https://www.youtube.com/watch?v=SsYCPtOaTKw'
-	});
-	const unveilObs = obstacles[obstacles.length-1];
+// 	shared.C(1, [], [26], {
+// 		x: 0,
+// 		y: 0,
+// 		w: 174800,
+// 		h: 1500,
+// 		musicPath: 'https://www.youtube.com/watch?v=SsYCPtOaTKw'
+// 	});
+// 	const unveilObs = obstacles[obstacles.length-1];
 
-	let t = -60;
-	let w = canvas.width;
-	let h = canvas.height;
-	let ended = false;
-	shared.C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
-		if(t > ts.end) {
-			if(ended === false){
-				for(let i = 0; i < shared.players.length; i++){
-					if(shared.players[i] === undefined) continue;
-					shared.players[i].renderRadius = 49.5;
-				}
-				unveilObs.pos.x = -1E9;
-				ended = true;
-				shared.C(1, [], [26], {
-					x: 0,
-					y: 0,
-					w: 174800,
-					h: 1500,
-					musicPath: 'https://www.youtube.com/watch?v=D3boxTP-ZG8'
-				});
-				shared.respawnPlayer();
-			}
-			return;
-		}
-		w = canvas.width;
-		h = canvas.height;
-		const transform = ctx.getTransform();
-		ctx.setTransform(1,0,0,1,0,0);
-		// ctx.translate(camera.x-canvas.w/2, camera.y-canvas.h/2);
-		ctx.fillStyle = 'black';
-		ctx.fillRect(0,0,w,h);
-		if(t > ts.wait5){
-			textYOff = interpolateBetween(5/2*h, 8*h+h/2, ts.wait5, ts.eXin);
-		}
-		else if(t > ts.wait4){
-			textYOff = interpolateBetween(h/2, 5/2*h, ts.wait4, ts.e3e4in);
-		}
-		else if(t > ts.wait3){
-			textYOff = interpolateBetween(-h/2, h/2, ts.wait3, ts.e2in);
-		}
+// 	let t = -60;
+// 	let w = canvas.width;
+// 	let h = canvas.height;
+// 	let ended = false;
+// 	shared.C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
+// 		if(t > ts.end) {
+// 			if(ended === false){
+// 				for(let i = 0; i < shared.players.length; i++){
+// 					if(shared.players[i] === undefined) continue;
+// 					shared.players[i].renderRadius = 49.5;
+// 				}
+// 				unveilObs.pos.x = -1E9;
+// 				ended = true;
+// 				shared.C(1, [], [26], {
+// 					x: 0,
+// 					y: 0,
+// 					w: 174800,
+// 					h: 1500,
+// 					musicPath: 'https://www.youtube.com/watch?v=D3boxTP-ZG8'
+// 				});
+// 				shared.respawnPlayer();
+// 			}
+// 			return;
+// 		}
+// 		w = canvas.width;
+// 		h = canvas.height;
+// 		const transform = ctx.getTransform();
+// 		ctx.setTransform(1,0,0,1,0,0);
+// 		// ctx.translate(camera.x-canvas.w/2, camera.y-canvas.h/2);
+// 		ctx.fillStyle = 'black';
+// 		ctx.fillRect(0,0,w,h);
+// 		if(t > ts.wait5){
+// 			textYOff = interpolateBetween(5/2*h, 8*h+h/2, ts.wait5, ts.eXin);
+// 		}
+// 		else if(t > ts.wait4){
+// 			textYOff = interpolateBetween(h/2, 5/2*h, ts.wait4, ts.e3e4in);
+// 		}
+// 		else if(t > ts.wait3){
+// 			textYOff = interpolateBetween(-h/2, h/2, ts.wait3, ts.e2in);
+// 		}
 
-		for(let i = 1; i <= 10; i++){
-			let localOffset = -(i-2)*h;
-			ctx.fillStyle = 'white';
-			ctx.font = `${180}px Inter`;
-			ctx.textAlign = 'center';
-			ctx.textBaseline = 'middle';
+// 		for(let i = 1; i <= 10; i++){
+// 			let localOffset = -(i-2)*h;
+// 			ctx.fillStyle = 'white';
+// 			ctx.font = `${180}px Inter`;
+// 			ctx.textAlign = 'center';
+// 			ctx.textBaseline = 'middle';
 
-			const y = textYOff + localOffset;
+// 			const y = textYOff + localOffset;
 
-			ctx.globalAlpha = smootherStep(1 - Math.min(1,Math.abs(y - h / 2) / (h/2)));
-			if(i === 10) {ctx.shadowColor = 'white'; ctx.shadowBlur = 22;}
-			ctx.fillText(`Evades ${i===10?'X':i}`, w/2, y);
-			ctx.globalAlpha = 1;
-		}
-		ctx.shadowBlur = 0;
+// 			ctx.globalAlpha = smootherStep(1 - Math.min(1,Math.abs(y - h / 2) / (h/2)));
+// 			if(i === 10) {ctx.shadowColor = 'white'; ctx.shadowBlur = 22;}
+// 			ctx.fillText(`Evades ${i===10?'X':i}`, w/2, y);
+// 			ctx.globalAlpha = 1;
+// 		}
+// 		ctx.shadowBlur = 0;
 
-		// ctx.translate(-camera.x+canvas.w/2, -camera.y+canvas.h/2);
-		t++;
-		ctx.setTransform(transform);
+// 		// ctx.translate(-camera.x+canvas.w/2, -camera.y+canvas.h/2);
+// 		t++;
+// 		ctx.setTransform(transform);
 
-		for(let i = 0; i < shared.players.length; i++){
-			if(shared.players[i] === undefined) continue;
-			shared.players[i].renderRadius = 0;
-		}
-	}})
-}
+// 		for(let i = 0; i < shared.players.length; i++){
+// 			if(shared.players[i] === undefined) continue;
+// 			shared.players[i].renderRadius = 0;
+// 		}
+// 	}})
+// }
 
 });

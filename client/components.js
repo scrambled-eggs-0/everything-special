@@ -75,7 +75,11 @@ function create(shape, simulates, effects, params){
     }
     if(params.sf !== undefined) e.simulate.push(params.sf);
     if(params.ef !== undefined) {e.effect.push(params.ef); e.renderEffect.push(renderEffectMap[3]);}
-    if(params.sf !== undefined || params.ef !== undefined) {e.simulate.push(()=>{e.dimensions=generateDimensions(e);e.topLeft=generateTopLeftCoordinates(e);})};
+    if(params.sf !== undefined || params.ef !== undefined) {
+        e.simulate.push(()=>{e.dimensions=generateDimensions(e);e.topLeft=generateTopLeftCoordinates(e);});
+        if(params.customSync !== undefined && params.applyCustomSync !== undefined)
+        {e.customSync = params.customSync; e.applyCustomSync = params.applyCustomSync;}
+    };
     if(params.cr !== undefined) e.cr = params.cr;
     
     obstacles.push(e);
@@ -105,16 +109,10 @@ function interpolate(start, end, t){
 }
 
 let res = new SAT.Response();
-let angle, collided = false, grappleForceObj={};
+let angle, collided = false;
 function simulate(){
     // player simulation
     const player = shared.players[shared.selfId];
-
-    if(shared.isExClient === true){
-        player.renderRadius = interpolate(player.renderRadius, player.sat.r, 1 / 5.4);
-    } else {
-        player.renderRadius = player.renderRadius * 0.83 + player.sat.r * 0.17;
-    }
 
     if(shared.isExClient === true && player.dead === false) {
         if(shared.touchMode === true){
@@ -304,12 +302,14 @@ function simulate(){
 
     for(let i = 0; i < shared.players.length; i++){
         const p = shared.players[i];
+        if(p === undefined) continue;
         if((p.interpX-p.pos.x)**2+(p.interpY-p.pos.y)**2>352**2){
             p.interpX = p.pos.x;
             p.interpY = p.pos.y;
         }
         p.interpX = interpolate(p.interpX, p.pos.x, 0.4);
         p.interpY = interpolate(p.interpY, p.pos.y, 0.4);
+        p.renderRadius = interpolate(p.renderRadius, p.sat.r, 1 / 5.4);
     }
 
     if(player.touchingNormalIndexes.length !== 0 || player.lastTouchingNormalIndexes.length !== 0){
@@ -956,10 +956,6 @@ const simulateMap = [
     }
 ]
 
-// ---
-
-// ---
-
 function shortAngleDist(a0,a1) {
     let da = (a1 - a0) % TAU;
     return 2*da % TAU - da;
@@ -1021,6 +1017,56 @@ shared.simulateConstraintsMap = [
     undefined,
     undefined,
 ];
+
+const simulateSyncKeys = [
+    /*pathMove*/
+    (o, sync) => {
+        sync.x = o.pos.x;
+        sync.y = o.pos.y;
+        const maxTimeRemain = Math.sqrt((o.pointOn[0] - o.pointTo[0])**2 + (o.pointOn[1] - o.pointTo[1])**2) / o.speed;
+        sync.currentPoint = o.currentPoint + (1 - o.timeRemain / maxTimeRemain);
+    },
+    // /*rotate*/
+    (o, sync) => {
+        sync.initialRotation = o.rotation;
+    },
+    // /*grow*/
+    undefined,
+    // /*custom*/
+    undefined,
+    // /*id*/
+    undefined,
+    // /*rotateHoming*/
+    undefined,
+]
+
+const applySimulateSyncKeys = [
+    /*pathMove*/
+    (o, init) => {
+        if(Number.isFinite(init.x + init.y + init.currentPoint) === false) return;
+        init.path = o.path;
+        initSimulateMap[0](o, init);
+        o.pos.x = init.x;
+        o.pos.y = init.y;
+    },
+    // /*rotate*/
+    (o, init) => {
+        if(Number.isFinite(init.initialRotation) === false) return;
+        init.initialRotation -= o.rotation;
+        init.pivotX = o.pivotX;
+        init.pivotY = o.pivotY;
+        init.rotateSpeed = o.rotateSpeed;
+        initSimulateMap[1](o, init);
+    },
+    // /*grow*/
+    undefined,
+    // /*custom*/
+    undefined,
+    // /*id*/
+    undefined,
+    // /*rotateHoming*/
+    undefined,
+]
 
 const initEffectMap = [
     /*bound*/
@@ -1965,6 +2011,182 @@ shared.effectDefaultMap = [
     // changeDeathTimer
     {changeDeathTimerStateTo: true, drainAmountWhileStandingOn: 0, deathTime: 10},
 ]
+
+const idleEffectSyncKeys = [
+    // 'bound',
+    undefined,
+    // 'kill',
+    undefined,
+    // 'bounce',
+    undefined,
+    // 'custom'
+    undefined,
+    // 'customImage'
+    undefined,
+    // 'stopForces',
+    undefined,
+    // 'winpad',
+    undefined,
+    // 'coin',
+    undefined,
+    // 'coindoor',
+    undefined,
+    // 'checkpoint',
+    undefined,
+    // 'breakable',
+    undefined,
+    // 'safe',
+    undefined,
+    // 'tp',
+    undefined,
+    // 'conveyor',
+    (o, sync) => {
+        if(o.conveyorAngleRotateSpeed === 0) return false;
+        sync.conveyorAngle = o.conveyorAngle;
+    },
+    // 'platformer',
+    (o, sync) => {
+        if(o.platformerAngleRotateSpeed === 0) return false;
+        sync.platformerAngle = o.platformerAngle;
+    },
+    // 'restrictAxis',
+    undefined,
+    // 'snapGrid',
+    (o, sync) => {
+        if(o.snapAngleRotateSpeed === 0) return false;
+        sync.snapAngle = o.snapAngle;
+    },
+    // 'timeTrap'
+    undefined,
+    // 'changeSize'
+    undefined,
+    // 'changeSpeed'
+    undefined,
+    // 'solidColor'
+    undefined,
+    // 'decoration'
+    undefined,
+    // 'changeMap'
+    undefined,
+    // 'tornado'
+    undefined,
+    // 'changeVignette'
+    undefined,
+    // 'pushable'
+    undefined,
+    // changeMusic
+    undefined,
+    // changeShip
+    undefined,
+    // changeGrapple
+    undefined,
+    // changeDeathTimer
+    undefined,
+]
+
+const applyIdleEffectSyncKeys = [
+    // 'bound',
+    undefined,
+    // 'kill',
+    undefined,
+    // 'bounce',
+    undefined,
+    // 'custom'
+    undefined,
+    // 'customImage'
+    undefined,
+    // 'stopForces',
+    undefined,
+    // 'winpad',
+    undefined,
+    // 'coin',
+    undefined,
+    // 'coindoor',
+    undefined,
+    // 'checkpoint',
+    undefined,
+    // 'breakable',
+    undefined,
+    // 'safe',
+    undefined,
+    // 'tp',
+    undefined,
+    // 'conveyor',
+    (o) => {
+        if(Number.isFinite(o.conveyorAngle) === false) return;
+        o.conveyorAngle = conveyorAngle;
+    },
+    // 'platformer',
+    (o) => {
+        if(Number.isFinite(o.platformerAngle) === false) return;
+        o.platformerAngle = platformerAngle;
+    },
+    // 'restrictAxis',
+    undefined,
+    // 'snapGrid',
+    (o) => {
+        if(Number.isFinite(o.snapAngle) === false) return;
+        o.snapAngle = snapAngle;
+    },
+    // 'timeTrap'
+    undefined,
+    // 'changeSize'
+    undefined,
+    // 'changeSpeed'
+    undefined,
+    // 'solidColor'
+    undefined,
+    // 'decoration'
+    undefined,
+    // 'changeMap'
+    undefined,
+    // 'tornado'
+    undefined,
+    // 'changeVignette'
+    undefined,
+    // 'pushable'
+    undefined,
+    // changeMusic
+    undefined,
+    // changeShip
+    undefined,
+    // changeGrapple
+    undefined,
+    // changeDeathTimer
+    undefined,
+]
+
+shared.generateSyncMaps = () => {
+    if(shared.simulateToSync !== undefined) return;
+    shared.simulateToSync = new Map(); shared.idleEffectToSync = new Map();
+    for(let i = 0; i < simulateMap.length; i++){
+        if(simulateSyncKeys[i] !== undefined){
+            shared.simulateToSync.set(simulateMap[i], simulateSyncKeys[i]);
+        }
+    }
+
+    for(let i = 0; i < idleEffectMap.length; i++){
+        if(idleEffectSyncKeys[i] !== undefined){
+            shared.idleEffectToSync.set(idleEffectMap[i], idleEffectSyncKeys[i]);
+        }
+    }
+}
+
+shared.generateApplySyncMaps = () => {
+    if(shared.simulateToApplySync !== undefined) return;
+    shared.simulateToApplySync = new Map(); shared.idleEffectToApplySync = new Map();
+    for(let i = 0; i < simulateMap.length; i++){
+        if(applySimulateSyncKeys[i] !== undefined){
+            shared.simulateToApplySync.set(simulateMap[i], applySimulateSyncKeys[i]);
+        }
+    }
+
+    for(let i = 0; i < idleEffectMap.length; i++){
+        if(applyIdleEffectSyncKeys[i] !== undefined){
+            shared.idleEffectToApplySync.set(idleEffectMap[i], applyIdleEffectSyncKeys[i]);
+        }
+    }
+}
 
 const renderEffectMap = [
     /*bound*/

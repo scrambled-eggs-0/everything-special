@@ -150,6 +150,6 @@ function stringHTMLSafe(str) {
 		.replace(/ /g, '&nbsp;')
 		.replace(/</g, '&lt;')
 		.replace(/>/g, '&gt;');
-};
+}
 
 export default { until, SCROLL_PARAMS, blendColor, environment, encodeAtPosition, decodeText, stringHTMLSafe };
