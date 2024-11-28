@@ -2,6 +2,22 @@ window.loadMap((shared)=>{
     let counter = 4000;
     const md = (a) => {return a;}
     const {C, colors, spawnPosition, mapDimensions, camera, generateDimensions, obstacles, difficultyImageColors, difficultyImageMap, blendColor, changeCameraScale, players, input} = shared;
+
+    C(0,[],[3],{x:-1E9,y:0,r:1,sf:(o,p)=>{
+        // revives
+        if(p.dead === true){
+            for(let i = 0; i < shared.players.length; i++){
+                const p2 = shared.players[i];
+                if(p2 === undefined) continue;
+    
+                if(p2.dead === false && (p2.pos.x-p.pos.x) ** 2 + (p2.pos.y-p.pos.y) ** 2 < (p2.sat.r + p.sat.r) ** 2){
+                    p.dead = false;
+                    p.renderRadius = 0;
+                }
+            }
+        }
+    }})
+    
     C(1,[],[18],{type:[1,[],[18]],x:1300,y:4000,w:1100,h:1700,size:15,inView:false,sizeChangePermanent:false,sizeMult:0.6122448979591837,})
 C(1,[],[18],{type:[1,[],[18]],x:13000,y:-200,w:1300,h:3300,size:18.5,inView:false,sizeChangePermanent:false,sizeMult:0.7551020408163265,})
 C(1,[],[18],{type:[1,[],[18]],x:17700,y:5550,w:700,h:750,size:2,inView:false,sizeChangePermanent:false,sizeMult:0.08163265306122448,})

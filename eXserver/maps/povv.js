@@ -4,6 +4,21 @@ window.loadMap((shared)=>{
     let selfId = shared.selfId;
     let counter = 10_000;
 
+    C(0,[],[3],{x:-1E9,y:0,r:1,sf:(o,p)=>{
+        // revives
+        if(p.dead === true){
+            for(let i = 0; i < shared.players.length; i++){
+                const p2 = shared.players[i];
+                if(p2 === undefined) continue;
+    
+                if(p2.dead === false && (p2.pos.x-p.pos.x) ** 2 + (p2.pos.y-p.pos.y) ** 2 < (p2.sat.r + p.sat.r) ** 2){
+                    p.dead = false;
+                    p.renderRadius = 0;
+                }
+            }
+        }
+    }})
+
     shared.linkDoors = {};
     shared.linkButtons = {};
     shared.morphsTriggered = {};

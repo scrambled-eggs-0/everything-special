@@ -4,6 +4,21 @@ window.loadMap((shared)=>{
     let selfId = shared.selfId;
     let counter = 8000;
 
+    C(0,[],[3],{x:-1E9,y:0,r:1,sf:(o,p)=>{
+        // revives
+        if(p.dead === true){
+            for(let i = 0; i < shared.players.length; i++){
+                const p2 = shared.players[i];
+                if(p2 === undefined) continue;
+    
+                if(p2.dead === false && (p2.pos.x-p.pos.x) ** 2 + (p2.pos.y-p.pos.y) ** 2 < (p2.sat.r + p.sat.r) ** 2){
+                    p.dead = false;
+                    p.renderRadius = 0;
+                }
+            }
+        }
+    }})
+
     shared.C(1,[],[19],{x:18500,y:14050,w:400,h:50,speedMult:1/3,speedChangePermanent:false});
     shared.C(1,[],[15],{x:9400,y:17700,w:100,h:200,axisSpeedMultX: 0, axisSpeedMultY:0})
 
