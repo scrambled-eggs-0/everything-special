@@ -78,7 +78,7 @@ function removeFromMap(me, isConnected=true){
     }
 }
 
-const encoder = new TextEncoder();
+global.encoder = new TextEncoder();
 class Map {
     constructor(name){
         this.players = [];
@@ -97,8 +97,8 @@ class Map {
         const buf = new Uint8Array(this.name.length + p.name.length + 2);
         buf[0] = 16;// 16 - add to lb
         buf[1] = this.name.length;
-        encoder.encodeInto(this.name, buf.subarray(2 | 0));
-        encoder.encodeInto(p.name, buf.subarray((this.name.length+2) | 0));
+        global.encoder.encodeInto(this.name, buf.subarray(2 | 0));
+        global.encoder.encodeInto(p.name, buf.subarray((this.name.length+2) | 0));
         global.broadcastEveryone(buf);
     }
     removePlayer(p){
@@ -110,8 +110,8 @@ class Map {
         const buf = new Uint8Array(this.name.length + p.name.length + 2);
         buf[0] = 17;// 17 - remove from lb
         buf[1] = this.name.length;
-        encoder.encodeInto(this.name, buf.subarray(2 | 0));
-        encoder.encodeInto(p.name, buf.subarray((this.name.length+2) | 0));
+        global.encoder.encodeInto(this.name, buf.subarray(2 | 0));
+        global.encoder.encodeInto(p.name, buf.subarray((this.name.length+2) | 0));
         global.broadcastEveryone(buf);
     }
     addClient(me){

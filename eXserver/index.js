@@ -43,7 +43,8 @@ global.app = uWS.App().ws('/*', {
             mapName: '',
             player: new Player(),
             dev: true,
-            accountData: undefined
+            accountData: undefined,
+            enterMapTime: -1
         }
 
         do {
@@ -293,6 +294,18 @@ app.get("/maps/:filename", (res, req) => {
         return;
     }
 
+    if(mapName === 'winroom' && ws.mapName !== ''){
+        const buf = new Uint8Array(ws.me.mapName.length + ws.me.player.name.length + 2);
+        buf[0] = 18;// 18 - win message
+        buf[1] = ws.me.mapName.length;
+        global.encoder.encodeInto(ws.me.mapName, buf.subarray(2 | 0));
+        global.encoder.encodeInto(ws.me.player.name, buf.subarray((ws.me.mapName.length+2) | 0));
+        global.broadcastEveryone(buf);
+
+        db.beatMap(ws.me.player.name, ws.accountData, ws.me.mapName, Date.now() - ws.me.enterMapTime);
+        ws.me.enterMapTime = -1;
+    } else ws.me.enterMapTime = Date.now();
+
     changeMap(ws.me, mapName, res);
 });
 
@@ -337,7 +350,7 @@ app.post("/join",async (res, req) => {
 
     ws.accountData = account;
     ws.me.player.name = username;
-    
+
     // send default map
     changeMap(ws.me, global.defaultMapName, res);
 });
@@ -362,13 +375,31 @@ const messageMap = [
         u16view[1] = me.player.id;
         global.maps[me.mapName].broadcast(data);
     },
-    // 5 - unused
-    () => {},
+    // 5 - mute user
+    (data, me) => {
+        console.log(me.player.name);
+        if(me.player.name !== 'Serum0017' && me.player.name !== 'trit') return;
+        const decoder = new TextDecoder();
+        const user = decoder.decode(data).slice(1);
+        for(let key in global.clients){
+            const p = global.clients[key].me.player;
+            if(p.name === user){
+                p.chatMuted = !p.chatMuted;
+                const str = `: Successfully ${p.chatMuted === true ? 'M' : 'unm'}uted ${user}`;
+                const buf = new Uint8Array(str.length + 2);
+                buf[0] = 7;// chat message
+                buf[1] = 1;// system message
+                global.encoder.encodeInto(str, buf.subarray(2 | 0));
+                broadcastEveryone(buf);
+            }
+        }
+        // chatMuted
+    },
     // 6 - unused
     () => {},
     // 7 - chat message
     (data, me) => {
-        if(data.byteLength > 1000 || me.mapName === '') return;
+        if(data.byteLength > 1000 || me.mapName === '' || me.player.chatMuted === true) return;
         // const msg = decoder.decode(data).slice(1);
         // TODO: server side verification on chat msgs to make sure that data[1] is what it should be (we don't want random people sending "dev" and displaying that way)
         broadcastEveryone(data);

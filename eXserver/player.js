@@ -8,6 +8,8 @@ class Player {
         this.name = '';
 
         this.reset();
+
+        this.chatMuted = false;
     }
     // reset powerups
     reset(){

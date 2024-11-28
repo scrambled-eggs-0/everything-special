@@ -74,17 +74,15 @@ function handleKey(e){
             if(msg === '/reset'){
                 shared.changeMap('/maps/hub');
             }
-            else if(shared.isProd === false){
-                if(msg.slice(0,6) === '/tpmap'){
-                    shared.changeMap(`/maps/` + msg.slice(7).toLowerCase());
-                }
-                else if(msg.slice(0,6) === '/scale'){
-                    const num = parseFloat(msg.slice(7));
-                    shared.changeCameraScale(num);
-                }
-                else if(msg.slice(0,4) === '/map'){
-                    shared.initImportMap(msg.slice(5));
-                }
+            if(shared.isProd === false && msg.slice(0,6) === '/tpmap'){
+                shared.changeMap(`/maps/` + msg.slice(7).toLowerCase());
+            }
+            else if(shared.isProd === false && msg.slice(0,6) === '/scale'){
+                const num = parseFloat(msg.slice(7));
+                shared.changeCameraScale(num);
+            }
+            else if(shared.isProd === false && msg.slice(0,4) === '/map'){
+                shared.initImportMap(msg.slice(5));
             }
             // else if(shared.zones !== undefined && msg.slice(0,7).toLowerCase() === '/tpzone'){
             //     const num = parseInt(msg.slice(8));
@@ -96,6 +94,13 @@ function handleKey(e){
             //         }
             //     }
             // }
+            else if(msg.slice(0,5) === '/mute' && (shared.username === 'trit' || shared.username === 'Serum0017')){
+                const user = msg.slice(6);
+                const buf = new Uint8Array(user.length + 1);
+                buf[0] = 5;
+                encodeAtPosition(user, buf, 1);
+                shared.send(buf);
+            }
             else if(msg.length !== 0){
                 msg = shared.username + ': ' + msg;
                 const buf = new Uint8Array(msg.length + 2);

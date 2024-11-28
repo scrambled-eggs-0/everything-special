@@ -93,41 +93,49 @@ canvas, .gui {
     }
 }
 
-.peaceful {
+/*peaceful*/
+.difficulty-0 {
     color: #6cd95b;
 }
-.moderate {
+/*moderate*/
+.difficulty-1 {
     color: #58ccb3;
 }
-.difficult {
+/*difficult*/
+.difficulty-2 {
     color: #0a77bf;
 }
-.hardcore {
+/*hardcore*/
+.difficulty-3 {
     color: #3528e0;
 }
-.exhausting {
+/*exhausting*/
+.difficulty-4 {
     color: #8248d4;
 }
-.relentless {
+/*relentless*/
+.difficulty-5 {
     color: #e32d8b;
 }
+/*agonizing*/
 @keyframes agonizingColor {
     0% {
         background-color: #ff0000;
     }
 }
-.agonizing {
+.difficulty-6 {
     color: #ff5736;
     animation-name: agonizingColor;
     animation-duration: 3s;
     animation-iteration-count: infinite;
 }
+/*terrorizing*/
 @keyframes terrorizingColor {
     0% {
         background-color: #ff0000;
     }
 }
-.terrorizing {
+.difficulty-7 {
     color: #fc3a3a;
     animation-name: terrorizingColor;
     animation-duration: 2s;
@@ -138,7 +146,8 @@ canvas, .gui {
         background-color: #ff0000;
     }
 }
-.cataclysmic {
+/*cataclysmic*/
+.difficulty-8 {
     color: #c95d5d;
     animation-name: cataclysmicColor;
     animation-duration: 1s;
@@ -286,7 +295,7 @@ canvas, .gui {
 }
 
 .lb-players div {
-    margin: 2px;
+    margin: 1.5px;
 	cursor: pointer;
 	background: transparent;
 	padding: 0px;

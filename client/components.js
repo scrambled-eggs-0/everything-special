@@ -1264,7 +1264,11 @@ const effectMap = [
             shared.won = true;
             if(shared.isExClient === true){
                 if(shared.mapPath === '/maps/winroom') shared.changeMap('/maps/hub');
-                else shared.changeMap('/maps/winroom');
+                else {
+                    shared.changeMap('/maps/winroom');
+                    shared.mapsBeaten[shared.mapPath] = true;
+                    localStorage.setItem('mapsBeaten', Object.keys(shared.mapsBeaten).join('|'));
+                }
             } else {
                 // scroll
                 toScroll = true;
@@ -2453,7 +2457,18 @@ const renderEffectMap = [
             }
 
             ctx.font = `${o.dimensions.x / 3.5}px Inter`;
-            ctx.fillStyle = 'white';
+
+            if(shared.mapsBeaten['/maps/' + o.mapName] === true){
+                const baseColor = blendColor(
+                    difficultyImageColors[Math.floor(o.difficulty)],
+                    difficultyImageColors[Math.ceil(o.difficulty)],
+                    t
+                );
+                ctx.fillStyle = shared.blendColor(baseColor, '#000000', 0.12);//'#5fbe50'
+            } else {
+                ctx.fillStyle = 'white';
+            }
+            
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
@@ -2846,7 +2861,7 @@ shared.createPlayer = () => {
     player.stopForces = false;
     player.forces = [];
     player.id = undefined;
-    player.dev = false; /*dev only for players[selfId]*/ player.god = false;
+    player.dev = !shared.isProd; /*dev only for players[selfId]*/ player.god = false;
     player.friction = 0.4;
     player.ship = false; player.shipAngle = 0; player.shipTurnSpeed = Math.PI / 100;
     player.deathTime = 0; player.deathTimer = false;

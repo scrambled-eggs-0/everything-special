@@ -1,5 +1,6 @@
 import shared from '../../shared/shared.js';
 shared.mapDifficulties = Object.freeze({
+    winroom: 0,
     hub: 0,
     popb: 0.2,
     poca: 1.2,
@@ -14,6 +15,7 @@ shared.mapDifficulties = Object.freeze({
 });
 
 shared.mapLeaderboardNames = Object.freeze({
+    winroom: 'Winroom',
     hub: 'Hub',
     popb: 'Planet of Peaceful Beginnings',
     poca: 'Planet of Conveyor Abuse',

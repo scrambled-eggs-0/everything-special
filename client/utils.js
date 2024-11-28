@@ -66,6 +66,15 @@ function componentToHex(c) {
 // 	return 2*da % max - da;
 // }
 
+const mapsBeatenStr = environment === 'server' ? null : localStorage.getItem('mapsBeaten');
+shared.mapsBeaten = {};
+if(mapsBeatenStr !== null){
+    const split = mapsBeatenStr.split('|');
+    for(let i = 0; i < split.length; i++){
+        shared.mapsBeaten[split[i]] = true;
+    }
+}
+
 shared.jewelBoxUrl = 'https://upload.wikimedia.org/wikipedia/commons/c/c3/A_Snapshot_of_the_Jewel_Box_cluster_with_the_ESO_VLT.jpg';
 shared.decorationImgs = {};
 if(typeof Image !== 'undefined'){

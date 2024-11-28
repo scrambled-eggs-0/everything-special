@@ -256,7 +256,7 @@ const messageMap = [
         // [16, len, mapName, playerName]
         const len = data[1];
         const mapName = decodeText(data, 2, len+2);
-        const playerName = decodeText(data, len+2);
+        const playerName = stringHTMLSafe(decodeText(data, len+2));
 
         let mapDiv = document.getElementById(`leaderboard-map-${mapName}`);
         if(mapDiv === null){
@@ -266,13 +266,13 @@ const messageMap = [
             mapDiv.id = `leaderboard-map-${mapName}`;
 
             const difficulty = shared.mapDifficulties[mapName] ?? 0;
-            const displayMapName = shared.mapLeaderboardNames[mapName] ?? mapName;
+            const displayMapName = stringHTMLSafe(shared.mapLeaderboardNames[mapName] ?? mapName);
 
             const mapNameDiv = document.createElement('span');
-            mapNameDiv.classList.add('lb-name');
-            mapNameDiv.style.color = shared.difficultyImageColors[Math.floor(difficulty)];
-            mapNameDiv.innerHTML = displayMapName;
             mapDiv.appendChild(mapNameDiv);
+            mapNameDiv.classList.add('lb-name');
+            mapNameDiv.style.color = (mapName === 'winroom') ? '#3528e0' : shared.difficultyImageColors[Math.floor(difficulty)];
+            mapNameDiv.innerHTML = displayMapName;
 
             leaderboard.appendChild(mapDiv);
         }
@@ -321,7 +321,7 @@ const messageMap = [
         // [17, len, mapName, playerName]
         const len = data[1];
         const mapName = decodeText(data, 2, len+2);
-        const playerName = decodeText(data, len+2);
+        const playerName = stringHTMLSafe(decodeText(data, len+2));
 
         // remove the player from the mapDiv
         document.getElementById(`player-container-${playerName}-${mapName}`).remove();
@@ -329,6 +329,25 @@ const messageMap = [
         // if no more players then remove the mapDiv
         let mapDiv = document.getElementById(`leaderboard-map-${mapName}`);
         if(mapDiv.children.length === 1/*map name*/) mapDiv.remove();
+    },
+    // 18 - win msg
+    (data) => {
+        // [18, len, mapName, name]
+        const len = data[1];
+        const mapName = decodeText(data, 2, len+2);
+        const playerName = stringHTMLSafe(decodeText(data, len+2));
+
+        const difficultyNumber = shared.mapDifficulties[mapName] ?? 0;
+        const displayMapName = stringHTMLSafe(shared.mapLeaderboardNames[mapName] ?? mapName);
+
+        const div = document.createElement('div');
+        div.classList.add('system-message');
+        div.classList.add(`difficulty-${Math.floor(difficultyNumber)}`);
+        div.innerHTML = `<span class="rainbow">[SƎRVƎR]</span>: ${playerName} ${['has beaten', 'completed', 'surmounted', 'finished'][Math.floor(Math.random()*4)]} the ${displayMapName}!`;
+
+        const chatMessageDiv = document.querySelector('.chat-div');
+        chatMessageDiv.appendChild(div);
+        chatMessageDiv.scrollTop = chatMessageDiv.scrollHeight;
     }
 ]
 

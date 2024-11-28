@@ -73,6 +73,18 @@ async function createAccount(
     return true;
 }
 
+async function beatMap(username, accountData, mapName, time) {
+    await until(() => {return connected;});
+    if(accountData.levelsBeaten[mapName] === undefined) accountData.levelsBeaten[mapName] = 1;
+    else accountData.levelsBeaten[mapName]++;
+    const update = {$set: {}};
+    update['$set'][`levelsBeaten.${mapName}`] = accountData.levelsBeaten[mapName];
+    if(accountData.fastestTimes[mapName] === undefined || accountData.fastestTime[mapName] < time){
+        update['$set'][`fastestTimes.${mapName}`] = time;
+    }
+    await userCollection.updateOne({username}, update);
+}
+
 async function getAccount(username) {
     await until(() => {return connected;});
     return await userCollection.findOne({ username });
@@ -86,5 +98,6 @@ async function getAccountRequirePassword(username, password){
 export default {
     createAccount,
     getAccount,
-    getAccountRequirePassword
+    getAccountRequirePassword,
+    beatMap
 };
