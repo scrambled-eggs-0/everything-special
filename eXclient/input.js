@@ -74,7 +74,7 @@ function handleKey(e){
             if(msg === '/reset'){
                 shared.changeMap('/maps/hub');
             }
-            if(shared.isProd === false && msg.slice(0,6) === '/tpmap'){
+            else if(shared.isProd === false && msg.slice(0,6) === '/tpmap'){
                 shared.changeMap(`/maps/` + msg.slice(7).toLowerCase());
             }
             else if(shared.isProd === false && msg.slice(0,6) === '/scale'){
