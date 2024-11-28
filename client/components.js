@@ -2846,7 +2846,7 @@ shared.createPlayer = () => {
     player.stopForces = false;
     player.forces = [];
     player.id = undefined;
-    player.dev = true; /*dev only for players[selfId]*/ player.god = false;
+    player.dev = false; /*dev only for players[selfId]*/ player.god = false;
     player.friction = 0.4;
     player.ship = false; player.shipAngle = 0; player.shipTurnSpeed = Math.PI / 100;
     player.deathTime = 0; player.deathTimer = false;
