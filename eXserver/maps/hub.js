@@ -552,7 +552,7 @@ window.loadMap((shared)=> {
             createdYT = true;
 
             (async()=>{
-                const urls = ['https://www.youtube.com/watch?v=0Ogenr6hVDY', 'https://www.youtube.com/watch?v=HQgIzUTP9A4', 'https://www.youtube.com/watch?v=IipVhYNTM5w'];// TODO: replace these last two with updated versions (reupload pre-trailer, all the planets that are really in the final game)
+                const urls = ['https://www.youtube.com/watch?v=0Ogenr6hVDY', 'https://www.youtube.com/watch?v=HQgIzUTP9A4', 'https://www.youtube.com/watch?v=IipVhYNTM5w', 'https://www.youtube.com/watch?v=GF8GKCEAPRU'];// TODO: replace these last two with updated versions (reupload pre-trailer, all the planets that are really in the final game)
                 const u = urls[Math.floor(Math.random() * urls.length)];
                 await shared.importYoutube();
     
