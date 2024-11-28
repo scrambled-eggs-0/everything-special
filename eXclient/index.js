@@ -37,22 +37,21 @@ shared.startGame = () => {
 }
 
 // gameloop
-let lastTime, accum, now;
-lastTime = accum = now = 0;
-window.frames = 0;
-const FRAME_TIME = 1000 / 60;
+let lastTime=0, now=0;
+window.frames = 0; shared.accum = 0;
+shared.FRAME_TIME = 1000 / 60;
 function run(){
     requestAnimationFrame(run);
 
     now = performance.now();
-    accum += now - lastTime;
+    shared.accum += now - lastTime;
     lastTime = now;
 
     // TODO: Get the map from another player
-    if(accum > 2000) accum = 0;
+    if(shared.accum > 2000) shared.accum = 0;
 
-    while(accum >= 0){
-        accum -= FRAME_TIME;
+    while(shared.accum >= 0){
+        shared.accum -= shared.FRAME_TIME;
         simulate();
     }
 
@@ -61,7 +60,6 @@ function run(){
 }
 
 const u12 = new Uint8Array(12);
-u12[0] = 4;// type 4 - player x and y
 const f12 = new Float32Array(u12.buffer);
 
 const u8 = new Uint8Array(8);
@@ -69,13 +67,17 @@ const f8 = new Float32Array(u8.buffer);
 
 shared.u4 = new Uint8Array(4);
 
-let lastShipAngle = Infinity;
+let lastX=Infinity, lastY=Infinity;
+let lastRadius=Infinity, lastShipAngle = Infinity;
 let lastDead = false;
 function sendUpdatePack(){
     const player = shared.players[shared.selfId];
-    f12[1] = player.pos.x;
-    f12[2] = player.pos.y;
-    shared.send(u12);
+    if(Math.abs(player.pos.x - lastX) > .1 || Math.abs(player.pos.y - lastY) > .1){
+        u12[0] = 4;// type 4 - player x and y
+        f12[1] = player.pos.x;
+        f12[2] = player.pos.y;
+        shared.send(u12);
+    }
 
     if(player.grapple === true){
         u12[0] = 11;
@@ -103,5 +105,12 @@ function sendUpdatePack(){
         shared.u4[0] = 15;
         shared.u4[1] = player.dead === true ? 1 : 0;
         shared.send(shared.u4);
+    }
+
+    if(player.sat.r !== lastRadius){
+        lastRadius = player.sat.r;
+        u8[0] = 22;
+        f8[1] = player.sat.r;
+        shared.send(u8);
     }
 }

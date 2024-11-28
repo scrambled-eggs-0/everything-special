@@ -7,6 +7,7 @@ const {decodeText, stringHTMLSafe} = Utils;
 
 const HOST = location.origin.replace(/^http/, 'ws');
 let ws, nextMsgFlag, gameStarted = false, canLoad=false;
+let syncMapFn=undefined, lateSyncMap=false, mapEntryTime=0;
 shared.disconnected = false;
 const messageQueue = [];
 shared.send = (data) => {
@@ -49,6 +50,7 @@ function initWS() {
 initWS();
 
 shared.changeMap = function changeMap(url=`/maps/hub`, method='GET', headers=new Headers()){
+    lateSyncMap = false; mapEntryTime = window.frames;
     headers.append('id', shared.authId);
     fetch(location.origin + url, {method, headers}).then(async (d) => {
         const levelData = await d.text();
@@ -61,10 +63,6 @@ shared.changeMap = function changeMap(url=`/maps/hub`, method='GET', headers=new
         shared.resetGame();
         shared.mapPath = url;
         shared.players.length = shared.obstacles.length = 0;
-
-        shared.mapReady = (fn) => {
-            fn(shared);
-        }
 
         canLoad = true;
         const s = document.createElement('script');
@@ -95,6 +93,11 @@ window.loadMap = (I) => {
     if(canLoad === false) return;
     canLoad = false;
     I(shared);
+
+    if(syncMapFn !== undefined){
+        syncMapFn();
+        syncMapFn = undefined;
+    } else lateSyncMap = true;
 }
 
 
@@ -131,6 +134,31 @@ function addToLeaderboard(playerName, mapName){
     playerNameDiv.classList.add('player-name');
     playerNameDiv.innerHTML = playerName;
     playerDiv.appendChild(playerNameDiv);
+}
+
+shared.addChatMessage = (message, type) => {
+    const div = document.createElement('div');
+    if (type !== 'system') div.classList.add('chat-message');
+    else div.classList.add('system-message');
+
+    const chatPrefixMap = {
+        normal: '',
+        system: '<span class="rainbow">[SERVER]</span>',
+        dev: '<span class="rainbow">[DEV]</span>',
+        guest: '<span class="guest">'
+    };
+
+    const chatSuffixMap = {
+        normal: '',
+        system: '',
+        dev: '',
+        guest: '</span>'
+    };
+
+    div.innerHTML = chatPrefixMap[type] + message + chatSuffixMap[type];
+    const chatMessageDiv = document.querySelector('.chat-div');
+    chatMessageDiv.appendChild(div);
+    chatMessageDiv.scrollTop = chatMessageDiv.scrollHeight;
 }
 
 // first byte encodes the message type
@@ -188,32 +216,14 @@ const messageMap = [
     // 6 - remove player
     (data) => {
         let id = new Uint16Array(data.buffer)[1];
-        shared.players[id] = undefined;// make america undefined again
+        shared.players[id] = undefined;
     },
     // 7 - chat message
     (data) => {
-        const chatMsg = decodeText(data, 2);
-        const type = ['normal', 'system', 'dev', 'guest'][data[1]];
-
-        const div = document.createElement('div');
-        if (type !== 'system') {
-            div.classList.add('chat-message');
-        } else {
-            div.classList.add('system-message');
-            // if (data.difficulty != undefined) {
-            //     div.classList.add(data.difficulty.toLowerCase());
-            // }
-        }
-        div.innerHTML = `${type === 'system'
-            ? '<span class="rainbow">[SERVER]</span>'
-            : type === 'dev'
-            ? '<span class="rainbow">[DEV]</span> '
-            : ''}${type === 'guest' ? '<span class="guest">' : ''}${
-                chatMsg
-            }${type === 'guest' ? '</span>' : ''}`;
-        const chatMessageDiv = document.querySelector('.chat-div');
-        chatMessageDiv.appendChild(div);
-        chatMessageDiv.scrollTop = chatMessageDiv.scrollHeight;
+        shared.addChatMessage(
+            stringHTMLSafe(decodeText(data, 2)),
+            ['normal', 'system', 'dev', 'guest'][data[1]]
+        )
     },
     // 8 - toggle godmode
     (data) => {
@@ -313,16 +323,32 @@ const messageMap = [
     (data) => {
         // [18, len, mapName, name]
         const len = data[1];
-        const mapName = decodeText(data, 2, len+2);
-        const playerName = stringHTMLSafe(decodeText(data, len+2));
+        const padding = data[2];
+        const mapName = decodeText(data, 8, len+8);
+        const playerName = stringHTMLSafe(decodeText(data, len+8, data.byteLength - padding));
 
         const difficultyNumber = shared.mapDifficulties[mapName] ?? 0;
         const displayMapName = stringHTMLSafe(shared.mapLeaderboardNames[mapName] ?? mapName);
+        const u32 = new Uint32Array(data.buffer);
+        const timeToBeat = u32[1] / 1000;
+
+        let ms = ((~~(timeToBeat*100))%100).toString();
+        let seconds = (~~(timeToBeat%60)).toString();
+        let minutes = (~~((timeToBeat / 60)%60)).toString();
+        if(ms.length === 1) ms = '0' + ms;
+        if(seconds.length === 1) seconds = '0' + seconds;
+
+        let displayMapTime = `${minutes}:${seconds}.${ms}`;
+        if(timeToBeat > 3600) {
+            if(minutes.length === 1) minutes = '0' + minutes;
+            const hours = (~~(timeToBeat / 3600)).toString();
+            displayMapTime = `${hours}:${minutes}:${seconds}.${ms}`;
+        }
 
         const div = document.createElement('div');
         div.classList.add('system-message');
         div.classList.add(`difficulty-${Math.floor(difficultyNumber)}`);
-        div.innerHTML = `<span class="rainbow">[SƎRVƎR]</span>: ${playerName} ${['has beaten', 'completed', 'surmounted', 'finished'][Math.floor(Math.random()*4)]} the ${displayMapName}!`;
+        div.innerHTML = `<span class="rainbow">[SƎRVƎR]</span>: ${playerName} ${['has beaten', 'completed', 'surmounted', 'finished'][Math.floor(Math.random()*4)]} the ${displayMapName} in ${displayMapTime}!`;
 
         const chatMessageDiv = document.querySelector('.chat-div');
         chatMessageDiv.appendChild(div);
@@ -338,16 +364,129 @@ const messageMap = [
                 addToLeaderboard(lb[mapName][id], mapName);
             }
         }
+    },
+    // 20 - map request
+    (data) => {
+        if(shared.obstacles.length === 0) return;
+        // generate function maps that map simulate functions to pack functions
+        shared.generateSyncMaps();
+
+        let ind=0, pack=[], fn, packed=false, lastId=-2;
+        for(let i = 0; i < shared.obstacles.length; i++){
+            const o = shared.obstacles[i];
+            if(o.customSync !== undefined){
+                pack[ind] = o.customSync(o);
+                packed = true;
+            } else {
+                pack[ind] = {}; packed = false;
+                for(let j = 0; j < o.simulate.length; j++){
+                    fn = shared.simulateToSync.get(o.simulate[j]);
+                    if(fn !== undefined) {
+                        packed ||= fn(o, pack[ind]) !== false;
+                        continue;
+                    }
+                    fn = shared.idleEffectToSync.get(o.simulate[j]);
+                    if(fn !== undefined) {
+                        packed ||= fn(o, pack[ind]) !== false;
+                        continue;
+                    }
+                    // custom simulate w/o customSync - dont pack
+                    packed = false;
+                }
+            }
+
+            if(packed === true){
+                if(lastId !== i-1) pack[ind].id = i;
+                lastId = i;
+                ind++;
+            }
+        }
+
+        if(pack.length === 0) return;
+
+        if(packed === false){
+            pack.length--;
+        }
+
+        const buf = msgpackr.pack(pack);
+
+        // First byte is 220 always, so replace it with 0 and reconstruct when client recieves.
+        buf[0] = 21;
+        shared.send(buf);
+    },
+    // 21 - map response
+    (data) => {
+        syncMapFn = () => {
+            shared.generateApplySyncMaps();
+
+            data[0] = 220;
+            let pack;
+            try {
+                pack = msgpackr.unpack(data);
+            } catch(e){
+                console.log('failed sync map parsing!', data);
+                console.error(e);
+                return;
+            }
+
+            if(Array.isArray(pack) === false || pack[0].id === undefined) return;
+            let lastId = pack[0].id, id, fn;
+
+            for(let i = 0; i < pack.length; i++){
+                id = pack[i].id;
+                if(id === undefined) id = ++lastId;
+                else lastId = id;
+
+                const o = shared.obstacles[id];
+                if(o === undefined) continue;
+
+                if(o.applyCustomSync !== undefined){
+                    o.applyCustomSync(o, pack[i]);
+                    continue;
+                }
+
+                for(let j = 0; j < o.simulate.length; j++){
+                    fn = shared.simulateToApplySync.get(o.simulate[j]);
+                    if(fn !== undefined) {
+                        fn(o, pack[i]);
+                        continue;
+                    }
+                    fn = shared.idleEffectToApplySync.get(o.simulate[j]);
+                    if(fn !== undefined) {
+                        fn(o, pack[i]);
+                        continue;
+                    }
+                }
+            }
+        }
+        
+        if(lateSyncMap === true){
+            syncMapFn();
+            syncMapFn = undefined;
+            lateSyncMap = false;
+        }
+
+        const ticksToSimulate = (window.frames - mapEntryTime) / 2;
+        if(ticksToSimulate > 2000) return;
+        shared.accum += shared.FRAME_TIME * ticksToSimulate;
+    },
+    // 22 - change radius
+    (data) => {
+        const u16 = new Uint16Array(data.buffer);
+        const id = u16[1];
+        if(id === shared.selfId) return;
+        const f32 = new Float32Array(data.buffer);
+        shared.players[id].sat.r = f32[1];
     }
 ]
 
 function createPlayerFromData(data){
     const p = shared.createPlayer();
-
     // if this gets bigger we may want to
     // for(let key in data)
     p.pos.x = data.pos.x;
     p.pos.y = data.pos.y;
+    p.sat.r = data.r;
     p.name = data.name;
     p.dead = data.dead;
     p.id = data.id;

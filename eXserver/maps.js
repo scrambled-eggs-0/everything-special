@@ -67,7 +67,7 @@ const u8 = new Uint8Array(buf4);
 const u16 = new Uint16Array(buf4);
 function removeFromMap(me, isConnected=true){
     global.maps[me.mapName].removePlayer(me.player);
-    if(isConnected === true) global.maps[me.mapName].removeClient(me);
+    global.maps[me.mapName].removeClient(me, isConnected);
 
     if(global.maps[me.mapName].players.length === 0) {delete global.maps[me.mapName]; delete global.leaderboard[me.mapName]}
     else {
@@ -82,6 +82,8 @@ global.encoder = new TextEncoder();
 class Map {
     constructor(name){
         this.players = [];
+
+        this.clients = [];
 
         this.reusablePlayerIds = [];
 
@@ -117,9 +119,14 @@ class Map {
     }
     addClient(me){
         me.ws.subscribe(this.name);
+        this.clients.push(me);
     }
-    removeClient(me){
-        me.ws.unsubscribe(this.name);
+    removeClient(me, isConnected){
+        this.clients = this.clients.filter(c => c !== me);
+        if(isConnected === true) me.ws.unsubscribe(this.name);
+    }
+    getRandomClient(){
+        return this.clients[Math.floor(Math.random() * this.clients.length)];
     }
     getInitDataForPlayer(p){
         return [this.players, p.id];

@@ -44,7 +44,8 @@ global.app = uWS.App().ws('/*', {
             player: new Player(),
             dev: true,
             accountData: undefined,
-            enterMapTime: -1
+            enterMapTime: -1,
+            mapRequestFor: undefined,
         }
 
         do {
@@ -300,16 +301,37 @@ app.get("/maps/:filename", (res, req) => {
     }
 
     if(mapName === 'winroom' && ws.mapName !== ''){
-        const buf = new Uint8Array(ws.me.mapName.length + ws.me.player.name.length + 2);
+        const len = ws.me.mapName.length + ws.me.player.name.length + 8;
+        const padding = (4 - (len % 4)) % 4;
+        const buf = new Uint8Array(len + padding);
+        const u32 = new Uint32Array(buf.buffer);
+        const timeToBeat = Date.now() - ws.me.enterMapTime;
         buf[0] = 18;// 18 - win message
         buf[1] = ws.me.mapName.length;
-        global.encoder.encodeInto(ws.me.mapName, buf.subarray(2 | 0));
-        global.encoder.encodeInto(ws.me.player.name, buf.subarray((ws.me.mapName.length+2) | 0));
+        buf[2] = padding;
+        u32[1] = timeToBeat;
+        global.encoder.encodeInto(ws.me.mapName, buf.subarray(8 | 0));
+        global.encoder.encodeInto(ws.me.player.name, buf.subarray((ws.me.mapName.length+8) | 0));
         global.broadcastEveryone(buf);
 
-        db.beatMap(ws.me.player.name, ws.accountData, ws.me.mapName, Date.now() - ws.me.enterMapTime);
+        db.beatMap(ws.me.player.name, ws.accountData, ws.me.mapName, timeToBeat);
         ws.me.enterMapTime = -1;
-    } else ws.me.enterMapTime = Date.now();
+    } else {
+        ws.me.enterMapTime = Date.now();
+
+        if(global.maps[mapName] !== undefined){
+            const otherClient = global.maps[mapName].getRandomClient();
+            if(otherClient !== undefined){
+                const buf = new Uint8Array(1);
+                buf[0] = 20; // request map
+                send(otherClient, buf);
+                otherClient.mapRequestFor = authId;
+                setTimeout(() => {
+                    if(otherClient.mapRequestFor === authId) otherClient.mapRequestFor = undefined;
+                }, 2000)
+            }
+        }
+    }
 
     changeMap(ws.me, mapName, res);
 });
@@ -353,8 +375,33 @@ app.post("/join",async (res, req) => {
         return;
     }
 
+    if(global.env === 'prod'){
+        for(let id in global.clients){
+            if(global.clients[id].me.player.name === username){
+                const buf = new Uint8Array(1);
+                buf[0] = 2; // send to create account page
+                send(ws.me, buf);
+                ws.close();
+                return;
+            }
+        }
+    }
+
     ws.accountData = account;
     ws.me.player.name = username;
+
+    if(global.maps[global.defaultMapName] !== undefined){
+        const otherClient = global.maps[global.defaultMapName].getRandomClient();
+        if(otherClient !== undefined){
+            const buf = new Uint8Array(1);
+            buf[0] = 20; // request map
+            send(otherClient, buf);
+            otherClient.mapRequestFor = authId;
+            setTimeout(() => {
+                if(otherClient.mapRequestFor === authId) otherClient.mapRequestFor = undefined;
+            }, 2000)
+        }
+    }
 
     // send default map
     changeMap(ws.me, global.defaultMapName, res);
@@ -376,8 +423,11 @@ const messageMap = [
     (data, me) => {
         if(data.byteLength !== 12) return;
         // format (in bytes): [type]1 [blank]1 [u16 id]2 [float position x]4 [float position y]4
-        const u16view = new Uint16Array(data.buffer);
-        u16view[1] = me.player.id;
+        const u16 = new Uint16Array(data.buffer);
+        const f32 = new Float32Array(data.buffer);
+        me.player.pos.x = f32[1];
+        me.player.pos.y = f32[2];
+        u16[1] = me.player.id;
         global.maps[me.mapName].broadcast(data);
     },
     // 5 - mute user
@@ -489,6 +539,30 @@ const messageMap = [
         u16[1] = me.player.id;
         global.maps[me.mapName].broadcast(data);
     },
+    // 16 - unused
+    () => {},
+    // 17 - unused
+    () => {},
+    // 18 - unused
+    () => {},
+    // 19 - unused
+    () => {},
+    // 20 - unused
+    () => {},
+    // 21 - map request fulfilled
+    (data, me) => {
+        if(me.mapRequestFor === undefined || global.clients[me.mapRequestFor] === undefined) return;
+        send(global.clients[me.mapRequestFor].me, data);
+        me.mapRequestFor = undefined;
+    },
+    // 22 - change radius
+    (data, me) => {
+        const u16 = new Uint16Array(data.buffer);
+        const f32 = new Float32Array(data.buffer);
+        me.player.r = f32[1];
+        u16[1] = me.player.id;
+        global.maps[me.mapName].broadcast(data);
+    }
 ]
 
 global.send = (client, msg) => {
