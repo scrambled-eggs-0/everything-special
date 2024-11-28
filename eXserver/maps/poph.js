@@ -6,8 +6,20 @@ let flashLava = false;
 let lavaType = flashLava === true ? [0, 1] : [1];
 let dt = 1000/60;
 
-C(0,[],[3],{x:-1E9,y:0,r:1,sf:()=>{
+C(0,[],[3],{x:-1E9,y:0,r:1,sf:(o,p)=>{
 	selfId = shared.selfId;
+	// revives
+	if(p.dead === true){
+		for(let i = 0; i < shared.players.length; i++){
+			const p2 = shared.players[i];
+			if(p2 === undefined) continue;
+
+			if(p2.dead === false && (p2.pos.x-p.pos.x) ** 2 + (p2.pos.y-p.pos.y) ** 2 < (p2.sat.r + p.sat.r) ** 2){
+				p.dead = false;
+				p.renderRadius = 0;
+			}
+		}
+	}
 }})
 
 mapDimensions.x = 700000;
@@ -5504,6 +5516,10 @@ shared.C(1, [], [9], {
 	shared.C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
 		if(t > ts.end) {
 			if(ended === false){
+				for(let i = 0; i < shared.players.length; i++){
+					if(shared.players[i] === undefined) continue;
+					shared.players[i].renderRadius = 49.5;
+				}
 				unveilObs.pos.x = -1E9;
 				ended = true;
 				shared.C(1, [], [26], {
