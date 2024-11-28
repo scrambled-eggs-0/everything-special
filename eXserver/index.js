@@ -377,7 +377,6 @@ const messageMap = [
     },
     // 5 - mute user
     (data, me) => {
-        console.log(me.player.name);
         if(me.player.name !== 'Serum0017' && me.player.name !== 'trit') return;
         const decoder = new TextDecoder();
         const user = decoder.decode(data).slice(1);
