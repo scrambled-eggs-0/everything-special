@@ -156,3 +156,18 @@ animation for poph that starts with e1 text and ends with eX, or zoom out and vi
 - discord bot announces wins in the planet wins channel (otherwise hide it from view)
 
 - discord server minor adjustments like bad language in rules, font should be inter or soulmaze, etc.
+
+
+
+
+----
+add emojis to discord server / finish setup stuff idk
+discord bot setup
+logo design
+fading difficulties redesign (with animation isntead of just opacity)
+make galaxy
+finish up podd
+make cata map in uni 1
+nerf poph a bit
+add mouse to poph
+add e2 accessories
