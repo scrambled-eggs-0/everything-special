@@ -5844,108 +5844,108 @@ shared.C(1, [], [9], {
 
 
 // Evades 1 - Evades X that plays at the beginning
-// {
-// 	function smootherStep(t){
-// 		return t * t * t * (t * (t * 6. - 15.) + 10.);
-// 	}
+{
+	function smootherStep(t){
+		return t * t * t * (t * (t * 6. - 15.) + 10.);
+	}
 
-// 	function interpolateBetween(startPos, endPos, startT, endT){
-// 		if(t < startT) return startPos;
-// 		else if(t > endT) return endPos;
+	function interpolateBetween(startPos, endPos, startT, endT){
+		if(t < startT) return startPos;
+		else if(t > endT) return endPos;
 	
-// 		const ratio = (t - startT) / (endT - startT);
+		const ratio = (t - startT) / (endT - startT);
 	
-// 		return interpolate(startPos, endPos, smootherStep(ratio));
-// 	}
+		return interpolate(startPos, endPos, smootherStep(ratio));
+	}
 
-// 	const interpolate = (s,e,t) => {return (1-t) * s + t * e;}
+	const interpolate = (s,e,t) => {return (1-t) * s + t * e;}
 
-// 	let textYOff = 0;
-// 	const ts = {
-// 		"wait3": 1070 - 1170,
-// 		"e2in": 1370 - 1170,
-// 		"wait4": 1380 - 1170,
-// 		"e3e4in": 1480 - 1170,
-// 		"wait5": 1490 - 1170,
-// 		"eXin": 1590 - 1170,
-// 		"end": 1640 - 1170
-// 	}
+	let textYOff = 0;
+	const ts = {
+		"wait3": 1070 - 1170,
+		"e2in": 1370 - 1170,
+		"wait4": 1380 - 1170,
+		"e3e4in": 1480 - 1170,
+		"wait5": 1490 - 1170,
+		"eXin": 1590 - 1170,
+		"end": 1640 - 1170
+	}
 
-// 	shared.C(1, [], [26], {
-// 		x: 0,
-// 		y: 0,
-// 		w: 174800,
-// 		h: 1500,
-// 		musicPath: 'https://www.youtube.com/watch?v=SsYCPtOaTKw'
-// 	});
-// 	const unveilObs = obstacles[obstacles.length-1];
+	shared.C(1, [], [26], {
+		x: 0,
+		y: 0,
+		w: 174800,
+		h: 1500,
+		musicPath: 'https://www.youtube.com/watch?v=SsYCPtOaTKw'
+	});
+	const unveilObs = obstacles[obstacles.length-1];
 
-// 	let t = -60;
-// 	let w = canvas.width;
-// 	let h = canvas.height;
-// 	let ended = false;
-// 	shared.C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
-// 		if(t > ts.end) {
-// 			if(ended === false){
-// 				for(let i = 0; i < shared.players.length; i++){
-// 					if(shared.players[i] === undefined) continue;
-// 					shared.players[i].renderRadius = 49.5;
-// 				}
-// 				unveilObs.pos.x = -1E9;
-// 				ended = true;
-// 				shared.C(1, [], [26], {
-// 					x: 0,
-// 					y: 0,
-// 					w: 174800,
-// 					h: 1500,
-// 					musicPath: 'https://www.youtube.com/watch?v=D3boxTP-ZG8'
-// 				});
-// 				shared.respawnPlayer();
-// 			}
-// 			return;
-// 		}
-// 		w = canvas.width;
-// 		h = canvas.height;
-// 		const transform = ctx.getTransform();
-// 		ctx.setTransform(1,0,0,1,0,0);
-// 		// ctx.translate(camera.x-canvas.w/2, camera.y-canvas.h/2);
-// 		ctx.fillStyle = 'black';
-// 		ctx.fillRect(0,0,w,h);
-// 		if(t > ts.wait5){
-// 			textYOff = interpolateBetween(5/2*h, 8*h+h/2, ts.wait5, ts.eXin);
-// 		}
-// 		else if(t > ts.wait4){
-// 			textYOff = interpolateBetween(h/2, 5/2*h, ts.wait4, ts.e3e4in);
-// 		}
-// 		else if(t > ts.wait3){
-// 			textYOff = interpolateBetween(-h/2, h/2, ts.wait3, ts.e2in);
-// 		}
+	let t = -60;
+	let w = canvas.width;
+	let h = canvas.height;
+	let ended = false;
+	shared.C(0,[],[3],{x:-1E9,y:0,r:1,cr:()=>{
+		if(t > ts.end) {
+			if(ended === false){
+				for(let i = 0; i < shared.players.length; i++){
+					if(shared.players[i] === undefined) continue;
+					shared.players[i].renderRadius = 49.5;
+				}
+				unveilObs.pos.x = -1E9;
+				ended = true;
+				shared.C(1, [], [26], {
+					x: 0,
+					y: 0,
+					w: 174800,
+					h: 1500,
+					musicPath: 'https://www.youtube.com/watch?v=D3boxTP-ZG8'
+				});
+				shared.respawnPlayer();
+			}
+			return;
+		}
+		w = canvas.width;
+		h = canvas.height;
+		const transform = ctx.getTransform();
+		ctx.setTransform(1,0,0,1,0,0);
+		// ctx.translate(camera.x-canvas.w/2, camera.y-canvas.h/2);
+		ctx.fillStyle = 'black';
+		ctx.fillRect(0,0,w,h);
+		if(t > ts.wait5){
+			textYOff = interpolateBetween(5/2*h, 8*h+h/2, ts.wait5, ts.eXin);
+		}
+		else if(t > ts.wait4){
+			textYOff = interpolateBetween(h/2, 5/2*h, ts.wait4, ts.e3e4in);
+		}
+		else if(t > ts.wait3){
+			textYOff = interpolateBetween(-h/2, h/2, ts.wait3, ts.e2in);
+		}
 
-// 		for(let i = 1; i <= 10; i++){
-// 			let localOffset = -(i-2)*h;
-// 			ctx.fillStyle = 'white';
-// 			ctx.font = `${180}px Inter`;
-// 			ctx.textAlign = 'center';
-// 			ctx.textBaseline = 'middle';
+		for(let i = 1; i <= 10; i++){
+			let localOffset = -(i-2)*h;
+			ctx.fillStyle = 'white';
+			ctx.font = `${180}px Inter`;
+			ctx.textAlign = 'center';
+			ctx.textBaseline = 'middle';
 
-// 			const y = textYOff + localOffset;
+			const y = textYOff + localOffset;
 
-// 			ctx.globalAlpha = smootherStep(1 - Math.min(1,Math.abs(y - h / 2) / (h/2)));
-// 			if(i === 10) {ctx.shadowColor = 'white'; ctx.shadowBlur = 22;}
-// 			ctx.fillText(`Evades ${i===10?'X':i}`, w/2, y);
-// 			ctx.globalAlpha = 1;
-// 		}
-// 		ctx.shadowBlur = 0;
+			ctx.globalAlpha = smootherStep(1 - Math.min(1,Math.abs(y - h / 2) / (h/2)));
+			if(i === 10) {ctx.shadowColor = 'white'; ctx.shadowBlur = 22;}
+			ctx.fillText(`Evades ${i===10?'X':i}`, w/2, y);
+			ctx.globalAlpha = 1;
+		}
+		ctx.shadowBlur = 0;
 
-// 		// ctx.translate(-camera.x+canvas.w/2, -camera.y+canvas.h/2);
-// 		t++;
-// 		ctx.setTransform(transform);
+		// ctx.translate(-camera.x+canvas.w/2, -camera.y+canvas.h/2);
+		t++;
+		ctx.setTransform(transform);
 
-// 		for(let i = 0; i < shared.players.length; i++){
-// 			if(shared.players[i] === undefined) continue;
-// 			shared.players[i].renderRadius = 0;
-// 		}
-// 	}})
-// }
+		for(let i = 0; i < shared.players.length; i++){
+			if(shared.players[i] === undefined) continue;
+			shared.players[i].renderRadius = 0;
+		}
+	}})
+}
 
 });
