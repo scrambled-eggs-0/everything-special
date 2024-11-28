@@ -58,6 +58,11 @@ global.app = uWS.App().ws('/*', {
         global.send(ws.me, randomBuf);
 
         ws.subscribe('global');
+
+        // send leaderboard
+        const lb = pack(global.leaderboard);
+        lb[0] = 19;
+        global.send(ws.me, lb);
     },
     message: (ws, data) => {
         if(ws.me.mapName === '') return;

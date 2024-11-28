@@ -97,6 +97,42 @@ window.loadMap = (I) => {
     I(shared);
 }
 
+
+function addToLeaderboard(playerName, mapName){
+    let mapDiv = document.getElementById(`leaderboard-map-${mapName}`);
+    if(mapDiv === null){
+        // create mapDiv
+        mapDiv = document.createElement('div');
+        mapDiv.classList.add("lb-group");
+        mapDiv.id = `leaderboard-map-${mapName}`;
+
+        const difficulty = shared.mapDifficulties[mapName] ?? 0;
+        const displayMapName = stringHTMLSafe(shared.mapLeaderboardNames[mapName] ?? mapName);
+
+        const mapNameDiv = document.createElement('span');
+        mapDiv.appendChild(mapNameDiv);
+        mapNameDiv.classList.add('lb-name');
+        mapNameDiv.style.color = (mapName === 'winroom') ? '#3528e0' : shared.difficultyImageColors[Math.floor(difficulty)];
+        mapNameDiv.innerHTML = displayMapName;
+
+        leaderboard.appendChild(mapDiv);
+    }
+
+    // add the player to the mapDiv
+    const playerContainer = document.createElement('div');
+    playerContainer.id = `player-container-${playerName}-${mapName}`;
+    playerContainer.classList.add('lb-players');
+    mapDiv.appendChild(playerContainer);
+
+    const playerDiv = document.createElement('div');
+    playerContainer.appendChild(playerDiv);
+
+    const playerNameDiv = document.createElement('span');
+    playerNameDiv.classList.add('player-name');
+    playerNameDiv.innerHTML = playerName;
+    playerDiv.appendChild(playerNameDiv);
+}
+
 // first byte encodes the message type
 const leaderboard = document.querySelector('.leaderboard-div');
 const messageMap = [
@@ -257,64 +293,7 @@ const messageMap = [
         const len = data[1];
         const mapName = decodeText(data, 2, len+2);
         const playerName = stringHTMLSafe(decodeText(data, len+2));
-
-        let mapDiv = document.getElementById(`leaderboard-map-${mapName}`);
-        if(mapDiv === null){
-            // create mapDiv
-            mapDiv = document.createElement('div');
-            mapDiv.classList.add("lb-group");
-            mapDiv.id = `leaderboard-map-${mapName}`;
-
-            const difficulty = shared.mapDifficulties[mapName] ?? 0;
-            const displayMapName = stringHTMLSafe(shared.mapLeaderboardNames[mapName] ?? mapName);
-
-            const mapNameDiv = document.createElement('span');
-            mapDiv.appendChild(mapNameDiv);
-            mapNameDiv.classList.add('lb-name');
-            mapNameDiv.style.color = (mapName === 'winroom') ? '#3528e0' : shared.difficultyImageColors[Math.floor(difficulty)];
-            mapNameDiv.innerHTML = displayMapName;
-
-            leaderboard.appendChild(mapDiv);
-        }
-
-        // add the player to the mapDiv
-
-        const playerContainer = document.createElement('div');
-        playerContainer.id = `player-container-${playerName}-${mapName}`;
-        playerContainer.classList.add('lb-players');
-        mapDiv.appendChild(playerContainer);
-
-        const playerDiv = document.createElement('div');
-        playerContainer.appendChild(playerDiv);
-
-        const playerNameDiv = document.createElement('span');
-        playerNameDiv.classList.add('player-name');
-        playerNameDiv.innerHTML = playerName;
-        playerDiv.appendChild(playerNameDiv);
-
-
-        // ref.lb.innerHTML = '';
-        // for (const map of Object.keys(uniqueMaps)) {
-        //     let playerStr = '';
-        //     for (const [id, _, name, dead, color, zone] of uniqueMaps[
-        //         map
-        //     ]) {
-        //         playerStr += `
-        //             <div>
-        //                 <span></span>
-        //             </div>
-        //         `;
-        //     }
-        //     //console.log('color', uniqueMaps[map][0][4])
-        //     ref.lb.innerHTML += `
-        //         <div class="lb-group">
-        //             <span class="lb-name" style="color: ${uniqueMaps[map][0][4]} !important;">${map}</span>
-        //             <div class="lb-players">
-        //                 ${playerStr}
-        //             </div>
-        //         </div>
-        //     `;
-        // }
+        addToLeaderboard(playerName, mapName);
     },
     // 17 - remove from leaderboard
     (data) => {
@@ -348,6 +327,18 @@ const messageMap = [
         const chatMessageDiv = document.querySelector('.chat-div');
         chatMessageDiv.appendChild(div);
         chatMessageDiv.scrollTop = chatMessageDiv.scrollHeight;
+    },
+    // 19 - init leaderboard
+    (data) => {
+        data[0] = 222;
+        const lb = msgpackr.unpack(data);
+
+        for(let mapName in lb){
+            for(let id in lb[mapName]){
+                console.log('adding to leaderboard', lb[mapName][id], mapName)
+                addToLeaderboard(lb[mapName][id], mapName);
+            }
+        }
     }
 ]
 

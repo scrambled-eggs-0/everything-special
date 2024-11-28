@@ -103,6 +103,7 @@ class Map {
     }
     removePlayer(p){
         this.players[p.id] = undefined;
+        while(this.players[this.players.length-1] === undefined && this.players.length > 0) this.players.length--;
         this.reusablePlayerIds.push(p.id);
 
         delete global.leaderboard[this.name][p.id];
