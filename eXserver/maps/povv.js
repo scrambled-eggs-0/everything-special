@@ -1,6 +1,7 @@
 window.loadMap((shared)=>{
     const md = (a) => {return a;}
-    const {C, colors, spawnPosition, mapDimensions, camera, generateDimensions, obstacles, difficultyImageColors, difficultyImageMap, blendColor, changeCameraScale, players, selfId, generateTopLeftCoordinates, input} = shared;
+    const {C, colors, spawnPosition, mapDimensions, camera, generateDimensions, obstacles, difficultyImageColors, difficultyImageMap, blendColor, changeCameraScale, players, generateTopLeftCoordinates, input} = shared;
+    let selfId = shared.selfId;
     let counter = 10_000;
 
     shared.linkDoors = {};
@@ -28,6 +29,8 @@ window.loadMap((shared)=>{
         }
         ctx.globalAlpha = 1;
         ctx.setLineDash([]);
+    },sf:()=>{
+        selfId = shared.selfId;
     }});
     
 C(0,[0],[1],{x:12650,y:17950,r:2,currentPoint:0.4105000000344808,path:[[12650,17950,3.51],[12650,18250,3.51]],
@@ -10859,11 +10862,31 @@ shared.morphsTriggered[24]=false;var x24=10600;C(1,[],[0],{y:4800,x:10600,w:300,
         }); var c = shared.obstacles[shared.obstacles.length-1]; shared.linkDoors[24] = {pos: {x: c.pos.x, y: c.pos.y}, dimensions: {x: c.dimensions.x, y: c.dimensions.y}};
 C(1,[],[13],{type:[1,[],[13]],x:14200,y:6200,w:1000,h:700,force:800,dir:{"x":0,"y":800},direction:"down",inView:false,conveyorAngle:90,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorForce:0.5666266506602641,})
 C(1,[],[17],{x:14100,y:6100,w:1200,h:800,timeTrapToShowTenth:false,timeTrapToKill:false,timeTrapRecoverySpeed:3,timeTrapMaxTime:360,
-        sf:(e)=>{
-            if(e.timeTrapTime <= 0){
+        sf:(o)=>{
+            if(o.timeTrapTime <= 0){
                 players[selfId].pos.x = 14700;
                 players[selfId].pos.y = 5300;
             }
+
+            if(o.timeTrapTime === o.timeTrapMaxTime){ return; }
+            const v = shared.colors.vignette;
+
+            const interpolate = (s,e,t) => {return (1-t)*s + e*t};
+            let t = Math.sqrt(Math.max(0,o.timeTrapTime) / o.timeTrapMaxTime);
+            let r = interpolate(56,0,t);
+            let g = interpolate(171,0,t);
+            let b = interpolate(48,0,t);
+            v.inner.r = r;
+            v.inner.g = g;
+            v.inner.b = b;
+            v.inner.size = 0;
+            v.inner.opacity = 0;
+
+            v.outer.r = r;
+            v.outer.g = g;
+            v.outer.b = b;
+            v.outer.size = interpolate(0.4,0.6,t);
+            v.outer.opacity = 1;
         },
         cr:(o)=>{
             let middleX = o.topLeft.x + o.dimensions.x/2;
@@ -10887,28 +10910,6 @@ C(1,[],[17],{x:14100,y:6100,w:1200,h:800,timeTrapToShowTenth:false,timeTrapToKil
 
             ctx.fillText(o.timeTrapToShowTenth === true ? Math.round(o.timeTrapTime/60 * 10) / 10 : Math.round(o.timeTrapTime/60), middleX, middleY);
             ctx.globalAlpha = 1;
-
-            
-                if(o.timeTrapTime === o.timeTrapMaxTime){ return; }
-                const v = shared.colors.vignette;
-
-                const interpolate = (s,e,t) => {return (1-t)*s + e*t};
-                let t = Math.sqrt(Math.max(0,o.timeTrapTime) / o.timeTrapMaxTime);
-                let r = interpolate(56,0,t);
-                let g = interpolate(171,0,t);
-                let b = interpolate(48,0,t);
-                v.inner.r = r;
-                v.inner.g = g;
-                v.inner.b = b;
-                v.inner.size = 0;
-                v.inner.opacity = 0;
-
-                v.outer.r = r;
-                v.outer.g = g;
-                v.outer.b = b;
-                v.outer.size = interpolate(0.4,0.6,t);
-                v.outer.opacity = 1;
-            
         }
     });C(1,[],[1],{type:[1,[],[1]],x:14200,y:6200,w:1000,h:700,canCollide:false,inView:false,boundPlayer:false,})
 C(1,[1],[1],{type:[1,[1],[1]],x:14200,y:7400,w:1500,h:200,angle:9520.616666664913,rotateSpeed:0.017744107744107743,pivotX:14950,pivotY:7500,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:378.3186487605389,unSim:4.433333333333343,inView:false,initialRotation:166.1661076535502,boundPlayer:true,})
@@ -11319,11 +11320,31 @@ C(1,[],[13],{type:[1,[],[13]],x:9400,y:5800,w:1200,h:200,force:4000,dir:{"x":0,"
 C(1,[],[13],{type:[1,[],[13]],x:9400,y:6400,w:1200,h:200,force:4000,dir:{"x":0,"y":4000},direction:"down",inView:false,conveyorAngle:90,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorForce:2.833133253301321,})
 C(1,[],[9],{type:[1,[],[9]],x:9400,y:5800,w:1200,h:800,spawn:{"x":5000,"y":3100},collected:false,inView:false,checkpointOffsetX:0,checkpointOffsetY:0,})
 C(1,[],[17],{x:3000,y:14600,w:1000,h:1400,timeTrapToShowTenth:false,timeTrapToKill:false,timeTrapRecoverySpeed:3,timeTrapMaxTime:180,
-        sf:(e)=>{
-            if(e.timeTrapTime <= 0){
+        sf:(o)=>{
+            if(o.timeTrapTime <= 0){
                 players[selfId].pos.x = 3500;
                 players[selfId].pos.y = 4100;
             }
+
+            if(o.timeTrapTime === o.timeTrapMaxTime){ return; }
+            const v = shared.colors.vignette;
+
+            const interpolate = (s,e,t) => {return (1-t)*s + e*t};
+            let t = Math.sqrt(Math.max(0,o.timeTrapTime) / o.timeTrapMaxTime);
+            let r = interpolate(56,0,t);
+            let g = interpolate(171,0,t);
+            let b = interpolate(48,0,t);
+            v.inner.r = r;
+            v.inner.g = g;
+            v.inner.b = b;
+            v.inner.size = 0;
+            v.inner.opacity = 0;
+
+            v.outer.r = r;
+            v.outer.g = g;
+            v.outer.b = b;
+            v.outer.size = interpolate(0.4,0.6,t);
+            v.outer.opacity = 1;
         },
         cr:(o)=>{
             let middleX = o.topLeft.x + o.dimensions.x/2;
@@ -11347,35 +11368,33 @@ C(1,[],[17],{x:3000,y:14600,w:1000,h:1400,timeTrapToShowTenth:false,timeTrapToKi
 
             ctx.fillText(o.timeTrapToShowTenth === true ? Math.round(o.timeTrapTime/60 * 10) / 10 : Math.round(o.timeTrapTime/60), middleX, middleY);
             ctx.globalAlpha = 1;
-
-            
-                if(o.timeTrapTime === o.timeTrapMaxTime){ return; }
-                const v = shared.colors.vignette;
-
-                const interpolate = (s,e,t) => {return (1-t)*s + e*t};
-                let t = Math.sqrt(Math.max(0,o.timeTrapTime) / o.timeTrapMaxTime);
-                let r = interpolate(56,0,t);
-                let g = interpolate(171,0,t);
-                let b = interpolate(48,0,t);
-                v.inner.r = r;
-                v.inner.g = g;
-                v.inner.b = b;
-                v.inner.size = 0;
-                v.inner.opacity = 0;
-
-                v.outer.r = r;
-                v.outer.g = g;
-                v.outer.b = b;
-                v.outer.size = interpolate(0.4,0.6,t);
-                v.outer.opacity = 1;
-            
         }
     });C(1,[],[17],{x:3000,y:13700,w:1000,h:900,timeTrapToShowTenth:false,timeTrapToKill:false,timeTrapRecoverySpeed:3,timeTrapMaxTime:120,
-        sf:(e)=>{
-            if(e.timeTrapTime <= 0){
+        sf:(o)=>{
+            if(o.timeTrapTime <= 0){
                 players[selfId].pos.x = 3500;
                 players[selfId].pos.y = 4100;
             }
+
+            if(o.timeTrapTime === o.timeTrapMaxTime){ return; }
+                const v = shared.colors.vignette;
+
+                const interpolate = (s,e,t) => {return (1-t)*s + e*t};
+                let t = Math.sqrt(Math.max(0,o.timeTrapTime) / o.timeTrapMaxTime);
+                let r = interpolate(56,0,t);
+                let g = interpolate(171,0,t);
+                let b = interpolate(48,0,t);
+                v.inner.r = r;
+                v.inner.g = g;
+                v.inner.b = b;
+                v.inner.size = 0;
+                v.inner.opacity = 0;
+
+                v.outer.r = r;
+                v.outer.g = g;
+                v.outer.b = b;
+                v.outer.size = interpolate(0.4,0.6,t);
+                v.outer.opacity = 1;
         },
         cr:(o)=>{
             let middleX = o.topLeft.x + o.dimensions.x/2;
@@ -11399,28 +11418,6 @@ C(1,[],[17],{x:3000,y:14600,w:1000,h:1400,timeTrapToShowTenth:false,timeTrapToKi
 
             ctx.fillText(o.timeTrapToShowTenth === true ? Math.round(o.timeTrapTime/60 * 10) / 10 : Math.round(o.timeTrapTime/60), middleX, middleY);
             ctx.globalAlpha = 1;
-
-            
-                if(o.timeTrapTime === o.timeTrapMaxTime){ return; }
-                const v = shared.colors.vignette;
-
-                const interpolate = (s,e,t) => {return (1-t)*s + e*t};
-                let t = Math.sqrt(Math.max(0,o.timeTrapTime) / o.timeTrapMaxTime);
-                let r = interpolate(56,0,t);
-                let g = interpolate(171,0,t);
-                let b = interpolate(48,0,t);
-                v.inner.r = r;
-                v.inner.g = g;
-                v.inner.b = b;
-                v.inner.size = 0;
-                v.inner.opacity = 0;
-
-                v.outer.r = r;
-                v.outer.g = g;
-                v.outer.b = b;
-                v.outer.size = interpolate(0.4,0.6,t);
-                v.outer.opacity = 1;
-            
         }
     });C(1,[],[10],{type:[1,[],[10]],x:3150,y:13500,w:750,h:200,maxStrength:30,currentStrength:30,time:0,timer:0,regenTime:800,inView:false,healSpeed:1,})
 C(1,[1],[12],{type:[1,[1],[12]],x:3600,y:9992,w:1000,h:116,tpx:3500,tpy:4100,angle:-10441.966666669316,rotateSpeed:-0.01946127946127946,pivotX:4100,pivotY:10050,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:251.67637950352037,unSim:4.433333333333343,inView:false,initialRotation:-182.2466987168768,})
@@ -11550,11 +11547,31 @@ C(1,[],[12],{type:[1,[],[12]],x:19400,y:1400,w:200,h:200,tpx:19400,tpy:2550,bgCo
 C(1,[],[0],{type:[1,[],[0]],x:9200,y:-250,w:1650,h:250,canJump:true,inView:true,})
 C(1,[],[13],{type:[1,[],[13]],x:800,y:0,w:8600,h:800,force:1750,dir:{"x":-1750,"y":0},direction:"left",inView:true,conveyorAngle:180,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorForce:1.2394957983193275,})
 C(1,[],[17],{x:900,y:200,w:450,h:100,timeTrapToShowTenth:false,timeTrapToKill:false,timeTrapRecoverySpeed:3,timeTrapMaxTime:180,
-        sf:(e)=>{
-            if(e.timeTrapTime <= 0){
+        sf:(o)=>{
+            if(o.timeTrapTime <= 0){
                 players[selfId].pos.x = 5200;
                 players[selfId].pos.y = 350;
             }
+
+            if(o.timeTrapTime === o.timeTrapMaxTime){ return; }
+                const v = shared.colors.vignette;
+
+                const interpolate = (s,e,t) => {return (1-t)*s + e*t};
+                let t = Math.sqrt(Math.max(0,o.timeTrapTime) / o.timeTrapMaxTime);
+                let r = interpolate(56,0,t);
+                let g = interpolate(171,0,t);
+                let b = interpolate(48,0,t);
+                v.inner.r = r;
+                v.inner.g = g;
+                v.inner.b = b;
+                v.inner.size = 0;
+                v.inner.opacity = 0;
+
+                v.outer.r = r;
+                v.outer.g = g;
+                v.outer.b = b;
+                v.outer.size = interpolate(0.4,0.6,t);
+                v.outer.opacity = 1;
         },
         cr:(o)=>{
             let middleX = o.topLeft.x + o.dimensions.x/2;
@@ -11578,28 +11595,6 @@ C(1,[],[17],{x:900,y:200,w:450,h:100,timeTrapToShowTenth:false,timeTrapToKill:fa
 
             ctx.fillText(o.timeTrapToShowTenth === true ? Math.round(o.timeTrapTime/60 * 10) / 10 : Math.round(o.timeTrapTime/60), middleX, middleY);
             ctx.globalAlpha = 1;
-
-            
-                if(o.timeTrapTime === o.timeTrapMaxTime){ return; }
-                const v = shared.colors.vignette;
-
-                const interpolate = (s,e,t) => {return (1-t)*s + e*t};
-                let t = Math.sqrt(Math.max(0,o.timeTrapTime) / o.timeTrapMaxTime);
-                let r = interpolate(56,0,t);
-                let g = interpolate(171,0,t);
-                let b = interpolate(48,0,t);
-                v.inner.r = r;
-                v.inner.g = g;
-                v.inner.b = b;
-                v.inner.size = 0;
-                v.inner.opacity = 0;
-
-                v.outer.r = r;
-                v.outer.g = g;
-                v.outer.b = b;
-                v.outer.size = interpolate(0.4,0.6,t);
-                v.outer.opacity = 1;
-            
         }
     });C(1,[],[9],{type:[1,[],[9]],x:0,y:0,w:800,h:800,spawn:{"x":200,"y":200},collected:false,inView:false,checkpointOffsetX:0,checkpointOffsetY:0,})
 C(1,[],[9],{type:[1,[],[9]],x:19200,y:0,w:800,h:800,spawn:{"x":9800,"y":200},collected:false,inView:false,checkpointOffsetX:0,checkpointOffsetY:0,})

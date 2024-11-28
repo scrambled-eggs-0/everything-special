@@ -1,6 +1,7 @@
 window.loadMap((shared)=>{
     const md = (a) => {return a;}
-    const {C, colors, spawnPosition, mapDimensions, camera, generateDimensions, obstacles, difficultyImageColors, difficultyImageMap, blendColor, changeCameraScale, players, selfId, generateTopLeftCoordinates, input} = shared;
+    const {C, colors, spawnPosition, mapDimensions, camera, generateDimensions, obstacles, difficultyImageColors, difficultyImageMap, blendColor, changeCameraScale, players, generateTopLeftCoordinates, input} = shared;
+    let selfId = shared.selfId;
     let counter = 5000;
 
     shared.linkDoors = {};
@@ -28,6 +29,8 @@ window.loadMap((shared)=>{
         }
         ctx.globalAlpha = 1;
         ctx.setLineDash([]);
+    },sf:()=>{
+        selfId = shared.selfId;
     }});
 
     shared.C(1,[],[0],{x:22400,y:0,w:4900,h:20000});

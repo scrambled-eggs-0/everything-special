@@ -1,6 +1,7 @@
 window.loadMap((shared)=>{
     const md = (a) => {return a;}
-    const {C, colors, spawnPosition, mapDimensions, camera, generateDimensions, obstacles, difficultyImageColors, difficultyImageMap, blendColor, changeCameraScale, players, selfId, generateTopLeftCoordinates, input} = shared;
+    const {C, colors, spawnPosition, mapDimensions, camera, generateDimensions, obstacles, difficultyImageColors, difficultyImageMap, blendColor, changeCameraScale, players, generateTopLeftCoordinates, input} = shared;
+    let selfId = shared.selfId;
     let counter = 8000;
 
     shared.C(1,[],[19],{x:18500,y:14050,w:400,h:50,speedMult:1/3,speedChangePermanent:false});
@@ -23,6 +24,7 @@ window.loadMap((shared)=>{
         if ((e.pos.y - e.sat.r) < 12700 || e.pos.y + e.sat.r > 13200) {
             yv8001 = yv8001 * -1;
         }
+        selfId = shared.selfId;
     },cr:(o)=>{
         if(o.sat.r < 0.01) return;
         ctx.strokeStyle = 'black';

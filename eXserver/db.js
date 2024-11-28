@@ -79,7 +79,7 @@ async function beatMap(username, accountData, mapName, time) {
     else accountData.levelsBeaten[mapName]++;
     const update = {$set: {}};
     update['$set'][`levelsBeaten.${mapName}`] = accountData.levelsBeaten[mapName];
-    if(accountData.fastestTimes[mapName] === undefined || accountData.fastestTime[mapName] < time){
+    if(accountData.fastestTimes[mapName] === undefined || accountData.fastestTimes[mapName] < time){
         update['$set'][`fastestTimes.${mapName}`] = time;
     }
     await userCollection.updateOne({username}, update);

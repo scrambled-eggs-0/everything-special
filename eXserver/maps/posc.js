@@ -2950,11 +2950,31 @@ C(1,[],[0],{type:[1,[],[0]],x:14000,y:4300,w:3000,h:2900,canJump:true,inView:fal
 C(1,[],[0],{type:[1,[],[0]],x:12800,y:5500,w:1200,h:1700,canJump:true,inView:false,})
 C(1,[],[0],{type:[1,[],[0]],x:13000,y:4100,w:1800,h:200,canJump:true,inView:false,})
 C(1,[],[17],{x:12800,y:4300,w:1200,h:1200,timeTrapToShowTenth:false,timeTrapToKill:false,timeTrapRecoverySpeed:3,timeTrapMaxTime:600,
-        sf:(e)=>{
-            if(e.timeTrapTime <= 0){
+        sf:(o)=>{
+            if(o.timeTrapTime <= 0){
                 players[selfId].pos.x = 14000;
                 players[selfId].pos.y = 7250;
             }
+
+            if(o.timeTrapTime === o.timeTrapMaxTime){ return; }
+                const v = shared.colors.vignette;
+
+                const interpolate = (s,e,t) => {return (1-t)*s + e*t};
+                let t = Math.sqrt(Math.max(0,o.timeTrapTime) / o.timeTrapMaxTime);
+                let r = interpolate(56,0,t);
+                let g = interpolate(171,0,t);
+                let b = interpolate(48,0,t);
+                v.inner.r = r;
+                v.inner.g = g;
+                v.inner.b = b;
+                v.inner.size = 0;
+                v.inner.opacity = 0;
+
+                v.outer.r = r;
+                v.outer.g = g;
+                v.outer.b = b;
+                v.outer.size = interpolate(0.4,0.6,t);
+                v.outer.opacity = 1;
         },
         cr:(o)=>{
             let middleX = o.topLeft.x + o.dimensions.x/2;
@@ -2978,28 +2998,6 @@ C(1,[],[17],{x:12800,y:4300,w:1200,h:1200,timeTrapToShowTenth:false,timeTrapToKi
 
             ctx.fillText(o.timeTrapToShowTenth === true ? Math.round(o.timeTrapTime/60 * 10) / 10 : Math.round(o.timeTrapTime/60), middleX, middleY);
             ctx.globalAlpha = 1;
-
-            
-                if(o.timeTrapTime === o.timeTrapMaxTime){ return; }
-                const v = shared.colors.vignette;
-
-                const interpolate = (s,e,t) => {return (1-t)*s + e*t};
-                let t = Math.sqrt(Math.max(0,o.timeTrapTime) / o.timeTrapMaxTime);
-                let r = interpolate(56,0,t);
-                let g = interpolate(171,0,t);
-                let b = interpolate(48,0,t);
-                v.inner.r = r;
-                v.inner.g = g;
-                v.inner.b = b;
-                v.inner.size = 0;
-                v.inner.opacity = 0;
-
-                v.outer.r = r;
-                v.outer.g = g;
-                v.outer.b = b;
-                v.outer.size = interpolate(0.4,0.6,t);
-                v.outer.opacity = 1;
-            
         }
     });C(1,[],[0],{type:[1,[],[0]],x:15200,y:4000,w:5250,h:6000,canJump:true,inView:false,})
 C(1,[],[0],{type:[1,[],[0]],x:12800,y:7200,w:1100,h:100,canJump:true,inView:false,})

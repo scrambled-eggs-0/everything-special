@@ -292,6 +292,24 @@ function simulate(){
                 }
             }
         }
+
+        const v = shared.colors.vignette;
+        for(let key in v.innerInterp){
+            v.innerInterp[key] = interpolate(v.innerInterp[key], v.inner[key], 0.03);
+        }
+        for(let key in v.outerInterp){
+            v.outerInterp[key] = interpolate(v.outerInterp[key], v.outer[key], 0.03);
+        }
+    }
+
+    for(let i = 0; i < shared.players.length; i++){
+        const p = shared.players[i];
+        if((p.interpX-p.pos.x)**2+(p.interpY-p.pos.y)**2>352**2){
+            p.interpX = p.pos.x;
+            p.interpY = p.pos.y;
+        }
+        p.interpX = interpolate(p.interpX, p.pos.x, 0.4);
+        p.interpY = interpolate(p.interpY, p.pos.y, 0.4);
     }
 
     if(player.touchingNormalIndexes.length !== 0 || player.lastTouchingNormalIndexes.length !== 0){
@@ -2854,6 +2872,7 @@ shared.createPlayer = () => {
     player.lastTouchingNormalIndexes = [];
     player.renderRadius = player.lastAliveRadius = player.sat.r;
     player.xv = player.yv = player.xa = player.ya = 0;
+    player.interpX = player.interpY = 0;
     player.speed = player.baseSpeed = 7.167;
     player.dead = false;
     player.onSafe = false;

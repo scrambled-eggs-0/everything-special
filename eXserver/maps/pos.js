@@ -1,6 +1,7 @@
 window.loadMap((shared)=>{
     const md = (a) => {return a;}
-    const {C, colors, spawnPosition, mapDimensions, camera, generateDimensions, obstacles, difficultyImageColors, difficultyImageMap, blendColor, changeCameraScale, players, selfId, generateTopLeftCoordinates, input} = shared;
+    const {C, colors, spawnPosition, mapDimensions, camera, generateDimensions, obstacles, difficultyImageColors, difficultyImageMap, blendColor, changeCameraScale, players, generateTopLeftCoordinates, input} = shared;
+    let selfId = shared.selfId;
     let counter = 6000;
 
     let xv6001 = 0.36684863787511873;
@@ -14,6 +15,7 @@ window.loadMap((shared)=>{
     if ((e.pos.y - e.sat.r) < 16300 || e.pos.y + e.sat.r > 17800) {
         yv6001 = yv6001 * -1;
     }
+    selfId = shared.selfId;
     }});
 
     

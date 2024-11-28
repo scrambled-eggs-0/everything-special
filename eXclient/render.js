@@ -124,7 +124,7 @@ const fullscreen = {
 //     return canv;
 // }
 
-let opaqIndex, len, lastPlayerX, lastPlayerY, lastPlayerRadius, diagonalStartOffset, diagonalDist, overRenderTiles = false, lastGA, j = false, lastNLDX = 0, lastNLDY = 0, cullingMinX=0, cullingMaxX=0, cullingMinY=0, cullingMaxY=0, canvSum=0;
+let opaqIndex, len, lastX, lastY, lastR, lastPlayerRadius, diagonalStartOffset, diagonalDist, overRenderTiles = false, lastGA, j = false, lastNLDX = 0, lastNLDY = 0, cullingMinX=0, cullingMaxX=0, cullingMinY=0, cullingMaxY=0, canvSum=0;
 shared.render = (os=shared.obstacles, cols=shared.colors, players=shared.players) => {
     overRenderTiles = false;
     if(shared.selfId !== undefined){
@@ -308,8 +308,15 @@ shared.render = (os=shared.obstacles, cols=shared.colors, players=shared.players
         if(player === undefined) continue;
         ctx.fillStyle = player.dead === true ? 'red' : 'black';
 
-        const lastRadius = player.sat.r;
+        lastR = player.sat.r;
         player.sat.r = Math.abs(player.renderRadius);
+
+        lastX = player.pos.x;
+        lastY = player.pos.y;
+        if(i !== shared.selfId){
+            player.pos.x = player.interpX;
+            player.pos.y = player.interpY;
+        }
         
         ctx.beginPath();
         player.renderShape(player);
@@ -402,7 +409,9 @@ shared.render = (os=shared.obstacles, cols=shared.colors, players=shared.players
             player.pos.y + player.renderRadius * 4/3 + 3
         );
 
-        player.sat.r = lastRadius;
+        player.pos.x = lastX;
+        player.pos.y = lastY;
+        player.sat.r = lastR;
     }
 
     // debug
@@ -448,13 +457,6 @@ shared.render = (os=shared.obstacles, cols=shared.colors, players=shared.players
 
     // vignette
     const v = shared.colors.vignette;
-    for(let key in v.innerInterp){
-        v.innerInterp[key] = interpolate(v.innerInterp[key], v.inner[key], 0.03);
-    }
-    for(let key in v.outerInterp){
-        v.outerInterp[key] = interpolate(v.outerInterp[key], v.outer[key], 0.03);
-    }
-    
     ctx.beginPath();
     const grd = ctx.createRadialGradient(
         canvas.w / 2,

@@ -8,7 +8,6 @@ window.loadMap((shared)=>{
 var or = shared.render; shared.render = (...params) => {
     or(...params);
     selfId = shared.selfId;
-    const p = shared.players[shared.selfId];
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 1000;
     ctx.strokeRect(-1000/2,-1000/2,canvas.w+1000,canvas.h+1000);
