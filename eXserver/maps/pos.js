@@ -1029,7 +1029,7 @@ C(2,[],[1],{type:[2,[],[1]],points:[[1700,1200],[1750,1200],[1700,1450]],most:{"
 C(1,[],[1],{type:[1,[],[1]],x:2900,y:3600,w:3100,h:2800,canCollide:false,inView:false,boundPlayer:false,})
 C(1,[],[0],{type:[1,[],[0]],x:0,y:6000,w:2900,h:2000,canJump:true,inView:false,})
 C(1,[],[19],{type:[1,[],[19]],x:2900,y:3600,w:3100,h:2800,speedInc:1.37,inView:false,speedChangePermanent:false,speedMult:1.37,})
-C(1,[],[17],{type:[1,[],[17]],x:2900,y:3600,w:3100,h:2800,time:0,maxTime:17,cdmult:3,trapType:"death",inView:false,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:1020,})
+C(1,[],[17],{type:[1,[],[17]],x:2900,y:3600,w:3100,h:2800,time:0,maxTime:17,cdmult:3,trapType:"death",inView:false,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:100,timeTrapMaxTime:1020,})
 C(2,[],[11],{type:[2,[],[11]],points:[[3250,3850],[3850,4450],[3750,4450],[3250,3950]],most:{"left":1625,"right":1925,"top":1925,"bottom":2225},renderType:"poly",inView:false,x:null,y:null,})
 C(0,[],[11],{type:[0,[],[11]],x:3100,y:5250,r:230,renderType:"circleR",radius:115,inView:false,})
 C(1,[],[1],{type:[1,[],[1]],x:3150,y:5200,w:350,h:100,canCollide:true,inView:false,boundPlayer:true,})

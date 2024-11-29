@@ -1028,7 +1028,8 @@ const simulateSyncKeys = [
     },
     // /*rotate*/
     (o, sync) => {
-        if(o.rotateSpeed !== 0) sync.initialRotation = o.rotation;
+        if(o.rotateSpeed === 0) return false;
+        sync.initialRotation = o.rotation;
     },
     // /*grow*/
     undefined,
@@ -1051,12 +1052,14 @@ const applySimulateSyncKeys = [
     },
     // /*rotate*/
     (o, init) => {
-        if(Number.isFinite(init.initialRotation) === false || o.rotateSpeed === 0) return;
+        if(Number.isFinite(init.initialRotation) === false) return;
+        const r = init.initialRotation;
         init.initialRotation -= o.rotation;
         init.pivotX = o.pivotX;
         init.pivotY = o.pivotY;
         init.rotateSpeed = o.rotateSpeed;
         initSimulateMap[1](o, init);
+        o.rotation = r;
     },
     // /*grow*/
     undefined,
@@ -1171,6 +1174,7 @@ const initEffectMap = [
         o.snapDistanceY = params.snapDistanceY;
         o.snapCooldown = o.maxSnapCooldown = params.snapCooldown;
         o.snapAngle = params.snapAngle * Math.PI / 180;
+        o.snapCollided = false;
         o.snapAngleRotateSpeed = params.snapAngleRotateSpeed * Math.PI/180;
 
         o.interpolatePlayerData = {time: 0, nextX: -1, nextY: -1};
@@ -1446,6 +1450,7 @@ const effectMap = [
         // translate the player to the snapGrid until its like the snap grid is unrotated. Then we snap
         // by moduloing the x to the grid and then rotate back to get the final position.
         o.snapCooldown--;
+        o.snapCollided = true;
 
         if(o.snapCooldown <= 0 && ((o.toSnapX === true && Math.abs(p.xv) > 0.01) || (o.toSnapY === true && Math.abs(p.yv) > 0.01))){
             o.snapCooldown = o.maxSnapCooldown;
@@ -1721,6 +1726,8 @@ const idleEffectMap = [
     // 'snapGrid',
     (o) => {
         o.snapAngle += o.snapAngleRotateSpeed;
+        if(o.snapCollided === false) o.interpolatePlayerData.time = -1;
+        o.snapCollided = false;
     },
     // 'timeTrap'
     (o) => {

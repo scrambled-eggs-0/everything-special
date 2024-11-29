@@ -2427,7 +2427,7 @@ C(1,[],[20],{x:8800,y:3300,w:100,h:100,hex:'#000000',alpha:0,cr:()=>{},ef:()=>{
     }});C(1,[1],[1],{type:[1,[1],[1]],x:8900,y:4500,w:500,h:100,angle:21410.666666669847,rotateSpeed:0.0228956228956229,pivotX:9150,pivotY:4550,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:127.47548783981962,unSim:15.483333333333094,inView:false,initialRotation:373.6866283803881,boundPlayer:true,})
 C(1,[1],[1],{type:[1,[1],[1]],x:8900,y:4100,w:500,h:100,angle:-21410.666666669847,rotateSpeed:-0.0228956228956229,pivotX:9150,pivotY:4150,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:127.47548783981962,unSim:15.483333333333094,inView:false,initialRotation:-373.6866283803881,boundPlayer:true,})
 C(1,[],[15],{type:[1,[],[15]],x:500,y:3300,w:5000,h:1000,rx:true,ry:false,inView:false,axisSpeedMultY:1,axisSpeedMultX:0,})
-C(1,[],[17],{type:[1,[],[17]],x:500,y:3300,w:4900,h:1000,time:0,maxTime:15,cdmult:3,trapType:"death",inView:false,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:900,})
+C(1,[],[17],{type:[1,[],[17]],x:500,y:3300,w:4900,h:1000,time:0,maxTime:15,cdmult:3,trapType:"death",inView:false,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:100,timeTrapMaxTime:900,})
 C(1,[1],[1],{type:[1,[1],[1]],x:8900,y:3700,w:500,h:100,angle:21410.666666669847,rotateSpeed:0.0228956228956229,pivotX:9150,pivotY:3750,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:127.47548783981962,unSim:15.483333333333094,inView:false,initialRotation:373.6866283803881,boundPlayer:true,})
 C(1,[],[0],{type:[1,[],[0]],x:9150,y:3600,w:250,h:300,canJump:true,inView:false,})
 C(1,[],[0],{type:[1,[],[0]],x:8900,y:4000,w:250,h:300,canJump:true,inView:false,})
