@@ -14260,7 +14260,7 @@ C(2,[],[0],{x:0,y:0,points:[[14450,11650],[14402.254248593737,11914.503363531612
             ctx.closePath();
         }});
 C(1,[],[26],{type:[1,[],[26]],x:9400,y:5850,w:1200,h:700,musicPath:"https://www.youtube.com/watch?v=6DpNIql7uPk",volume:1,startTime:0,inView:false,})
-C(0,[],[7,9],{type:[0,[],[7,9]],x:14700,y:12000,r:70,collected:false,renderType:"circle",inView:false,color:"#d5d612",coinAmount:1,checkpointOffsetX:0,checkpointOffsetY:0})
+C(0,[],[7,9],{type:[0,[],[7,9]],x:14700,y:11900,r:70,collected:false,renderType:"circle",inView:false,color:"#d5d612",coinAmount:1,checkpointOffsetX:0,checkpointOffsetY:0})
 C(1,[],[20],{x:13950,y:14200,w:200,h:1000,hex:'#000000',alpha:0,cr:()=>{},ef:()=>{
         for(let i = 0; i < obstacles.length; i++){
             if(obstacles[i].collected !== undefined){

@@ -12,6 +12,7 @@ shared.mapDifficulties = Object.freeze({
     podc: 6.1,
     posc: 0.6,
     poph: 4.05,
+    posh: 1.68
 });
 
 shared.mapLeaderboardNames = Object.freeze({
@@ -26,5 +27,6 @@ shared.mapLeaderboardNames = Object.freeze({
     poqt: 'Planet of Quick Thinking',
     podc: 'Planet of Difficulty Chart',
     posc: 'Planet of Simple Challenges',
-    poph: 'Planet of Prehistory'
+    poph: 'Planet of Prehistory',
+    posh: `Planet of ${Math.random() < 0.01 ? 'Suspicious' : 'Slight'} Hurdles`
 });

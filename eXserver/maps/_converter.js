@@ -438,7 +438,7 @@ shared.convertOldExMap = (obs, enemies, safes, texts, counter, special=undefined
                         pivotX: params.pivotX * 2,
                         pivotY: params.pivotY * 2
                     };
-                } else if(special === 'posc' || special === 'povv' || (special === 'pospd' && params.x > 3750/2 && params.y >11400/2 && params.x < 6100/2 && params.y < 13450/2)){
+                } else if(special === 'posc' || special === 'povv' || special === 'posh' || (special === 'pospd' && params.x > 3750/2 && params.y >11400/2 && params.x < 6100/2 && params.y < 13450/2)){
                     params.x = params.distToPivot + params.pivotX;
                     params.y = params.pivotY;
                     return {
@@ -1354,11 +1354,11 @@ shared.convertOldExMap = (obs, enemies, safes, texts, counter, special=undefined
 
                 let index;
 
-                C(0,[],[3],{r:${projectileParams.radius},y:e.pos.y,x:e.pos.x,sf:(e)=>{
+                C(0,[3],[1],{r:${projectileParams.radius},y:e.pos.y,x:e.pos.x,sf:(e)=>{
                 e.pos.y += yv${counter};
                 e.pos.x += xv${counter};
                 /*delete obstacle*/
-                if ((e.pos.x - e.sat.r - xv${counter} * dyingTimer) < ${bounds.x} || e.pos.x + e.sat.r + xv${counter} * dyingTimer > ${bounds.x + bounds.w} || (e.pos.y - e.sat.r - yv${counter} * dyingTimer) < ${bounds.y} || e.pos.y + e.sat.r + yv${counter} * dyingTimer > ${bounds.y + bounds.h}) {
+                if ((e.pos.x - e.sat.r)+xv${counter}*dyingTimer < ${bounds.x} || e.pos.x + e.sat.r-xv${counter}*dyingTimer > ${bounds.x + bounds.w} || (e.pos.y - e.sat.r)+yv${counter}*dyingTimer < ${bounds.y} || e.pos.y + e.sat.r-yv${counter}*dyingTimer > ${bounds.y + bounds.h}) {
                     // shared.tickFns.push(()=>{
                     //     for(let i = 0; i < obstacles.length; i++){
                     //         if(obstacles[i] === e) {obstacles.splice(i,1); break;}
@@ -1374,10 +1374,6 @@ shared.convertOldExMap = (obs, enemies, safes, texts, counter, special=undefined
                         reusableIndexes.push(index);
                         dyingTimer = -Infinity;
                     }
-                },ef:(p,res)=>{
-                    if(dyingTimer === 30 && res.overlap > 1){
-                        p.dead = true;
-                    }    
                 }
                 },cr:(o)=>{
                     if(dyingTimer < 0) return;
@@ -2757,7 +2753,7 @@ shared.convertOldExMap = (obs, enemies, safes, texts, counter, special=undefined
             }});\n`
         }
 
-        if(special === 'povv' || special === 'posc' || special === 'poqt'){
+        if(special === 'povv' || special === 'posc' || special === 'poqt' || special === 'posh'){
             if(special === 'poqt' && o.x < 2000 && o.y < 1200 && (o.type === 'door' || o.type === 'button')){
                 if(o.type === 'door'){
                     o.x *= 2; o.y *= 2; o.w *= 2; o.h *= 2;

@@ -1028,7 +1028,7 @@ const simulateSyncKeys = [
     },
     // /*rotate*/
     (o, sync) => {
-        sync.initialRotation = o.rotation;
+        if(o.rotateSpeed !== 0) sync.initialRotation = o.rotation;
     },
     // /*grow*/
     undefined,
@@ -1051,7 +1051,7 @@ const applySimulateSyncKeys = [
     },
     // /*rotate*/
     (o, init) => {
-        if(Number.isFinite(init.initialRotation) === false) return;
+        if(Number.isFinite(init.initialRotation) === false || o.rotateSpeed === 0) return;
         init.initialRotation -= o.rotation;
         init.pivotX = o.pivotX;
         init.pivotY = o.pivotY;
