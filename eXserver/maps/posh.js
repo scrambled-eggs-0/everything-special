@@ -2723,6 +2723,8 @@ C(0,[],[0],{type:[0,[],[0]],x:3880,y:380,r:20,renderType:"circle",inView:false,t
 C(1,[],[0],{type:[1,[],[0]],x:3820,y:200,w:60,h:200,toRender:false,})
 C(1,[],[0],{type:[1,[],[0]],x:3800,y:220,w:100,h:160,toRender:false,})
 
+C(1,[],[13],{type:[1,[],[13]],x:400,y:4200,w:100,h:100,conveyorAngle:180,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorForce:2,})
+
 
     spawnPosition.x=50;
     spawnPosition.y=50;
