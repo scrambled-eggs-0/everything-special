@@ -1568,14 +1568,14 @@ let areas = [
 	[// 8.3 - cc z20 w/ pulsing enemies
 		{
 			type: "snake",
-			count: 12,
-			radius: 18,
-			speed: 4
-		}, {
-			type: "oscillating",
-			count: 12,
+			count: 11,
 			radius: 18,
 			speed: 3.2
+		}, {
+			type: "oscillating",
+			count: 11,
+			radius: 18,
+			speed: 2.4
 		}, {
 			type: "slower",
 			count: 20,
@@ -1586,17 +1586,17 @@ let areas = [
 	[// 8.4 - cc z30 w/ fading enemies 
 		{
 			type: "liquid",
-			count: 9,
+			count: 7,
 			radius: 18,
 			speed: 2
 		}, {
 			type: "warp",
-			count: 20,
+			count: 16,
 			radius: 20,
 			speed: 6
 		}, {
 			type: "icicle",
-			count: 16,
+			count: 12,
 			radius: 16,
 			speed: 6
 		}, {
@@ -1662,9 +1662,9 @@ let areas = [
 		},
 		{
 			type: "turning",
-			count: 30,
+			count: 15,
 			radius: 26,
-			speed: 1.5
+			speed: 1
 		},
 		// {
 		// 	extraobs: true,
