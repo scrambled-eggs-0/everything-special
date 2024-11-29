@@ -5,8 +5,6 @@ class Player {
         
         this.pos = {x: 0, y: 0};
 
-        this.r = 49.5;
-
         this.name = '';
 
         this.reset();
@@ -15,6 +13,8 @@ class Player {
     }
     // reset powerups
     reset(){
+        this.r = 49.5;
+        
         this.dead = false;
 
         this.god = false;

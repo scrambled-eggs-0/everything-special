@@ -1354,11 +1354,11 @@ shared.convertOldExMap = (obs, enemies, safes, texts, counter, special=undefined
 
                 let index;
 
-                C(0,[3],[1],{r:${projectileParams.radius},y:e.pos.y,x:e.pos.x,sf:(e)=>{
+                C(0,[],[3],{r:${projectileParams.radius},y:e.pos.y,x:e.pos.x,sf:(e)=>{
                 e.pos.y += yv${counter};
                 e.pos.x += xv${counter};
                 /*delete obstacle*/
-                if ((e.pos.x - e.sat.r) < ${bounds.x} || e.pos.x + e.sat.r > ${bounds.x + bounds.w} || (e.pos.y - e.sat.r) < ${bounds.y} || e.pos.y + e.sat.r > ${bounds.y + bounds.h}) {
+                if ((e.pos.x - e.sat.r - xv${counter} * dyingTimer) < ${bounds.x} || e.pos.x + e.sat.r + xv${counter} * dyingTimer > ${bounds.x + bounds.w} || (e.pos.y - e.sat.r - yv${counter} * dyingTimer) < ${bounds.y} || e.pos.y + e.sat.r + yv${counter} * dyingTimer > ${bounds.y + bounds.h}) {
                     // shared.tickFns.push(()=>{
                     //     for(let i = 0; i < obstacles.length; i++){
                     //         if(obstacles[i] === e) {obstacles.splice(i,1); break;}
@@ -1374,6 +1374,10 @@ shared.convertOldExMap = (obs, enemies, safes, texts, counter, special=undefined
                         reusableIndexes.push(index);
                         dyingTimer = -Infinity;
                     }
+                },ef:(p,res)=>{
+                    if(dyingTimer === 30 && res.overlap > 1){
+                        p.dead = true;
+                    }    
                 }
                 },cr:(o)=>{
                     if(dyingTimer < 0) return;
