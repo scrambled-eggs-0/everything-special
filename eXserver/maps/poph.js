@@ -394,7 +394,7 @@ let areas = [
 	}],
 	[{ //2.3
 		type: "homing",
-		count: 16,
+		count: 12,
 		radius: 18,
 		speed: 8
 	}, {
@@ -473,7 +473,7 @@ let areas = [
 		speed: 12
 	}, {
 		type: "homing",
-		count: 20,
+		count: 15,
 		radius: 15,
 		speed: 6
 	}, {
@@ -486,12 +486,12 @@ let areas = [
 		type: "normal",
 		count: 14,
 		radius: 18,
-		speed: 15
+		speed: 13
 	}, {
 		type: "normal",
 		count: 14,
 		radius: 12,
-		speed: 15
+		speed: 13
 	}, {
 		type: "wall",
 		count: 8,
@@ -1568,17 +1568,17 @@ let areas = [
 	[// 8.3 - cc z20 w/ pulsing enemies
 		{
 			type: "snake",
-			count: 11,
+			count: 8,
 			radius: 18,
 			speed: 3.2
 		}, {
 			type: "oscillating",
-			count: 11,
+			count: 9,
 			radius: 18,
 			speed: 2.4
 		}, {
 			type: "slower",
-			count: 20,
+			count: 18,
 			radius: 24,
 			speed: 6
 		}
@@ -1662,7 +1662,7 @@ let areas = [
 		},
 		{
 			type: "turning",
-			count: 15,
+			count: 12,
 			radius: 26,
 			speed: 1
 		},

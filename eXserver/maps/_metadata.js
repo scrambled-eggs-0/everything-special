@@ -8,7 +8,7 @@ shared.mapDifficulties = Object.freeze({
     pos: 3.3,
     pols: 5.01,
     povv: 1.99,
-    poqt: 4.5,
+    poqt: 5.5,
     podc: 6.1,
     posc: 0.6,
     poph: 4.05,
