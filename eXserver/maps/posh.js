@@ -2701,7 +2701,7 @@ C(3,[],[20],{type:[3,[],[20]],x:8150,y:-50,w:50,h:50,size:30,text:"Speed Check!"
 // C(3,[],[20],{type:[3,[],[20]],x:350,y:-290,w:50,h:50,size:30,text:"The First Community-Made Map!",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
 C(3,[],[20],{type:[3,[],[20]],x:350,y:-220,w:50,h:50,size:30,text:/*"Planet of Slight Hurdles (PoSH)"*/"The First Community-Made Map!",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
 C(3,[],[20],{type:[3,[],[20]],x:350,y:-150,w:50,h:50,size:30,text:"Creator: Smelty",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
-C(3,[],[20],{type:[3,[],[20]],x:350,y:-80,w:50,h:50,size:30,text:"Difficulty: Low Moderate",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
+C(3,[],[20],{type:[3,[],[20]],x:350,y:-80,w:50,h:50,size:30,text:"Difficulty: Low-Mid Moderate",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
 // C(3,[],[20],{type:[3,[],[20]],x:5150,y:3250,w:50,h:50,size:30,text:"Approaching the end...",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
 C(3,[],[20],{type:[3,[],[20]],x:350,y:4050,w:50,h:50,size:30,text:"v Need Coins? ",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
 C(0,[],[0],{type:[0,[],[0]],x:2020,y:1120,r:20,renderType:"circle",inView:false,toRender:false,})

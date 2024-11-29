@@ -2,17 +2,17 @@ import shared from '../../shared/shared.js';
 shared.mapDifficulties = Object.freeze({
     winroom: 0,
     hub: 0,
-    popb: 0.2,
-    poca: 1.05,
-    pospd: 2.8,
-    pos: 3.3,
+    popb: 0.25,
+    poca: 1.07,
+    pospd: 2.71,
+    pos: 3.17,
     pols: 5.01,
     povv: 1.99,
-    poqt: 5.5,
-    podc: 6.1,
-    posc: 0.6,
-    poph: 4.05,
-    posh: 1.68
+    poqt: 5.66,
+    podc: 6.01,
+    posc: 0.65,
+    poph: 4.33,
+    posh: 1.39
 });
 
 shared.mapLeaderboardNames = Object.freeze({

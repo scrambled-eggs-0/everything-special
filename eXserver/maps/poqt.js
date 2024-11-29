@@ -16301,6 +16301,10 @@ C(3,[],[20],{type:[3,[],[20]],x:48550,y:10050,w:50,h:50,size:22,text:"Watch Out 
 C(3,[],[20],{type:[3,[],[20]],x:47150,y:10050,w:50,h:50,size:22,text:"Don't look ahead of you!",angle:0,story:false,fontSize:44,hex:"#FFFFFF",})
 C(3,[],[20],{type:[3,[],[20]],x:750,y:550,w:50,h:50,size:30,text:"Welcome To PoQT!",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
 C(3,[],[20],{type:[3,[],[20]],x:750,y:600,w:50,h:50,size:12,text:"~A collection of reaction-based games~",angle:0,story:false,fontSize:24,hex:"#FFFFFF",})
+
+C(3,[],[20],{type:[3,[],[20]],x:750,y:1200,w:50,h:50,size:12,text:"This planet is undergoing RNG fixes! Come back later if you want a good time!",angle:0,story:false,fontSize:24,hex:"#FFFFFF",})
+
+
 C(3,[],[20],{type:[3,[],[20]],x:85500,y:1000,w:50,h:50,size:30,text:"Good Luck.",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
 C(3,[],[20],{type:[3,[],[20]],x:90200,y:1000,w:50,h:50,size:84,text:"!",angle:0,story:false,fontSize:168,hex:"#FFFFFF",})
 C(3,[1],[20],{type:[3,[1],[20]],x:100400,y:1000,w:50,h:50,size:62,text:"<->",angle:90,story:false,fontSize:124,hex:"#FFFFFF",pivotX:100400,pivotY:1000,rotateSpeed:0,initialRotation:1.5707963267948966,})

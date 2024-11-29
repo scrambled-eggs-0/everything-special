@@ -145,6 +145,36 @@ function decodeText(u8array, startPos=0, endPos=Infinity){
 	return decoder.decode(u8array).slice(startPos, endPos);
 }
 
+
+function genBannedWordsRegex(...args) {
+  let parsed = [];
+  args.forEach(e => {
+    parsed.push("(\\S*" +
+      e.replace(/[aа]/gmi, "[aа4]")
+      .replace(/[cс]/gmi, "[cс]")
+      .replace(/[eеё]/gmi, "[eеё3]")
+      .replace(/[oо]/gmi, "[oо0]")
+      .replace(/[pр]/gmi, "[pр]")
+      .replace(/[tт]/gmi, "[tт]")
+      .replace(/[yу]/gmi, "[yу]")
+      .replace(/[hн]/gmi, "[hн]")
+      .replace(/[kк]/gmi, "[kк]")
+      .replace(/[xх]/gmi, "[xх]")
+      .replace(/[bв]/gmi, "[bв]")
+      .replace(/[nп]/gmi, "[nп]")
+      .replace(/[mм]/gmi, "[mм]")
+      .replace(/[i1]/gmi, "[i1]")
+      .replace(/[ _\-]/gmi, "[ _\\-]") +
+      "\\S*)");
+  });
+  return new RegExp(parsed.join("|"), "gmi"); 
+}
+let bannedWordsRegex = genBannedWordsRegex("nigger", "nigga", "chink", "ching chong", "onrender", "cunt", "asshole", "porn", "hentai", "slut", "whore", "faggot", "on render", "fake evades", "real evades")
+
+function filterText(text){
+	return text.replace(bannedWordsRegex, "[https://evadesx.io/]");
+}
+
 function stringHTMLSafe(str) {
 	return str.replace(/&/g, '&amp;')
 		.replace(/ /g, '&nbsp;')
@@ -152,4 +182,4 @@ function stringHTMLSafe(str) {
 		.replace(/>/g, '&gt;');
 }
 
-export default { until, SCROLL_PARAMS, blendColor, environment, encodeAtPosition, decodeText, stringHTMLSafe };
+export default { until, SCROLL_PARAMS, blendColor, environment, encodeAtPosition, decodeText, stringHTMLSafe, filterText };

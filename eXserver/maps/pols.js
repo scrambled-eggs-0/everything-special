@@ -94,7 +94,7 @@ C(1,[],[0],{type:[1,[],[0]],x:2500,y:32600,w:100,h:100,canJump:true,inView:false
 C(1,[1],[0,1],{type:[1,[1],[0,1]],x:550,y:32700,w:500,h:100,angle:38,rotateSpeed:0.025757575757575757,pivotX:800,pivotY:32750,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:127.47548783981962,unSim:23.633333333332633,inView:false,boundPlayer:true,initialRotation:0.6632251157578452,})
 C(0,[],[0,1],{type:[0,[],[0,1]],x:800,y:32750,r:50,renderType:"circleR",inView:false,boundPlayer:true,})
 C(1,[],[1],{type:[1,[],[1]],x:2600,y:31500,w:400,h:1100,canCollide:false,inView:false,boundPlayer:false,})
-C(0,[],[0,1],{type:[0,[],[0,1]],x:2580,y:32300,r:70,renderType:"circleR",inView:false,boundPlayer:true,})
+C(0,[],[0,1],{type:[0,[],[0,1]],x:2585,y:32300,r:65,renderType:"circleR",inView:false,boundPlayer:true,})
 C(1,[],[0,1],{type:[1,[],[0,1]],x:2600,y:31800,w:250,h:100,canCollide:true,inView:false,boundPlayer:true,})
 C(2,[],[0,1],{type:[2,[],[0,1]],points:[[2600,31675],[2700,32050],[2600,32050]],most:{"left":1300,"right":1350,"top":15837.5,"bottom":16025},renderType:"poly",inView:false,x:null,y:null,boundPlayer:true,})
 C(0,[],[0,1],{type:[0,[],[0,1]],x:3025,y:31675,r:76,renderType:"circleR",inView:false,boundPlayer:true,})
@@ -1120,7 +1120,7 @@ C(1,[],[0],{type:[1,[],[0]],x:0,y:20000,w:2400,h:200,canJump:true,inView:false,}
 C(1,[],[0],{type:[1,[],[0]],x:-1.5308084989341915e-15,y:20200,w:1600,h:900,canJump:true,inView:false,})
 C(1,[],[0],{type:[1,[],[0]],x:2400,y:20300,w:1600,h:1100,canJump:true,inView:false,})
 C(1,[],[0],{type:[1,[],[0]],x:2500,y:19800,w:100,h:150,canJump:true,inView:false,})
-C(1,[],[29],{type:[1,[],[29]],x:2200,y:20200,w:200,h:200,time:37,inView:false,changeDeathTimerStateTo:true,deathTime:2220,drainAmountWhileStandingOn:0,})
+C(1,[],[29],{type:[1,[],[29]],x:2200,y:20200,w:200,h:200,time:34,inView:false,changeDeathTimerStateTo:true,deathTime:2040,drainAmountWhileStandingOn:0,})
 C(1,[],[0],{type:[1,[],[0]],x:1600,y:20200,w:600,h:200,canJump:true,inView:false,})
 C(1,[],[1],{type:[1,[],[1]],x:1175,y:14125,w:25,h:100,canCollide:true,inView:false,boundPlayer:true,})
 C(1,[],[1],{type:[1,[],[1]],x:1175,y:14825,w:25,h:100,canCollide:true,inView:false,boundPlayer:true,})
@@ -2003,7 +2003,7 @@ C(3,[],[20],{type:[3,[],[20]],x:2150,y:37450,w:50,h:50,size:30,text:"GG",angle:0
 C(3,[],[20],{type:[3,[],[20]],x:2150,y:37550,w:50,h:50,size:30,text:"GG",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
 C(3,[],[20],{type:[3,[],[20]],x:2150,y:37650,w:50,h:50,size:30,text:"GG",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
 C(3,[],[20],{type:[3,[],[20]],x:2150,y:37850,w:50,h:50,size:120,text:"GG",angle:0,story:false,fontSize:240,hex:"#FFFFFF",})
-C(3,[],[20],{type:[3,[],[20]],x:2150,y:38050,w:50,h:50,size:15,text:"next up: the heart wrenchings",angle:0,story:false,fontSize:30,hex:"#FFFFFF",})
+C(3,[],[20],{type:[3,[],[20]],x:2150,y:38050,w:50,h:50,size:15,text:"good luck on your future endeavors",angle:0,story:false,fontSize:30,hex:"#FFFFFF",})
 C(3,[],[20],{type:[3,[],[20]],x:2550,y:36850,w:50,h:50,size:30,text:"heres ur sanity back",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
 C(3,[],[20],{type:[3,[],[20]],x:2500,y:36700,w:50,h:50,size:30,text:"pink win message",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
 C(3,[],[20],{type:[3,[],[20]],x:1750,y:36550,w:50,h:50,size:30,text:"that was hard",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
@@ -2039,6 +2039,8 @@ C(0,[],[0],{type:[0,[],[0]],x:3220,y:5080,r:20,renderType:"circle",inView:false,
 C(0,[],[0],{type:[0,[],[0]],x:3280,y:5080,r:20,renderType:"circle",inView:false,toRender:false,})
 C(1,[],[0],{type:[1,[],[0]],x:3220,y:5000,w:60,h:100,toRender:false,})
 C(1,[],[0],{type:[1,[],[0]],x:3200,y:5020,w:100,h:60,toRender:false,})
+C(1,[0],[11],{type:[1,[0],[11]],x:700,y:3400,w:100,h:400,points:[[350,1700],[950,1700]],speed:150,currentPoint:1.9166666666666665,pointOn:{"x":950,"y":1700},pointTo:{"x":350,"y":1700},xv:-150,yv:1.8369701987210297e-14,inView:false,path:[[700,3400,5],[1900,3400,5]],})
+C(1,[0],[11],{type:[1,[0],[11]],x:1900,y:3400,w:100,h:400,points:[[950,1700],[350,1700]],speed:150,currentPoint:1.9166666666666665,pointOn:{"x":350,"y":1700},pointTo:{"x":950,"y":1700},xv:150,yv:0,inView:false,path:[[1900,3400,5],[700,3400,5]],})
 
 
     mapDimensions.x=4000;
@@ -2056,13 +2058,11 @@ C(1,[],[0],{type:[1,[],[0]],x:3200,y:5020,w:100,h:60,toRender:false,})
         musicPath: 'https://www.youtube.com/watch?v=p6XthttV1JM'
     });
 
+    
     shared.C(1,[],[0],{x:-150,y:3050,w:150,h:300})
     shared.C(1,[],[0],{x:0,y:2900,w:150,h:200})
     const o = obstacles.splice(241,1)[0];
-
-    shared.C(1,[0],[11],{type:[1,[0],[11]],x:700,y:3400,w:100,h:400,points:[[350,1700],[950,1700]],speed:150,currentPoint:1.9166666666666665,pointOn:{"x":950,"y":1700},pointTo:{"x":350,"y":1700},xv:-150,yv:1.8369701987210297e-14,inView:false,path:[[700,3400,5],[1900,3400,5]],})
-    shared.C(1,[0],[11],{type:[1,[0],[11]],x:1900,y:3400,w:100,h:400,points:[[950,1700],[350,1700]],speed:150,currentPoint:1.9166666666666665,pointOn:{"x":350,"y":1700},pointTo:{"x":950,"y":1700},xv:150,yv:0,inView:false,path:[[1900,3400,5],[700,3400,5]],})
-
+    
     let o1 = obstacles.pop();
     let o2 = obstacles.pop();
 

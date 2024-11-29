@@ -3,7 +3,7 @@ import './msgpackr.js';
 
 // used for decoding chat messages
 import Utils from '../client/utils.js';
-const {decodeText, stringHTMLSafe} = Utils;
+const {decodeText, filterText, stringHTMLSafe} = Utils;
 
 const HOST = location.origin.replace(/^http/, 'ws');
 let ws, nextMsgFlag, gameStarted = false, canLoad=false;
@@ -221,7 +221,7 @@ const messageMap = [
     // 7 - chat message
     (data) => {
         shared.addChatMessage(
-            stringHTMLSafe(decodeText(data, 2)),
+            stringHTMLSafe(filterText(decodeText(data, 2))),
             ['normal', 'system', 'dev', 'guest'][data[1]]
         )
     },
