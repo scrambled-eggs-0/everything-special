@@ -95,6 +95,25 @@ async function getAccountRequirePassword(username, password){
     return await userCollection.findOne({ username, password });
 }
 
+async function logBeaten(){
+    await until(() => {return connected;});
+    const users = await userCollection.find({}).toArray();
+
+    const levelsBeatenTotals = {};
+
+    for(let i = 0; i < users.length; i++){
+        const u = users[i];
+        for(let key in u.levelsBeaten){
+            if(levelsBeatenTotals[key] === undefined) levelsBeatenTotals[key] = 0;
+            levelsBeatenTotals[key] += u.levelsBeaten[key];
+            if(key === 'hub') console.log(u);
+        }
+    }
+    // console.log(levelsBeatenTotals);
+}
+
+logBeaten();
+
 export default {
     createAccount,
     getAccount,
