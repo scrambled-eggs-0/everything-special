@@ -29,6 +29,8 @@ import db from './db.js';
 
 const PORT = 3000;
 
+import sendWebhookWinMessage from './webhook.js'
+
 const clients = global.clients = {};
 const randomBuf = new Uint32Array(2);
 // create the server and set functions for when a connection opens, closes, and sends a message
@@ -314,7 +316,11 @@ app.get("/maps/:filename", (res, req) => {
         global.encoder.encodeInto(ws.me.player.name, buf.subarray((ws.me.mapName.length+8) | 0));
         global.broadcastEveryone(buf);
 
+        //Win msg discord:
+        sendWebhookWinMessage(ws.me.mapName, ws.me.player.name, timeToBeat)
+
         db.beatMap(ws.me.player.name, ws.accountData, ws.me.mapName, timeToBeat);
+        
         ws.me.enterMapTime = -1;
     } else {
         ws.me.enterMapTime = Date.now();
