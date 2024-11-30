@@ -11675,7 +11675,7 @@ C(2,[],[1],{type:[2,[],[1]],points:[[55150,15800],[55350,15800],[55250,15900]],m
 C(2,[],[1],{type:[2,[],[1]],points:[[55350,15800],[55550,15800],[55450,15900]],most:{"left":175,"right":275,"top":7900,"bottom":7950},renderType:"poly",inView:false,x:null,y:null,boundPlayer:true,})
 C(2,[],[1],{type:[2,[],[1]],points:[[55550,15800],[55750,15800],[55650,15900]],most:{"left":275,"right":375,"top":7900,"bottom":7950},renderType:"poly",inView:false,x:null,y:null,boundPlayer:true,})
 C(2,[],[1],{type:[2,[],[1]],points:[[59100,15800],[59300,15800],[59200,15880]],most:{"left":2050,"right":2150,"top":7900,"bottom":7940},renderType:"poly",inView:false,x:null,y:null,boundPlayer:true,})
-C(1,[],[16],{type:[1,[],[16]],x:58200,y:15920,w:1100,h:0,snapDistance:50,snapWait:10,snapX:false,snapY:true,inView:false,snapAngleRotateSpeed:0,snapAngle:0,snapCooldown:600,snapDistanceY:100,snapDistanceX:100,toSnapX:false,toSnapY:true,})
+C(1,[],[16],{type:[1,[],[16]],x:58200,y:15950,w:1100,h:0,snapDistance:50,snapWait:10,snapX:false,snapY:true,inView:false,snapAngleRotateSpeed:0,snapAngle:0,snapCooldown:600,snapDistanceY:100,snapDistanceX:100,toSnapX:false,toSnapY:true,})
 C(2,[],[1],{type:[2,[],[1]],points:[[59000,16020],[59100,16100],[58900,16100]],most:{"left":1950,"right":2050,"top":8010,"bottom":8050},renderType:"poly",inView:false,x:null,y:null,boundPlayer:true,})
 C(2,[],[1],{type:[2,[],[1]],points:[[58800,16020],[58900,16100],[58700,16100]],most:{"left":1850,"right":1950,"top":8010,"bottom":8050},renderType:"poly",inView:false,x:null,y:null,boundPlayer:true,})
 C(2,[],[1],{type:[2,[],[1]],points:[[58700,15800],[58900,15800],[58800,15880]],most:{"left":1850,"right":1950,"top":7900,"bottom":7940},renderType:"poly",inView:false,x:null,y:null,boundPlayer:true,})
@@ -11874,6 +11874,7 @@ C(1,[],[3],{x:36800,y:3100,w:200,h:100,cr:(o)=>{
             ctx.setLineDash([]);
         },ef:(p,res,o)=>{
             shared.gunActive = true;
+            resetGunCooldown();
         }});
 C(1,[],[3],{x:33000,y:14300,w:700,h:100,cr:(o)=>{
             ctx.fillStyle = "#6e7175";
@@ -11932,7 +11933,15 @@ C(1,[],[15],{type:[1,[],[15]],x:49000,y:10100,w:1000,h:500,rx:true,ry:false,axis
 C(1,[],[12],{type:[1,[],[12]],x:49900,y:10100,w:150,h:450,tpx:42050,tpy:8050,bgColor:"#0c0e13",tileColor:"#383838",changeColor:false,})
 C(1,[],[15],{type:[1,[],[15]],x:42000,y:10100,w:6900,h:500,rx:true,ry:true,axisSpeedMultY:0,axisSpeedMultX:0,})
 C(4,[],[0],{type:[4,[],[0]],x:42250,y:10350,radius:250,startAngle:1.5707963267948966,endAngle:4.71238898038469,startPolygon:{"points":[[21125,5300],[21125,5425]],"type":"poly","props":{}},endPolygon:{"points":[[21125,5050],[21125,4925]],"type":"poly","props":{}},innerRadius:250,toRotate:false,rotateSpeed:0,renderType:"circle",r:500,startSliceAngle:1.5707963267948966,endSliceAngle:4.71238898038469,startSliceAngleRotateSpeed:0,endSliceAngleRotateSpeed:0,})
-C(1,[],[14],{type:[1,[],[14]],x:42400,y:12550,w:3900,h:6500,force:3000,dir:{"x":0,"y":3000},direction:"down",jumpHeight:200,maxForce:1000,overrideJC:30,variableJumpHeight:false,platformerFriction:0.98,specialPOQTPlatformer:true,platformerAngle:90,platformerAngleRotateSpeed:0,platformerForce:0.7779111644657863,jumpForce:34.8,jumpDecay:0.98,maxJumpCooldown:30,canJumpMidair:true,})
+C(1,[],[14],{type:[1,[],[14]],x:42400,y:12550,w:3900,h:6500,force:3000,dir:{"x":0,"y":3000},direction:"down",jumpHeight:200,maxForce:1000,overrideJC:42,variableJumpHeight:false,platformerFriction:0.98,specialPOQTPlatformer:true,platformerAngle:90,platformerAngleRotateSpeed:0,platformerForce:0.7779111644657863*1.3,jumpForce:34.8*1.2,jumpDecay:0.98,maxJumpCooldown:30,canJumpMidair:true,})
+C(1,[],[11],{x:44200,y:12600,w:1400,h:100});
+
+C(1,[],[3],{ef:(p)=>{
+    for(let i = 0; i < p.forces.length; i+=3){
+        p.forces[i+1] = 0;// y comp = 0
+    }
+},cr:()=>{},type:[1,[],[14]],x:58700,y:15900,w:1100,h:100,platformerAngle:-90,platformerFriction:0.8,platformerAngleRotateSpeed:0,platformerForce:2,jumpDecay:0.95,jumpForce:0,maxJumpCooldown:20})
+
 var morphTriggered40 = false;
     C(1,[],[3],{h:300,w:300,y:18400,x:44750,
         cr:(e)=>{
@@ -12153,6 +12162,10 @@ C(1,[],[12],{type:[1,[],[12]],x:30000,y:250,w:200,h:450,tpx:33250,tpy:150,bgColo
 C(1,[],[13],{type:[1,[],[13]],x:29500,y:300,w:300,h:300,force:10000,dir:{"x":0,"y":10000},direction:"down",conveyorAngle:90,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorForce:7.436974789915965,})
 C(1,[],[17],{x:25950,y:9300,w:14000,h:7350,timeTrapToShowTenth:false,timeTrapToKill:false,timeTrapRecoverySpeed:3,timeTrapMaxTime:3600,
         sf:(e)=>{
+            const p = players[selfId];
+            if(p.pos.x < 31200 && p.pos.y > 14800 && p.pos.y < 15300 && p.pos.x > 30300){
+                e.timeTrapTime = e.timeTrapMaxTime;
+            }
             if(e.timeTrapTime <= 0){
                 players[selfId].pos.x = 30550;
                 players[selfId].pos.y = 15050;
@@ -12190,7 +12203,7 @@ C(1,[],[13],{type:[1,[],[13]],x:37300,y:11300,w:700,h:500,force:2500,dir:{"x":0,
 C(1,[],[13],{type:[1,[],[13]],x:37300,y:9600,w:700,h:1700,force:4000,dir:{"x":0,"y":4000},direction:"down",conveyorAngle:90,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorForce:2.974789915966387,})
 C(1,[],[25],{type:[1,[],[25]],x:37300,y:10900,w:100,h:100,dir:"up",max:150,pushBack:15,startX:18650,startY:5450,pusherId:0.37883095005885137,pushAngle:90,maxPushDistance:300,idlePushBackSpeed:12.5,positiveDirectionOnly:true,pushConversionRatio:0.86,})
 C(1,[],[13],{type:[1,[],[13]],x:29600,y:9600,w:5700,h:700,force:2000,dir:{"x":2000,"y":0},direction:"right",conveyorAngle:0,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorForce:1.4873949579831935,})
-C(1,[],[2],{type:[1,[],[2]],x:35200,y:9750,w:150,h:300,effect:200,bounciness:133.33333333333334,decay:0.5,})
+C(1,[],[2],{type:[1,[],[2]],x:35200,y:9750,w:150,h:300,effect:200,bounciness:133.33333333333334*16,decay:0.5,})
 C(1,[],[13],{type:[1,[],[13]],x:31600,y:11100,w:2100,h:2000,force:2000,dir:{"x":0,"y":-2000},direction:"up",conveyorAngle:270,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorForce:1.4873949579831935,})
 C(1,[],[12],{type:[1,[],[12]],x:30300,y:15400,w:500,h:450,tpx:27450,tpy:150,bgColor:"#0d0d0d",tileColor:"#383838",changeColor:false,})
 C(1,[],[13],{type:[1,[],[13]],x:33000,y:13100,w:700,h:1400,force:5000,dir:{"x":0,"y":-5000},direction:"up",conveyorAngle:270,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorForce:3.7184873949579824,})
@@ -12213,6 +12226,8 @@ C(1,[],[20],{h:600,w:200,y:10050,x:19700,hex:'#FFFFFF',alpha:1,
             ctx.globalAlpha = 1;
         }
     });
+
+    C(1,[],[12],{x:36400,y:14700,w:2600,h:100,tpx:39400,tpy:14300});
 C(1,[],[13],{type:[1,[],[13]],x:0,y:10000,w:20000,h:900,force:12000,dir:{"x":12000,"y":0},direction:"right",conveyorAngle:0,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorForce:8.924369747899162,})
 C(1,[],[15],{type:[1,[],[15]],x:0,y:4000,w:19600,h:1000,rx:true,ry:false,axisSpeedMultY:1,axisSpeedMultX:0,})
 C(1,[],[13],{type:[1,[],[13]],x:0,y:4000,w:16900,h:1000,force:6000,dir:{"x":6000,"y":0},direction:"right",conveyorAngle:0,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorForce:4.462184873949581,})
@@ -15524,7 +15539,7 @@ C(1,[],[20],{x:30500,y:15000,w:100,h:100,hex:'#000000',alpha:0,cr:()=>{},ef:()=>
                 lastMorphTriggered = morphTriggered40;
 
                 for(let i = 0; i < o.path.length; i++){
-                    o.path[i][2] = 5.633333333333334;
+                    o.path[i][2] = 4;
                 }
 
                 o.speed = o.pointOn[2];
@@ -16302,8 +16317,6 @@ C(3,[],[20],{type:[3,[],[20]],x:47150,y:10050,w:50,h:50,size:22,text:"Don't look
 C(3,[],[20],{type:[3,[],[20]],x:750,y:550,w:50,h:50,size:30,text:"Welcome To PoQT!",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
 C(3,[],[20],{type:[3,[],[20]],x:750,y:600,w:50,h:50,size:12,text:"~A collection of reaction-based games~",angle:0,story:false,fontSize:24,hex:"#FFFFFF",})
 
-C(3,[],[20],{type:[3,[],[20]],x:750,y:1200,w:50,h:50,size:12,text:"This planet is undergoing RNG fixes! Come back later if you want a good time!",angle:0,story:false,fontSize:24,hex:"#FFFFFF",})
-
 
 C(3,[],[20],{type:[3,[],[20]],x:85500,y:1000,w:50,h:50,size:30,text:"Good Luck.",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
 C(3,[],[20],{type:[3,[],[20]],x:90200,y:1000,w:50,h:50,size:84,text:"!",angle:0,story:false,fontSize:168,hex:"#FFFFFF",})
@@ -16447,6 +16460,7 @@ C(3,[],[20],{type:[3,[],[20]],x:208900,y:1000,w:50,h:50,size:30,text:"Maybe ill 
 
     shared.gunActive = false;
     let deadEnemies = 0;
+    let resetGunCooldown = () => {cooldown = 0;}
     {
         const enemies = obstacles.filter(o => o.isEnemy === true);
         // gun
@@ -16524,7 +16538,7 @@ C(3,[],[20],{type:[3,[],[20]],x:208900,y:1000,w:50,h:50,size:30,text:"Maybe ill 
 
                     if(dist < enemies[j].sat.r + bullets[i].radius){
                         if(enemies[j].deadTime === undefined) deadEnemies++;
-                        enemies[j].deadTime = 180;
+                        enemies[j].deadTime = 200;
                         const ef = enemies[j].effect;
                         enemies[j].effect = new Array(ef.length).fill(()=>{});
                         enemies[j].cr = () => {
@@ -17047,7 +17061,6 @@ C(3,[],[20],{type:[3,[],[20]],x:208900,y:1000,w:50,h:50,size:30,text:"Maybe ill 
         shared.C(0,[],[3],{x:-1E9,y:0,r:1,sf:(o,p)=>{
             if(active === false) {time = 0; return;}
             if(p.dead === true) {
-                console.log(time);
                 active = false; time = 0;
                 activeArrows = [];
                 return;
@@ -17146,13 +17159,35 @@ C(3,[],[20],{type:[3,[],[20]],x:208900,y:1000,w:50,h:50,size:30,text:"Maybe ill 
     //     }
     //     shared.ar = arrows;
     // }, 3000)
-
-
     // Z10 OBS
     let z10active = false;
     shared.C(1,[],[3],{x:82000,y:900,w:100,h:100,musicPath:'https://www.youtube.com/watch?v=Okiynofp4zQ',ef:()=>{
         if(z10active === true) return;
         z10active = true;
+
+        if(shared.skullImg === undefined){
+            shared.skullImg = new Image();
+            shared.skullImg.src = 'https://svgsilh.com/svg/1294357.svg';
+            shared.skullImg.onload = () => {
+                shared.skullImgLoaded = true;
+            }
+        }
+
+        shared.players[shared.selfId].cr = (player) => {
+            const lastR = player.sat.r;
+            player.sat.r = player.renderRadius;
+            ctx.save();
+            ctx.beginPath();
+            player.renderShape(player);
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = 8;
+            ctx.stroke();
+            ctx.clip();
+            if(shared.skullImgLoaded === true)ctx.drawImage(shared.skullImg, player.pos.x - player.sat.r, player.pos.y - player.sat.r, player.sat.r * 2, player.sat.r * 2);
+            ctx.closePath();
+            ctx.restore();
+            player.sat.r = lastR;
+        }
         for(let i = 0; i < obstacles.length; i++){
             if(obstacles[i].isWinpad === true) continue;
             // if(obstacles[i].sat.r === undefined){
@@ -17962,56 +17997,101 @@ C(3,[],[20],{type:[3,[],[20]],x:208900,y:1000,w:50,h:50,size:30,text:"Maybe ill 
     shared.C(1,[],[5],{x:31800,y:7050,w:100,h:100});
 
     // WAVES
-    let waves = [
-        {
-            obstacles: [
-                //x,y,r,shootRadius,shootTime,shootSpeed,speedupMult
-                new Turret(canvas.w / 2, canvas.h / 2, 120*1.5, 12*2, 50, 3, 0.96),
-                new Turret(20, 20, 80*2, 12*2, 100, 3, 0.96),
-                new Turret(canvas.w - 20, 20, 80*2, 12*2, 100, 3, 0.96),
-                new Turret(20, canvas.h - 20, 80*2, 12*2, 100, 3, 0.96),
-                new Turret(canvas.w - 20, canvas.h - 20, 80*2, 12*2, 100, 3, 0.96),
-            ],
-            time: 900,
-        },
-        {
-            obstacles: [
-                //spawnTime,speedupMult,warmUpTime,laserLife
-                new LaserSpawner(100, 0.94, 120, 100)
-            ],
-            time: 1100,
-        },
-        {
-            obstacles: [
-                //spawnRadius,spawnTime,spawnSpeed,spawnLife,speedupMult,warmUpTime
-                new NormalEnemySpawner(24*2, 80, 6*2, 300, 0.88, 200)
-            ],
-            time: 750,
-        },
-        {
-            obstacles: [
-                //spawnRadius,spawnTime,spawnSpeed,spawnLife,speedupMult,warmUpTime,homingAngleIncrement
-                new HomingEnemySpawner(32*2, 100, 3*2, 200, 0.97, 200, 0.06)
-            ],
-            time: 1200,
-        },
-        {
-            obstacles: [
-                //spawnTime,speedupMult,warmUpTime,laserLife
-                new LaserSpawner(200, 0.96, 150, 120),
-                //x,y,r,shootRadius,shootTime,shootSpeed,speedupMult
-                new Turret(canvas.w / 2, canvas.h / 2, 40*2, 12*2, 20, 3.2, 0.99),
-            ],
-            time: 1000,
-        },
-        {
-            obstacles: [
-                //x,y,r,shootRadius,shootTime,shootSpeed,speedupMult
-                new Turret(canvas.w / 2, canvas.h / 2, 60*2, 24*2, 2, 3, 1),
-            ],
-            time: 400,
-        },
-    ];
+    function getWaves(){
+        return [
+            {
+                obstacles: [
+                    //x,y,r,shootRadius,shootTime,shootSpeed,speedupMult
+                    new Turret(canvas.w / 2, canvas.h / 2, 120*1.5, 12*2, 50, 4.5, 0.96),
+                    new Turret(20, 20, 80*2, 12*2, 100, 4.5, 0.96),
+                    new Turret(canvas.w - 20, 20, 80*2, 12*2, 100, 4.5, 0.96),
+                    new Turret(20, canvas.h - 20, 80*2, 12*2, 100, 4.5, 0.96),
+                    new Turret(canvas.w - 20, canvas.h - 20, 80*2, 12*2, 100, 4.5, 0.96),
+                ],
+                time: 900,
+            },
+            {
+                obstacles: [
+                    //spawnTime,speedupMult,warmUpTime,laserLife
+                    new LaserSpawner(88, 0.94, 120, 100)
+                ],
+                time: 1100,
+            },
+            {
+                obstacles: [
+                    //spawnRadius,spawnTime,spawnSpeed,spawnLife,speedupMult,warmUpTime
+                    new NormalEnemySpawner(24*2, 68, 6*2, 300, 0.88, 200)
+                ],
+                time: 750,
+            },
+            {
+                obstacles: [
+                    //spawnRadius,spawnTime,spawnSpeed,spawnLife,speedupMult,warmUpTime,homingAngleIncrement
+                    new HomingEnemySpawner(32*2, 100, 3*1.86, 200, 0.97, 200, 0.06)
+                ],
+                time: 1200,
+            },
+            {
+                obstacles: [
+                    //spawnTime,speedupMult,warmUpTime,laserLife
+                    new LaserSpawner(200, 0.96, 150, 120),
+                    //x,y,r,shootRadius,shootTime,shootSpeed,speedupMult
+                    new Turret(canvas.w / 2, canvas.h / 2, 40*2, 12*2, 20, 3.2, 0.99),
+                ],
+                time: 1000,
+            },
+            {
+                obstacles: [
+                    //x,y,r,shootRadius,shootTime,shootSpeed,speedupMult
+                    new Turret(canvas.w / 2, canvas.h / 2, 60*2, 24*2, 2, 3, 1),
+                ],
+                time: 400,
+            },
+            // new :)
+            {
+                obstacles: [
+                    //spawnRadius,spawnTime,spawnSpeed,spawnLife,speedupMult,warmUpTime,homingAngleIncrement
+                    new HomingEnemySpawner(80, 100, 5, 100, 0.98, 160, 0.012),
+                    //spawnRadius,spawnTime,spawnSpeed,spawnLife,speedupMult,warmUpTime
+                    new NormalEnemySpawner(40, 100, 10, 200, 0.98, 160)
+                ],
+                time: 2200,
+            },
+            {
+                obstacles: [
+                    //spawnRadius,spawnTime,spawnSpeed,spawnLife,speedupMult,warmUpTime
+                    new NormalEnemySpawner(20, 20, 1, 400, 0.99, 180),
+                    //x,y,r,shootRadius,shootTime,shootSpeed,speedupMult
+                    new Turret(Math.random() * canvas.w, Math.random() * canvas.h, 40, 20, 80, 1, 0.95),
+                    new Turret(Math.random() * canvas.w, Math.random() * canvas.h, 40, 20, 80, 1, 0.95),
+                    new Turret(Math.random() * canvas.w, Math.random() * canvas.h, 40, 20, 80, 1, 0.95),
+                    new Turret(Math.random() * canvas.w, Math.random() * canvas.h, 40, 20, 80, 1, 0.95),
+                    new Turret(Math.random() * canvas.w, Math.random() * canvas.h, 40, 20, 80, 1, 0.95),
+                    new Turret(Math.random() * canvas.w, Math.random() * canvas.h, 40, 20, 80, 1, 0.95),
+                    new Turret(Math.random() * canvas.w, Math.random() * canvas.h, 40, 20, 80, 1, 0.95),
+                    new Turret(Math.random() * canvas.w, Math.random() * canvas.h, 40, 20, 80, 1, 0.95),
+                    new Turret(Math.random() * canvas.w, Math.random() * canvas.h, 40, 20, 80, 1, 0.95),
+                    new Turret(Math.random() * canvas.w, Math.random() * canvas.h, 40, 20, 80, 1, 0.95),
+                ],
+                time: 1200,
+            },
+            {
+                obstacles: [
+        
+                    //x,y,r,shootRadius,shootTime,shootSpeed,speedupMult
+                    new Turret(canvas.w / 2, canvas.h / 2, 80, 20, 75, 5, 0.985),
+                    //spawnRadius,spawnTime,spawnSpeed,spawnLife,speedupMult,warmUpTime,homingAngleIncrement
+                    new HomingEnemySpawner(28*2, 260, 3, 200, 0.97, 200, 0.02),
+                    //spawnRadius,spawnTime,spawnSpeed,spawnLife,speedupMult,warmUpTime
+                    new NormalEnemySpawner(24*2, 210, 5, 220, 0.95, 200),
+                    //spawnTime,speedupMult,warmUpTime,laserLife
+                    new LaserSpawner(300, 0.96, 200, 60),
+                ],
+                time: 3600,
+            },
+        ];
+    }
+    let waves = getWaves();
     
     let currentWave = -1;
     let currentWaveTime = 0;
@@ -18079,56 +18159,7 @@ C(3,[],[20],{type:[3,[],[20]],x:208900,y:1000,w:50,h:50,size:30,text:"Maybe ill 
         obs = [];
         currentWave = -1;
         currentWaveTime = 0;
-        waves = [
-            {
-                obstacles: [
-                    //x,y,r,shootRadius,shootTime,shootSpeed,speedupMult
-                    new Turret(canvas.w / 2, canvas.h / 2, 120*1.5, 12*2, 50, 3, 0.96),
-                    new Turret(20, 20, 80*2, 12*2, 100, 3, 0.96),
-                    new Turret(canvas.w - 20, 20, 80*2, 12*2, 100, 3, 0.96),
-                    new Turret(20, canvas.h - 20, 80*2, 12*2, 100, 3, 0.96),
-                    new Turret(canvas.w - 20, canvas.h - 20, 80*2, 12*2, 100, 3, 0.96),
-                ],
-                time: 900,
-            },
-            {
-                obstacles: [
-                    //spawnTime,speedupMult,warmUpTime,laserLife
-                    new LaserSpawner(100, 0.94, 120, 100)
-                ],
-                time: 1100,
-            },
-            {
-                obstacles: [
-                    //spawnRadius,spawnTime,spawnSpeed,spawnLife,speedupMult,warmUpTime
-                    new NormalEnemySpawner(24*2, 80, 6*2, 300, 0.88, 200)
-                ],
-                time: 750,
-            },
-            {
-                obstacles: [
-                    //spawnRadius,spawnTime,spawnSpeed,spawnLife,speedupMult,warmUpTime,homingAngleIncrement
-                    new HomingEnemySpawner(32*2, 100, 3*2, 200, 0.97, 200, 0.046)
-                ],
-                time: 1200,
-            },
-            {
-                obstacles: [
-                    //spawnTime,speedupMult,warmUpTime,laserLife
-                    new LaserSpawner(200, 0.96, 150, 120),
-                    //x,y,r,shootRadius,shootTime,shootSpeed,speedupMult
-                    new Turret(canvas.w / 2, canvas.h / 2, 40*2, 12*2, 20, 3.2, 0.99),
-                ],
-                time: 1000,
-            },
-            {
-                obstacles: [
-                    //x,y,r,shootRadius,shootTime,shootSpeed,speedupMult
-                    new Turret(canvas.w / 2, canvas.h / 2, 60*2, 24*2, 2, 3, 1),
-                ],
-                time: 400,
-            },
-        ];
+        waves = getWaves();
     }
 
     function runPredictionDodging(){
@@ -18137,7 +18168,10 @@ C(3,[],[20],{type:[3,[],[20]],x:208900,y:1000,w:50,h:50,size:30,text:"Maybe ill 
         simulateObstacles();
         let dead = runCollision(p, obs);
         if (dead === true) {
-            gameOver();
+            p.radius -= 0.3;
+            if(p.radius <= 0){
+                gameOver();
+            }
         }
     }
 
@@ -18201,8 +18235,61 @@ C(3,[],[20],{type:[3,[],[20]],x:208900,y:1000,w:50,h:50,size:30,text:"Maybe ill 
     }});
     
     let inv216=0;C(1,[],[3],{cr:()=>{},x:142000/2,y:24200/2,w:2600/2,h:200/2,ef:()=>{
-        inv216 = 24.599999999999998;
+        inv216 = 46;
     }});
+
+    C(1,[],[3],{x:30500,y:15000,w:100,h:100,cr:()=>{},ef:()=>{
+        inv216 = inv112 = inv36 = inv14 = 0;
+    }});
+
+    // covering up area with a normal
+    C(1,[],[0],{x:55000,y:0,w:20000,h:10900});
+
+    // camera zoom!
+    {
+        const interpolate = (s,e,t) => {return (1-t)*s + e*t};
+        let blackBarAlpha = 0;
+        let toInterp = false;
+        let curScale = 1;
+        C(1,[],[3],{x:67600,y:12100,w:1300,h:700,cr:()=>{
+            if(blackBarAlpha <= 0.001) return;
+            shared.colors.vignette.holeFunctions.push(() => {
+                ctx.save();
+                ctx.resetTransform();
+                ctx.fillStyle = shared.blendColor('#000000', '#FF0000', (Math.sin(window.frames/36)+1)/2 * 0.3);
+                ctx.globalAlpha = blackBarAlpha;
+                ctx.fillRect(0,0,canvas.width/3,canvas.height);
+                ctx.fillRect(canvas.width*2/3,0,canvas.width/3,canvas.height);
+                ctx.restore();
+            })
+        },ef:()=>{
+            toInterp = true;
+        },sf:()=>{
+            if(toInterp === false) return;
+            curScale = interpolate(curScale, 0.3, 0.03);
+            blackBarAlpha = interpolate(blackBarAlpha, 1, 0.03);
+            if(blackBarAlpha > 0.999){
+                blackBarAlpha = 1;
+                curScale = 0.3;
+                toInterp = false;
+            }
+            shared.changeCameraScale(curScale);
+        }})
+        {
+            let collided = false;
+            let lastCollided = false;
+            C(1,[],[3],{x:77400,y:10000,w:500,h:7500,cr:()=>{},ef:(p)=>{
+                shared.changeCameraScale(interpolate(0.3, 1, (p.pos.y - 10000) / 7500));
+                blackBarAlpha = interpolate(1, 0, (p.pos.y - 10000) / 7500);
+            },sf:()=>{
+                if(lastCollided === true && collided === false){
+                    shared.changeCameraScale(1);
+                    blackBarAlpha = 0;
+                }
+                collided = false;
+            }})
+        }
+}
 
     shared.C(0,[],[11],{x:-1E9,y:0,r:100,sf:(o,p)=>{
         if(inv14 <= 0){
@@ -18284,6 +18371,864 @@ shared.C(0,[],[11],{x:-1E9,y:0,r:100,sf:(o,p)=>{
         o.pos.x = p.pos.x;
         o.pos.y = p.pos.y;
     }});
+}
+
+// tetris iframe!
+
+{
+    let lastW = canvas.w;
+    let lastH = canvas.h;
+    canvas.w = 1600;
+    canvas.h = 900
+    let lastTransform;
+    let started = false;
+    let won = false;
+    // let freezeX, freezeY;
+    let onkdown = window.onkeydown;
+    let onkup = window.onkeyup;
+    let oldRender = shared.render;
+    let lastResize = window.onresize;
+    let interval1 = undefined;
+    let scaledBy = undefined;
+    C(1,[],[3],{x:29650,y:16850,w:100,h:100,ef:(p)=>{
+        if(started === false) {
+            interval1 = window.setInterval(() => {
+                timer -= (performance.now() - lastTime) / 1000;
+                lastTime = performance.now();
+                if (timer < 0) {
+                    won = true;
+                }
+            }, 1000 / 60)
+        
+            speedInterval = setInterval(() => {
+                run();
+            }, Math.max(10, 165 - level * 20))
+            started = true;
+
+            window.onkeydown = (event) => trackKeys(event, input);
+            window.onkeyup = (event) => trackKeys(event, input);
+
+            lastW = canvas.w;
+            lastH = canvas.h;
+
+            ctx.save();
+
+            ctx.clearRect(0,0,canvas.w,canvas.h);
+            ctx.resetTransform();
+            const wRatio = window.innerWidth / canvas.width;
+            const hRatio = window.innerHeight / canvas.height;
+
+            if(wRatio > hRatio){
+                ctx.scale(wRatio,wRatio);
+            } else {
+                ctx.scale(hRatio,hRatio);
+            }
+            canvas.w = 1600;
+            canvas.h = 900;
+
+            shared.render = () => {
+                render();
+            }
+
+            window.onresize = () => {
+                ctx.restore();
+                hasResized = true;
+                started = false;
+                won = false;
+                shared.players[shared.selfId].pos.x = 30000;
+                shared.players[shared.selfId].pos.y = 17500;
+                shared.render = oldRender;
+                window.onkeyup = onkup;
+                window.onkeydown = onkdown;
+                clearInterval(speedInterval);
+                clearInterval(interval1);
+                if(lastTransform !== undefined) ctx.setTransform(lastTransform);
+                realResize();
+            }
+        }
+        // if(won === false){
+        //     p.pos.x = freezeX;
+        //     p.pos.y = freezeY;
+        // }
+        // if(freezeX === undefined){
+        //     freezeX = p.pos.x;
+        //     freezeY = p.pos.y;
+        // }
+    },sf:(_,p)=>{
+        // if(freezeX !== undefined){
+        //     p.pos.x = freezeX;
+        //     p.pos.y = freezeY;
+        // }
+    },cr:()=>{
+        if(started === false || won === true) return;
+        
+    }})
+    function win(){
+        ctx.restore();
+        shared.render = oldRender;
+        won = true;
+        window.onkeyup = onkup;
+        window.onkeydown = onkdown;
+        clearInterval(speedInterval);
+        clearInterval(interval1);
+        window.onresize = lastResize;
+        if(lastTransform !== undefined) ctx.setTransform(lastTransform);
+        realResize();
+    }
+
+    function realResize(){
+        let lastScale = shared.camera.scale;
+        shared.changeCameraScale(1);
+        const dpi = window.devicePixelRatio;
+        canvas.style.width = Math.ceil(window.innerWidth) + 'px';
+        canvas.style.height = Math.ceil(window.innerHeight) + 'px';
+        canvas.width = Math.ceil(window.innerWidth) * dpi;
+        canvas.height = Math.ceil(window.innerHeight) * dpi;
+        // w and h are calced with zoom
+        canvas.w = canvas.width / canvas.zoom;
+        canvas.h = canvas.height / canvas.zoom;
+        ctx.scale(canvas.zoom, canvas.zoom);
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+
+        for(let i = 0; i < shared.resizeFns.length; i++){
+            shared.resizeFns[i]();
+        }
+        shared.changeCameraScale(lastScale);
+    }
+
+    let hasResized = false;
+
+    // BLOCK
+    const colorSchemes = [
+        {//normal
+            fill: '#1f2229',
+        },
+        {//lava
+            fill: '#c70000',
+            stroke: 'black'
+        },
+        {//breakable
+            fill: '#14161A',
+        },
+        {//teleporter
+            fill: '#38ab30',
+        },
+        {//bouncy
+            fill: '#234acc',
+        },
+        {//coin
+            fill: '#d6d611',
+        },
+        {// checkpoint
+            fill: '#05962b',
+            alpha: 0.8
+        }
+    ];
+    
+    function generateBlock(x, y, w) {// canvas dimensions
+        let ind = Math.floor(Math.random() * 7);
+        let basePiece = [{ x: 0, y: 0 }];
+        switch (ind) {
+            case 0:
+                // t piece
+                basePiece = [
+                    { x: 0, y: 0 },
+                    { x: 1, y: 0 },
+                    { x: 2, y: 0 },
+                    { x: 1, y: 1 }
+                ]
+                break;
+            case 1:
+                // j piece
+                basePiece = [
+                    { x: 0, y: 0 },
+                    { x: 1, y: 0 },
+                    { x: 0, y: 1 },
+                    { x: 0, y: 2 }
+                ]
+                break;
+            case 2:
+                // reverse s piece
+                basePiece = [
+                    { x: 1, y: 0 },
+                    { x: 0, y: 1 },
+                    { x: 1, y: 1 },
+                    { x: 0, y: 2 }
+                ]
+                break;
+            case 3:
+                // square
+                basePiece = [
+                    { x: 0, y: 0 },
+                    { x: 0, y: 1 },
+                    { x: 1, y: 0 },
+                    { x: 1, y: 1 }
+                ]
+                break;
+            case 4:
+                // l piece
+                basePiece = [
+                    { x: 0, y: 0 },
+                    { x: 1, y: 0 },
+                    { x: 2, y: 0 },
+                    { x: 0, y: 1 }
+                ]
+                break;
+            case 5:
+                // s piece
+                basePiece = [
+                    { x: 1, y: 0 },
+                    { x: 2, y: 0 },
+                    { x: 0, y: 1 },
+                    { x: 1, y: 1 }
+                ]
+                break;
+            case 6:
+                // long bar
+                basePiece = [
+                    { x: 0, y: 0 },
+                    { x: 1, y: 0 },
+                    { x: 2, y: 0 },
+                    { x: 3, y: 0 }
+                ]
+                break;
+        }
+        let maxBlockH = 0;
+        for (let piece of basePiece) {
+            if (piece.y > maxBlockH) {
+                maxBlockH = piece.y;
+            }
+        }
+        maxBlockH *= tileSize;
+        maxBlockH += 100;
+        return new Block(basePiece.map((b) => {
+            return {
+                x: x + Math.round((tileImg.width / 2) / 50) * 50 + b.x * tileSize,
+                y: y - maxBlockH + b.y * tileSize,
+                previewX: b.x * tileSize,
+                previewY: b.y * tileSize,
+            }
+        }), ind === 0);//b.x*tileSize+x,b.y*tileSize+y
+    }
+    
+    class Block {
+        constructor(pts, tpiece) {
+            this.points = pts;//[{x: 1, y: 1},{x: 2,y: 1}]
+            this.colorScheme = colorSchemes[Math.floor(Math.random() * colorSchemes.length)];
+            this.toStroke = this.colorScheme.stroke !== undefined;
+            this.angle = 0;
+            this.snapped = 0;// amount of times the piece has been snapped to grid
+            this.isTpiece = tpiece;
+        }
+        fall() {
+            for (let point of this.points) {
+                point.y += 50;
+            }
+        }
+        checkCollision() {
+            // checking collision
+            for (let point of this.points) {
+                if (point.y + tileSize >= canvas.h) {
+                    return false;
+                }
+            }
+            for (let block of blocks) {
+                for (let point of this.points) {
+                    for (let otherPoint of block.points) {
+                        if (point.x === otherPoint.x && (point.y + tileSize === otherPoint.y || point.y === otherPoint.y)) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+        checkMoveCollision() {
+            // checking collision
+            for (let point of this.points) {
+                if (point.y + tileSize > canvas.h) {
+                    return false;
+                }
+            }
+            for (let block of blocks) {
+                for (let point of this.points) {
+                    for (let otherPoint of block.points) {
+                        if (point.x === otherPoint.x && point.y === otherPoint.y) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+        render() {
+            ctx.fillStyle = this.colorScheme.fill;
+            ctx.globalAlpha = this.colorScheme.alpha || 1;
+            if (this.toStroke) {
+                ctx.strokeStyle = this.colorScheme.stroke;
+            }
+            for (let point of this.points) {
+                ctx.beginPath();
+                ctx.rect(point.x, point.y, tileSize, tileSize);
+                ctx.fill();
+                if (this.toStroke) {
+                    ctx.stroke();
+                }
+                ctx.closePath();
+            }
+            ctx.globalAlpha = 1;
+        }
+        renderAsPreview(x, y) {
+            ctx.fillStyle = this.colorScheme.fill;
+            ctx.globalAlpha = this.colorScheme.alpha || 1;
+            if (this.toStroke) {
+                ctx.strokeStyle = this.colorScheme.stroke;
+            }
+            for (let point of this.points) {
+                ctx.beginPath();
+                ctx.rect(point.previewX + x, point.previewY + y, tileSize, tileSize);
+                ctx.fill();
+                if (this.toStroke) {
+                    ctx.stroke();
+                }
+                ctx.closePath();
+            }
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    // UTIL
+    const tileSize = 50;
+
+    function createTileImg(w, h, backgroundColor, tileColor) {
+        const canv = document.createElement('canvas');
+        const cx = canv.getContext('2d');
+        canv.width = w;
+        canv.height = h;
+        cx.imageSmoothingEnabled = false;
+
+        cx.fillStyle = tileColor;
+        cx.fillRect(0, 0, w, h);
+        // tile background
+        cx.globalAlpha = 0.75;
+        cx.strokeStyle = backgroundColor;
+        cx.lineWidth = 2;
+        for (let y = 0; y < h; y += tileSize) {
+            for (let x = 0; x < w; x += tileSize) {
+                cx.strokeRect(x, y, tileSize, tileSize);
+            }
+        }
+        cx.globalAlpha = 1;
+        return canv;
+    }
+
+    function checkClearedLines() {
+        let linesCleared = [];
+        for (let y = 0; y < tileImg.height; y += tileSize) {
+            let lineCleared = true;
+            for (let x = canvas.w / 2 - tileImg.width / 2; x < canvas.w / 2 + tileImg.width / 2; x += tileSize) {
+                if (!checkSpace(x, y)) {
+                    lineCleared = false;
+                    //break;
+                }
+            }
+            if (lineCleared) {
+                linesCleared.push(y);
+            }
+        }
+        return linesCleared;
+    }
+
+    function checkSpace(x, y) {
+        for (let block of blocks) {
+            for (let point of block.points) {
+                if (point.x === x && point.y === y) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    function clearLine(y) {
+        for (let i = 0; i < blocks.length; i++) {
+            blocks[i].points = blocks[i].points.filter((p) => p.y !== y);
+        }
+        for (let block of blocks) {
+            for (let point of block.points) {
+                if (point.y < y) {
+                    point.y += tileSize;
+                }
+            }
+        }
+    }
+
+    function checkGameOver() {
+        if(hasResized === true) {hasResized = false; return true;}
+        for (let block of blocks) {
+            for (let point of block.points) {
+                if (point.y < 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    function getAllMethodNames(obj) {
+        let methods = [];
+        while (obj = Reflect.getPrototypeOf(obj)) {
+            let keys = Reflect.ownKeys(obj)
+            keys.forEach((k) => methods.push(k));
+        }
+        return methods;
+    }
+
+    function deepCopy(object) {
+        let deepobj = JSON.parse(JSON.stringify(object));
+        let otherFunctions = getAllMethodNames(object);
+        // dynamically getting all functions (including helper functions)
+        for (let otherfunc of otherFunctions) {
+            if (!["constructor", "__defineGetter__", "__defineSetter__", "hasOwnProperty", "__lookupGetter__", "__lookupSetter__", "isPrototypeOf", "propertyIsEnumerable", "toString", "valueOf", "__proto__", "toLocaleString"].includes(otherfunc)) {
+                deepobj[otherfunc] = object[otherfunc];
+            }
+        }
+        return deepobj;
+    }
+
+    function pushAgainstWallRotate(){
+        if(!activeblock) return;
+        for (let point of activeblock.points) {
+            if (point.x + tileSize > canvas.w / 2 + tileImg.width / 2) {
+                //intersectingWall = true;
+                for(let changePoint of activeblock.points){
+                    changePoint.x -= tileSize;
+                }
+                pushAgainstWallRotate()
+                return;
+            } else if (point.x < canvas.w / 2 - tileImg.width / 2) {
+                //intersectingWall = true;
+                for(let changePoint of activeblock.points){
+                    changePoint.x += tileSize;
+                }
+                pushAgainstWallRotate()
+                return;
+            }
+        }
+    }
+
+    // MAIN (script.js)
+    let tileImg = createTileImg(500, 900, '#1f2229', '#323645');
+
+    let blocks = [];
+
+    let score = 0;
+
+    let level = 1;
+
+    let linesCleared = 0;
+
+    let timer = 75;
+
+    let activeblock = null;
+
+    let nextblock = generateBlock(canvas.w / 2 - tileImg.width / 2, 0, 500, 1000);
+
+    function render() {
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, canvas.w, canvas.h);
+
+        // let lastW = canvas.w;
+        // let lastH = canvas.h;
+        // ctx.save();
+
+        // const wRatio = canvas.w / window.innerWidth;
+        // const hRatio = canvas.h / window.innerHeight;
+
+        // canvas.w = 1600;
+        // canvas.h = 900;
+
+        // if(wRatio > hRatio){
+        //     // fat
+        //     ctx.scale(wRatio, wRatio);
+        //     // ctx.translate()
+        // } else {
+        //     // tall
+        //     ctx.scale(hRatio, hRatio);
+        // }
+
+        ctx.drawImage(tileImg, canvas.w / 2 - tileImg.width / 2, 0);
+        for (let block of blocks) {
+            block.render();
+        }
+        if (activeblock !== null) {
+            activeblock.render();
+        }
+        ctx.fillStyle = 'white';
+        ctx.font = "30px inter";
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText('Score: ' + score, canvas.w / 2 - tileImg.width / 2 - 10, 50);
+
+        let timerText = ctx.measureText(Math.round(timer * 10) / 10);
+        ctx.fillText('Time Left: ', canvas.w / 2 - tileImg.width / 2 - 10 - timerText.width, 120);
+        ctx.fillStyle = timer < 0 ? 'green' : 'red';
+        ctx.fillText(Math.round(timer * 10) / 10, canvas.w / 2 - tileImg.width / 2 - 10, 120);
+        ctx.fillStyle = 'white';
+
+        ctx.textAlign = 'left';
+        ctx.fillText('Level: ' + level, canvas.w / 2 + tileImg.width / 2 + 10, 50);
+        ctx.fillText('Lines Cleared: ' + linesCleared, canvas.w / 2 + tileImg.width / 2 + 10, 120);
+        ctx.fillText('Next: ', canvas.w / 2 + tileImg.width / 2 + 10, 180);
+        nextblock.renderAsPreview(canvas.w / 2 + tileImg.width / 2 + 10, 220);
+
+        // ctx.restore();
+        // canvas.w = lastW;
+        // canvas.h = lastH;
+    }
+    function simulate() {
+        // let lastW = canvas.w;
+        // let lastH = canvas.h;
+
+        // canvas.w = 1600;
+        // canvas.h = 900;
+
+        if (!nextblock) {
+            nextblock = generateBlock(canvas.w / 2 - tileImg.width / 2, 0, 500, 1000)
+        }
+        if (!activeblock) {
+            activeblock = deepCopy(nextblock);
+            nextblock = generateBlock(canvas.w / 2 - tileImg.width / 2, 0, 500, 1000)
+        }
+
+        // its reached its end, time to turn it into a regular block
+        activeblock.fall()
+        for (let keypress of Object.keys(input)) {
+            simulateInput(input[keypress], keypress);
+        }
+        checkActiveWillSettle();
+
+        // canvas.w = lastW;
+        // canvas.h = lastH;
+    }
+
+    function willSettle() {
+        if (!activeblock) {
+            return false;
+        }
+        if (!activeblock.checkCollision()) {
+            return true;
+        }
+        return false;
+    }
+
+    function checkActiveWillSettle() {
+        if (!activeblock) return;
+        let collision = !activeblock.checkCollision();
+        if (collision) {
+            blocks.push(activeblock);
+            activeblock = null;
+            if (checkGameOver()) {
+                if(timer < 0){
+                    // won
+                    win();
+                    return;
+                }
+                // window.location.reload();
+                blocks = [];
+                score = 0;
+                level = 1;
+                linesCleared = 0;
+                timer = 75;
+                activeblock = generateBlock(canvas.w / 2 - tileImg.width / 2, 0, 500, 1000);
+                nextblock = generateBlock(canvas.w / 2 - tileImg.width / 2, 0, 500, 1000);
+                clearInterval(speedInterval);
+                speedInterval = setInterval(() => {
+                    run();
+                }, Math.max(10, 165 - level * 20))
+                return;
+            }
+            let clearedLines = checkClearedLines();
+            switch (clearedLines.length) {
+                case 1:
+                    score += 100
+                    break;
+                case 2:
+                    score += 300
+                    break;
+                case 3:
+                    score += 500
+                    break;
+                case 4:
+                    score += 800
+                    break;
+            }
+            for (let line of clearedLines) {
+                clearLine(line);
+                linesCleared++;
+            }
+            if (linesCleared / 3 >= level) {
+                level++;
+                clearInterval(speedInterval);
+                speedInterval = setInterval(() => {
+                    run();
+                }, Math.max(10, 165 - level * 20))
+            }
+        }
+    }
+
+    let lastTime = performance.now();
+    function run() {
+        simulate();
+    }
+
+    let speedInterval; 
+
+    const Controls = {
+        KeyA: { key: 'left' },
+        KeyD: { key: 'right' },
+        ArrowUp: { key: 'rotateright' },
+        ArrowDown: { key: 'rotateleft' },
+        ArrowLeft: { key: 'left' },
+        ArrowRight: { key: 'right' },
+        KeyW: { key: 'rotateright' },
+        KeyS: { key: 'rotateleft' },
+        Period: { key: 'rotateright' },
+        Comma: { key: 'rotateleft' },
+        Space: { key: 'harddrop' },
+        Enter: { key: 'enterpress' },
+    };
+    
+    function trackKeys(event) {
+        if (event.repeat) return event.preventDefault();
+        if (Controls[event.code] != undefined) {
+            input[Controls[event.code].key] = event.type === 'keydown';
+            // console.log(input[Controls[event.code].key], Controls[event.code].key);
+            simulateInput(input[Controls[event.code].key], Controls[event.code].key, Controls[event.code].key);
+            event.preventDefault();
+        }
+    }
+    
+    function simulateInput(state, key, keycode) {
+        if (state === true && activeblock !== null) {
+            let stuckAgainstWall = false;
+            let laststate = JSON.parse(JSON.stringify(activeblock.points));
+            let lastangle = activeblock.angle;
+            let centerpoint;
+            let shouldRefund = false;
+            let snapped = false;
+            switch (key) {
+                case 'left':
+                    for (let point of activeblock.points) {
+                        if (point.x <= canvas.w / 2 - tileImg.width / 2) {
+                            stuckAgainstWall = true;
+                            break;
+                        }
+                    }
+                    if (!stuckAgainstWall) {
+                        activeblock.points.forEach((p) => {
+                            p.x -= tileSize;
+                        })
+                    } else {
+                        shouldRefund = true;
+                    }
+                    break;
+                case 'right':
+                    for (let point of activeblock.points) {
+                        if (point.x + tileSize >= canvas.w / 2 + tileImg.width / 2) {
+                            stuckAgainstWall = true;
+                            break;
+                        }
+                    }
+                    if (!stuckAgainstWall) {
+                        activeblock.points.forEach((p) => {
+                            p.x += tileSize;
+                        })
+                    } else {
+                        shouldRefund = true;
+                    }
+                    break;
+                case 'rotateright':
+                    // finding a center point
+                    centerPoint = { x: 0, y: 0 };
+                    for (let point of activeblock.points) {
+                        centerPoint.x += point.x;
+                        centerPoint.y += point.y;
+                    }
+                    centerPoint.x /= activeblock.points.length;
+                    centerPoint.y /= activeblock.points.length;
+                    centerPoint.x += tileSize / 2;
+                    centerPoint.y += tileSize / 2;
+    
+                    // transforming all points relative to this center point
+                    for (let point of activeblock.points) {
+                        point.x += tileSize / 2;
+                        point.y += tileSize / 2;
+                        point.x -= centerPoint.x;
+                        point.y -= centerPoint.y;
+                    }
+    
+                    // rotating (x,y) => (-y,x)
+                    for (let point of activeblock.points) {
+                        let desiredPoint = { x: -point.y, y: point.x };
+                        point.x = desiredPoint.x;
+                        point.y = desiredPoint.y;
+                    }
+    
+                    // transforming back to normal grid
+                    for (let point of activeblock.points) {
+                        point.x -= tileSize / 2;
+                        point.y -= tileSize / 2;
+                        point.x += centerPoint.x;
+                        point.y += centerPoint.y;
+                    }
+    
+                    // snapping to the grid
+                    for (let point of activeblock.points) {
+                        if (point.x % 50 !== 0 || point.y % 50 !== 0) {
+                            if (point.x % 50 !== 0) {
+                                snapped = true;
+                            }
+                            point.x = Math.round(point.x / 50) * 50;
+                            point.y = Math.round(point.y / 50) * 50;
+                        }
+                    }
+    
+                    if (snapped && activeblock.isTpiece === false) {
+                        activeblock.snapped++;
+                        if (activeblock.snapped % 2 === 1) {
+                            for (let point of activeblock.points) {
+                                point.x -= 50;
+                            }
+                        }
+                    }
+    
+                    // making sure it isnt clipping into the ground or another block
+                    activeblock.angle = (36000 + 90 + activeblock.angle) % 360;
+                    for (let point of activeblock.points) {
+                        if (point.y + tileSize >= canvas.h) {
+                            activeblock.points = laststate;
+                        }
+                    }
+    
+                    pushAgainstWallRotate()
+                    break;
+                case 'rotateleft':
+                    // finding a center point
+                    centerPoint = { x: 0, y: 0 };
+                    for (let point of activeblock.points) {
+                        centerPoint.x += point.x;
+                        centerPoint.y += point.y;
+                    }
+                    centerPoint.x /= activeblock.points.length;
+                    centerPoint.y /= activeblock.points.length;
+                    centerPoint.x += tileSize / 2;
+                    centerPoint.y += tileSize / 2;
+    
+                    // transforming all points relative to this center point
+                    for (let point of activeblock.points) {
+                        point.x += tileSize / 2;
+                        point.y += tileSize / 2;
+                        point.x -= centerPoint.x;
+                        point.y -= centerPoint.y;
+                    }
+    
+                    // rotating (x,y) => (y,-x)
+                    for (let point of activeblock.points) {
+                        let desiredPoint = { x: point.y, y: -point.x };
+                        point.x = desiredPoint.x;
+                        point.y = desiredPoint.y;
+                    }
+    
+                    // transforming back to normal grid
+                    for (let point of activeblock.points) {
+                        point.x -= tileSize / 2;
+                        point.y -= tileSize / 2;
+                        point.x += centerPoint.x;
+                        point.y += centerPoint.y;
+                    }
+    
+                    // snapping to the grid
+                    for (let point of activeblock.points) {
+                        if (point.x % 50 !== 0 || point.y % 50 !== 0) {
+                            if (point.x % 50 !== 0 && point.y % 50 === 0) {
+                                snapped = true;
+                            }
+                            point.x = Math.round(point.x / 50) * 50;
+                            point.y = Math.round(point.y / 50) * 50;
+                        }
+                    }
+    
+                    if (snapped && activeblock.isTpiece === false) {
+                        activeblock.snapped++;
+                        if (activeblock.snapped % 2 === 1) {
+                            for (let point of activeblock.points) {
+                                point.x -= 50;
+                            }
+                        }
+                    }
+    
+                    // making sure it isnt clipping into the ground or another block
+                    activeblock.angle = (36000 - 90 + activeblock.angle) % 360;
+                    for (let point of activeblock.points) {
+                        if (point.y + tileSize >= canvas.h) {
+                            activeblock.points = laststate;
+                        }
+                    }
+    
+                    pushAgainstWallRotate()
+                    break;
+                case 'harddrop':
+                    while (activeblock.checkCollision()) {
+                        for (let point of activeblock.points) {
+                            point.y += 50;
+                        }
+                        score++;
+                    }
+                    break;
+                case 'enterpress':
+                    window.top.postMessage('enterpress', '*');
+            }
+            if (!activeblock.checkMoveCollision() && !shouldRefund && key !== 'harddrop') {
+                // cant move in this direction
+                activeblock.points = laststate;
+            } else {
+                input[keycode] = false;
+                if (!activeblock) {
+                    activeblock = deepCopy(nextblock);
+                    nextblock = generateBlock(canvas.w / 2 - tileImg.width / 2, 0, 500, 1000)
+                }
+                // will settle if moved in this direction
+                checkActiveWillSettle();
+            }
+    
+            let isInSamePosition = true;
+            for (let i = 0; i < laststate.length; i++) {
+                if (activeblock.points[i] !== laststate[i]) {
+                    isInSamePosition = false;
+                    break;
+                }
+            }
+            if (isInSamePosition) {
+                // refund
+                input[keycode] = true;
+                activeblock.angle = lastangle;
+            }
+            render()
+        }
+    }
+    
+    let input = {
+        left: false,
+        right: false,
+        rotateright: false,
+        rotateleft: false,
+        harddrop: false,
+    };
+
+    canvas.w = lastW;
+    canvas.h = lastH;
 }
 
 // platformer top walls corrections

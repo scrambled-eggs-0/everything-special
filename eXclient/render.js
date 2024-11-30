@@ -306,6 +306,7 @@ shared.render = (os=shared.obstacles, cols=shared.colors, players=shared.players
     for(let i = 0; i < players.length; i++){
         const player = players[i];
         if(player === undefined) continue;
+        if(player.cr !== undefined) {player.cr(player); continue;}
         ctx.fillStyle = player.dead === true ? 'red' : 'black';
 
         lastR = player.sat.r;
