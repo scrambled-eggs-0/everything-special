@@ -75,10 +75,9 @@ shared.onLoopTrap = () => {
   shared.infiniteLoop = true;
   alert("Infinite loop detected. Code execution paused.");
 }
-function getCode(){
+window.getCode = () => {
   return javascriptGenerator.workspaceToCode(ws);//.replaceAll('var ', 'let ');
 }
-shared.getCode = getCode;
 
 let runCode = shared.runCode = () => {
   shared.loopTrap = 1000;
@@ -222,9 +221,9 @@ shared.uploadCode = () => {
     });
 }
 
-import './createMode.js';
+import './create.js';
 
-shared.requestIdleCallback(() => {
+window.requestIdleCallback(() => {
   // overriding the duplicate function 
   const PASTE = Blockly.ShortcutItems.names.PASTE;
   const oldPasteShortcut = Blockly.ShortcutRegistry.registry.getRegistry()[PASTE];

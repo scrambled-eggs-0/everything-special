@@ -49,30 +49,6 @@ export default /*const toolbox =*/ {
         },
         {
           'kind': 'block',
-          "type": "create_obstacle",
-          "extraState": {
-              "shapeParamToId": {
-                  "h": "SHAPE3",
-                  "w": "SHAPE4",
-                  "y": "SHAPE5",
-                  "x": "SHAPE6"
-              },
-              "numSimulateFields": 0,
-              "numEffectFields": 1,
-              "sditk": [],
-              "editk": ["21"],
-              "lastShape": "1"
-          },
-          "fields": {
-              "SHAPE_DROPDOWN": "1",
-              "NUM_SIMULATES_DROPDOWN": 0,
-              "NUM_EFFECTS_DROPDOWN": 1,
-              "EFFECT_DROPDOWN0": "21",
-              "DECO_DROPDOWN": "https://upload.wikimedia.org/wikipedia/commons/c/c3/A_Snapshot_of_the_Jewel_Box_cluster_with_the_ESO_VLT.jpg"
-          },
-        },
-        {
-          'kind': 'block',
           'type': 'get_parameter'
         },
         {

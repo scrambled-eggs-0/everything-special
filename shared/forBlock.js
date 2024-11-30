@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import shared from './shared.js';
+
 // we only need Order here, so don't import from blockly
 const Order = Object.freeze({
   ATOMIC: 0,

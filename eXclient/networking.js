@@ -47,7 +47,7 @@ function initWS() {
     }
 }
 
-initWS();
+if(shared.isEditor === false) initWS();
 
 shared.changeMap = function changeMap(url=`/maps/hub`, method='GET', headers=new Headers()){
     lateSyncMap = false; mapEntryTime = window.frames;

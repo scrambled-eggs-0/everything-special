@@ -167,7 +167,7 @@ shared.resetGame = () => {
     }
     shared.resetFns.length = shared.obstacles.length = shared.mouseUpFunctions.length = shared.mouseDownFunctions.length = shared.mouseMoveFunctions.length = shared.resizeFns.length = 0;
     if(shared.environment !== 'editor') {shared.respawnPlayer(); /*player.renderRadius = player.sat.r;*/ }
-    else {shared.infiniteLoop = false;}
+    else {shared.infiniteLoop = false; shared.onEditorReset();}
     for(let key in shared.defaultColors) { shared.colors[key] = shared.defaultColors[key]; }
     if(shared.colors.vignette !== undefined) shared.colors.vignette = structuredClone(shared.defaultColors.vignette);
     shared.mouseDownFunctions.push(() => {
@@ -181,7 +181,7 @@ shared.resetGame = () => {
     const player = shared.players[shared.selfId];
     if(player !== undefined){
         player.sat.r = 49.5;
-        player.speed = player.baseSpeed = 0.43;
+        player.speed = player.baseSpeed = 7.167;
     }
     shared.idToObs = {};
 }

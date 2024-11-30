@@ -29,7 +29,7 @@ shared.username = '';
 shared.authId = -1;
 
 shared.startGame = () => {
-    gui.classList.remove('hidden');
+    if(shared.isEditor === false) gui.classList.remove('hidden');
     lastTime = performance.now();
     shared.respawnPlayer();
     run();

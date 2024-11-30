@@ -158,6 +158,8 @@ function handleKey(e){
                 zenMode = !zenMode;
             } else if (e.code === 'KeyU' && shared.isProd === false){
                 shared.renderDebug = !shared.renderDebug;
+            } else if(e.code === 'Escape' && shared.isEditor === true){
+                shared.stopEditorCreateDrag();
             }
         }
 
