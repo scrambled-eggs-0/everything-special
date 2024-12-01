@@ -367,6 +367,10 @@ app.post("/join",async (res, req) => {
     const authId = req.getHeader("id");
     const ws = clients[authId];
 
+    if (bannedUsernames.includes(username)){
+        res.end("n");
+        return;
+    }
     if(ws === undefined){
         res.end("n");
         return;
@@ -416,6 +420,7 @@ app.post("/join",async (res, req) => {
 // const decoder = new TextDecoder();
 
 let mutedUsernames = [];
+let bannedUsernames = [];
 function removeItemAll(arr, value) {
     var i = 0;
     while (i < arr.length) {
@@ -476,8 +481,26 @@ const messageMap = [
         }
         // chatMuted
     },
-    // 6 - unused
-    () => {},
+    // 6 - ban user
+    (data, me) => {
+        if(me.player.name !== 'Serum0017' && me.player.name !== 'trit') return;
+        const decoder = new TextDecoder();
+        const user = decoder.decode(data).slice(1);
+
+        if (bannedUsernames.includes(user)){
+            bannedUsernames = removeItemAll(bannedUsernames, user);
+        }
+        else{
+            bannedUsernames.push(user);
+        }
+
+        for(let key in global.clients){
+            const p = global.clients[key].me.player;
+            if(p.name === user){
+                global.clients[key].close();
+            }
+        }
+    },
     // 7 - chat message
     (data, me) => {
         if(data.byteLength > 1000 || me.mapName === '' || me.player.chatMuted === true || mutedUsernames.includes(me.player.name)) return;

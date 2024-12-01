@@ -104,6 +104,14 @@ function handleKey(e){
                 encodeAtPosition(user, buf, 1);
                 shared.send(buf);
             }
+            else if(msg.slice(0,4) === '/ban' && (shared.username === 'trit' || shared.username === 'Serum0017')){
+                const user = msg.slice(5);
+                const buf = new Uint8Array(user.length + 1);
+                buf[0] = 6;
+                encodeAtPosition(user, buf, 1);
+                shared.send(buf);
+            }
+            
             else if(msg.length !== 0){
                 msg = shared.username + ': ' + msg;
                 const buf = new Uint8Array(msg.length + 2);
