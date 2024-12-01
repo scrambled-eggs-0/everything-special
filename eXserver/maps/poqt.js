@@ -17190,6 +17190,7 @@ C(3,[],[20],{type:[3,[],[20]],x:208900,y:1000,w:50,h:50,size:30,text:"Maybe ill 
         }
         for(let i = 0; i < obstacles.length; i++){
             if(obstacles[i].isWinpad === true) continue;
+            if(obstacles[i].topLeft.x < 80_000) continue;
             // if(obstacles[i].sat.r === undefined){
             //     if(obstacles[i].sat.points[0].x < 79000 || obstacles[i].isText !== undefined) continue;
             // } else {
