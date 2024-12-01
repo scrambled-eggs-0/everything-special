@@ -415,6 +415,19 @@ app.post("/join",async (res, req) => {
 
 // const decoder = new TextDecoder();
 
+let mutedUsernames = [];
+function removeItemAll(arr, value) {
+    var i = 0;
+    while (i < arr.length) {
+      if (arr[i] === value) {
+        arr.splice(i, 1);
+      } else {
+        ++i;
+      }
+    }
+    return arr;
+}
+
 // functions that each correspond to a message. Tells the server what to do when processing the message
 const messageMap = [
     // 0 - unused
@@ -441,6 +454,14 @@ const messageMap = [
         if(me.player.name !== 'Serum0017' && me.player.name !== 'trit') return;
         const decoder = new TextDecoder();
         const user = decoder.decode(data).slice(1);
+
+        if (mutedUsernames.includes(user)){
+            mutedUsernames = removeItemAll(mutedUsernames, user);
+        }
+        else{
+            mutedUsernames.push(user);
+        }
+
         for(let key in global.clients){
             const p = global.clients[key].me.player;
             if(p.name === user){
@@ -459,7 +480,7 @@ const messageMap = [
     () => {},
     // 7 - chat message
     (data, me) => {
-        if(data.byteLength > 1000 || me.mapName === '' || me.player.chatMuted === true) return;
+        if(data.byteLength > 1000 || me.mapName === '' || me.player.chatMuted === true || mutedUsernames.includes(me.player.name)) return;
         // const msg = decoder.decode(data).slice(1);
         // TODO: server side verification on chat msgs to make sure that data[1] is what it should be (we don't want random people sending "dev" and displaying that way)
         broadcastEveryone(data);
