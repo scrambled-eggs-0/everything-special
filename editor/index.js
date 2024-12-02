@@ -267,4 +267,4 @@ window.requestIdleCallback(() => {
   Blockly.ContextMenuRegistry.registry.unregister('blockDuplicate');
 }, {timeout: 100})
 
-ws.registerButtonCallback("returnToMainGame", ()=>{location.replace(location.origin)});
+// ws.registerButtonCallback("returnToMainGame", ()=>{location.replace(location.origin)});

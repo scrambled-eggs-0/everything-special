@@ -6,6 +6,7 @@ let ctx = window.ctx = canvas.getContext('2d');
 const camera = shared.camera = {
     x: 0, y: 0, scale: 1,
     numControlledBy: 0,
+    angle: 0,
     /*3d*/
     z: 1,
     basis1: [1, 0, 0],
@@ -133,13 +134,17 @@ shared.render = (os=shared.obstacles, cols=shared.colors, players=shared.players
         if(camera.numControlledBy === 0){
             camera.x = me.pos.x;
             camera.y = me.pos.y;
+            camera.angle = 0;
+            if(me.ship === true){
+                camera.angle = Math.PI/2+me.shipAngle;
+                overRenderTiles = true;
+            }
         }
 
-        if(me.ship === true){
+        if(camera.angle !== 0){
             ctx.translate(canvas.w/2, canvas.h/2);
-            ctx.rotate(-Math.PI/2-me.shipAngle);
+            ctx.rotate(-camera.angle);
             ctx.translate(-canvas.w/2, -canvas.h/2);
-            overRenderTiles = true;
         }
     }
 
@@ -389,13 +394,10 @@ shared.render = (os=shared.obstacles, cols=shared.colors, players=shared.players
 
     ctx.translate(camera.x-canvas.w/2, camera.y-canvas.h/2);
 
-    if(shared.selfId !== undefined){
-        const me = players[shared.selfId];
-        if(me.ship === true){
-            ctx.translate(canvas.w/2, canvas.h/2);
-            ctx.rotate(me.shipAngle+Math.PI/2);
-            ctx.translate(-canvas.w/2, -canvas.h/2);
-        }
+    if(camera.angle !== 0){
+        ctx.translate(canvas.w/2, canvas.h/2);
+        ctx.rotate(camera.angle);
+        ctx.translate(-canvas.w/2, -canvas.h/2);
     }
 
     // vignette
@@ -681,6 +683,62 @@ shared.unTaintCanvas = () => {
     shared.resize();
 
     ctx.setTransform(transform);
+}
+
+// mouse coordinates ranging (0,canvas.w) to world position (same coordinates as obstacle rendering)sD
+// TODO: test angle !== 0
+shared.translateScreenToWorld = () => {
+    ctx.translate(-(camera.x-canvas.w/2), -(camera.y-canvas.h/2));
+    // if(camera.angle !== 0){
+    //     ctx.translate(canvas.w/2, canvas.h/2);
+    //     ctx.rotate(-camera.angle);
+    //     ctx.translate(-canvas.w/2, -canvas.h/2);
+    // }
+}
+
+shared.translateWorldToScreen = () => {
+    // if(camera.angle !== 0){
+    //     ctx.translate(canvas.w/2, canvas.h/2);
+    //     ctx.rotate(camera.angle);
+    //     ctx.translate(-canvas.w/2, -canvas.h/2);
+    // }
+    ctx.translate((camera.x-canvas.w/2), (camera.y-canvas.h/2));
+}
+
+shared.screenToWorld = (x,y) => {
+    // if(camera.angle === 0){
+        return [
+            x + (camera.x-canvas.w/2),
+            y + (camera.y-canvas.h/2)
+        ];
+    // } else {
+    //     x += -(camera.x-canvas.w/2) + canvas.w/2;
+    //     y += -(camera.y-canvas.h/2) + canvas.h/2;
+    //     const mag = Math.sqrt(x**2 + y **2);
+    //     const angle = Math.atan2(y,x) + camera.angle;
+    //     return [
+    //         Math.cos(angle) * mag,
+    //         Math.sin(angle) * mag
+    //     ]
+    // }
+}
+
+shared.worldToScreen = (x,y) => {
+    // if(camera.angle === 0){
+        return [
+            x - (camera.x-canvas.w/2),
+            y - (camera.y-canvas.h/2)
+        ]
+    // } else {
+    //     x -= canvas.w/2;
+    //     y -= canvas.h/2;
+    //     const mag = Math.sqrt(x**2 + y**2);
+    //     const angle = Math.atan2(y,x) - camera.angle;
+    //     return [
+    //         Math.cos(angle) * mag - (camera.x-canvas.w/2),
+    //         Math.sin(angle) * mag - (camera.y-canvas.h/2),
+    //     ]
+    // }
 }
 
 export default shared.render;

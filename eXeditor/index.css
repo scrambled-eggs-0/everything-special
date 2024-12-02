@@ -150,6 +150,7 @@ canvas {
 }
 
 #messagetext {
+    position: fixed;
     color: white;
     z-index: 10000000;
     font-size: 4.72vh;/*42px*/
@@ -195,18 +196,23 @@ body {
 
 .menugui {
     position: relative !important;
-    /* left: calc(100vw - 300px); */
-    /* top: 0px; */
-    /* min-width: 300px; */
     max-height: 100vh;
     display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
+    justify-content: flex-start;
+    align-items: center;
     flex-direction: column;
     overflow-x: hidden;
     overflow-y: auto;
-    /* background: red; */
     z-index: 1000;
+}
+
+/*hiding scrollbar*/
+.menugui::-webkit-scrollbar {
+    display: none;
+}
+.menugui {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 .or,
@@ -255,6 +261,7 @@ body {
     /* background: var(--gui-bg); */
     width: 300px;
     z-index: 1000;
+    user-select: none;
     /* background: var(--bg); */
 }
 
@@ -712,6 +719,7 @@ input[type='number'] {
 .gui-disable {
     opacity: 0.25;
     pointer-events: none;
+    user-select: none;
     /* background-color: gray; */
 }
 

@@ -22,6 +22,7 @@ const tutorialMaps = [
     `shared.C(0,[],[2,18],{r:212.13203435596427,y:0,x:50,decay:0.98,bounciness:1,sizeChangePermanent:false,sizeMult:1.5,});shared.C(0,[],[6],{r:100,y:300,x:850,});shared.C(0,[],[17],{r:206.15528128088303,y:100,x:550,timeTrapToShowTenth:false,timeTrapToKill:true,timeTrapRecoverySpeed:1.5,timeTrapMaxTime:300,});shared.C(0,[],[13],{r:250,y:500,x:175,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorAngle:112,conveyorForce:0.3,});shared.C(0,[],[12,9],{r:254.95097567963924,y:650,x:700,tpy:800,tpx:350,checkpointOffsetY:-250,checkpointOffsetX:-200,});shared.C(0,[],[10],{r:180.27756377319946,y:1150,x:650,healSpeed:1,regenTime:100,maxStrength:60,});shared.C(0,[],[15],{r:150,y:1450,x:450,axisSpeedMultY:1,axisSpeedMultX:0,});shared.C(0,[],[16],{r:304.138126514911,y:1100,x:100,snapAngleRotateSpeed:0,snapAngle:0,snapCooldown:40,snapDistanceY:100,snapDistanceX:100,toSnapY:true,toSnapX:true,});colors.tile=colourRgb(30,53,46);colors.background=colourRgb(50,76,69);`,
 
     // idea: nearly impossible level, teaching the player about scrolling
+    // NOTE: Growings will be broken because they need a growPivotX, growPivotY (didn't exist at the time of omni)
     `var angle1, xv1, yv1;
     shared.C(1,[],[6],{h:100,w:900,y:0,x:0,});
     shared.C(2,[0,2],[1],{points:[[0,200],[300,200],[150,400]],path:[[0,0,5],[600,0,5]],currentPoint:0,toStartGrowing:true,startGrowth:1,minGrowth:1,maxGrowth:1.25,shrinkSpeed:0.006,growSpeed:0.006,});

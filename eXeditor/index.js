@@ -2,7 +2,6 @@ import './index.css';
 import './utils.js';
 import './divider.js';
 import '../eXclient/index.js';
-import './transform.js';
 
 import shared from '../shared/shared.js';
 import * as Blockly from 'blockly';
@@ -69,6 +68,10 @@ let runCode = shared.runCode = () => {
     shared.stopMusic();
   }
 
+  for(let i = 0; i < shared.editorRunFns.length; i++){
+    shared.editorRunFns[i]();
+  }
+
   return code;
 };
 
@@ -88,7 +91,12 @@ ws.addChangeListener((e) => {
 
 // Every time the workspace changes state, save the changes to storage.
 ws.addChangeListener((e) => {
-  if (e.isUiEvent) return;
+  if (e.isUiEvent === true) {
+    if(e.type === Blockly.Events.SELECTED || e.type === Blockly.Events.BLOCK_DRAG){
+      shared.selectCorrespondingObs(e.newElementId);
+    }
+    return;
+  }
   save(ws);
 });
 
@@ -136,14 +144,16 @@ window.requestIdleCallback(() => {
   Blockly.ContextMenuRegistry.registry.unregister('blockDuplicate');
 }, {timeout: 100})
 
-shared.ws.registerButtonCallback("returnToMainGame", ()=>{location.replace(location.origin)});
+// shared.ws.registerButtonCallback("returnToMainGame", ()=>{location.replace(location.origin)});
 
-import './create.js';
+import './overrides.js';
+import './menu.js'
 
 let username = localStorage.getItem('username');
 shared.players[shared.selfId].name = username ?? '';
+shared.players[shared.selfId].cr = () => {};
+shared.players[shared.selfId].god = true;
 shared.startGame();
-
 // // TODO: Upload code. Also, if the user doesn't have an account,
 // // "Looks like you don't have an account. You can still use the editor, but won't be able to upload levels. Head on over to evadesX.io/create or /login to get an account".
 // let hashedPassword = localStorage.getItem('hashedPassword');

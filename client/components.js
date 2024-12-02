@@ -713,7 +713,7 @@ const renderShapeMap = [
             renderShapeMap[2](o);
             return;
         }
-        ctx.rect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y);
+        ctx.rect(o.topLeft.x, o.topLeft.y, o.dimensions.x, o.dimensions.y);
     },
     /*polygon*/
     (o) => {
@@ -795,6 +795,8 @@ const initSimulateMap = [
         o.minGrowth = init.minGrowth;
         o.growing = init.toStartGrowing;
         o.growth = o.lastGrowth = init.startGrowth;
+        o.growPivotX = init.growPivotX;
+        o.growPivotY = init.growPivotY;
     },
     // /*custom*/
     () => {},
@@ -900,15 +902,23 @@ const simulateMap = [
 
         if(o.sat.r !== undefined){
             // circle
+            o.pos.x -= o.growPivotX;
+            o.pos.y -= o.growPivotY;
+            o.pos.x *= growthRatio;
+            o.pos.y *= growthRatio;
+            o.pos.x += o.growPivotX;
+            o.pos.y += o.growPivotY;
+
             o.sat.r *= growthRatio;
         } else {
             // poly
-            let middleX = o.topLeft.x + o.dimensions.x/2;
-            let middleY = o.topLeft.y + o.dimensions.y/2; 
-
             for(let i = 0; i < o.sat.points.length; i++){
-                o.sat.points[i].x = (o.sat.points[i].x + o.pos.x - middleX) * growthRatio - o.pos.x + middleX;
-                o.sat.points[i].y = (o.sat.points[i].y + o.pos.y - middleY) * growthRatio - o.pos.y + middleY;
+                o.sat.points[i].x += o.pos.x - o.growPivotX;
+                o.sat.points[i].y += o.pos.y - o.growPivotY;
+                o.sat.points[i].x *= growthRatio;
+                o.sat.points[i].y *= growthRatio;
+                o.sat.points[i].x -= o.pos.x - o.growPivotX;
+                o.sat.points[i].y -= o.pos.y - o.growPivotY;
             }
             o.sat.setPoints(o.sat.points);
 
@@ -917,7 +927,7 @@ const simulateMap = [
             }
         }
 
-        o.topLeft = shared.generateTopLeftCoordinates(o);
+        o.topLeft = generateTopLeftCoordinates(o);
         o.dimensions = generateDimensions(o);
         o.lastGrowth = o.growth;
     },
@@ -1005,6 +1015,8 @@ shared.simulateDefaultMap = [
         minGrowth: 1,
         startGrowth: 1,
         toStartGrowing: true,
+        growPivotX: 100,
+        growPivotY: 300
     },
     // custom
     {},
@@ -1019,8 +1031,8 @@ shared.simulateDefaultMap = [
         homingRotateSpeed: 0.01,
         detectionRadius: 200,
         spokeAngles: [0, Math.PI],
-        pivotX: 450,
-        pivotY: 800
+        pivotX: 300,
+        pivotY: 300
     }
 ]
 
@@ -1221,8 +1233,10 @@ const initEffectMap = [
         o.hex = params.hex;
         o.alpha = params.alpha;
     },
-    /*decoration - scrapped*/
-    (o, params) => {},
+    /*invisible*/
+    (o, params) => {
+        o.cr = ()=>{};
+    },
     /*changeMap*/
     (o, params) => {
         o.mapName = params.mapName;
@@ -1565,7 +1579,7 @@ const effectMap = [
     },
     /*solidColor*/
     (p, res, o) => {},
-    /*decoration - scrapped*/
+    /*invisible*/
     (p, res, o) => {},
     /*changeMap*/
     (p, res, o) => {
@@ -1766,7 +1780,7 @@ const idleEffectMap = [
     undefined,
     // 'solidColor'
     undefined,
-    // 'decoration' - scrapped
+    // 'invisible'
     undefined,
     // 'changeMap'
     undefined,
@@ -1844,7 +1858,7 @@ shared.effectConstraintsMap = [
     undefined,
     /*solidColor*/
     undefined,
-    /*decoration - scrapped*/
+    /*invisible*/
     undefined,
     /*changeMap*/
     undefined,
@@ -1886,7 +1900,7 @@ shared.effectMapI2N = [
     'changeSize',
     'changeSpeed',
     'solidColor',
-    'decoration',
+    'invisible',
     'changeMap',
     'tornado',
     'changeVignette',
@@ -2002,7 +2016,7 @@ shared.effectDefaultMap = [
         hex: '#FFFFFF',
         alpha: 1
     },
-    // decoration - scrapped
+    // invisible
     {},
     // changeMap
     {mapName: 'hub'},
@@ -2083,7 +2097,7 @@ const idleEffectSyncKeys = [
     undefined,
     // 'solidColor'
     undefined,
-    // 'decoration' - scrapped
+    // 'invisible'
     undefined,
     // 'changeMap'
     undefined,
@@ -2155,7 +2169,7 @@ const applyIdleEffectSyncKeys = [
     undefined,
     // 'solidColor'
     undefined,
-    // 'decoration' - scrapped
+    // 'invisible'
     undefined,
     // 'changeMap'
     undefined,
@@ -2639,7 +2653,7 @@ const renderEffectMap = [
         if(o.isText === true)ctx.globalAlpha = 0;
         else ctx.globalAlpha = o.alpha;
     },
-    /*decoration - scrapped*/
+    /*invisible*/
     (o) => {},
     /*changeMap*/
     (o) => {

@@ -97,6 +97,9 @@ if(global.env === 'dev'){
     });
 }
 
+app.get("/favicon.ico", (res, req) => {
+    res.end(fs.readFileSync("eXclient/gfx/favicon.ico"));
+});
 
 app.get("/:filename", (res, req) => {
     const path = 'z_dev' + req.getUrl();

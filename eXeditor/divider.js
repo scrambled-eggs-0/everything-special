@@ -1,6 +1,6 @@
 const divider = document.getElementById('divider');
-const leftPanel = document.getElementById('left');
-const rightPanel = document.getElementById('right');
+const left = document.getElementById('left');
+const right = document.getElementById('right');
 
 import shared from '../shared/shared.js';
 import * as Blockly from 'blockly';
@@ -16,11 +16,11 @@ document.addEventListener('mousemove', (e) => {
   if (!isDragging) return;
 
   const containerRect = divider.parentElement.getBoundingClientRect();
-  const newLeftWidth = ((e.clientX - containerRect.left) / containerRect.width) * 100;
-  const newRightWidth = 100 - newLeftWidth;
+  const leftWidth = ((e.clientX - containerRect.left) / containerRect.width) * 100;
+  const rightWidth = 100 - leftWidth;
 
-  leftPanel.style.width = `${newLeftWidth}%`;
-  rightPanel.style.width = `${newRightWidth}%`;
+  left.style.width = `${leftWidth}%`;
+  right.style.width = `${rightWidth}%`;
   Blockly.svgResize(shared.ws);
   shared.resize();
 });
@@ -30,5 +30,5 @@ document.addEventListener('mouseup', () => {
   document.body.style.cursor = 'default';
 });
 
-leftPanel.style.width = `100%`;
-rightPanel.style.width = `0%`;
+// left.style.width = `100%`;
+// right.style.width = `0%`;

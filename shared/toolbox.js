@@ -66,11 +66,11 @@ export default /*const toolbox =*/ {
       'name': 'Game',
       'categorystyle': 'game_category',
       'contents': [
-        {
-          "kind": "button",
-          "text": "Click to return to the main game!",
-          "callbackKey": "returnToMainGame"
-        },
+        // {
+        //   "kind": "button",
+        //   "text": "Click to return to the main game!",
+        //   "callbackKey": "returnToMainGame"
+        // },
         {
           'kind': 'block',
           'type': 'debug_log',

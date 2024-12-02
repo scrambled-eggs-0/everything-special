@@ -137,7 +137,7 @@ function handleKey(e){
                 chatOpen = true;
                 chatDiv.classList.remove('hidden');
                 chat.focus();
-            } else if (e.code === 'KeyZ') {
+            } else if (e.code === 'KeyZ' && shared.isEditor !== true) {
                 if (!zenMode) {
                     chat.blur();
                     if (!visChatDiv.classList.contains('hideChat')) {
@@ -158,8 +158,6 @@ function handleKey(e){
                 zenMode = !zenMode;
             } else if (e.code === 'KeyU' && shared.isProd === false){
                 shared.renderDebug = !shared.renderDebug;
-            } else if(e.code === 'Escape' && shared.isEditor === true){
-                shared.stopEditorCreateDrag();
             }
         }
 

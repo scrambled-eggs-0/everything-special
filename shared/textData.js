@@ -14,7 +14,6 @@
 // emojis.push(["\u2705", "\u2705"], ["\u26C5", "\u26C5"], ["\u{1F300}", "\u{1F300}"]);
 
 import shared from './shared.js';
-const {effectDefaultMap, simulateDefaultMap} = shared;
 
 export default {
   blockData: [
@@ -876,7 +875,7 @@ export default {
 
               // append all of the params in order
               const dropdownValue = simulateDropdownIndexToKey[i];
-              const paramMap = simulateDefaultMap[dropdownValue];
+              const paramMap = shared.simulateDefaultMap[dropdownValue];
 
               simulateOptionsToNull.push(dropdownValue);
 
@@ -926,7 +925,7 @@ export default {
 
               // append all of the params in order
               const dropdownValue = effectDropdownIndexToKey[i];
-              const paramMap = effectDefaultMap[dropdownValue];
+              const paramMap = shared.effectDefaultMap[dropdownValue];
 
               effectOptionsToNull.push(dropdownValue);
 
@@ -1489,8 +1488,8 @@ function generateParameterDropdownOptions(childBlock, isPlug=false, id="NO_ID"){
   for(let i = 0; i < simulatesLen; i++){
     const simulate = block.getFieldValue(`SIMULATE_DROPDOWN${i}`);
     simulates.push(simulate);
-    for(let key in simulateDefaultMap[simulate]){
-      params[key] = simulateDefaultMap[simulate][key];
+    for(let key in shared.simulateDefaultMap[simulate]){
+      params[key] = shared.simulateDefaultMap[simulate][key];
     }
   }
 
@@ -1498,8 +1497,8 @@ function generateParameterDropdownOptions(childBlock, isPlug=false, id="NO_ID"){
   for(let i = 0; i < effectsLen; i++){
     const effect = block.getFieldValue(`EFFECT_DROPDOWN${i}`);
     effects.push(effect);
-    for(let key in effectDefaultMap[effect]){
-      params[key] = effectDefaultMap[effect][key];
+    for(let key in shared.effectDefaultMap[effect]){
+      params[key] = shared.effectDefaultMap[effect][key];
     }
   }
 

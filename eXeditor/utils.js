@@ -25,9 +25,20 @@ shared.onEditorReset = () => {
   }
 }
 
+shared.editorMouseDownFns = [];
+shared.editorMouseMoveFns = [];
+shared.editorMouseUpFns = [];
+shared.editorRunFns = [];
+// shared.undoFns = [];
+
 shared.snap = 50;
+shared.snapEnabled = true;
 shared.snapGrid = (val) => {
+  if(shared.snapEnabled === false || shared.snap === 0) return val;
   return Math.round(val / shared.snap) * shared.snap;
+}
+shared.snapPt = ([x,y]) => {
+  return [shared.snapGrid(x), shared.snapGrid(y)];
 }
 
 shared.workspaceLoaded = false;
@@ -57,15 +68,15 @@ window.onLoopTrap = () => {
 // }
 
 const messageText = document.getElementById('messagetext');
-window.alert = (msg, toFade=true) => {
+window.alert = (msg, toFade=true, time=3) => {
   messageText.innerText = msg;
   messageText.style.opacity = "1";
-  if(toFade === true) shared.fadeAlert();
+  if(toFade === true) shared.fadeAlert(time);
 }
 
-shared.fadeAlert = () => {
+shared.fadeAlert = (time=3) => {
   messageText.style.opacity = "0";
   messageText.style.animation = 'none';
   messageText.offsetHeight; /* trigger reflow */
-  messageText.style.animation = "fadeOut 3s ease-in-out 1";
+  messageText.style.animation = `fadeOut ${time}s ease-in-out 1`;
 }

@@ -132,8 +132,8 @@ forBlock['create_obstacle'] = function(block, generator) {
 
   // console.log({shape, simulates, effects, params});
   
-  return `shared.C(${shape},${simulates},${effects},${params});`;
-
+  return `shared.C(${shape},${simulates},${effects},${params});\n`
+   + (shared.environment === 'editor' ? `shared.CB2O("${block.id}");\n` : '');
   // console.log(shapeParams);
 
   // let simulates = '[';
@@ -174,7 +174,7 @@ forBlock['create_list'] = function(block, generator) {
 }
 
 forBlock['debug_log'] = function (block, generator) {
-  return `if(environment === 'editor'){alert(${generator.valueToCode(block, 'MSG', Order.NONE)});}\n`;
+  return `if(shared.environment === 'editor'){alert(${generator.valueToCode(block, 'MSG', Order.NONE)});}\n`;
 };
 
 forBlock['break_continue'] = function(block, generator) {
@@ -428,7 +428,7 @@ forBlock['player_spawn'] = function (block, generator) {
 forBlock['bg_color'] = function (block, generator) {
   const tile = generator.valueToCode(block, 'TILE_COLOR', Order.NONE);
   const bg = generator.valueToCode(block, 'BG_COLOR', Order.NONE);
-  return `colors.background=${bg}; colors.tile=${tile};\n`;
+  return `shared.colors.background=${bg}; shared.colors.tile=${tile};\n`;
 };
 
 // forBlock['bg_image'] = function (block, generator) {

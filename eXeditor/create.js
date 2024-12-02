@@ -1,20 +1,16 @@
+import * as Blockly from 'blockly';
 import shared from '../shared/shared.js';
+import {save} from './serialization';
 
 const btn = document.getElementById('create-button');
-btn.onclick = () => {[changeState, cancelState, cancelState, cancelState, () => {cancelState(); changeState()}][state]();}
-const oldRender = shared.render;
-shared.render = (...params) => {
-    oldRender(...params);
-
-    renderCreateMenu();
-}
+btn.onclick = () => {[() => {/*shared.undoFns.push(cancelState);*/ changeState()}, cancelState, cancelState, cancelState, () => {cancelState(); changeState()}][state]();}
 
 // 0 - disabled,        1 - choose shape,
 // 2 - choose simulate, 3 - choose effect,
 // 4 - chosen
 // esc to cancel btw not like zero's space to create
 let state = 0;
-let obs = [], params={}, type=[0,[],[0]], previewObs;
+let obs = [], params={}, type=[0,[],[0]], previewObs, lastScale=1;
 shared.snapDistance = 50;
 let gridSizes = [
     /*choose shape*/
@@ -27,6 +23,9 @@ let gridSizes = [
 gridSizes[2][1] += shared.tileSize;
 function renderCreateMenu(){
     if(state >= 1 && state <= 3){
+        lastScale = shared.camera.scale;
+        if(lastScale !== 1) shared.changeCameraScale(1);
+
         const [w,h] = gridSizes[state-1];
         const cols = shared.colors;
 
@@ -78,7 +77,17 @@ function renderCreateMenu(){
                 }
             }
         }
+
+        if(lastScale !== 1) shared.changeCameraScale(lastScale);
     } else if(state === 4){
+        ctx.globalAlpha = 0.6 + Math.sin(window.frames / 36) * 0.05;
+        ctx.fillStyle = 'white';
+        ctx.font = `${54/shared.camera.scale}px Inter`;
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText('Create Mode (Esc to exit)', 10/shared.camera.scale, canvas.h - 20/shared.camera.scale);
+        ctx.globalAlpha = 1;
+
         if(previewObs === undefined) return;
         // TODO: account for ship mode (devise a general system for getting cam translations, maybe a method in render.js?)
         ctx.translate(-(shared.camera.x-canvas.w/2), -(shared.camera.y-canvas.h/2));
@@ -89,7 +98,7 @@ function renderCreateMenu(){
 const variantMaps = [shared.satDefaultMap, structuredClone(shared.simulateDefaultMap), shared.effectDefaultMap];
 // remove custom and id simulate types, add "none"
 variantMaps[1].splice(3,2); variantMaps[1].push({});
-const modifyTypeMap = [
+const setTypeMap = [
     (i) => {
         type[0] = i;
     },
@@ -100,7 +109,30 @@ const modifyTypeMap = [
     (i) => {
         type[2] = [i];
     }
+];
+const resetTypeMap = [
+    () => {},
+    () => {type[1] = [];},
+    () => {type[2] = [];}
 ]
+const addTypeMap = [
+    (i) => {
+        type[0] = i;
+    },
+    (i) => {
+        if(i === variantMaps[1].length-1) type[1] = [];
+        else type[1].push([0,1,2,5][i]);    
+    },
+    (i) => {
+        type[2].push(i);
+    }
+]
+const removeTypeMap = [
+    (i) => {},
+    (i) => {type[1].filter(t => t!==i);},
+    (i) => {type[2].filter(t => t!==i);},
+]
+
 const wrap = gridSizes[2][0]/shared.tileSize-1;
 const bounds = [
     [
@@ -141,17 +173,44 @@ for(let i = 0; i < bounds.length; i++){
     }
 }
 
-const extraObsMap = [/*lambda array, mostly texts*/];
+const extraObsMap = [
+    () => {},
+    ()=>{
+        const C = (...params) => {
+            shared.C(...params);
+            obs.push(shared.obstacles.pop());
+        }
+        C(3,[],[20],{x:100,y:50,fontSize:36,text:'None',alpha:1,hex:"#FFFFFF"});
+        C(3,[],[20],{x:300,y:300-36,fontSize:36,text:'Rotate',alpha:1,hex:"#FFFFFF"});
+        C(3,[],[20],{x:300,y:300,fontSize:36,text:'Towards',alpha:1,hex:"#FFFFFF"});
+        C(3,[],[20],{x:300,y:300+36,fontSize:36,text:'Player',alpha:1,hex:"#FFFFFF"});
+        const shape = type[0];
+        if(shape === 0) C(3,[],[20],{x:300,y:100,fontSize:36,text:'Rotate',alpha:1,hex:"#FFFFFF"});
+    },
+    ()=>{
+        const C = (...params) => {
+            shared.C(...params);
+            obs.push(shared.obstacles.pop());
+        }
+        C(3,[],[20],{x:100,y:500-32/2,fontSize:32,text:'Solid',alpha:1,hex:"#000000"});
+        C(3,[],[20],{x:100,y:500+32/2,fontSize:32,text:'Color',alpha:1,hex:"#000000"});
+        C(3,[],[20],{x:200,y:500,fontSize:32,text:'Invis',alpha:1,hex:"#FFFFFF"});
+        C(3,[],[20],{x:500,y:500,fontSize:26,text:'Vignette',alpha:1,hex:"#FFFFFF"});
+        C(3,[],[20],{x:200,y:600,fontSize:32,text:'Music',alpha:1,hex:"#FFFFFF"});
+    }
+];
 function changeState(){
+    lastSelected = undefined;
     obs.length = 0;
     state++;
     if(state >= 1 && state <= 3){
         const v = variantMaps[state-1];
         for(let i = 0; i < v.length; i++){
-            modifyTypeMap[state-1](i);
+            setTypeMap[state-1](i);
             shared.C(...type, {...params, ...v[i]});
             obs.push(shared.obstacles.pop());
         }
+        resetTypeMap[state-1]();
 
         if(state !== 1){
             for(let i = 0; i < obs.length; i++){
@@ -169,18 +228,35 @@ function changeState(){
 
                 obs[i].topLeft = shared.generateTopLeftCoordinates(obs[i]);
             }
+
+            if(state === 3){
+                for(let i = 0; i < obs.length; i++){
+                    if(obs[i].pivotX !== undefined){
+                        obs[i].pivotX = obs[i].topLeft.x + obs[i].dimensions.x/2;
+                        obs[i].pivotY = obs[i].topLeft.y + obs[i].dimensions.y/2;
+                    }
+                    if(obs[i].growPivotX !== undefined){
+                        obs[i].growPivotX = obs[i].topLeft.x + obs[i].dimensions.x/2;
+                        obs[i].growPivotY = obs[i].topLeft.y + obs[i].dimensions.y/2;
+                    }
+                }
+            }
         }
+
+        extraObsMap[state-1]();
     } else if(state === 4){
         polyPts.length = 0;
         startX = startY = undefined;
     }
 }
 
-function cancelState(){
+const cancelState = shared.cancelCreate = () => {
+    lastSelected = undefined;
     state = 0;
     obs.length = 0;
     shared.stopEditorCreateDrag();
     params = {};
+    type = [0,[],[0]];
 }
 
 let startX, startY, endX, endY, polyPts=[];
@@ -211,14 +287,15 @@ const halveSizeMap = [
     }
 ]
 
-canvas.onmousedown = (e) => {
+let lastSelected;
+shared.editorMouseDownFns.push((e) => {
     const dimensions = canvas.getBoundingClientRect();
-    const x = ((e.pageX - dimensions.x) / dimensions.width ) * canvas.w;
-    const y = ((e.pageY - dimensions.y) / dimensions.height) * canvas.h;
+    let x = ((e.pageX - dimensions.x) / dimensions.width ) * canvas.w;
+    let y = ((e.pageY - dimensions.y) / dimensions.height) * canvas.h;
 
     if(state === 4){
-        const worldX = x + shared.camera.x - canvas.w/2;
-        const worldY = y + shared.camera.y - canvas.h/2;
+        shared.breakFns = true;
+        const [worldX, worldY] = shared.snapPt(shared.screenToWorld(x,y));
         const shape = type[0]; 
         startX = worldX; startY = worldY;
         if(shape === 2) {
@@ -239,6 +316,14 @@ canvas.onmousedown = (e) => {
 
     if(state === 0 || state > 3) return;
 
+    lastScale = shared.camera.scale;
+    shared.changeCameraScale(1);
+
+    x = ((e.pageX - dimensions.x) / dimensions.width ) * canvas.w;
+    y = ((e.pageY - dimensions.y) / dimensions.height) * canvas.h;
+
+    shared.changeCameraScale(lastScale);
+    shared.breakFns = true;
     for(let i = 0; i < bounds[state-1].length; i++){
         const b = bounds[state-1][i];
         if(x < b.x || x > b.x + b.w || y < b.y || y > b.y + b.h) continue;
@@ -247,25 +332,64 @@ canvas.onmousedown = (e) => {
             b.selected = false;
             return;
         }
-        if(state === 1 || (state !== 1 && b.selected === true)){
+        if((state === 1 && lastSelected === i) || (state !== 1 && b.selected === true)){
+            // UNDO
+            // {
+            //     let lastParams = structuredClone(params);
+            //     let lastType = structuredClone(type);
+            //     let lastObs = [];
+            //     for(let i = 0; i < obs.length; i++){lastObs.push(obs[i]);}
+            //     let lastState = state;
+            //     let last_lastSelected = lastSelected;
+            //     shared.undoFns.push(()=>{
+            //         cancelState();
+            //         type = lastType;
+            //         params = lastParams;
+            //         obs = lastObs;
+            //         state = lastState;
+            //         lastSelected = last_lastSelected;
+            //     })
+            // }
             // we double clicked. Advance to the next state (shape->simulate simulate->effect).
-            // but first, save our params and type
-            const v = variantMaps[state-1];
-            for(let key in v[i]){
-                params[key] = v[i][key];
-            }
             // going from shape to simulate we have to halve the size.
             if(state === 1) halveSizeMap[i](params);
-            modifyTypeMap[state-1](i);
             changeState();
             return;
         }
+        if(state === 1){
+            // you can only select one shape (but multiple sims/ effects)
+            if(lastSelected !== undefined && lastSelected !== i) {
+                bounds[state-1][lastSelected].selected = false;
+                const v = variantMaps[state-1];
+                for(let key in v[lastSelected]){
+                    delete params[key];
+                }
+            }
+            lastSelected = i;
+        }
+        
         b.selected = !b.selected;
+
+        // add or remove the type and params
+        const v = variantMaps[state-1];
+        if(b.selected === true) {
+            addTypeMap[state-1](i);
+            for(let key in v[i]){
+                params[key] = v[i][key];
+            }
+        }
+        else {
+            removeTypeMap[state-1](i);
+            for(let key in v[i]){
+                delete params[key];
+            }
+        }
+        // if this gets any more complex factor out add and remove into sep functions (just the const v and for loop)
         return;
     }
-}
+});
 
-canvas.onmouseup = (e) => {
+shared.editorMouseUpFns.push((e) => {
     if(startX === undefined) return;
     const dimensions = canvas.getBoundingClientRect();
     const x = ((e.pageX - dimensions.x) / dimensions.width ) * canvas.w;
@@ -274,16 +398,15 @@ canvas.onmouseup = (e) => {
     if(state === 4){
         const shape = type[0];
         if(shape === 2) return;
-        const worldX = x + shared.camera.x - canvas.w/2;
-        const worldY = y + shared.camera.y - canvas.h/2;
-        endX = worldX; endY = worldY;
+        [endX, endY] = shared.snapPt(shared.screenToWorld(x,y));
         createWithPos();
         shared.stopEditorCreateDrag();
+        shared.breakFns = true;
         return;
     }
-}
+});
 
-canvas.onmousemove = (e) => {
+shared.editorMouseMoveFns.push((e) => {
     if(startX === undefined) return;
     const dimensions = canvas.getBoundingClientRect();
     const x = ((e.pageX - dimensions.x) / dimensions.width ) * canvas.w;
@@ -291,22 +414,40 @@ canvas.onmousemove = (e) => {
 
     if(state === 4){
         const shape = type[0];
-        const worldX = x + shared.camera.x - canvas.w/2;
-        const worldY = y + shared.camera.y - canvas.h/2;
-        endX = worldX; endY = worldY;
+        [endX, endY] = shared.snapPt(shared.screenToWorld(x,y));
         if(shape === 2) polyPts.push([endX, endY]);
-        createWithPos();
+        previewWithPos();
         previewObs = shared.obstacles.pop();
         if(shape === 2) polyPts.pop();
+        shared.breakFns = true;
         return;
     }
-}
+});
 
-function createWithPos(){
+function previewWithPos(){
     generatePosParams[type[0]](params, startX, startY, endX, endY);
     // guaranteed not to be deep reffed
     // because we reset params right after
     shared.C(...type, {...structuredClone(params)});
+}
+
+function createWithPos(){
+    if(startX === endX && startY === endY && type[0] !== 2){
+        shared.stopEditorCreateDrag();
+        return;
+    }
+    Blockly.Events.disable();
+    generatePosParams[type[0]](params, startX, startY, endX, endY);
+    const [block, extraState] = shared.createBlock(type, true);
+
+    // set shape params we got from 
+    for(let key in extraState.shapeParamToId){
+        const input = block.getInput(extraState.shapeParamToId[key]);
+        input.setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(params[key])));
+    }
+    Blockly.Events.enable();
+    shared.runCode();
+    save(shared.ws);
 }
 
 const generatePosParams = [
@@ -339,8 +480,12 @@ const generatePosParams = [
         params.y = (y0+y1)/2;
         const w = Math.abs(x0-x1);
         const h = Math.abs(y0-y1);
-        const wRatio = w / dimensions.w;
-        const hRatio = h / dimensions.h;
+
+        const dimensionsW = dimensions.actualBoundingBoxRight + dimensions.actualBoundingBoxLeft;
+        const dimensionsH = dimensions.actualBoundingBoxDescent + dimensions.actualBoundingBoxAscent;
+
+        const wRatio = w / dimensionsW;
+        const hRatio = h / dimensionsH;
         if(wRatio < hRatio){
             // text is tall, we're capped by h
             params.fontSize = Math.round(hRatio);
@@ -377,416 +522,80 @@ shared.stopEditorCreateDrag = () => {
     }
 }
 
-// let obstacleOptions = [];
-// let type = [0,[],[0]];
-// let params = {};
+shared.createBlock = (type, toFocus=false) => {
+    const ws = shared.ws;
+    let block = ws.newBlock('create_obstacle');
+    block.initSvg();
+    block.render();
+    shared.workspaceLoaded = false;
 
-// function initCreateMode(){
-//     shared.onEditorReset();
-//     state = 'shape';
-//     // shape
-//     for(let i = 0; i < shared.satDefaultMap.length; i++){
-//         type[0] = i;
-//         addObstacleOption(shared.satDefaultMap[i], i);
-//     }
-// }
+    const shape = type[0];
+    const numSimulates = type[1].length;
+    const numEffects = type[2].length;
 
-// function addObstacleOption(extraParams, dif){
-//     obstacleOptions.push(shared.obstacles.length);
-//     shared.C(...type, {...params, ...extraParams});
-//     const o = shared.obstacles[shared.obstacles.length-1];
-//     o.desiredX = o.desiredY = 0;
-//     o.selectionDifference = dif;
-// }
+    block.setFieldValue(shape.toString(), "SHAPE_DROPDOWN");
+    block.setFieldValue(numSimulates.toString(), "NUM_SIMULATES_DROPDOWN");
+    block.setFieldValue(numEffects.toString(), "NUM_EFFECTS_DROPDOWN");
 
-// shared.onEditorResetFns.push(() => {
-//     shared.C(0,[],[3],{x:-1E9,y:0,r:1,sf:(_,p)=>{
-//         for(let i = 0; i < obstacleOptions.length; i++){
-//             const ind = obstacleOptions[i];
-//             const o = shared.obstacles[ind];
-//             const angle = i / obstacleOptions.length * Math.PI * 2;
+    const shapeKeys = Object.keys(shared.satDefaultMap[shape]);
+
+    const simulateKeys = [];
+    for(let i = 0; i < numSimulates; i++){
+        simulateKeys.push(...Object.keys(shared.simulateDefaultMap[type[1][i]]));
+    }
+
+    const effectKeys = [];
+    for(let i = 0; i < numEffects; i++){
+        effectKeys.push(...Object.keys(shared.effectDefaultMap[type[2][i]]));
+    }
+
+    const extraState = {};
+    extraState.lastShape = shape;
+
+    extraState.shapeParamToId = {};
+    for(let i = 0; i < shapeKeys.length; i++){
+        extraState.shapeParamToId[shapeKeys[i]] = `SHAPE${i}`;
+    }
+    extraState.lastShapeIdGen = shapeKeys.length;
+
+    extraState.simulateParamToId = {};
+    for(let i = 0; i < simulateKeys.length; i++){
+        extraState.simulateParamToId[simulateKeys[i]] = `SIMULATE${i}`;
+    }
+    extraState.lastSimulateIdGen = simulateKeys.length;
+
+    extraState.effectParamToId = {};
+    for(let i = 0; i < effectKeys.length; i++){
+        extraState.effectParamToId[effectKeys[i]] = `EFFECT${i}`;
+    }
+    extraState.lastEffectIdGen = effectKeys.length;
+
+    extraState.numSimulateFields = numSimulates;
+    extraState.numEffectFields = numEffects;
+
+    extraState.sditk = type[1].map(s => s.toString());
+    extraState.editk = type[2].map(s => s.toString());
+
+    block.loadExtraState(extraState);
+
+    // rotate
+    for(let i = 0; i < numSimulates; i++){
+        block.setFieldValue(type[1][i].toString(), `SIMULATE_DROPDOWN${i}`);
+    }
+
+    for(let i = 0; i < numEffects; i++){
+        block.setFieldValue(type[2][i].toString(), `EFFECT_DROPDOWN${i}`);
+    }
     
-//             const r = Math.min(canvas.w, canvas.h) / 3;
-//             o.desiredX = p.pos.x + Math.sin(angle) * r;
-//             o.desiredY = p.pos.y - Math.cos(angle) * r;
-    
-//             o.pos.x -= (o.topLeft.x+o.dimensions.x/2) - o.desiredX;
-//             o.pos.y -= (o.topLeft.y+o.dimensions.y/2) - o.desiredY;
-    
-//             o.topLeft = shared.generateTopLeftCoordinates(o);
-//         }
-//     }});
-// })
+    shared.workspaceLoaded = true;
+    // block.moveBy(x, y);
+    if(toFocus === true) ws.centerOnBlock(block.id);
+    for(let i = 0; i < shared.onWorkspaceLoadFunctions.length; i++){
+        shared.onWorkspaceLoadFunctions[i]();
+    }
+    shared.onWorkspaceLoadFunctions.length = 0;
 
-// let res = new SAT.Response();
-// let cursor = new SAT.Circle(new SAT.Vector(0,0), .1);
-// let collided = false;
-// canvas.onclick = (e) => {
-//     const dimensions = canvas.getBoundingClientRect();
-//     cursor.pos.x = ((e.pageX - dimensions.x) / dimensions.width ) * canvas.w + shared.camera.x - canvas.w/2;
-//     cursor.pos.y = ((e.pageY - dimensions.y) / dimensions.height) * canvas.h + shared.camera.y - canvas.h/2;
+    return [block, extraState];
+}
 
-//     collided = false;
-//     for(let j = 0; j < obstacleOptions.length; j++){
-//         const i = obstacleOptions[j];
-//         // TODO: fix the copypasting (this is really bad code quality lol)
-//         if(shared.obstacles[i].sat.r !== undefined){
-//             if(shared.obstacles[i].startSlice !== undefined){
-//                 collided = shared.testCircleSliceCircle(shared.obstacles[i], {sat: cursor, pos: cursor.pos}, res);
-//             } else {
-//                 collided = SAT.testCircleCircle(shared.obstacles[i].sat, cursor, res);
-//             }
-//         } else {
-//             collided = SAT.testPolygonCircle(shared.obstacles[i].sat, cursor, res);
-//         }
-//         res.clear();
-//         if(collided === true){
-//             selectObstacle(shared.obstacles[i].selectionDifference);
-//             break;
-//         }
-//     }
-// }
-
-// let lastSelectedIndex = -1;
-// function selectObstacle(i){
-//     if(state === 'shape'){
-//         // proceed to simulate
-//         type[0] = i;
-//         for(let i = 0; i < obstacleOptions.length; i++){
-//             shared.R(obstacleOptions[i]);
-//         }
-//         obstacleOptions.length = 0;
-//         state = 'simulate';
-//         for(let key in shared.satDefaultMap[i]){
-//             params[key] = shared.satDefaultMap[i][key];
-//         }
-//         // no simulate
-//         type[1] = [];
-//         addObstacleOption({}, 0);
-//         for(let i = 0; i < /*shared.simulateDefaultMap.length*/3; i++){
-//             type[1] = [i];
-//             addObstacleOption(shared.simulateDefaultMap[i], i+1);
-//         }
-//     } else if(state === 'simulate'){
-//         if(lastSelectedIndex === i){
-//             // proceed to effect
-//             type[1] = i === 0 ? [] : [i];
-//             for(let i = 0; i < obstacleOptions.length; i++){
-//                 shared.R(obstacleOptions[i]);
-//             }
-//             obstacleOptions.length = 0;
-//             state = 'effect';
-//             for(let key in shared.simulateDefaultMap[i]){
-//                 params[key] = shared.simulateDefaultMap[i][key];
-//             }
-//             for(let i = 0; i < shared.effectDefaultMap.length; i++){
-//                 type[2] = [i];
-//                 addObstacleOption(shared.effectDefaultMap[i], i);
-//             }
-//         } else {
-//             // add the obstacle to our selection
-//             shared.selectedObstacles.push(shared.obstacles[obstacleOptions[i]]);
-//             lastSelectedIndex = i;
-//         }
-//     } else if(state === 'effect'){
-        
-//     }
-// }
-
-// // UNUSED - used to be mass create in omni!
-
-// import * as Blockly from 'blockly';
-
-// let createBlock = null;
-// let createBlockXML = null;
-// let inCreateMode = false;
-
-// let previewX = 0;
-// let previewY = 0;
-// let previewShape = -1;
-// let previewPolygonPoints = [];
-// let previewText = ''; let previewFontSize = 80;
-// let isDragging = false;
-// let generatorInit = false;
-// window.inClearCheckMode = false;
-// // let newBlockPos = {x: 0, y: 0};
-// // let createBlockWidth = 0;
-// // const blockPadding = 32; // const moveDist = 30;// Blockly.SNAP_RADIUS
-// const createModeBg = document.getElementById('createmodebg');
-// const createModeBtn = document.getElementById('createmode');
-// const blocklyDiv = document.getElementById('blocklyDiv');
-// const outputPane = document.getElementById('outputPane');
-// const publishBtn = document.getElementById('publish');
-// const canvas = document.getElementById('canvas');
-// createModeBtn.onclick = () => {
-//     alert('select a block to mass create!', false);
-//     blocklyDiv.style.cursor = 'crosshair';
-//     const cl = window.ws.addChangeListener((e) => {
-//         if(e.blockId === undefined) return;
-//         const block = window.ws.getBlockById(e.blockId);
-//         if(block === null || block.type !== "create_obstacle") return;
-
-//         window.fadeAlert();
-
-//         window.setCreateBlock(block);
-        
-//         // const createBlockPos = block.getRelativeToSurfaceXY();
-//         // createBlockWidth = block.width;
-//         // newBlockPos.x = createBlockPos.x + createBlockWidth + blockPadding;//+ moveDist;
-//         // newBlockPos.y = createBlockPos.y //+ moveDist;
-
-//         createModeBg.classList.remove('hidden');
-//         canvas.remove();
-//         createModeBg.appendChild(canvas);
-//         window.ws.removeChangeListener(cl);
-
-//         // resetting mouseOut checks in case mouse isnt moved between the time of 2 clicks
-//         window.canvasDimensions = canvas.getBoundingClientRect();
-//         window.onmousemove({pageX: window.pageX, pageY: window.pageY, movementY: 0});
-
-//         blocklyDiv.style.cursor = '';
-//     });
-// }
-// createModeBg.onmousedown = () => {
-//     previewX = window.mouseX;
-//     previewY = window.mouseY;
-//     isDragging = true;
-
-//     if(window.mouseOut === true || (createBlock && createBlock.disposed === true)){
-//         // exit create mode
-//         createModeBg.classList.add('hidden');
-//         canvas.remove();
-//         outputPane.insertBefore(canvas, publishBtn);
-//         isDragging = false;
-//         inCreateMode = false;
-//         window.inClearCheckMode = false;
-//     }
-// }
-// let fixedPts;
-// window.onclick = () => {
-//     if(inCreateMode === false) return;
-
-//     // if we click the canvas, create a block
-//     if(previewShape === 0){
-//         if(snapGrid(window.mouseX) === snapGrid(previewX) && snapGrid(window.mouseY) === snapGrid(previewY)) {
-//             isDragging = false;
-//             return;
-//         }
-//     } else if(previewShape === 1){
-//         if(snapGrid(window.mouseX) === snapGrid(previewX) || snapGrid(window.mouseY) === snapGrid(previewY)) {
-//             isDragging = false;
-//             return;
-//         }
-//     } else if(previewShape === 2){
-//         const nextPt = [snapGrid(window.mouseX), snapGrid(window.mouseY)];
-//         previewPolygonPoints.push(nextPt);
-
-//         // if we're not at the start
-//         if(previewPolygonPoints.length === 1 || previewPolygonPoints[0][0] !== nextPt[0] || previewPolygonPoints[0][1] !== nextPt[1]){
-//             return;
-//         }
-
-//         fixedPts = fixPolygon(previewPolygonPoints);
-//         if(fixedPts.length <= 2){
-//             isDragging = false;
-//             return;
-//         }
-//     }
-    
-//     const newBlock = Blockly.Xml.domToBlock(createBlockXML, window.ws);
-
-//     // get last child and connect
-//     let lastBlock = createBlock;
-//     let nextBlock;
-//     while((nextBlock = lastBlock.getNextBlock()) !== null){
-//         lastBlock = nextBlock;
-//     }
-//     lastBlock.nextConnection.connect(newBlock.previousConnection);
-
-//     // change x and y to reflect mouse pos
-//     // newBlock.getInput(newBlock.shapeParamToId['x'])
-//     // newBlock.setFieldValue(window.mouseX, newBlock.shapeParamToId['x'] + 'F');
-
-//     if(previewShape === 0){
-//         // circle
-//         newBlock.getInput(newBlock.shapeParamToId['x']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(previewX))));
-//         newBlock.getInput(newBlock.shapeParamToId['y']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(previewY))));
-
-//         const dist = Math.sqrt((snapGrid(previewX) - snapGrid(window.mouseX)) ** 2 + (snapGrid(previewY) - snapGrid(window.mouseY)) ** 2);
-//         newBlock.getInput(newBlock.shapeParamToId['r']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(Math.floor(dist * 1000) / 1000)));
-//     } else if(previewShape === 1){
-//         // rect
-//         const minX = Math.min(previewX, window.mouseX);
-//         const maxX = Math.max(previewX, window.mouseX);
-
-//         const minY = Math.min(previewY, window.mouseY);
-//         const maxY = Math.max(previewY, window.mouseY);
-
-//         newBlock.getInput(newBlock.shapeParamToId['x']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(minX))));
-//         newBlock.getInput(newBlock.shapeParamToId['y']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(minY))));
-
-//         newBlock.getInput(newBlock.shapeParamToId['w']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(maxX) - snapGrid(minX))));
-//         newBlock.getInput(newBlock.shapeParamToId['h']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(maxY) - snapGrid(minY))));
-//     } else if(previewShape === 2){
-//         // polygon
-//         // points: [[300,700],[600,700],[450,900]]
-//         newBlock.getInput(newBlock.shapeParamToId['points']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(fixedPts)));
-//         previewPolygonPoints.length = 0;
-//     } else if(previewShape === 3){
-//         newBlock.getInput(newBlock.shapeParamToId['x']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(window.mouseX))));
-//         newBlock.getInput(newBlock.shapeParamToId['y']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(snapGrid(window.mouseY))));
-//         newBlock.getInput(newBlock.shapeParamToId['text']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(previewText)));
-//         newBlock.getInput(newBlock.shapeParamToId['fontSize']).setShadowDom(Blockly.utils.xml.textToDom(window.generateShadowBlock(previewFontSize)));
-//     } else {
-//         console.error('previewShapeToObs not defined | createMode.js');
-//     }
-
-//     if(generatorInit === false) {generatorInit = true; window.generator.init(window.ws);}
-
-//     for(let key in lastBlock.simulateParamToId){
-//         const shadow = lastBlock.getInput(lastBlock.simulateParamToId[key]).connection.getShadowDom(true).cloneNode(true);
-//         newBlock.getInput(newBlock.simulateParamToId[key]).setShadowDom(shadow);
-//     }
-
-//     for(let key in lastBlock.effectParamToId){
-//         const shadow = lastBlock.getInput(lastBlock.effectParamToId[key]).connection.getShadowDom(true).cloneNode(true);
-//         newBlock.getInput(newBlock.effectParamToId[key]).setShadowDom(shadow);
-//     }
-    
-
-//     isDragging = false;
-//     // newBlock.moveBy(newBlockPos.x, newBlockPos.y);
-//     // newBlockPos.x += createBlockWidth + blockPadding//moveDist;
-//     // // newBlockPos.y += moveDist;
-// }
-
-// createModeBg.oncontextmenu = (e) => {
-//     isDragging = false;
-//     previewPolygonPoints.length = 0;
-//     return e.preventDefault();
-// }
-
-// // btw if we have any more rendering effects that need to be done then create a sep file with maybe window.editorRenderFunctions
-// const oldRender = window.render;
-// window.render = () => {
-//     oldRender();
-
-//     // render preview
-//     if(!isDragging || window.inClearCheckMode === true) return;
-//     ctx.beginPath();
-//     ctx.fillStyle = 'black';
-//     ctx.strokeStyle = 'black';
-//     ctx.lineWidth = 8;
-
-//     if(previewShape === 0){
-//         // circle
-//         const x = snapGrid(previewX);
-//         const y = snapGrid(previewY);
-//         const dist = Math.sqrt((x - snapGrid(window.mouseX)) ** 2 + (y - snapGrid(window.mouseY)) ** 2);
-//         ctx.arc(x, y, dist, 0, Math.PI * 2);
-//     } else if(previewShape === 1){
-//         // rectangle
-//         ctx.rect(snapGrid(previewX), snapGrid(previewY), snapGrid(window.mouseX)-snapGrid(previewX), snapGrid(window.mouseY)-snapGrid(previewY));
-//     } else if(previewShape === 2){
-//         // polygon
-//         if(previewPolygonPoints.length !== 0){
-//             ctx.setLineDash([15, 12]);
-//             ctx.lineDashOffset = -window.time / 48;
-//             ctx.arc(previewPolygonPoints[0][0], previewPolygonPoints[0][1], 26, 0, Math.PI * 2);
-//             ctx.stroke();
-//             ctx.closePath();
-//             ctx.setLineDash([]);
-
-//             ctx.beginPath();
-//             ctx.moveTo(previewPolygonPoints[0][0], previewPolygonPoints[0][1]);
-//             for(let i = 0; i < previewPolygonPoints.length; i++){
-//                 ctx.lineTo(previewPolygonPoints[i][0], previewPolygonPoints[i][1]);
-//             }
-//             ctx.lineTo(previewPolygonPoints[0][0], previewPolygonPoints[0][1]);
-//         }
-//     } else if(previewShape === 3){
-//         // text
-//         const x = snapGrid(window.mouseX); const y = snapGrid(window.mouseY);
-
-//         ctx.setLineDash([28,8]);
-//         ctx.lineDashOffset = -window.time / 55;
-
-//         ctx.textAlign = 'center';
-//         ctx.textBaseline = 'middle';
-//         ctx.lineWidth = 4;
-//         ctx.font = `${previewFontSize}px Inter`;
-
-//         const dimensions = ctx.measureText(previewText);
-//         const w = dimensions.actualBoundingBoxRight + dimensions.actualBoundingBoxLeft;
-//         const h = dimensions.actualBoundingBoxDescent + dimensions.actualBoundingBoxAscent;
-//         const wOffset = (dimensions.actualBoundingBoxRight - dimensions.actualBoundingBoxLeft) / 2;
-//         const hOffset = (dimensions.actualBoundingBoxDescent - dimensions.actualBoundingBoxAscent) / 2;
-//         ctx.rect(x - w/2, y - h/2, w, h);
-
-//         ctx.strokeText(previewText, x - wOffset * (window.wOffsetMult??1), y - hOffset * (window.hOffsetMult??1));
-
-//         ctx.lineWidth = 8;
-
-//         ctx.setLineDash([]);
-//     } else {
-//         console.error('previewShape not defined | createMode.js');
-//     }
-//     ctx.globalAlpha = 0.29;
-//     ctx.fill();
-//     ctx.globalAlpha = 1;
-//     ctx.stroke();
-//     ctx.closePath();
-// }
-
-// // upload mode! Same thing with the canvas
-// window.enterClearCheckMode = () => {
-//     const selected = Blockly.getSelected();
-//     if(selected !== null) selected.unselect();
-//     window.runCode();
-//     window.respawnPlayer();
-//     window.inClearCheckMode = true;
-//     if(document.activeElement.classList.contains('blocklyHtmlInput') === true){
-//         document.activeElement.blur();
-//     }
-//     createModeBg.classList.remove('hidden');
-//     canvas.remove();
-//     createModeBg.appendChild(canvas);
-
-//     // resetting mouseOut checks in case mouse isnt moved between the time of 2 clicks
-//     window.canvasDimensions = canvas.getBoundingClientRect();
-//     window.onmousemove({pageX: window.pageX, pageY: window.pageY, movementY: 0});
-
-//     blocklyDiv.style.cursor = '';
-// }
-
-// window.exitClearCheckMode = () => {
-//     let last = window.mouseOut;
-//     window.mouseOut = true;
-//     createModeBg.onmousedown();
-//     window.mouseOut = last;
-// }
-
-// window.setCreateBlock = (block) => {
-//     const lastPreviousConnection = block.previousConnection.targetConnection;
-//     const lastNextConnection = block.nextConnection.targetConnection;
-
-//     block.previousConnection.disconnect();
-//     block.nextConnection.disconnect();
-
-//     createBlock = block;
-//     createBlockXML = Blockly.Xml.blockToDom(block);
-
-//     if(lastPreviousConnection !== null) block.previousConnection.connect(lastPreviousConnection);
-//     if(lastNextConnection !== null) block.nextConnection.connect(lastNextConnection);
-
-//     previewShape = parseInt(block.getFieldValue('SHAPE_DROPDOWN'));
-//     if(previewShape === 2) previewPolygonPoints.length = 0;
-//     else if(previewShape === 3) {
-//         if(generatorInit === false) {generatorInit = true; window.generator.init(window.ws);}
-//         previewText = window.generator.valueToCode(createBlock, createBlock.shapeParamToId['text'], 0);
-//         previewText = previewText.slice(1, previewText.length - 1);
-//         previewFontSize = parseFloat(window.generator.valueToCode(createBlock, createBlock.shapeParamToId['fontSize'], 0));
-//     }
-
-//     inCreateMode = true;
-// }
+export default renderCreateMenu;
