@@ -343,6 +343,11 @@ app.get("/maps/:filename", (res, req) => {
 });
 
 app.get("/tutorial", (res, req) => {
+    let aborted = false;
+    res.onAborted(() => {
+        aborted = true;
+    });
+    
     const authId = req.getHeader("id");
 
     const ws = clients[authId];
