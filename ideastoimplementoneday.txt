@@ -1,5 +1,7 @@
 TODO: change map wins to be / account instead of localstorage, bc there are actually a really high # of players playing on multiple devices (school and home for example, or switching browsers)
 
+HOW TO IMPLEMENT SAVING PROGRESS:
+- you can save your progress *on a checkpoint only* and you must return within 1 hour or it will delete your saved progress
 
 
 
