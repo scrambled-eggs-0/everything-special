@@ -542,7 +542,7 @@ C(1,[],[0],{type:[1,[],[0]],x:8100,y:8100,w:600,h:1500,canJump:true,inView:false
 C(1,[],[0],{type:[1,[],[0]],x:7800,y:5900,w:600,h:200,canJump:true,inView:false,})
 C(0,[],[0],{type:[0,[],[0]],x:7400,y:5600,r:100,renderType:"circle",inView:false,})
 C(0,[],[0],{type:[0,[],[0]],x:7750,y:5200,r:100,renderType:"circle",inView:false,})
-C(1,[],[0],{type:[1,[],[0]],x:7800,y:5100,w:100,h:200,canJump:true,inView:false,})
+C(1,[],[0],{type:[1,[],[0]],x:7750,y:5100,w:150,h:200,canJump:true,inView:false,})
 C(1,[],[0],{type:[1,[],[0]],x:6600,y:5900,w:500,h:200,canJump:true,inView:false,})
 C(1,[],[0],{type:[1,[],[0]],x:7700,y:4800,w:200,h:300,canJump:true,inView:false,})
 C(0,[],[0],{type:[0,[],[0]],x:7750,y:5000,r:100,renderType:"circle",inView:false,})
