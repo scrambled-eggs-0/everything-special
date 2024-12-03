@@ -1,3 +1,8 @@
+TODO: change map wins to be / account instead of localstorage, bc there are actually a really high # of players playing on multiple devices (school and home for example, or switching browsers)
+
+
+
+
 make the menu screen have 3 (5) animations. Those being:
 
 starfield
