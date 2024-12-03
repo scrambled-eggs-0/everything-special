@@ -347,7 +347,7 @@ app.get("/tutorial", (res, req) => {
     res.onAborted(() => {
         aborted = true;
     });
-    
+
     const authId = req.getHeader("id");
 
     const ws = clients[authId];
@@ -509,6 +509,13 @@ const messageMap = [
     // 7 - chat message
     (data, me) => {
         if(data.byteLength > 1000 || me.mapName === '' || me.player.chatMuted === true || mutedUsernames.includes(me.player.name)) return;
+        
+        //Spaghetti chat ratelimit, TODO: fix
+        if (me.lastChatMessage){
+            if (Date.now() + 1250 < me.lastChatMessage) return;
+        }
+        me.lastChatMessage = Date.now();
+        
         // const msg = decoder.decode(data).slice(1);
         // TODO: server side verification on chat msgs to make sure that data[1] is what it should be (we don't want random people sending "dev" and displaying that way)
         broadcastEveryone(data);

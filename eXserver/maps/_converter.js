@@ -438,7 +438,7 @@ shared.convertOldExMap = (obs, enemies, safes, texts, counter, special=undefined
                         pivotX: params.pivotX * 2,
                         pivotY: params.pivotY * 2
                     };
-                } else if(special === 'posc' || special === 'povv' || special === 'posh' || (special === 'pospd' && params.x > 3750/2 && params.y >11400/2 && params.x < 6100/2 && params.y < 13450/2)){
+                } else if(special === 'posc' || special === 'powc' || special === 'povv' || special === 'posh' || (special === 'pospd' && params.x > 3750/2 && params.y >11400/2 && params.x < 6100/2 && params.y < 13450/2)){
                     params.x = params.distToPivot + params.pivotX;
                     params.y = params.pivotY;
                     return {

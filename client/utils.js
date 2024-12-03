@@ -169,7 +169,7 @@ function genBannedWordsRegex(...args) {
   });
   return new RegExp(parsed.join("|"), "gmi"); 
 }
-let bannedWordsRegex = genBannedWordsRegex("nigger", "nigga", "chink", "ching chong", "onrender", "cunt", "asshole", "porn", "hentai", "slut", "whore", "faggot", "on render", "fake evades", "real evades")
+let bannedWordsRegex = genBannedWordsRegex("nigger", "nigga", "chink", "ching chong", "onrender", "trash version", "evades.", "zerotix", "zero tix", "zero", "0tix", "cunt", "asshole", "porn", "hentai", "slut", "whore", "faggot", "on render", "fake evades", "real evades")
 
 function filterText(text){
 	return text.replace(bannedWordsRegex, "[https://evadesx.io/]");
