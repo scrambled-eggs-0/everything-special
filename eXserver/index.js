@@ -29,10 +29,13 @@ import db from './db.js';
 
 const PORT = 3000;
 
-import sendWebhookWinMessage from './webhook.js'
+import sendWebhookWinMessage from './webhook.js';
+
+import banIp from './ipBan.js';
 
 const clients = global.clients = {};
 const randomBuf = new Uint32Array(2);
+
 // create the server and set functions for when a connection opens, closes, and sends a message
 global.app = uWS.App().ws('/*', {
     compression: 0,
@@ -48,6 +51,14 @@ global.app = uWS.App().ws('/*', {
             accountData: undefined,
             enterMapTime: -1,
             mapRequestFor: undefined,
+            ip: undefined
+        }
+
+        console.log(ws.context);
+
+        if(global.bannedIps[ws.me.ip] !== undefined){
+            ws.close();
+            return;
         }
 
         do {
@@ -381,6 +392,9 @@ app.post("/join",async (res, req) => {
         return;
     }
 
+    const ip = req.getHeader('x-forwarded-for')?.split(',').shift();
+    if(ip !== undefined) ws.me.ip = ip;
+
     const account = await db.getAccountRequirePassword(username, password);
     const succeeded = account !== null;
 
@@ -426,17 +440,6 @@ app.post("/join",async (res, req) => {
 
 let mutedUsernames = [];
 let bannedUsernames = [];
-function removeItemAll(arr, value) {
-    var i = 0;
-    while (i < arr.length) {
-      if (arr[i] === value) {
-        arr.splice(i, 1);
-      } else {
-        ++i;
-      }
-    }
-    return arr;
-}
 
 // functions that each correspond to a message. Tells the server what to do when processing the message
 const messageMap = [
@@ -465,12 +468,8 @@ const messageMap = [
         const decoder = new TextDecoder();
         const user = decoder.decode(data).slice(1);
 
-        if (mutedUsernames.includes(user)){
-            mutedUsernames = removeItemAll(mutedUsernames, user);
-        }
-        else{
-            mutedUsernames.push(user);
-        }
+        if (mutedUsernames.includes(user) === true) mutedUsernames = mutedUsernames.filter(u => u !== user);
+        else mutedUsernames.push(user);
 
         for(let key in global.clients){
             const p = global.clients[key].me.player;
@@ -492,16 +491,13 @@ const messageMap = [
         const decoder = new TextDecoder();
         const user = decoder.decode(data).slice(1);
 
-        if (bannedUsernames.includes(user)){
-            bannedUsernames = removeItemAll(bannedUsernames, user);
-        }
-        else{
-            bannedUsernames.push(user);
-        }
+        if (bannedUsernames.includes(user) === true) bannedUsernames = bannedUsernames.filter(u => u !== user);
+        else bannedUsernames.push(user);
 
         for(let key in global.clients){
             const p = global.clients[key].me.player;
-            if(p.name === user){
+            if(p.name === user) {
+                banIp(global.clients[key].me.ip);
                 global.clients[key].close();
             }
         }
