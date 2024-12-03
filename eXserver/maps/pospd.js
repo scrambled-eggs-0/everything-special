@@ -2641,7 +2641,7 @@ C(1,[],[17],{type:[1,[],[17]],x:18800,y:11800,w:1000,h:900,time:0,maxTime:2,cdmu
 C(1,[],[13],{type:[1,[],[13]],x:19500,y:10000,w:200,h:400,force:4000,dir:{"x":0,"y":4000},direction:"down",inView:false,conveyorAngle:90,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorForce:2.833133253301321,})
 C(1,[],[17],{type:[1,[],[17]],x:17600,y:14100,w:900,h:200,time:0,maxTime:1,cdmult:3,trapType:"death",inView:false,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:60,})
 C(1,[],[17],{type:[1,[],[17]],x:17200,y:12700,w:1700,h:1400,time:0,maxTime:2.5,cdmult:3,trapType:"death",inView:false,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:150,})
-C(1,[],[17],{type:[1,[],[17]],x:17800,y:14200,w:700,h:100,time:0,maxTime:3.5,cdmult:3,trapType:"death",inView:false,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:180,})
+C(1,[],[17],{type:[1,[],[17]],x:17800,y:14200,w:700,h:100,time:0,maxTime:4,cdmult:3,trapType:"death",inView:false,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:240,})
 C(1,[],[19],{type:[1,[],[19]],x:18800,y:12100,w:1000,h:600,speedInc:1.85,inView:false,speedChangePermanent:false,speedMult:1.85,})
 C(4,[],[0],{type:[4,[],[0]],x:19500,y:12100,radius:300,startAngle:0,endAngle:3.141592653589793,startPolygon:{"points":[[9900,6050],[10050,6050]],"type":"poly","props":{}},endPolygon:{"points":[[9600,6050],[9450,6050]],"type":"poly","props":{}},innerRadius:300,toRotate:false,rotateSpeed:0,renderType:"circle",inView:false,r:600,startSliceAngle:0,endSliceAngle:3.141592653589793,startSliceAngleRotateSpeed:0,endSliceAngleRotateSpeed:0,})
 C(1,[],[19],{type:[1,[],[19]],x:17200,y:12700,w:1700,h:1400,speedInc:3,inView:false,speedChangePermanent:false,speedMult:3,})
@@ -3934,12 +3934,14 @@ C(1,[0],[0],{type:[1,[0],[0]],x:2800,y:6600,w:200,h:350,points:[[1400,3300],[140
 
 //Rng fixing...
 //Zone 3
-C(1,[],[11],{type:[1,[],[11]],x:2800,y:6560,w:200,h:0})
+C(1,[],[11],{type:[1,[],[11]],x:2800,y:6560,w:200,h:10})
 //Zone 6
-C(1,[],[11],{type:[1,[],[11]],x:16800,y:15060,w:400,h:0})
+C(1,[],[11],{type:[1,[],[11]],x:16800,y:15060,w:400,h:10})
+//Zone 8
+C(1,[],[5],{type:[1,[],[5]],x:8200,y:17700,w:100,h:200})
 //Zone 10
-C(1,[],[11],{type:[1,[],[11]],x:15650,y:11360,w:400,h:0})
-C(1,[],[11],{type:[1,[],[11]],x:15650,y:11550,w:400,h:0})
+C(1,[],[11],{type:[1,[],[11]],x:15650,y:11360,w:400,h:1})
+C(1,[],[11],{type:[1,[],[11]],x:15650,y:11550,w:400,h:1})
 
 
 

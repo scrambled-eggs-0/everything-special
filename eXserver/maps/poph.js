@@ -2692,6 +2692,10 @@ for (let i = 0; i < areas.length; i++) {
 								if (players[ii] == undefined) {
 									continue;
 								}
+								if (players[ii].dead == true){
+									//Dead!
+									continue;
+								}
 								let dist = Math.hypot(players[ii].pos.x - e.pos.x, players[ii].pos.y - e.pos.y);
 								if (dist <= closestDist) {
 									closestDist = dist;
@@ -2935,6 +2939,10 @@ for (let i = 0; i < areas.length; i++) {
 								if (players[ii] == undefined) {
 									continue;
 								}
+								if (players[ii].dead == true){
+									//Dead!
+									continue;
+								}
 								if (!(players[ii].pos.x % 15000 > 1000 && players[ii].pos.x % 15000 < 9000)){
 									//Not in active zone!
 									continue;
@@ -3026,6 +3034,10 @@ for (let i = 0; i < areas.length; i++) {
 								if (players[ii] == undefined) {
 									continue;
 								}
+								if (players[ii].dead == true){
+									//Dead!
+									continue;
+								}
 								let dist = Math.hypot(players[ii].pos.x - e.pos.x, players[ii].pos.y - e.pos.y);
 								if (dist <= 240 + players[ii].dimensions.x / 2) {
 									let targetAngle = Math.atan2(e.pos.y - players[ii].pos.y, e.pos.x - players[ii].pos.x)
@@ -3096,6 +3108,10 @@ for (let i = 0; i < areas.length; i++) {
 						sf: (e) => {
 							for (let ii of Object.keys(players)) {
 								if (players[ii] == undefined) {
+									continue;
+								}
+								if (players[ii].dead == true){
+									//Dead!
 									continue;
 								}
 								let dist = Math.hypot(players[ii].pos.x - e.pos.x, players[ii].pos.y - e.pos.y);
