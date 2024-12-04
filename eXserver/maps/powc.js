@@ -938,9 +938,9 @@ C(1,[0],[1],{type:[1,[0],[1]],x:4600,y:4200,w:200,h:100,points:[[2300,2100],[230
 C(1,[0],[1],{type:[1,[0],[1]],x:4400,y:2900,w:100,h:200,points:[[2200,1450],[2350,1450]],speed:150,currentPoint:1.85,collidable:true,pointOn:{"x":2350,"y":1450},pointTo:{"x":2200,"y":1450},xv:-150,yv:1.8369701987210297e-14,inView:false,path:[[4400,2900,5],[4700,2900,5]],boundPlayer:true,})
 C(1,[0],[1],{type:[1,[0],[1]],x:4400,y:3100,w:100,h:200,points:[[2200,1550],[2350,1550]],speed:150,currentPoint:0.85,collidable:true,pointOn:{"x":2200,"y":1550},pointTo:{"x":2350,"y":1550},xv:150,yv:0,inView:false,path:[[4400,3100,5],[4700,3100,5]],boundPlayer:true,})
 C(1,[],[14],{type:[1,[],[14]],x:3900,y:3100,w:400,h:1800,force:3400,dir:{"x":0,"y":3400},direction:"down",jumpHeight:200,maxForce:1000,variableJumpHeight:false,platformerFriction:0.972,inView:false,platformerAngle:90,platformerAngleRotateSpeed:0,platformerForce:0.7346938775510204,jumpForce:58,jumpDecay:0.96,maxJumpCooldown:20,canJumpMidair:true,})
-C(1,[],[1],{type:[1,[],[1]],x:3900,y:4100,w:50,h:300,canCollide:true,inView:false,boundPlayer:true,})
-C(1,[],[1],{type:[1,[],[1]],x:4250,y:3600,w:50,h:300,canCollide:true,inView:false,boundPlayer:true,})
-C(1,[],[1],{type:[1,[],[1]],x:3900,y:3100,w:50,h:300,canCollide:true,inView:false,boundPlayer:true,})
+C(1,[],[1],{type:[1,[],[1]],x:3900,y:4100,w:50,h:250,canCollide:true,inView:false,boundPlayer:true,})
+C(1,[],[1],{type:[1,[],[1]],x:4250,y:3600,w:50,h:250,canCollide:true,inView:false,boundPlayer:true,})
+C(1,[],[1],{type:[1,[],[1]],x:3900,y:3100,w:50,h:250,canCollide:true,inView:false,boundPlayer:true,})
 C(1,[],[13],{type:[1,[],[13]],x:4000,y:3000,w:200,h:100,force:5000,dir:{"x":0,"y":-5000},direction:"up",inView:false,conveyorAngle:270,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorForce:3.7184873949579824,})
 C(1,[],[1],{type:[1,[],[1]],x:3400,y:4300,w:50,h:200,canCollide:true,inView:false,boundPlayer:true,})
 C(2,[],[1],{type:[2,[],[1]],points:[[3400,3850],[3550,3900],[3550,4000],[3400,4050]],most:{"left":1700,"right":1775,"top":1925,"bottom":2025},renderType:"poly",inView:false,x:null,y:null,boundPlayer:true,})
@@ -1088,11 +1088,11 @@ C(1,[],[0],{type:[1,[],[0]],x:7600,y:1200,w:500,h:100,canJump:true,inView:false,
 C(1,[],[0],{type:[1,[],[0]],x:8000,y:1200,w:100,h:600,canJump:true,inView:false,isNormal:true,})
 C(1,[],[0],{type:[1,[],[0]],x:7600,y:1700,w:200,h:100,canJump:true,inView:false,isNormal:true,})
 C(1,[1],[0],{type:[1,[1],[0]],x:7600,y:1475,w:400,h:50,angle:2466,rotateSpeed:0.10303030303030303,pivotX:7800,pivotY:1500,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:100.77822185373186,unSim:0,inView:true,initialRotation:43.03981935418017,})
-C(1,[1],[1],{type:[1,[1],[1]],x:8100,y:2050,w:700,h:100,angle:1644,rotateSpeed:0.0686868686868687,pivotX:8450,pivotY:2100,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:176.7766952966369,unSim:0,inView:true,initialRotation:28.69321290278678,boundPlayer:true,})
+C(1,[1],[1],{type:[1,[1],[1]],x:8100,y:2050,w:700,h:100,angle:1644,rotateSpeed:0.064,pivotX:8450,pivotY:2100,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:176.7766952966369,unSim:0,inView:true,initialRotation:28.69321290278678,boundPlayer:true,})
 C(1,[],[0],{type:[1,[],[0]],x:8100,y:1200,w:1200,h:600,canJump:true,inView:false,isNormal:true,})
 C(1,[],[0],{type:[1,[],[0]],x:9300,y:1200,w:500,h:2300,canJump:true,inView:false,isNormal:true,})
 C(1,[],[0],{type:[1,[],[0]],x:7600,y:3000,w:1200,h:500,canJump:true,inView:false,isNormal:true,})
-C(1,[1],[1],{type:[1,[1],[1]],x:8100,y:2650,w:700,h:100,angle:-1644,rotateSpeed:-0.0686868686868687,pivotX:8450,pivotY:2700,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:176.7766952966369,unSim:0,inView:true,initialRotation:-28.69321290278678,boundPlayer:true,})
+C(1,[1],[1],{type:[1,[1],[1]],x:8100,y:2650,w:700,h:100,angle:-1644,rotateSpeed:-0.064,pivotX:8450,pivotY:2700,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:176.7766952966369,unSim:0,inView:true,initialRotation:-28.69321290278678,boundPlayer:true,})
 C(2,[],[1],{type:[2,[],[1]],points:[[7600,2000],[8100,2200],[7600,2400]],most:{"left":3800,"right":4050,"top":1000,"bottom":1200},renderType:"poly",inView:false,x:null,y:null,boundPlayer:true,})
 C(2,[],[1],{type:[2,[],[1]],points:[[7600,2950],[7900,3000],[7600,3000]],most:{"left":3800,"right":3950,"top":1475,"bottom":1500},renderType:"poly",inView:false,x:null,y:null,boundPlayer:true,})
 C(1,[1],[0],{type:[1,[1],[0]],x:9100,y:3100,w:100,h:300,angle:2466,rotateSpeed:0.10303030303030303,pivotX:9050,pivotY:3250,distToPivot:50,canCollide:true,renderType:"rotating",cullingRadius:129.05694150420948,unSim:0,inView:true,initialRotation:43.03981935418017,})
@@ -1854,7 +1854,7 @@ C(2,[],[1],{type:[2,[],[1]],points:[[17200,9150],[17700,9400],[17100,9400]],most
 C(1,[],[1],{type:[1,[],[1]],x:16700,y:9400,w:1200,h:100,canCollide:true,inView:false,boundPlayer:true,})
 C(0,[],[0],{type:[0,[],[0]],x:16750,y:9450,r:158,renderType:"circle",inView:false,})
 C(1,[],[1],{type:[1,[],[1]],x:5100,y:1900,w:100,h:100,canCollide:true,inView:false,boundPlayer:true,})
-C(1,[],[10],{type:[1,[],[10]],x:8200,y:4950,w:150,h:100,maxStrength:17,currentStrength:17,time:0,timer:0,regenTime:133.33333333333334,inView:false,healSpeed:1,})
+C(1,[],[10],{type:[1,[],[10]],x:8200,y:4850,w:150,h:100,maxStrength:17,currentStrength:17,time:0,timer:0,regenTime:133.33333333333334,inView:false,healSpeed:1,})
 C(2,[],[1],{type:[2,[],[1]],points:[[9650,3500],[10400,3500],[10200,4450],[9650,3750]],most:{"left":4825,"right":5200,"top":1750,"bottom":2225},renderType:"poly",inView:false,x:null,y:null,boundPlayer:true,})
 C(1,[],[0],{type:[1,[],[0]],x:18800,y:400,w:200,h:300,canJump:true,inView:false,isNormal:true,})
 C(1,[],[13],{type:[1,[],[13]],x:18700,y:400,w:100,h:200,force:15000,dir:{"x":0,"y":-15000},direction:"up",inView:false,conveyorAngle:270,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorForce:11.15546218487395,})
@@ -1919,7 +1919,7 @@ C(3,[1],[20],{type:[3,[1],[20]],x:16550,y:9800,w:50,h:50,size:30,text:"touch thi
     // invincibility powerup
     // safe rendering on the player
     {
-			const maxInv = 135;
+			const maxInv = 145;
 			let inv = maxInv;
 			shared.C(0,[],[11],{x:-1E9,y:0,r:100,sf:(o,p)=>{
 					let inside = false;
