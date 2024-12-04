@@ -56,7 +56,7 @@ window.loadMap((shared)=>{
 
 	var xv1 = -4.7087785028302545;
 	var yv1 = 7.162177934566113;
-	var switchTime1 = 157.59564680552447;
+	var switchTime1 = 120;
 	var switchState1 = true;
 	var pos1 = {
 			x: 12701.56476317675, y: 651.7520205860351 
@@ -108,7 +108,7 @@ obstacles[obstacles.length-1].isEnemy = true;
 
 	var xv2 = 6.560640622930078;
 	var yv2 = 5.516102099477643;
-	var switchTime2 = 113.99412661672828;
+	var switchTime2 = 120;
 	var switchState2 = true;
 	var pos2 = {
 			x: 12438.996506660704, y: 1027.7108183593077 
@@ -160,7 +160,7 @@ obstacles[obstacles.length-1].isEnemy = true;
 
 	var xv3 = 2.575140464608761;
 	var yv3 = 8.175453464037124;
-	var switchTime3 = 180.60373498068734;
+	var switchTime3 = 120;
 	var switchState3 = true;
 	var pos3 = {
 			x: 12163.065668552117, y: 1105.6398527366784 
@@ -212,7 +212,7 @@ obstacles[obstacles.length-1].isEnemy = true;
 
 	var xv4 = 7.0439928398268465;
 	var yv4 = 4.8838051381653385;
-	var switchTime4 = 185.25107823309685;
+	var switchTime4 = 120;
 	var switchState4 = true;
 	var pos4 = {
 			x: 12321.982015363385, y: 817.8375593888925 
@@ -264,7 +264,7 @@ obstacles[obstacles.length-1].isEnemy = true;
 
 	var xv5 = -7.820763905081959;
 	var yv5 = -3.507854001532737;
-	var switchTime5 = 167.21313618651794;
+	var switchTime5 = 120;
 	var switchState5 = true;
 	var pos5 = {
 			x: 12389.744886823275, y: 953.8792481470828 
@@ -316,7 +316,7 @@ obstacles[obstacles.length-1].isEnemy = true;
 
 	var xv6 = 0.7508614556744643;
 	var yv6 = 8.538477313285107;
-	var switchTime6 = 3.285411477260176;
+	var switchTime6 = 120;
 	var switchState6 = true;
 	var pos6 = {
 			x: 12659.854400081378, y: 1345.6626248431703 
@@ -368,7 +368,7 @@ obstacles[obstacles.length-1].isEnemy = true;
 
 	var xv7 = -6.802310751266139;
 	var yv7 = 5.215165979938809;
-	var switchTime7 = 49.23118081025496;
+	var switchTime7 = 120;
 	var switchState7 = true;
 	var pos7 = {
 			x: 12394.514066918928, y: 1436.2398678358195 
@@ -420,7 +420,7 @@ obstacles[obstacles.length-1].isEnemy = true;
 
 	var xv8 = -7.627762373835383;
 	var yv8 = -3.909811878262591;
-	var switchTime8 = 80.6478039982947;
+	var switchTime8 = 120;
 	var switchState8 = true;
 	var pos8 = {
 			x: 12553.150238961323, y: 1360.1896897466706 
@@ -469,7 +469,9 @@ obstacles[obstacles.length-1].isEnemy = true;
 	}});
 	
 obstacles[obstacles.length-1].isEnemy = true;
+
 C(1,[],[18],{type:[1,[],[18]],x:3350,y:5000,w:3400,h:1250,size:15,inView:false,sizeChangePermanent:false,sizeMult:0.6122448979591837,})
+C(1,[],[18],{type:[1,[],[18]],x:6500,y:1300,w:1000,h:3700,size:15,inView:false,sizeChangePermanent:false,sizeMult:0.3})
 C(1,[],[18],{type:[1,[],[18]],x:4900,y:2700,w:1400,h:2200,size:35,inView:false,sizeChangePermanent:false,sizeMult:1.4285714285714286,})
 C(1,[],[14],{type:[1,[],[14]],x:16700,y:6500,w:3300,h:3500,force:3400,dir:{"x":0,"y":3400},direction:"down",jumpHeight:275,maxForce:1000,variableJumpHeight:false,platformerFriction:0.972,inView:false,platformerAngle:90,platformerAngleRotateSpeed:0,platformerForce:0.7346938775510204,jumpForce:64.75,jumpDecay:0.96,maxJumpCooldown:20,canJumpMidair:true,})
 
@@ -608,8 +610,8 @@ C(0,[],[1],{type:[0,[],[1]],x:6100,y:6000,r:50,renderType:"circleR",inView:false
 C(0,[],[1],{type:[0,[],[1]],x:6550,y:5600,r:50,renderType:"circleR",inView:false,boundPlayer:true,})
 C(0,[],[1],{type:[0,[],[1]],x:6450,y:5250,r:50,renderType:"circleR",inView:false,boundPlayer:true,})
 C(0,[],[1],{type:[0,[],[1]],x:6100,y:5400,r:100,renderType:"circleR",inView:false,boundPlayer:true,})
-C(1,[1],[1],{type:[1,[1],[1]],x:4100,y:5950,w:800,h:100,angle:822,rotateSpeed:0.03434343434343435,pivotX:4500,pivotY:6000,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:201.55644370746373,unSim:0,inView:true,initialRotation:14.34660645139339,boundPlayer:true,})
-C(1,[1],[1],{type:[1,[1],[1]],x:4600,y:6150,w:800,h:100,angle:857,rotateSpeed:0.03434343434343435,pivotX:5000,pivotY:6200,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:201.55644370746373,unSim:0,inView:true,initialRotation:14.957471689591403,boundPlayer:true,})
+C(1,[1],[1],{type:[1,[1],[1]],x:4100,y:5950,w:800,h:100,angle:822,rotateSpeed:Math.PI/90,pivotX:4500,pivotY:6000,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:201.55644370746373,unSim:0,inView:true,initialRotation:14.34660645139339,boundPlayer:true,})
+C(1,[1],[1],{type:[1,[1],[1]],x:4600,y:6150,w:800,h:100,angle:857,rotateSpeed:Math.PI/90,pivotX:5000,pivotY:6200,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:201.55644370746373,unSim:0,inView:true,initialRotation:14.957471689591403,boundPlayer:true,})
 C(1,[0],[1],{type:[1,[0],[1]],x:5100,y:6000,w:400,h:100,points:[[2550,3000],[2550,2700]],speed:200,currentPoint:1.5666666666662512,collidable:true,pointOn:{"x":2550,"y":2700},pointTo:{"x":2550,"y":3000},xv:1.2246467991473532e-14,yv:200,inView:false,path:[[5100,6000,6.666666666666667],[5100,5400,6.666666666666667]],boundPlayer:true,})
 C(1,[0],[1],{type:[1,[0],[1]],x:5500,y:6300,w:300,h:100,points:[[2750,3150],[2750,2850]],speed:200,currentPoint:0.5666666666662513,collidable:true,pointOn:{"x":2750,"y":3150},pointTo:{"x":2750,"y":2850},xv:1.2246467991473532e-14,yv:-200,inView:false,path:[[5500,6300,6.666666666666667],[5500,5700,6.666666666666667]],boundPlayer:true,})
 C(1,[0],[1],{type:[1,[0],[1]],x:5200,y:5600,w:100,h:200,points:[[2600,2800],[2900,2800]],speed:200,currentPoint:0.5666666666662513,collidable:true,pointOn:{"x":2600,"y":2800},pointTo:{"x":2900,"y":2800},xv:200,yv:0,inView:false,path:[[5200,5600,6.666666666666667],[5800,5600,6.666666666666667]],boundPlayer:true,})
@@ -956,6 +958,25 @@ C(1,[],[5],{type:[1,[],[5]],x:10400,y:3300,w:800,h:50})
 C(1,[],[3],{type:[1,[],[3]],x:17100,y:6300,w:2900,h:200,ef:(p,res,o) => {p.pos.x += res.overlapV.x; p.pos.y += res.overlapV.y; },cr:(o)=>{ctx.fillStyle = colors.tile; ctx.fillRect(o.topLeft.x, o.topLeft.y, o.dimensions.x, o.dimensions.y)}})
 C(1,[],[3],{type:[1,[],[3]],x:16700,y:5400,w:2900,h:400,ef:(p,res,o) => {p.pos.x += res.overlapV.x; p.pos.y += res.overlapV.y; },cr:(o)=>{ctx.fillStyle = colors.tile; ctx.fillRect(o.topLeft.x, o.topLeft.y, o.dimensions.x, o.dimensions.y)}})
 
+//Zoom out on 9
+{
+let lastColliding = false;
+let colliding = false;
+let scale;
+shared.C(1,[],[3],{x:9000,y:6000,w:3000,h:3800,cr:()=>{},ef:(p)=>{
+	const t = (p.pos.y - 6000) / 3800;
+	scale = (1-t) * 0.4 + (t) * 1;
+	shared.changeCameraScale(scale);
+	colliding = true;
+},sf:()=>{
+	if(lastColliding === true && colliding === false){
+			scale = 1;
+			shared.changeCameraScale(scale);
+	}
+	lastColliding = colliding;
+	colliding = false;
+}})
+}
 
 C(2,[],[1],{type:[2,[],[1]],points:[[800,2800],[1100,2800],[1100,3000]],most:{"left":400,"right":550,"top":1400,"bottom":1500},renderType:"poly",inView:false,x:null,y:null,boundPlayer:true,})
 C(2,[],[1],{type:[2,[],[1]],points:[[50,2200],[350,2200],[50,3300]],most:{"left":25,"right":175,"top":1100,"bottom":1650},renderType:"poly",inView:false,x:null,y:null,boundPlayer:true,})
@@ -1693,8 +1714,8 @@ C(2,[],[0],{type:[2,[],[0]],points:[[13600,9900],[13600,10000],[13500,10000]],mo
 C(1,[],[17],{type:[1,[],[17]],x:13100,y:7300,w:1300,h:2200,time:0,maxTime:10,cdmult:3,trapType:"death",inView:false,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:600,})
 C(1,[],[0],{type:[1,[],[0]],x:14400,y:8500,w:200,h:1000,canJump:true,inView:false,isNormal:true,})
 C(1,[],[0],{type:[1,[],[0]],x:14400,y:6200,w:200,h:2100,canJump:true,inView:false,isNormal:true,})
-C(1,[1],[1],{type:[1,[1],[1]],x:13100,y:9225,w:500,h:50,angle:-822,rotateSpeed:-0.03434343434343435,pivotX:13350,pivotY:9250,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:125.62344526401112,unSim:0,inView:true,initialRotation:-14.34660645139339,boundPlayer:true,})
-C(1,[1],[1],{type:[1,[1],[1]],x:13600,y:9225,w:500,h:50,angle:822,rotateSpeed:0.03434343434343435,pivotX:13850,pivotY:9250,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:125.62344526401112,unSim:0,inView:true,initialRotation:14.34660645139339,boundPlayer:true,})
+C(1,[1],[1],{type:[1,[1],[1]],x:13100,y:9225,w:500,h:50,angle:-822,rotateSpeed:-Math.PI/90,pivotX:13350,pivotY:9250,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:125.62344526401112,unSim:0,inView:true,initialRotation:-14.34660645139339,boundPlayer:true,})
+C(1,[1],[1],{type:[1,[1],[1]],x:13600,y:9225,w:500,h:50,angle:822,rotateSpeed:Math.PI/90,pivotX:13850,pivotY:9250,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:125.62344526401112,unSim:0,inView:true,initialRotation:14.34660645139339,boundPlayer:true,})
 C(1,[],[1],{type:[1,[],[1]],x:13100,y:8900,w:1000,h:100,canCollide:true,inView:false,boundPlayer:true,})
 C(1,[],[1],{type:[1,[],[1]],x:14100,y:9300,w:100,h:200,canCollide:true,inView:false,boundPlayer:true,})
 C(1,[],[1],{type:[1,[],[1]],x:14200,y:9350,w:200,h:100,canCollide:true,inView:false,boundPlayer:true,})
@@ -1792,9 +1813,9 @@ C(1,[],[1],{type:[1,[],[1]],x:17750,y:7500,w:200,h:100,canCollide:true,inView:fa
 C(1,[],[1],{type:[1,[],[1]],x:18100,y:8250,w:200,h:100,canCollide:true,inView:false,boundPlayer:true,})
 C(1,[],[1],{type:[1,[],[1]],x:17650,y:8350,w:400,h:100,canCollide:true,inView:false,boundPlayer:true,})
 C(0,[],[0],{type:[0,[],[0]],x:18050,y:8300,r:158,renderType:"circle",inView:false,})
-C(1,[],[1],{type:[1,[],[1]],x:17550,y:8050,w:100,h:550,canCollide:true,inView:false,boundPlayer:true,})
-C(1,[],[1],{type:[1,[],[1]],x:17350,y:8250,w:100,h:400,canCollide:true,inView:false,boundPlayer:true,})
-C(1,[],[1],{type:[1,[],[1]],x:17150,y:8050,w:100,h:550,canCollide:true,inView:false,boundPlayer:true,})
+C(1,[],[1],{type:[1,[],[1]],x:17550,y:8050,w:100,h:400,canCollide:true,inView:false,boundPlayer:true,})
+C(1,[],[1],{type:[1,[],[1]],x:17350,y:8250,w:100,h:300,canCollide:true,inView:false,boundPlayer:true,})
+C(1,[],[1],{type:[1,[],[1]],x:17150,y:8050,w:100,h:500,canCollide:true,inView:false,boundPlayer:true,})
 C(2,[],[1],{type:[2,[],[1]],points:[[18300,8500],[18300,9200],[18000,8800]],most:{"left":9000,"right":9150,"top":4250,"bottom":4600},renderType:"poly",inView:false,x:null,y:null,boundPlayer:true,})
 C(1,[0],[11],{type:[1,[0],[11]],x:16700,y:9700,w:200,h:200,points:[[8350,4850],[9050,4850]],speed:200,currentPoint:1.957142857142145,pointOn:{"x":9050,"y":4850},pointTo:{"x":8350,"y":4850},xv:-200,yv:2.4492935982947064e-14,inView:false,path:[[16700,9700,6.666666666666667],[18100,9700,6.666666666666667]],})
 C(1,[0],[11],{type:[1,[0],[11]],x:16700,y:9700,w:200,h:200,points:[[8350,4850],[9050,4850]],speed:200,currentPoint:0.9571428571421451,pointOn:{"x":8350,"y":4850},pointTo:{"x":9050,"y":4850},xv:200,yv:0,inView:false,path:[[16700,9700,6.666666666666667],[18100,9700,6.666666666666667]],})
@@ -1880,7 +1901,7 @@ C(3,[],[20],{type:[3,[],[20]],x:7800,y:3700,w:50,h:50,size:30,text:"7",angle:0,s
 C(3,[],[20],{type:[3,[],[20]],x:14600,y:2000,w:50,h:50,size:30,text:"8",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
 C(3,[],[20],{type:[3,[],[20]],x:15000,y:2350,w:50,h:50,size:30,text:"try not to use up",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
 C(3,[],[20],{type:[3,[],[20]],x:15000,y:2400,w:50,h:50,size:30,text:"all your invincibility!",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
-C(3,[],[20],{type:[3,[],[20]],x:11900,y:5150,w:50,h:50,size:30,text:"SLOW YOURSELF DOWN",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
+C(3,[],[20],{type:[3,[],[20]],x:11900,y:5150,w:50,h:50,size:30,text:"USE THE BALLS TO SLOW YOURSELF!",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
 C(3,[],[20],{type:[3,[],[20]],x:9200,y:6200,w:50,h:50,size:30,text:"9",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
 C(3,[],[20],{type:[3,[],[20]],x:9650,y:6050,w:50,h:50,size:30,text:"torture chamber",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
 C(3,[],[20],{type:[3,[],[20]],x:9450,y:6350,w:50,h:50,size:30,text:"->",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
