@@ -28,7 +28,7 @@ shared.render = (...params) => {
     renderSelection();
     renderCreateMenu();
 
-    shared.changeCameraScale(interpolate(shared.camera.scale, desiredScrollScale, 0.3));
+    if(shared.playMode === false) shared.changeCameraScale(interpolate(shared.camera.scale, desiredScrollScale, 0.3));
 }
 
 canvas.onmousedown = (e) => {
@@ -70,6 +70,8 @@ window.onkeydown = window.onkeyup = (e) => {
         shared.cancelCreate();
     } else if(e.code === 'Delete'){
         shared.deleteSelectedObs();
+    } else if(e.code === 'Digit0' && e.ctrlKey === true){// TODO && testing === false
+        shared.respawnPlayer();
     } // scrapped because blockly has all the undo stuff we really need
     /* else if(e.code === 'KeyZ' && e.ctrlKey === true){
         let val = 'alsoUndoNext';

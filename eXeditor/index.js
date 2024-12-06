@@ -147,7 +147,8 @@ window.requestIdleCallback(() => {
 // shared.ws.registerButtonCallback("returnToMainGame", ()=>{location.replace(location.origin)});
 
 import './overrides.js';
-import './menu.js'
+import './menu.js';
+import './playMode.js';
 
 let username = localStorage.getItem('username');
 shared.players[shared.selfId].name = username ?? '';

@@ -91,6 +91,19 @@ function renderSelection(){
     }
 }
 
+let lastSimulating = shared.simulateMode;
+function stopSimulation(){
+    lastSimulating = shared.simulateMode;
+    if(lastSimulating === false) return;
+    shared.toggleSimulateMode();
+}
+
+function restartSimulation(){
+    if(lastSimulating === false) return;
+    shared.toggleSimulateMode();
+    lastSimulating = shared.simulateMode;
+}
+
 let singleFlag = false;// TODO: pausing simulation!!
 shared.editorMouseDownFns.push((e) => {
     // creating obs
@@ -126,6 +139,7 @@ shared.editorMouseDownFns.push((e) => {
                         o.rotateSpeed = o.rotation = 0;
                     }
                     startX = startY = undefined;
+                    stopSimulation();
                     return;
                 }
             } else {
@@ -153,6 +167,7 @@ shared.editorMouseDownFns.push((e) => {
                         shared.selectedObstacles.length = 0;
                         updateTransformBounds();
                     }
+                    stopSimulation();
                 }
             }
         } else {
@@ -201,6 +216,7 @@ shared.editorMouseDownFns.push((e) => {
                 }
             }
             startX = startY = undefined;
+            stopSimulation();
             break;
         }
         res.clear();
@@ -246,6 +262,7 @@ shared.editorMouseMoveFns.push((e) => {
 shared.editorMouseUpFns.push((e) => {
     if((transformX !== undefined && state === 'select') || (tMinX !== undefined && state !== 'select')){
         setBlocksMatchingTransform();
+        restartSimulation();
         return;
     }
     if(singleFlag === true){
@@ -334,8 +351,10 @@ shared.selectCorrespondingObs = (id) => {
     if(obstacle === undefined || obstacle === null) return;
     if(shared.selectedObstacles.includes(obstacle)) return;
     shared.selectedObstacles.push(obstacle);
-    shared.players[shared.selfId].pos.x = obstacle.topLeft.x + obstacle.dimensions.x/2;
-    shared.players[shared.selfId].pos.y = obstacle.topLeft.y + obstacle.dimensions.y/2;
+    if(shared.playMode === false){
+        shared.players[shared.selfId].pos.x = obstacle.topLeft.x + obstacle.dimensions.x/2;
+        shared.players[shared.selfId].pos.y = obstacle.topLeft.y + obstacle.dimensions.y/2;
+    }
     shared.regenerateMenu();
 }
 function selectCorrespondingBlock(o) {
@@ -400,6 +419,8 @@ function setObstaclesMatchingRotate(middleX, middleY, angle){
     rotateAngle = angle;
     for(let i = 0; i < shared.selectedObstacles.length; i++){
         const o = shared.selectedObstacles[i];
+
+        if(o.alreadyHasRotateType === true) continue;
 
         if(o.sat.r !== undefined){
             o.pos.x -= o.pivotX;
