@@ -84,11 +84,11 @@
         <div class="submenu">
             <span class="submenu-title">Manage State</span>
             <div class="menu-button-div" id="undo" title="Ctrl+Z">
-                <button class="menu-button">&lt;</button>
+                <button class="menu-button" id="undo-button">&lt;</button>
                 <span class="menu-button-text">Undo</span>
             </div>
             <div class="menu-button-div" id="redo" title="Ctrl+Y">
-                <button class="menu-button">&gt;</button>
+                <button class="menu-button" id="redo-button">&gt;</button>
                 <span class="menu-button-text">Redo</span>
             </div>
             <div
@@ -96,7 +96,7 @@
                 id="clear"
                 title="Ctrl+Delete"
             >
-                <button class="menu-button">—</button>
+                <button class="menu-button" id="clear-button">—</button>
                 <span class="menu-button-text">Clear</span>
             </div>
             <!-- <div class="menu-button-div" id="save" title="Ctrl+S">
@@ -159,12 +159,12 @@
                 <span class="menu-button-text">Test</span>
             </div>-->
         </div>
-        <div class="menu-button-div" id="import-button">
-            <button class="menu-button">v</button>
+        <div class="menu-button-div">
+            <button class="menu-button" id="import-button">v</button>
             <span class="menu-button-text">Import</span>
         </div>
         <div class="menu-button-div" id="export">
-            <button class="menu-button">^</button>
+            <button class="menu-button" id="export-button">^</button>
             <span class="menu-button-text">Export</span>
         </div>
         <div class="menu-button-div" id="resync">

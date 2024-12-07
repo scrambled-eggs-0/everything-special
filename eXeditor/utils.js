@@ -68,6 +68,7 @@ window.onLoopTrap = () => {
 // }
 
 const messageText = document.getElementById('messagetext');
+shared.oldAlert = window.alert;
 window.alert = (msg, toFade=true, time=3) => {
   messageText.innerText = msg;
   messageText.style.opacity = "1";

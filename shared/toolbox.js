@@ -55,10 +55,10 @@ export default /*const toolbox =*/ {
           'kind': 'block',
           'type': 'set_parameter'
         },
-        {
-          'kind': 'block',
-          'type': 'delete_obstacle'
-        },
+        // {
+        //   'kind': 'block',
+        //   'type': 'delete_obstacle'
+        // },
       ],
     },
     {
@@ -89,10 +89,10 @@ export default /*const toolbox =*/ {
           'kind': 'block',
           'type': 'client_pos'
         },
-        {
-          'kind': 'block',
-          'type': 'is_dragging'
-        },
+        // {
+        //   'kind': 'block',
+        //   'type': 'is_dragging'
+        // },
         {
           'kind': 'block',
           'type': 'player_spawn'
@@ -105,7 +105,7 @@ export default /*const toolbox =*/ {
               'shadow': {
                 'type': 'text',
                 'fields': {
-                  'TEXT': "https://www.youtube.com/watch?v=i_7ekMgvRIk",
+                  'TEXT': "https://www.youtube.com/watch?v=BUbZVWZQkyw"//"https://www.youtube.com/watch?v=-WYJ1Jh2kuI"//"https://www.youtube.com/watch?v=bMY4HPLLqDQ"//"https://www.youtube.com/watch?v=jVTsD4UPT-k"//"https://www.youtube.com/watch?v=i_7ekMgvRIk",
                 },
               },
             },
@@ -119,10 +119,10 @@ export default /*const toolbox =*/ {
           'kind': 'block',
           'type': 'bg_color'
         },
-        {
-          'kind': 'block',
-          'type': 'collide_obstacles'
-        }
+        // {
+        //   'kind': 'block',
+        //   'type': 'collide_obstacles'
+        // }
       ],
     },
     // {

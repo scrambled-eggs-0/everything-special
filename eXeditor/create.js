@@ -271,6 +271,7 @@ const halveSizeMap = [
     },
     /*poly*/
     (p) => {
+        params.points = structuredClone(params.points);
         for(let i = 0; i < params.points.length; i++){
             params.points[i][0] /= 2;
             params.points[i][1] /= 2;
@@ -303,6 +304,7 @@ shared.editorMouseDownFns.push((e) => {
             const dist = polyPts.length === 0 ? Infinity : Math.sqrt((pt[0] - polyPts[0][0]) ** 2 + (pt[1] - polyPts[0][1]));
             if(dist < Math.max(10, shared.snapDistance)){
                 endX = startX; endY = startY;
+
                 createWithPos();
                 shared.stopEditorCreateDrag();
                 return;

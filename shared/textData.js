@@ -350,15 +350,17 @@ export default {
     //   'previousStatement': null,
     //   'nextStatement': null,
     // },
-    {
-      'type': 'is_dragging',
-      'message0': 'is draggging',
-      'args0': [],
-      'output': 'Boolean',
-      'colour': '121',
-      'tooltip': 'true or false depending on if the user is currently dragging',
-      'helpUrl': '',
-    },
+
+    
+    // {
+    //   'type': 'is_dragging',
+    //   'message0': 'is draggging',
+    //   'args0': [],
+    //   'output': 'Boolean',
+    //   'colour': '121',
+    //   'tooltip': 'true or false depending on if the user is currently dragging',
+    //   'helpUrl': '',
+    // },
     {
       'type': 'client_pos',
       'message0': '%1 %2 position',
@@ -368,7 +370,7 @@ export default {
           "name": "TYPE_DROPDOWN",
           "options": [
             [ "player", "player" ],
-            [ "mouse", "mouse" ]
+            // [ "mouse", "mouse" ]
           ]
         },
         {
@@ -1480,8 +1482,8 @@ function generateParameterDropdownOptions(childBlock, isPlug=false, id="NO_ID"){
   const simulates = [];
   const effects = [];
 
-  for(let key in satDefaultMap[shape]){
-    params[key] = satDefaultMap[shape][key];
+  for(let key in shared.satDefaultMap[shape]){
+    params[key] = shared.satDefaultMap[shape][key];
   }
 
   const simulatesLen = block.getFieldValue('NUM_SIMULATES_DROPDOWN');
@@ -1502,7 +1504,7 @@ function generateParameterDropdownOptions(childBlock, isPlug=false, id="NO_ID"){
     }
   }
 
-  shared.shared.C(shape, simulates, effects, params);
+  shared.C(shape, simulates, effects, params);
   const o = shared.obstacles.pop();
 
   const arr = [['x', 'x'], ['y', 'y']];

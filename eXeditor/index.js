@@ -155,6 +155,49 @@ shared.players[shared.selfId].name = username ?? '';
 shared.players[shared.selfId].cr = () => {};
 shared.players[shared.selfId].god = true;
 shared.startGame();
+
+// importing and exporting
+const importBtn = document.getElementById('import-button');
+importBtn.onclick = () => {
+  navigator.clipboard.readText().then((txt) => {
+    const lastWS = localStorage.getItem('ws') ?? '';
+    console.log(lastWS);
+    try {
+      localStorage.setItem('ws', txt);
+      load(shared.ws);
+    } catch (err) {
+      console.error(err);
+      alert('Map Import Failed! ' + err, true, 22);
+      localStorage.setItem('ws', lastWS);
+      load(shared.ws);
+    }
+  });
+}
+
+const exportBtn = document.getElementById('export-button');
+exportBtn.onclick = () => {
+  save(shared.ws);
+  navigator.clipboard.writeText(localStorage.getItem('ws'));
+  alert('Copied To clipboard!', true, 3);
+};
+
+// undo, redo, and clear
+const undoBtn = document.getElementById('undo-button');
+undoBtn.onclick = () => {
+  shared.ws.undo(false);
+}
+const redoBtn = document.getElementById('redo-button');
+redoBtn.onclick = () => {
+  shared.ws.undo(true);
+}
+const clearBtn = document.getElementById('clear-button');
+clearBtn.onclick = () => {
+  if(confirm('Are you sure you want to clear the map?') !== true) return;
+  localStorage.removeItem('ws');
+  load(shared.ws);
+  shared.runCode();
+}
+
 // // TODO: Upload code. Also, if the user doesn't have an account,
 // // "Looks like you don't have an account. You can still use the editor, but won't be able to upload levels. Head on over to evadesX.io/create or /login to get an account".
 // let hashedPassword = localStorage.getItem('hashedPassword');

@@ -2,6 +2,7 @@ import shared from '../../shared/shared.js';
 shared.mapDifficulties = Object.freeze({
     winroom: 0,
     hub: 0,
+    pom: 0,
     popb: 0.25,
     poca: 1.01,
     pospd: 2.71,
@@ -12,12 +13,13 @@ shared.mapDifficulties = Object.freeze({
     podc: 6.01,
     posc: 0.65,
     poph: 4.33,
-    posh: 1.39
+    posh: 1.39,
 });
 
 shared.mapLeaderboardNames = Object.freeze({
     winroom: 'Winroom',
     hub: 'Hub',
+    pom: 'Planet of 🗺️',
     popb: 'Planet of Peaceful Beginnings',
     poca: 'Planet of Conveyor Abuse',
     pospd: 'Planet of Speed (nyoom)',
@@ -28,5 +30,5 @@ shared.mapLeaderboardNames = Object.freeze({
     podc: 'Planet of Difficulty Chart',
     posc: 'Planet of Simple Challenges',
     poph: 'Planet of Prehistory',
-    posh: `Planet of ${Math.random() < 0.01 ? 'Suspicious' : 'Slight'} Hurdles`
+    posh: `Planet of ${Math.random() < 0.01 ? 'Suspicious' : 'Slight'} Hurdles`,
 });
