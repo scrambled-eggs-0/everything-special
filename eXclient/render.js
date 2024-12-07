@@ -44,6 +44,7 @@ shared.renderDebug = false;
 shared.distortionsActive = false;
 shared.skullImgLoaded = false;
 shared.skullImg = undefined;
+shared.renderTimer = false;
 const fullscreen = {
     ratio: 9 / 16,
     zoom: 1800,
@@ -473,7 +474,7 @@ shared.render = (os=shared.obstacles, cols=shared.colors, players=shared.players
         ctx.fillText(txt, canvas.w - 30, canvas.h - 50);
         ctx.font = '28px Inter';
         ctx.fillText('You may still play the current map but cannot win or leave.', canvas.w - 30, canvas.h - 18);
-    }
+    } else if(shared.renderTimer === true) renderTimerFn();
 
     if(shared.distortionsActive === true) shared.renderGl();
 }
@@ -666,6 +667,12 @@ shared.importYoutube = async() => {
     importedYT = true;
 
     return Promise.all([p1, p2]);
+}
+
+let renderTimerFn;
+shared.toggleTimer = async () => {
+    if(shared.renderTimer === true) {shared.renderTimer = false;return;}
+    if(renderTimerFn === undefined) {renderTimerFn = (await import('./extras/timer.js')).default; shared.renderTimer = true;}
 }
 
 shared.unTaintCanvas = () => {

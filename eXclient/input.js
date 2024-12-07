@@ -156,6 +156,8 @@ function handleKey(e){
                     }
                 }
                 zenMode = !zenMode;
+            } else if(e.code === 'KeyT' && shared.isEditor !== true) {
+                shared.toggleTimer();
             } else if (e.code === 'KeyU' && shared.isProd === false){
                 shared.renderDebug = !shared.renderDebug;
             }
