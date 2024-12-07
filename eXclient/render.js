@@ -6,6 +6,7 @@ let ctx = window.ctx = canvas.getContext('2d');
 const camera = shared.camera = {
     x: 0, y: 0, scale: 1,
     numControlledBy: 0,
+    angle: 0,
     /*3d*/
     z: 1,
     basis1: [1, 0, 0],
@@ -43,6 +44,7 @@ shared.renderDebug = false;
 shared.distortionsActive = false;
 shared.skullImgLoaded = false;
 shared.skullImg = undefined;
+shared.renderTimer = false;
 const fullscreen = {
     ratio: 9 / 16,
     zoom: 1800,
@@ -133,13 +135,17 @@ shared.render = (os=shared.obstacles, cols=shared.colors, players=shared.players
         if(camera.numControlledBy === 0){
             camera.x = me.pos.x;
             camera.y = me.pos.y;
+            camera.angle = 0;
+            if(me.ship === true){
+                camera.angle = Math.PI/2+me.shipAngle;
+                overRenderTiles = true;
+            }
         }
 
-        if(me.ship === true){
+        if(camera.angle !== 0){
             ctx.translate(canvas.w/2, canvas.h/2);
-            ctx.rotate(-Math.PI/2-me.shipAngle);
+            ctx.rotate(-camera.angle);
             ctx.translate(-canvas.w/2, -canvas.h/2);
-            overRenderTiles = true;
         }
     }
 
@@ -239,68 +245,7 @@ shared.render = (os=shared.obstacles, cols=shared.colors, players=shared.players
     ctx.translate(-(camera.x-canvas.w/2), -(camera.y-canvas.h/2));
 
     // render obstacles
-    for(let i = 0; i < os.length; i++){
-        if(os[i].cr !== undefined) { os[i].cr(os[i]); continue; }
-
-        // culling
-        if(os[i].topLeft.x > cullingMaxX || os[i].topLeft.x + os[i].dimensions.x < cullingMinX || os[i].topLeft.y > cullingMaxY || os[i].topLeft.y + os[i].dimensions.y < cullingMinY) continue;
-
-        len = os[i].effect.length;
-        if(len === 1){
-            j = 0;
-            ctx.toFill = true;
-            ctx.toStroke = false;
-            ctx.lineWidth = 4; 
-            ctx.beginPath();
-            os[i].renderShape(os[i]);
-            os[i].renderEffect[j](os[i]);
-            if(os[i].isText === true) renderTextSpecials(os[i], cols);
-            if(ctx.toFill === true) ctx.fill();
-            if(ctx.toStroke === true) ctx.stroke();
-            if(ctx.cleanUpFunction !== undefined) { ctx.cleanUpFunction(); ctx.cleanUpFunction = undefined; }
-            ctx.closePath();
-            ctx.globalAlpha = 1;
-        } else {
-            // so we want to fade between the effect renders. We render a previous one with 1 opacity and then raise the next one from 0-1 opacity, until the next one becomes the previous and the cycle repeats
-            os[i].renderEffectTimer += 1/128;
-            if(os[i].renderEffectTimer >= len) os[i].renderEffectTimer -= len;
-
-            opaqIndex = Math.floor(os[i].renderEffectTimer);
-            /*let fullIndex*/j = opaqIndex - 1;
-            if(/*fullIndex*/j === -1) /*fullIndex*/j = len-1;
-            // j = fullIndex;
-
-            // render full index
-            ctx.toFill = true;
-            ctx.toStroke = false;
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            os[i].renderShape(os[i]);
-            os[i].renderEffect[j](os[i]);
-            if(os[i].isText === true) renderTextSpecials(os[i], cols);
-            ctx.globalAlpha = 1;
-            if(ctx.toFill === true) ctx.fill();
-            if(ctx.toStroke === true) ctx.stroke();
-            if(ctx.cleanUpFunction !== undefined) { ctx.cleanUpFunction(); ctx.cleanUpFunction = undefined; }
-            ctx.closePath();
-
-            // render opaq index
-            j = opaqIndex;
-            ctx.toFill = true;
-            ctx.toStroke = false;
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            os[i].renderShape(os[i]);
-            os[i].renderEffect[j](os[i]);
-            if(os[i].isText === true) renderTextSpecials(os[i], cols);
-            ctx.globalAlpha = os[i].renderEffectTimer - opaqIndex;
-            if(ctx.toFill === true) ctx.fill();
-            if(ctx.toStroke === true) ctx.stroke();
-            if(ctx.cleanUpFunction !== undefined) { ctx.cleanUpFunction(); ctx.cleanUpFunction = undefined; }
-            ctx.closePath();
-            ctx.globalAlpha = 1;
-        }
-    }
+    renderObstacles(os, cols);
 
     // render players
     for(let i = 0; i < players.length; i++){
@@ -447,13 +392,10 @@ shared.render = (os=shared.obstacles, cols=shared.colors, players=shared.players
 
     ctx.translate(camera.x-canvas.w/2, camera.y-canvas.h/2);
 
-    if(shared.selfId !== undefined){
-        const me = players[shared.selfId];
-        if(me.ship === true){
-            ctx.translate(canvas.w/2, canvas.h/2);
-            ctx.rotate(me.shipAngle+Math.PI/2);
-            ctx.translate(-canvas.w/2, -canvas.h/2);
-        }
+    if(camera.angle !== 0){
+        ctx.translate(canvas.w/2, canvas.h/2);
+        ctx.rotate(camera.angle);
+        ctx.translate(-canvas.w/2, -canvas.h/2);
     }
 
     // vignette
@@ -462,10 +404,10 @@ shared.render = (os=shared.obstacles, cols=shared.colors, players=shared.players
     const grd = ctx.createRadialGradient(
         canvas.w / 2,
         canvas.h / 2,
-        (canvas.w * v.innerInterp.size),
+        (Math.max(canvas.w,canvas.h) * v.innerInterp.size),
         canvas.w / 2,
         canvas.h / 2,
-        (canvas.w * v.outerInterp.size)
+        (Math.max(canvas.w,canvas.h) * v.outerInterp.size)
     );
 
     grd.addColorStop(
@@ -529,9 +471,79 @@ shared.render = (os=shared.obstacles, cols=shared.colors, players=shared.players
         ctx.fillText(txt, canvas.w - 30, canvas.h - 50);
         ctx.font = '28px Inter';
         ctx.fillText('You may still play the current map but cannot win or leave.', canvas.w - 30, canvas.h - 18);
-    }
+    } else if(shared.renderTimer === true) renderTimerFn();
 
     if(shared.distortionsActive === true) shared.renderGl();
+}
+
+shared.disableCulling = () => {
+    cullingMinX = cullingMinY = -Infinity;
+    cullingMaxX = cullingMaxY =  Infinity;
+}
+
+const renderObstacles = shared.renderObstacles = (os, cols=shared.colors) => {
+    for(let i = 0; i < os.length; i++){
+        if(os[i].cr !== undefined) { os[i].cr(os[i]); continue; }
+
+        // culling
+        if(os[i].topLeft.x > cullingMaxX || os[i].topLeft.x + os[i].dimensions.x < cullingMinX || os[i].topLeft.y > cullingMaxY || os[i].topLeft.y + os[i].dimensions.y < cullingMinY) continue;
+
+        len = os[i].effect.length;
+        if(len === 1){
+            j = 0;
+            ctx.toFill = true;
+            ctx.toStroke = false;
+            ctx.lineWidth = 4; 
+            ctx.beginPath();
+            os[i].renderShape(os[i]);
+            os[i].renderEffect[j](os[i]);
+            if(os[i].isText === true) renderTextSpecials(os[i], cols);
+            if(ctx.toFill === true) ctx.fill();
+            if(ctx.toStroke === true) ctx.stroke();
+            if(ctx.cleanUpFunction !== undefined) { ctx.cleanUpFunction(); ctx.cleanUpFunction = undefined; }
+            ctx.closePath();
+            ctx.globalAlpha = 1;
+        } else {
+            // so we want to fade between the effect renders. We render a previous one with 1 opacity and then raise the next one from 0-1 opacity, until the next one becomes the previous and the cycle repeats
+            os[i].renderEffectTimer += 1/128;
+            if(os[i].renderEffectTimer >= len) os[i].renderEffectTimer -= len;
+
+            opaqIndex = Math.floor(os[i].renderEffectTimer);
+            /*let fullIndex*/j = opaqIndex - 1;
+            if(/*fullIndex*/j === -1) /*fullIndex*/j = len-1;
+            // j = fullIndex;
+
+            // render full index
+            ctx.toFill = true;
+            ctx.toStroke = false;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            os[i].renderShape(os[i]);
+            os[i].renderEffect[j](os[i]);
+            if(os[i].isText === true) renderTextSpecials(os[i], cols);
+            ctx.globalAlpha = 1;
+            if(ctx.toFill === true) ctx.fill();
+            if(ctx.toStroke === true) ctx.stroke();
+            if(ctx.cleanUpFunction !== undefined) { ctx.cleanUpFunction(); ctx.cleanUpFunction = undefined; }
+            ctx.closePath();
+
+            // render opaq index
+            j = opaqIndex;
+            ctx.toFill = true;
+            ctx.toStroke = false;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            os[i].renderShape(os[i]);
+            os[i].renderEffect[j](os[i]);
+            if(os[i].isText === true) renderTextSpecials(os[i], cols);
+            ctx.globalAlpha = os[i].renderEffectTimer - opaqIndex;
+            if(ctx.toFill === true) ctx.fill();
+            if(ctx.toStroke === true) ctx.stroke();
+            if(ctx.cleanUpFunction !== undefined) { ctx.cleanUpFunction(); ctx.cleanUpFunction = undefined; }
+            ctx.closePath();
+            ctx.globalAlpha = 1;
+        }
+    }
 }
 
 function interpolate(start, end, t){
@@ -560,16 +572,25 @@ function renderTextSpecials(o, cols){
 
 // canvas resizing
 shared.resizeFns = [];
-const gui = document.querySelector('.gui');
-let lastScale=1;
-function resize(){
+const gui = document.querySelector('.gui') ?? {style:{}};
+let lastScale=1,w,h;
+if(shared.isEditor === undefined) shared.isEditor = false;
+shared.resize = () => {
+    if(shared.isEditor === true){
+        const dimensions = shared.left.getBoundingClientRect();
+        w = dimensions.width;
+        h = dimensions.height;
+    } else {
+        w = window.innerWidth;
+        h = window.innerHeight;
+    }
     lastScale = shared.camera.scale;
     shared.changeCameraScale(1);
     const dpi = window.devicePixelRatio;
-    gui.style.width = canvas.style.width = Math.ceil(window.innerWidth) + 'px';
-    gui.style.height = canvas.style.height = Math.ceil(window.innerHeight) + 'px';
-    gui.width = canvas.width = Math.ceil(window.innerWidth) * dpi;
-    gui.height = canvas.height = Math.ceil(window.innerHeight) * dpi;
+    gui.style.width = canvas.style.width = Math.ceil(w) + 'px';
+    gui.style.height = canvas.style.height = Math.ceil(h) + 'px';
+    gui.width = canvas.width = Math.ceil(w) * dpi;
+    gui.height = canvas.height = Math.ceil(h) * dpi;
     canvas.zoom = Math.max(0.1, Math.round((Math.max(canvas.height, canvas.width * fullscreen.ratio) / fullscreen.zoom * camera.scale) * 100) / 100);
     // w and h are calced with zoom
     canvas.w = canvas.width / canvas.zoom;
@@ -603,9 +624,9 @@ shared.changeCameraScale = (scale) => {
 }
   
 window.addEventListener('resize', function () {
-    resize();
+    shared.resize();
 });
-resize();
+shared.resize();
 
 // if there's ever more extras, make an array system
 let nonLinearFns;
@@ -645,6 +666,13 @@ shared.importYoutube = async() => {
     return Promise.all([p1, p2]);
 }
 
+let renderTimerFn;
+shared.toggleTimer = async () => {
+    if(shared.renderTimer === true) {shared.renderTimer = false;return;}
+    if(renderTimerFn === undefined) {renderTimerFn = (await import('./extras/timer.js')).default; shared.renderTimer = true;}
+    else shared.renderTimer = true;
+}
+
 shared.unTaintCanvas = () => {
     const transform = ctx.getTransform();
 
@@ -657,9 +685,65 @@ shared.unTaintCanvas = () => {
     canvas = window.canvas = newCanvas;
     canvas.id = "canvas";
     ctx = window.ctx = canvas.getContext('2d');
-    resize();
+    shared.resize();
 
     ctx.setTransform(transform);
 }
 
-export default render;
+// mouse coordinates ranging (0,canvas.w) to world position (same coordinates as obstacle rendering)sD
+// TODO: test angle !== 0
+shared.translateScreenToWorld = () => {
+    ctx.translate(-(camera.x-canvas.w/2), -(camera.y-canvas.h/2));
+    // if(camera.angle !== 0){
+    //     ctx.translate(canvas.w/2, canvas.h/2);
+    //     ctx.rotate(-camera.angle);
+    //     ctx.translate(-canvas.w/2, -canvas.h/2);
+    // }
+}
+
+shared.translateWorldToScreen = () => {
+    // if(camera.angle !== 0){
+    //     ctx.translate(canvas.w/2, canvas.h/2);
+    //     ctx.rotate(camera.angle);
+    //     ctx.translate(-canvas.w/2, -canvas.h/2);
+    // }
+    ctx.translate((camera.x-canvas.w/2), (camera.y-canvas.h/2));
+}
+
+shared.screenToWorld = (x,y) => {
+    // if(camera.angle === 0){
+        return [
+            x + (camera.x-canvas.w/2),
+            y + (camera.y-canvas.h/2)
+        ];
+    // } else {
+    //     x += -(camera.x-canvas.w/2) + canvas.w/2;
+    //     y += -(camera.y-canvas.h/2) + canvas.h/2;
+    //     const mag = Math.sqrt(x**2 + y **2);
+    //     const angle = Math.atan2(y,x) + camera.angle;
+    //     return [
+    //         Math.cos(angle) * mag,
+    //         Math.sin(angle) * mag
+    //     ]
+    // }
+}
+
+shared.worldToScreen = (x,y) => {
+    // if(camera.angle === 0){
+        return [
+            x - (camera.x-canvas.w/2),
+            y - (camera.y-canvas.h/2)
+        ]
+    // } else {
+    //     x -= canvas.w/2;
+    //     y -= canvas.h/2;
+    //     const mag = Math.sqrt(x**2 + y**2);
+    //     const angle = Math.atan2(y,x) - camera.angle;
+    //     return [
+    //         Math.cos(angle) * mag - (camera.x-canvas.w/2),
+    //         Math.sin(angle) * mag - (camera.y-canvas.h/2),
+    //     ]
+    // }
+}
+
+export default shared.render;

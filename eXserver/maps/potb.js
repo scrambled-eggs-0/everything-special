@@ -813,10 +813,10 @@ shared.obsArr.push(...[
 // // LAYER 2.5 
 shared.obsArr.push(...[
     `shared.C(2,[],[10],{"points":[[9500,2700],[9600,2600],[9700,2700],[9600,2800]],"maxStrength":60,"regenTime":100,"healSpeed":1,"x":0,"y":0})`,
-    `shared.C(0,[2],[1],{"r":100,"boundPlayer":false,"x":8700,"y":3400,"growSpeed":0.0006*1000/60,"shrinkSpeed":0.0006*1000/60,"maxGrowth":1,"minGrowth":0.5,"startGrowth":1,"toStartGrowing":true})`,
+    `shared.C(0,[2],[1],{"r":100,"boundPlayer":false,"x":8700,"y":3400,"growPivotX":8700,"growPivotY":3400,"growSpeed":0.0006*1000/60,"shrinkSpeed":0.0006*1000/60,"maxGrowth":1,"minGrowth":0.5,"startGrowth":1,"toStartGrowing":true})`,
     `shared.C(2,[],[19],{"points":[[8900,3600],[9100,3600],[9000,3800]],"speedMult":2.5,"speedChangePermanent":false,"x":0,"y":0})`,
     `shared.C(0,[],[15],{"r":100,"axisSpeedMultX":-1,"axisSpeedMultY":-1,"x":10200,"y":3700})`,
-    `shared.C(0,[2],[1],{"r":100,"boundPlayer":false,"x":8700,"y":3400,"growSpeed":0.0006*1000/60,"shrinkSpeed":0.0006*1000/60,"maxGrowth":1,"minGrowth":0.5,"startGrowth":1,"toStartGrowing":true})`,
+    `shared.C(0,[2],[1],{"r":100,"boundPlayer":false,"x":8700,"y":3400,"growPivotX":8700,"growPivotY":3400,"growSpeed":0.0006*1000/60,"shrinkSpeed":0.0006*1000/60,"maxGrowth":1,"minGrowth":0.5,"startGrowth":1,"toStartGrowing":true})`,
     `shared.C(0,[0],[16],{
         x: 10500, y: 2800, r: 100,
         snapDistanceX: 100, snapDistanceY: 100,

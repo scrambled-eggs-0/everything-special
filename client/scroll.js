@@ -166,22 +166,21 @@ shared.resetGame = () => {
         shared.resetFns[i]();
     }
     shared.resetFns.length = shared.obstacles.length = shared.mouseUpFunctions.length = shared.mouseDownFunctions.length = shared.mouseMoveFunctions.length = shared.resizeFns.length = 0;
-    if(shared.environment !== 'editor') {shared.respawnPlayer(); /*player.renderRadius = player.sat.r;*/ }
-    else {shared.infiniteLoop = false;}
+    if(shared.environment !== 'editor') {shared.respawnPlayer(); shared.changeCameraScale(1); /*player.renderRadius = player.sat.r;*/ }
+    else {shared.infiniteLoop = false; shared.onEditorReset();}
     for(let key in shared.defaultColors) { shared.colors[key] = shared.defaultColors[key]; }
     if(shared.colors.vignette !== undefined) shared.colors.vignette = structuredClone(shared.defaultColors.vignette);
     shared.mouseDownFunctions.push(() => {
         if(player.dead === true) shared.respawnPlayer();
     })
-    shared.changeCameraScale(1);
     if(shared.addSideMenuEvtListeners !== undefined) shared.addSideMenuEvtListeners(nextFileName);
     shared.spawnPosition.x = 100;
-    shared.spawnPosition.y = 1500;
+    shared.spawnPosition.y = 100;
     shared.camera.numControlledBy = 0;
     const player = shared.players[shared.selfId];
     if(player !== undefined){
         player.sat.r = 49.5;
-        player.speed = player.baseSpeed = 0.43;
+        player.speed = player.baseSpeed = 7.167;
     }
     shared.idToObs = {};
 }

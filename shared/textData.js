@@ -13,27 +13,7 @@
 // }
 // emojis.push(["\u2705", "\u2705"], ["\u26C5", "\u26C5"], ["\u{1F300}", "\u{1F300}"]);
 
-const decoPaths = [shared.jewelBoxUrl, 'arrow.png', 'https://static.wikia.nocookie.net/geometry-dash/images/0/01/RegularBlock01.png'];
-const decoOptions = []; 
-if(typeof location !== 'undefined'){
-  for(let i = 0; i < decoPaths.length; i++){
-    if(decoPaths[i].slice(0,4) === 'http'){
-      decoOptions.push([{src: decoPaths[i], width: 50, height: 50, alt: 'jewelBox'}, decoPaths[i]]);
-    } else {
-      // insert a placeholder so that there's no "invalid dropdown options" setting
-      decoOptions.push(['[unloaded image]', decoPaths[i]]);
-      import(`../client/gfx/decorations/${decoPaths[i]}`).then(data => {
-        const o = data.default;
-        decoOptions[i] = [{src: o, width: 50, height: 50, alt: decoPaths[i].split('.')[0]}, decoPaths[i]];
-      });
-    }
-  }
-} else {
-  for(let i = 0; i < decoPaths.length; i++){
-    decoOptions.push(['[unloaded image]', decoPaths[i]]);
-  }
-}
-const getDecoOptions = ()=>{if(decoOptions.length === 0){return [[{src: shared.jewelBoxUrl, width: 50, height: 50, alt: 'jewelBox'}, shared.jewelBoxUrl]]}return decoOptions};
+import shared from './shared.js';
 
 export default {
   blockData: [
@@ -370,15 +350,17 @@ export default {
     //   'previousStatement': null,
     //   'nextStatement': null,
     // },
-    {
-      'type': 'is_dragging',
-      'message0': 'is draggging',
-      'args0': [],
-      'output': 'Boolean',
-      'colour': '121',
-      'tooltip': 'true or false depending on if the user is currently dragging',
-      'helpUrl': '',
-    },
+
+    
+    // {
+    //   'type': 'is_dragging',
+    //   'message0': 'is draggging',
+    //   'args0': [],
+    //   'output': 'Boolean',
+    //   'colour': '121',
+    //   'tooltip': 'true or false depending on if the user is currently dragging',
+    //   'helpUrl': '',
+    // },
     {
       'type': 'client_pos',
       'message0': '%1 %2 position',
@@ -388,7 +370,7 @@ export default {
           "name": "TYPE_DROPDOWN",
           "options": [
             [ "player", "player" ],
-            [ "mouse", "mouse" ]
+            // [ "mouse", "mouse" ]
           ]
         },
         {
@@ -626,7 +608,7 @@ export default {
           }
 
           this.removeInput('EFFECT_CUSTOM_FN', true);
-          this.removeInput('DECO_DROPDOWN_CONTAINER', true);
+          
 
           this.effectParamToId = {};
 
@@ -685,8 +667,8 @@ export default {
             this.shapeParamToId[key] = id;
             this.appendValueInput(id)
               .appendField(key + ':')
-              .setCheck(generateConnectionType(newValueMap[key]))
-              .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(newValueMap[key])));
+              .setCheck(shared.generateConnectionType(newValueMap[key]))
+              .setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(newValueMap[key])));
 
             this.inputList.splice(1, 0, this.inputList.pop())
           }
@@ -741,8 +723,8 @@ export default {
             this.simulateParamToId[key] = id;
             this.appendValueInput(id)
               .appendField(key + ':')
-              .setCheck(generateConnectionType(newValueMap[key]))
-              .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(newValueMap[key])));
+              .setCheck(shared.generateConnectionType(newValueMap[key]))
+              .setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(newValueMap[key])));
             
             this.inputList.splice(insertionIndex++, 0, this.inputList.pop());
           }
@@ -770,10 +752,8 @@ export default {
           // Custom
           if(oldValue === '3'){
             this.removeInput('EFFECT_CUSTOM_FN', true);
-          } else if(oldValue === '21'){
-            this.removeInput('DECO_DROPDOWN_CONTAINER', true);
           }
-
+          
           let insertionIndex = this.getIndexOfInput(`EFFECT_CONTAINER${dropdownId}`) + 1;
 
           // Custom
@@ -785,13 +765,6 @@ export default {
             this.appendStatementInput('EFFECT_CUSTOM_FN');
             this.inputList.splice(insertionIndex++, 0, this.inputList.pop())
             return insertionIndex;
-          } else if(newValue === '21'){
-            this.appendDummyInput("DECO_DROPDOWN_CONTAINER")
-              .appendField('decoration: ')
-              .appendField(new Blockly.FieldDropdown(getDecoOptions), "DECO_DROPDOWN");
-            
-            this.inputList.splice(insertionIndex++, 0, this.inputList.pop())
-            return insertionIndex;
           }
 
           const newValueArr = Object.keys(newValueMap);
@@ -801,8 +774,8 @@ export default {
             this.effectParamToId[key] = id;
             this.appendValueInput(id)
               .appendField(key + ':')
-              .setCheck(generateConnectionType(newValueMap[key]))
-              .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(newValueMap[key])));
+              .setCheck(shared.generateConnectionType(newValueMap[key]))
+              .setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(newValueMap[key])));
 
             this.inputList.splice(insertionIndex++, 0, this.inputList.pop());
           }
@@ -870,8 +843,8 @@ export default {
               const id = newValueMap[key];
               this.appendValueInput(id)
                 .appendField(key + ':')
-                .setCheck(generateConnectionType(params[key]))
-                .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(params[key])));
+                .setCheck(shared.generateConnectionType(params[key]))
+                .setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(params[key])));
 
               this.inputList.splice(1, 0, this.inputList.pop())
             }
@@ -904,7 +877,7 @@ export default {
 
               // append all of the params in order
               const dropdownValue = simulateDropdownIndexToKey[i];
-              const paramMap = simulateDefaultMap[dropdownValue];
+              const paramMap = shared.simulateDefaultMap[dropdownValue];
 
               simulateOptionsToNull.push(dropdownValue);
 
@@ -919,8 +892,8 @@ export default {
                 const id = this.simulateParamToId[key];
                 this.appendValueInput(id)
                   .appendField(key + ':')
-                  .setCheck(generateConnectionType(paramMap[key]))
-                  .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(paramMap[key])));
+                  .setCheck(shared.generateConnectionType(paramMap[key]))
+                  .setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(paramMap[key])));
 
                 this.inputList.splice(insertionIndex++, 0, this.inputList.pop());
               }
@@ -954,7 +927,7 @@ export default {
 
               // append all of the params in order
               const dropdownValue = effectDropdownIndexToKey[i];
-              const paramMap = effectDefaultMap[dropdownValue];
+              const paramMap = shared.effectDefaultMap[dropdownValue];
 
               effectOptionsToNull.push(dropdownValue);
 
@@ -963,20 +936,14 @@ export default {
                 this.appendStatementInput('EFFECT_CUSTOM_FN');
                 this.inputList.splice(insertionIndex++, 0, this.inputList.pop());
                 continue;
-              } else if(dropdownValue === '21'){
-                this.appendDummyInput("DECO_DROPDOWN_CONTAINER")
-                  .appendField('decoration: ')
-                  .appendField(new Blockly.FieldDropdown(getDecoOptions), "DECO_DROPDOWN");
-                this.inputList.splice(insertionIndex++, 0, this.inputList.pop());
-                continue;
               }
 
               for(let key in paramMap){
                 const id = this.effectParamToId[key];
                 this.appendValueInput(id)
                   .appendField(key + ':')
-                  .setCheck(generateConnectionType(paramMap[key]))
-                  .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(paramMap[key])));
+                  .setCheck(shared.generateConnectionType(paramMap[key]))
+                  .setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(paramMap[key])));
 
                 this.inputList.splice(insertionIndex++, 0, this.inputList.pop());
               }
@@ -1035,7 +1002,7 @@ export default {
             block.appendValueInput("ID")
               .appendField('delete ', 'PREFIX1')
               .appendField(new Blockly.FieldDropdown([["obstacle with id", "id"],["this obstacle", "this"]], block.validateIdDropdown), 'ID_DROPDOWN')
-              .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(Object.keys(shared.idToObs)[0] ?? "No obstacles with [id] simulate type found")));
+              .setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(Object.keys(shared.idToObs)[0] ?? "No obstacles with [id] simulate type found")));
             block.setInputsInline(true);
             block.inputList.unshift(block.inputList.pop());
           }
@@ -1064,7 +1031,7 @@ export default {
         validateParamDropdown: function(newValue) {
           const childBlock = this.getSourceBlock();
           if(childBlock.defaults !== undefined){
-            this.outputType = generateConnectionType(childBlock.defaults[newValue]);
+            this.outputType = shared.generateConnectionType(childBlock.defaults[newValue]);
             childBlock.setOutput(true, this.outputType);
           } 
           return newValue;
@@ -1092,7 +1059,7 @@ export default {
             block.appendValueInput("ID")
               .appendField('get ', 'PREFIX1')
               .appendField(new Blockly.FieldDropdown([["obstacle with id", "id"],["this obstacle", "this"]], block.validateIdDropdown), 'ID_DROPDOWN')
-              .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(Object.keys(shared.idToObs)[0] ?? "No obstacles with [id] simulate type found")));
+              .setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(Object.keys(shared.idToObs)[0] ?? "No obstacles with [id] simulate type found")));
             block.setInputsInline(true);
             block.inputList.unshift(block.inputList.pop());
           }
@@ -1119,8 +1086,8 @@ export default {
             .appendField(new Blockly.FieldDropdown([["this obstacle", "this"],["obstacle with id", "id"]], this.validateIdDropdown), 'ID_DROPDOWN')
             .appendField(new Blockly.FieldDropdown(()=>{return generateParameterDropdownOptions(block, false, block.obstacleId)}, this.validateParamDropdown), 'INPUT')
             .appendField(' to')
-            .setCheck(generateConnectionType(this.defaults['y']))
-            .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(this.defaults['y'])));
+            .setCheck(shared.generateConnectionType(this.defaults['y']))
+            .setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(this.defaults['y'])));
         },
 
         validateParamDropdown: function(newValue) {
@@ -1129,8 +1096,8 @@ export default {
 
           field
             .setCheck(null)
-            .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(childBlock.defaults[newValue])))
-            .setCheck(generateConnectionType(childBlock.defaults[newValue]));
+            .setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(childBlock.defaults[newValue])))
+            .setCheck(shared.generateConnectionType(childBlock.defaults[newValue]));
 
           return newValue;
         },
@@ -1157,7 +1124,7 @@ export default {
             block.appendValueInput("ID")
               .appendField('set ', 'PREFIX1')
               .appendField(new Blockly.FieldDropdown([["obstacle with id", "id"],["this obstacle", "this"]], block.validateIdDropdown), 'ID_DROPDOWN')
-              .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(Object.keys(shared.idToObs)[0] ?? "No obstacles with [id] simulate type found")));
+              .setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(Object.keys(shared.idToObs)[0] ?? "No obstacles with [id] simulate type found")));
             block.setInputsInline(true);
             block.inputList.unshift(block.inputList.pop());
           }
@@ -1178,7 +1145,7 @@ export default {
 
           this.appendValueInput("ID2")
             .appendField(' with obstacle with id ', 'BETWEEN')
-            .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(Object.keys(shared.idToObs)[0] ?? "No obstacles with [id] simulate type found")))
+            .setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(Object.keys(shared.idToObs)[0] ?? "No obstacles with [id] simulate type found")))
             .setCheck("String");
           
           this.lastColType = 'bound';
@@ -1221,7 +1188,7 @@ export default {
 
           if(newValue === 'id'){
             block.appendValueInput("ID")
-              .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(keys[0] ?? "No obstacles with [id] simulate type found")))
+              .setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(keys[0] ?? "No obstacles with [id] simulate type found")))
               .setCheck("String")
           }
 
@@ -1229,7 +1196,7 @@ export default {
           const keyVal = newValue === 'id' ? keys[1] : keys[0];
           block.appendValueInput("ID2")
             .appendField(`${conjunction} obstacle with id`, 'BETWEEN')
-            .setShadowDom(Blockly.utils.xml.textToDom(generateShadowBlock(keyVal ?? `No ${otherAdd}obstacles with [id] simulate type found`)))
+            .setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(keyVal ?? `No ${otherAdd}obstacles with [id] simulate type found`)))
             .setCheck("String");
           
           return newValue;
@@ -1472,7 +1439,7 @@ shared.generateShadowBlock = (value) => {
     `<field name="ITEMS_AMT">${value.length}</field>` +
       value.map((v, i) => {
         if(v === null) return '';
-        return `<value name="ITEM${i}">` + generateShadowBlock(v) + '</value>';
+        return `<value name="ITEM${i}">` + shared.generateShadowBlock(v) + '</value>';
       }) +
     '</shadow>'
   }// else {
@@ -1515,16 +1482,16 @@ function generateParameterDropdownOptions(childBlock, isPlug=false, id="NO_ID"){
   const simulates = [];
   const effects = [];
 
-  for(let key in satDefaultMap[shape]){
-    params[key] = satDefaultMap[shape][key];
+  for(let key in shared.satDefaultMap[shape]){
+    params[key] = shared.satDefaultMap[shape][key];
   }
 
   const simulatesLen = block.getFieldValue('NUM_SIMULATES_DROPDOWN');
   for(let i = 0; i < simulatesLen; i++){
     const simulate = block.getFieldValue(`SIMULATE_DROPDOWN${i}`);
     simulates.push(simulate);
-    for(let key in simulateDefaultMap[simulate]){
-      params[key] = simulateDefaultMap[simulate][key];
+    for(let key in shared.simulateDefaultMap[simulate]){
+      params[key] = shared.simulateDefaultMap[simulate][key];
     }
   }
 
@@ -1532,12 +1499,12 @@ function generateParameterDropdownOptions(childBlock, isPlug=false, id="NO_ID"){
   for(let i = 0; i < effectsLen; i++){
     const effect = block.getFieldValue(`EFFECT_DROPDOWN${i}`);
     effects.push(effect);
-    for(let key in effectDefaultMap[effect]){
-      params[key] = effectDefaultMap[effect][key];
+    for(let key in shared.effectDefaultMap[effect]){
+      params[key] = shared.effectDefaultMap[effect][key];
     }
   }
 
-  shared.shared.C(shape, simulates, effects, params);
+  shared.C(shape, simulates, effects, params);
   const o = shared.obstacles.pop();
 
   const arr = [['x', 'x'], ['y', 'y']];

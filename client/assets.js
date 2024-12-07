@@ -1,3 +1,4 @@
+import shared from '../shared/shared.js';
 const starImg = new Image();
 starImg.src = shared.jewelBoxUrl;
 

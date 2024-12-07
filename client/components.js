@@ -103,6 +103,20 @@ function create(shape, simulates, effects, params){
 shared.C = create;
 shared.idToObs = {};
 shared.tickFns = [];
+shared.R = remove;
+function remove(i/*ndex*/){
+    if(i === obstacles.length-1){
+        do {
+            obstacles.pop();
+        } while(obstacles[obstacles.length-1].removed === true)
+        return;
+    }
+    const o = obstacles[i];
+    o.simulate.length = o.effect.length = 0;
+    delete o.sf; delete o.ef; delete o.cr;
+    o.pos.x = -1E9;
+    o.removed = true;
+}
 
 function interpolate(start, end, t){
     return (1-t) * start + t * end;
@@ -379,7 +393,7 @@ function simulate(){
 }
 
 let runningOverlapN = new SAT.Vector(), runningOverlapV = new SAT.Vector();
-function testCircleSliceCircle(circleSlice, circle, res){
+const testCircleSliceCircle = shared.testCircleSliceCircle = (circleSlice, circle, res) => {
     let collisionAngle, collisionDistSq, gts, lte, angleOverflow, collided = false;
 
     // do circle first, then slices. If we collide with the circle then we don't want to collide w/ slices
@@ -651,36 +665,36 @@ shared.satConstraintsMap = [
 shared.satDefaultMap = [
     // circle
     {
-        x: 450,
-        y: 800,
-        r: 120
+        x: 300,
+        y: 100,
+        r: 100
     },
     // rectangle
     {
-        x: 300,
-        y: 700,
-        w: 300,
+        x: 0,
+        y: 0,
+        w: 200,
         h: 200
     },
     // polygon
     {
-        points: [[300,700],[600,700],[450,900]],
+        points: [[0,400],[50,200],[150,200],[200,400]],
     },
     // text
     {
-        x: 450,
-        y: 800,
-        text: ['Why hello there', 'I am a text :D', 'Evades X', 'Taste the Edge.'][Math.floor(Math.random() * 4)],
+        x: 300,
+        y: 250,
+        text: 'Text',
         fontSize: 80,
     },
     // circleSlice
     {
-        x: 450,
-        y: 800,
-        r: 120,
-        innerRadius: 80,
+        x: 300,
+        y: 300,
+        r: 100,
+        innerRadius: 50,
         startSliceAngle: 0,
-        endSliceAngle: 0,
+        endSliceAngle: Math.PI,
         startSliceAngleRotateSpeed: 0,
         endSliceAngleRotateSpeed: 0
     }
@@ -699,7 +713,7 @@ const renderShapeMap = [
             renderShapeMap[2](o);
             return;
         }
-        ctx.rect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y);
+        ctx.rect(o.topLeft.x, o.topLeft.y, o.dimensions.x, o.dimensions.y);
     },
     /*polygon*/
     (o) => {
@@ -781,6 +795,8 @@ const initSimulateMap = [
         o.minGrowth = init.minGrowth;
         o.growing = init.toStartGrowing;
         o.growth = o.lastGrowth = init.startGrowth;
+        o.growPivotX = init.growPivotX;
+        o.growPivotY = init.growPivotY;
     },
     // /*custom*/
     () => {},
@@ -886,15 +902,23 @@ const simulateMap = [
 
         if(o.sat.r !== undefined){
             // circle
+            o.pos.x -= o.growPivotX;
+            o.pos.y -= o.growPivotY;
+            o.pos.x *= growthRatio;
+            o.pos.y *= growthRatio;
+            o.pos.x += o.growPivotX;
+            o.pos.y += o.growPivotY;
+
             o.sat.r *= growthRatio;
         } else {
             // poly
-            let middleX = o.topLeft.x + o.dimensions.x/2;
-            let middleY = o.topLeft.y + o.dimensions.y/2; 
-
             for(let i = 0; i < o.sat.points.length; i++){
-                o.sat.points[i].x = (o.sat.points[i].x + o.pos.x - middleX) * growthRatio - o.pos.x + middleX;
-                o.sat.points[i].y = (o.sat.points[i].y + o.pos.y - middleY) * growthRatio - o.pos.y + middleY;
+                o.sat.points[i].x += o.pos.x - o.growPivotX;
+                o.sat.points[i].y += o.pos.y - o.growPivotY;
+                o.sat.points[i].x *= growthRatio;
+                o.sat.points[i].y *= growthRatio;
+                o.sat.points[i].x -= o.pos.x - o.growPivotX;
+                o.sat.points[i].y -= o.pos.y - o.growPivotY;
             }
             o.sat.setPoints(o.sat.points);
 
@@ -903,7 +927,7 @@ const simulateMap = [
             }
         }
 
-        o.topLeft = shared.generateTopLeftCoordinates(o);
+        o.topLeft = generateTopLeftCoordinates(o);
         o.dimensions = generateDimensions(o);
         o.lastGrowth = o.growth;
     },
@@ -974,14 +998,14 @@ shared.simulateDefaultMap = [
     // pathMove
     {
         currentPoint: 0,
-        path: [[0,0,1],[100,0,2],[0,100,3]],
+        path: [[0,0,2],[50,0,1],[-50,0,2]],
     },
     // rotate
     {
         initialRotation: 0,
         rotateSpeed: 0.01,
-        pivotX: 450,
-        pivotY: 800
+        pivotX: 300,
+        pivotY: 100
     },
     // grow
     {
@@ -991,6 +1015,8 @@ shared.simulateDefaultMap = [
         minGrowth: 1,
         startGrowth: 1,
         toStartGrowing: true,
+        growPivotX: 100,
+        growPivotY: 300
     },
     // custom
     {},
@@ -1005,8 +1031,8 @@ shared.simulateDefaultMap = [
         homingRotateSpeed: 0.01,
         detectionRadius: 200,
         spokeAngles: [0, Math.PI],
-        pivotX: 450,
-        pivotY: 800
+        pivotX: 300,
+        pivotY: 300
     }
 ]
 
@@ -1207,9 +1233,9 @@ const initEffectMap = [
         o.hex = params.hex;
         o.alpha = params.alpha;
     },
-    /*decoration*/
+    /*invisible*/
     (o, params) => {
-        o.decoFilePath = params.decoFilePath;
+        o.cr = ()=>{};
     },
     /*changeMap*/
     (o, params) => {
@@ -1553,7 +1579,7 @@ const effectMap = [
     },
     /*solidColor*/
     (p, res, o) => {},
-    /*decoration*/
+    /*invisible*/
     (p, res, o) => {},
     /*changeMap*/
     (p, res, o) => {
@@ -1754,7 +1780,7 @@ const idleEffectMap = [
     undefined,
     // 'solidColor'
     undefined,
-    // 'decoration'
+    // 'invisible'
     undefined,
     // 'changeMap'
     undefined,
@@ -1832,7 +1858,7 @@ shared.effectConstraintsMap = [
     undefined,
     /*solidColor*/
     undefined,
-    /*decoration*/
+    /*invisible*/
     undefined,
     /*changeMap*/
     undefined,
@@ -1874,7 +1900,7 @@ shared.effectMapI2N = [
     'changeSize',
     'changeSpeed',
     'solidColor',
-    'decoration',
+    'invisible',
     'changeMap',
     'tornado',
     'changeVignette',
@@ -1990,7 +2016,7 @@ shared.effectDefaultMap = [
         hex: '#FFFFFF',
         alpha: 1
     },
-    // decoration
+    // invisible
     {},
     // changeMap
     {mapName: 'hub'},
@@ -2071,7 +2097,7 @@ const idleEffectSyncKeys = [
     undefined,
     // 'solidColor'
     undefined,
-    // 'decoration'
+    // 'invisible'
     undefined,
     // 'changeMap'
     undefined,
@@ -2143,7 +2169,7 @@ const applyIdleEffectSyncKeys = [
     undefined,
     // 'solidColor'
     undefined,
-    // 'decoration'
+    // 'invisible'
     undefined,
     // 'changeMap'
     undefined,
@@ -2627,47 +2653,8 @@ const renderEffectMap = [
         if(o.isText === true)ctx.globalAlpha = 0;
         else ctx.globalAlpha = o.alpha;
     },
-    /*decoration*/
-    (o) => {
-        ctx.toFill = false;
-
-        const decoImg = decorationImgs[o.decoFilePath];
-        if(decoImg === undefined){
-            decorationImgs[o.decoFilePath] = 'loading';
-            let img = new Image();
-            if(o.decoFilePath.slice(0,4) === 'http'){
-                img.src = o.decoFilePath;
-                img.onload = () => {
-                    decorationImgs[o.decoFilePath] = img;
-                }
-            } else {
-                if(environment === 'editor'){
-                    import(`./gfx/decorations/${o.decoFilePath}`).then(data => {
-                        img.src = data.default;
-                        decorationImgs[o.decoFilePath] = img;
-                    });
-                } else {
-                    img.src = `./gfx/decorations/${o.decoFilePath}`;
-                    img.onload = () => {
-                        decorationImgs[o.decoFilePath] = img;
-                    }
-                }
-            }
-            return;
-        } else if(decoImg === 'loading') {
-            return;
-        }
-
-        let middleX = o.topLeft.x + o.dimensions.x/2;
-        let middleY = o.topLeft.y + o.dimensions.y/2; 
-        const maxDimension = Math.max(o.dimensions.x, o.dimensions.y);
-
-        ctx.translate(middleX, middleY);
-        if(o.rotation !== undefined) ctx.rotate(o.rotation);
-        ctx.drawImage(decoImg, -maxDimension / 2, -maxDimension / 2, maxDimension, maxDimension);
-        if(o.rotation !== undefined) ctx.rotate(-o.rotation);
-        ctx.translate(-middleX, -middleY);
-    },
+    /*invisible*/
+    (o) => {},
     /*changeMap*/
     (o) => {
         // ctx.fillStyle = `hsl(${window.frames*1000/60/12},50%,50%)`;
@@ -2677,7 +2664,7 @@ const renderEffectMap = [
         //     ctx.shadowBlur = 0;
         // }
 
-        let t = (1+Math.sin(window.frames*1000/60 / 600))/2 * (o.difficulty % 1);
+        let t = (1+Math.sin(window.frames/36))/2 * (o.difficulty % 1);
 
         ctx.fillStyle = blendColor(difficultyImageColors[Math.floor(o.difficulty)],difficultyImageColors[Math.min(8,Math.ceil(o.difficulty))],t);
 
@@ -3091,7 +3078,7 @@ const difficultyImageMap = shared.difficultyImageMap = [
 // an obstacle is an ECS
 const obstacles = shared.obstacles = [];
 
-shared.spawnPosition = {x: 100, y: 1500};
+shared.spawnPosition = {x: 100, y: 100};
 // a player is also an ecs
 shared.createPlayer = () => {
     create(0/*circle*/, [], [], /*no simulate/ effects*/ {x: shared.spawnPosition.x, y: shared.spawnPosition.y, r: /*24.5*/49.5})
@@ -3121,7 +3108,7 @@ shared.createPlayer = () => {
 
 shared.players = [];
 
-if(shared.isExClient !== true) {shared.players.push(shared.createPlayer()); shared.selfId = 0; shared.mapDimensions = environment === 'server' ? {x:2000,y:2000} : {x:900,y:1600}}
+if(shared.isExClient !== true || shared.isEditor === true) {shared.players.push(shared.createPlayer()); shared.selfId = 0; shared.mapDimensions = {x:2000,y:2000}}
 if(shared.isExClient === true || environment === 'server') shared.mapDimensions = {x: 2000, y: 2000};
 
 export default simulate;

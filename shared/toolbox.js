@@ -49,40 +49,16 @@ export default /*const toolbox =*/ {
         },
         {
           'kind': 'block',
-          "type": "create_obstacle",
-          "extraState": {
-              "shapeParamToId": {
-                  "h": "SHAPE3",
-                  "w": "SHAPE4",
-                  "y": "SHAPE5",
-                  "x": "SHAPE6"
-              },
-              "numSimulateFields": 0,
-              "numEffectFields": 1,
-              "sditk": [],
-              "editk": ["21"],
-              "lastShape": "1"
-          },
-          "fields": {
-              "SHAPE_DROPDOWN": "1",
-              "NUM_SIMULATES_DROPDOWN": 0,
-              "NUM_EFFECTS_DROPDOWN": 1,
-              "EFFECT_DROPDOWN0": "21",
-              "DECO_DROPDOWN": "https://upload.wikimedia.org/wikipedia/commons/c/c3/A_Snapshot_of_the_Jewel_Box_cluster_with_the_ESO_VLT.jpg"
-          },
-        },
-        {
-          'kind': 'block',
           'type': 'get_parameter'
         },
         {
           'kind': 'block',
           'type': 'set_parameter'
         },
-        {
-          'kind': 'block',
-          'type': 'delete_obstacle'
-        },
+        // {
+        //   'kind': 'block',
+        //   'type': 'delete_obstacle'
+        // },
       ],
     },
     {
@@ -90,11 +66,11 @@ export default /*const toolbox =*/ {
       'name': 'Game',
       'categorystyle': 'game_category',
       'contents': [
-        {
-          "kind": "button",
-          "text": "Click to return to the main game!",
-          "callbackKey": "returnToMainGame"
-        },
+        // {
+        //   "kind": "button",
+        //   "text": "Click to return to the main game!",
+        //   "callbackKey": "returnToMainGame"
+        // },
         {
           'kind': 'block',
           'type': 'debug_log',
@@ -113,10 +89,10 @@ export default /*const toolbox =*/ {
           'kind': 'block',
           'type': 'client_pos'
         },
-        {
-          'kind': 'block',
-          'type': 'is_dragging'
-        },
+        // {
+        //   'kind': 'block',
+        //   'type': 'is_dragging'
+        // },
         {
           'kind': 'block',
           'type': 'player_spawn'
@@ -129,7 +105,7 @@ export default /*const toolbox =*/ {
               'shadow': {
                 'type': 'text',
                 'fields': {
-                  'TEXT': "https://www.youtube.com/watch?v=i_7ekMgvRIk",
+                  'TEXT': "https://www.youtube.com/watch?v=BUbZVWZQkyw"//"https://www.youtube.com/watch?v=-WYJ1Jh2kuI"//"https://www.youtube.com/watch?v=bMY4HPLLqDQ"//"https://www.youtube.com/watch?v=jVTsD4UPT-k"//"https://www.youtube.com/watch?v=i_7ekMgvRIk",
                 },
               },
             },
@@ -143,10 +119,10 @@ export default /*const toolbox =*/ {
           'kind': 'block',
           'type': 'bg_color'
         },
-        {
-          'kind': 'block',
-          'type': 'collide_obstacles'
-        }
+        // {
+        //   'kind': 'block',
+        //   'type': 'collide_obstacles'
+        // }
       ],
     },
     // {

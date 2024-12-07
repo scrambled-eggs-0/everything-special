@@ -45,6 +45,9 @@ make plat arrow move speed sync with terminal falling speed
 
 network hub obstacles like pong and drawing
 
+.............................. NEEDED ..............................
+poly circle slice collision and with it a complete SAT system with a collide function, making everything modular !!
+
 Advanced music extra file that overrides play, pause, etc. Loads the youtube api behind the scenes (https://www.youtube.com/iframe_api)
 let player = new YT.Player('player', {
     height: '360',

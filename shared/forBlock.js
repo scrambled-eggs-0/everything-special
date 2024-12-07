@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import shared from './shared.js';
+
 // we only need Order here, so don't import from blockly
 const Order = Object.freeze({
   ATOMIC: 0,
@@ -130,8 +132,8 @@ forBlock['create_obstacle'] = function(block, generator) {
 
   // console.log({shape, simulates, effects, params});
   
-  return `shared.C(${shape},${simulates},${effects},${params});`;
-
+  return `shared.C(${shape},${simulates},${effects},${params});\n`
+   + (shared.environment === 'editor' ? `shared.CB2O("${block.id}");\n` : '');
   // console.log(shapeParams);
 
   // let simulates = '[';
@@ -172,7 +174,7 @@ forBlock['create_list'] = function(block, generator) {
 }
 
 forBlock['debug_log'] = function (block, generator) {
-  return `if(environment === 'editor'){alert(${generator.valueToCode(block, 'MSG', Order.NONE)});}\n`;
+  return `if(shared.environment === 'editor'){alert(${generator.valueToCode(block, 'MSG', Order.NONE)});}\n`;
 };
 
 forBlock['break_continue'] = function(block, generator) {
@@ -384,22 +386,23 @@ forBlock['modify_existing'] = function(generator, Blockly) {
 
 forBlock['client_pos'] = function (block, generator) {
   if(block.getFieldValue('TYPE_DROPDOWN', Order.NONE) === 'player'){
-    if(block.getFieldValue('POS_DROPDOWN', Order.NONE) === 'x') return [`player.pos.x`, Order.NONE];
-    return [`player.pos.y`, Order.NONE];
-  } else {
-    if(block.getFieldValue('POS_DROPDOWN', Order.NONE) === 'x') return [`mouseX`, Order.NONE];
-    return [`mouseY`, Order.NONE];
-  }
+    if(block.getFieldValue('POS_DROPDOWN', Order.NONE) === 'x') return [`shared.players[shared.selfId].pos.x`, Order.NONE];
+    return [`shared.players[shared.selfId].pos.y`, Order.NONE];
+  } //else {
+    //if(block.getFieldValue('POS_DROPDOWN', Order.NONE) === 'x') return [`mouseX`, Order.NONE];
+    //return [`mouseY`, Order.NONE];
+  //}
+  // TODO: KB and mouse inputs
 };
 
-forBlock['is_dragging'] = function (block, generator) {
-  return [`dragging`, Order.NONE];
-};
+// forBlock['is_dragging'] = function (block, generator) {
+//   return [`dragging`, Order.NONE];
+// };
 
 forBlock['player_spawn'] = function (block, generator) {
   const sx = block.getFieldValue('SPAWN_X', Order.NONE);
   const sy = block.getFieldValue('SPAWN_Y', Order.NONE);
-  let str = `spawnPosition.x=${sx};spawnPosition.y=${sy};`;
+  let str = `shared.spawnPosition.x=${sx};shared.spawnPosition.y=${sy};`;
   if(block.getFieldValue('TO_RESPAWN', Order.NONE) === "TRUE"){
     str += "shared.respawnPlayer();"
   }
@@ -426,7 +429,7 @@ forBlock['player_spawn'] = function (block, generator) {
 forBlock['bg_color'] = function (block, generator) {
   const tile = generator.valueToCode(block, 'TILE_COLOR', Order.NONE);
   const bg = generator.valueToCode(block, 'BG_COLOR', Order.NONE);
-  return `colors.background=${bg}; colors.tile=${tile};\n`;
+  return `shared.colors.background=${bg}; shared.colors.tile=${tile};\n`;
 };
 
 // forBlock['bg_image'] = function (block, generator) {
@@ -439,12 +442,12 @@ forBlock['bg_color'] = function (block, generator) {
 // };
 
 forBlock['set_music'] = function (block, generator) {
-  const url = generator.valueToCode(block, 'URL', Order.NONE) || "'https://www.youtube.com/watch?v=i_7ekMgvRIk'";
-  return `playMusic(${url});\n`;
+  const url = generator.valueToCode(block, 'URL', Order.NONE) || "https://www.youtube.com/watch?v=jVTsD4UPT-k";//"'https://www.youtube.com/watch?v=i_7ekMgvRIk'";
+  return `shared.playMusic(${url});\n`;
 };
 
 forBlock['stop_music'] = function (block, generator) {
-  return `stopMusic(true);\n`;
+  return `shared.stopMusic(true);\n`;
 };
 
 forBlock['delete_obstacle'] = function (block, generator) {
@@ -570,12 +573,12 @@ forBlock['set_parameter'] = function (block, generator) {
 
     if(constraints === undefined || constraints[parameter] === undefined){
       wrapFunction = (a) => {
-        return `{const e=idToObs[${id}];if(e!==undefined){${a};\n}}`;
+        return `{const e=shared.idToObs[${id}];if(e!==undefined){${a};\n}}`;
       }
     } else {
       constraints = constraints[parameter];// TODO: fix this (not tested)
       wrapFunction = (a) => {
-        return `{const e=idToObs[${id}];if(e!==undefined){${a};\ncset(e,"${parameter}",${constraints.toString()});}}`;
+        return `{const e=shared.idToObs[${id}];if(e!==undefined){${a};\ncset(e,"${parameter}",${constraints.toString()});}}`;
       }
     }
 
@@ -596,11 +599,11 @@ forBlock['set_parameter'] = function (block, generator) {
   // what?? addition?? i thought this was a setter??
   // all part of the plan :brain:
   if(parameter === 'x'){
-    return wrapFunction(`e.pos.x += ${value} - generateTopLeftCoordinates(e)[0] - e.dimensions.x/2;\n`);
+    return wrapFunction(`e.pos.x += ${value} - e.topLeft.x - e.dimensions.x/2;\n`);
   } else if(parameter === 'y'){
-    return wrapFunction(`e.pos.y += ${value} - generateTopLeftCoordinates(e)[1] - e.dimensions.y/2;\n`);
+    return wrapFunction(`e.pos.y += ${value} - e.topLeft.y - e.dimensions.y/2;\n`);
   } else if(parameter === 'sat.r'){
-    return wrapFunction(`e.sat.r = Math.max(${value},0.001);\ne.dimensions = generateDimensions(e);\n`);
+    return wrapFunction(`e.sat.r = Math.max(${value},0.001);\ne.dimensions = shared.generateDimensions(e);\n`);
   }
   
   if(id === ''){

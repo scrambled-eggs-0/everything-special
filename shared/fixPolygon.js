@@ -1,5 +1,6 @@
 // takes in a series of points and computes the minimum convex hull
 // which is what we need for SAT polygons. 
+import shared from './shared.js';
 shared.fixPolygon = (points) => {
     return new GrahamScan(points).hull;
 }

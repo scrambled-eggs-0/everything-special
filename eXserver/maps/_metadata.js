@@ -2,6 +2,7 @@ import shared from '../../shared/shared.js';
 shared.mapDifficulties = Object.freeze({
     winroom: 0,
     hub: 0,
+    pom: 0,
     popb: 0.25,
     poca: 1.01,
     pospd: 2.8,
@@ -12,13 +13,14 @@ shared.mapDifficulties = Object.freeze({
     podc: 6.01,
     posc: 0.55,
     poph: 4.33,
-    posh: 1.34,
-    powc: 1.85
+    powc: 1.85,
+    posh: 1.39,
 });
 
 shared.mapLeaderboardNames = Object.freeze({
     winroom: 'Winroom',
     hub: 'Hub',
+    pom: 'Planet of 🗺️',
     popb: 'Planet of Peaceful Beginnings',
     poca: 'Planet of Conveyor Abuse',
     pospd: 'Planet of Speed (nyoom)',

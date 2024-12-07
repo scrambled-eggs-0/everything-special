@@ -108,6 +108,9 @@ if(global.env === 'dev'){
     });
 }
 
+app.get("/favicon.ico", (res, req) => {
+    res.end(fs.readFileSync("eXclient/gfx/favicon.ico"));
+});
 
 app.get("/:filename", (res, req) => {
     const path = 'z_dev' + req.getUrl();
@@ -189,6 +192,17 @@ app.get("/gfx/decorations/:filename", (res, req) => {
         });
     }
 });
+
+app.get("/editor", (res, req) => {
+    res.end(fs.readFileSync("editor/dist/index.html"));
+});
+
+// app.get("/bundle.js", (res, req) => {
+//     res.cork(() => {
+//         res.writeHeader("Content-Type", "text/javascript");
+//         res.end(fs.readFileSync("editor/dist/bundle.js"));
+//     });
+// });
 
 app.get('/create', (res, req) => {
     res.end(fs.readFileSync('eXaccount/index.html'));

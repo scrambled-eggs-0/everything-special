@@ -7,7 +7,8 @@ const {decodeText, filterText, stringHTMLSafe} = Utils;
 
 const HOST = location.origin.replace(/^http/, 'ws');
 let ws, nextMsgFlag, gameStarted = false, canLoad=false;
-let syncMapFn=undefined, lateSyncMap=false, mapEntryTime=0;
+let syncMapFn=undefined, lateSyncMap=false;
+shared.mapEntryTime = 0;
 shared.disconnected = false;
 const messageQueue = [];
 shared.send = (data) => {
@@ -47,10 +48,10 @@ function initWS() {
     }
 }
 
-initWS();
+if(shared.isEditor === false) initWS();
 
 shared.changeMap = function changeMap(url=`/maps/hub`, method='GET', headers=new Headers()){
-    lateSyncMap = false; mapEntryTime = window.frames;
+    lateSyncMap = false; shared.mapEntryTime = window.frames;
     headers.append('id', shared.authId);
     fetch(location.origin + url, {method, headers}).then(async (d) => {
         const levelData = await d.text();
@@ -466,7 +467,7 @@ const messageMap = [
             lateSyncMap = false;
         }
 
-        const ticksToSimulate = (window.frames - mapEntryTime) / 2;
+        const ticksToSimulate = (window.frames - shared.mapEntryTime) / 2;
         if(ticksToSimulate > 2000) return;
         shared.accum += shared.FRAME_TIME * ticksToSimulate;
     },

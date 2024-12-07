@@ -98,7 +98,7 @@ if(typeof Image !== 'undefined'){
 	shared.arrowImg = shared.starImg = {};
 }
 
-shared.colourRgb = (r,g,b) => {
+window.colourRgb = (r,g,b) => {
 	r = Math.max(Math.min(Number(r), 100), 0) * 2.55;
 	g = Math.max(Math.min(Number(g), 100), 0) * 2.55;
 	b = Math.max(Math.min(Number(b), 100), 0) * 2.55;
@@ -108,16 +108,16 @@ shared.colourRgb = (r,g,b) => {
 	return '#' + r + g + b;
 }
 
-if(environment === 'server') global.colourRgb = shared.colourRgb;
+if(environment === 'server') global.colourRgb = window.colourRgb;
 
-shared.md = (a) => {return (a !== a || a === undefined || a === null) ? 0 : a;}; // make defined
-shared.makeNumber = (a) => {return Number.isFinite(a) === true ? a : 0;};
-shared.makeNotNaN = (a) => {return (a === a) ? a : 0;};
-shared.makeNotNull = (a) => {return a === null ? 0 : a};
-shared.makeNotUndefined = (a) => {return a === undefined ? 0 : a};
-shared.rlt = (a) => {shared.loopTrap = 1000; return a;};// reset loop trap
-shared.makeType = (a,typeArr) => {
-	if(typeArr.includes(generateConnectionType(a)) === true)return a;
+window.md = (a) => {return (a !== a || a === undefined || a === null) ? 0 : a;}; // make defined
+window.makeNumber = (a) => {return Number.isFinite(a) === true ? a : 0;};
+window.makeNotNaN = (a) => {return (a === a) ? a : 0;};
+window.makeNotNull = (a) => {return a === null ? 0 : a};
+window.makeNotUndefined = (a) => {return a === undefined ? 0 : a};
+window.rlt = (a) => {shared.loopTrap = 1000; return a;};// reset loop trap
+window.makeType = (a,typeArr) => {
+	if(typeArr.includes(shared.generateConnectionType(a)) === true)return a;
 	return defaultTypeMap[typeof a];
 }
 shared.generateConnectionType = (val) => {
