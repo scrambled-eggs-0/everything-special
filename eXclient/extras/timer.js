@@ -1,66 +1,92 @@
 import shared from '../../shared/shared.js';
+
+let lastMapPath;
+let checkpoints = [];
+let cpTimer = -1;
+let cpDisplay = '';
+let lastT = Infinity, lastTxt = 0;
+
 export default function renderTimerFn() {
-    ctx.font = '50px monospace';
+    ctx.font = `${50 + (cpTimer < 0 ? 0 : smootherStep(cpTimer / 30) * 20)}px monospace`;
     ctx.textAlign = 'middle';
     ctx.textBaseline = 'top';
 
     ctx.globalAlpha = 0.95;
 
     const t = (window.frames - shared.mapEntryTime) / 60;
-    const txt = toRenderTime(t);
+    let txt;
 
-    // let minutes = (~~((t / 60)%60));
+    if((shared.mapPath === '/maps/winroom' || shared.won === true) && lastTxt !== undefined){
+        txt = lastTxt;
+    }
+    else if(cpTimer >= 0){
+        cpTimer--;
+        txt = toRenderTime(cpDisplay);
+    }
+    else txt = toRenderTime(t);
 
-    // const hue = hues[minutes % 10];
-    // const saturation = saturations[(~~(minutes / 10)) % 10];
-    // const lightness = lightnesses[(~~(minutes / 100)) % 10];
+    if(lastT < t) lastTxt = txt;
+    lastT = t;
 
-    // minutes++;
-    // const nextHue = hues[minutes % 10];
-    // const nextSaturation = saturations[(~~(minutes / 10)) % 10];
-    // const nextLightness = lightnesses[(~~(minutes / 100)) % 10];
-
-    // const hue = t / 60
-
-    // const blendFac = (t%60) / 60;// seconds
-
-    // ctx.fillStyle = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-    // const col1 = ctx.fillStyle;
-
-    // ctx.fillStyle = `hsl(${nextHue}, ${nextSaturation}%, ${nextLightness}%)`;
-    // const col2 = ctx.fillStyle;
-
-    // ctx.fillStyle = shared.blendColor(col1, col2, blendFac);
-
-    ctx.fillStyle = 'white';
-
-    ctx.fillText(txt, canvas.w/2, 15);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
 
     const dimensions = ctx.measureText(txt);
     const w = dimensions.actualBoundingBoxRight + dimensions.actualBoundingBoxLeft + 60;
     const h = dimensions.actualBoundingBoxDescent + dimensions.actualBoundingBoxAscent + 50;
     const hOffset = (dimensions.actualBoundingBoxDescent - dimensions.actualBoundingBoxAscent) / 2;
 
-    let mapName = shared.mapPath.split('/');
-    let mapDifficulty = Math.floor(shared.mapDifficulties[mapName[mapName.length-1]] ?? 0);
+    // let mapName = shared.mapPath.split('/');
+    // let mapDifficulty = Math.floor(shared.mapDifficulties[mapName[mapName.length-1]] ?? 0);
 
-    console.log(mapName[mapName.length-1], mapDifficulty);
+    const col = shared.colors.background//shared.difficultyImageColors[mapDifficulty];
 
-    const period = 30;
-    const offset = (-window.frames) % period;
-    const alphaMult = 0.2;
-    for(let r = offset; r <= h; r += period){
-        // if(r < h * 0.5) ctx.globalAlpha = Math.max(0, (r) / (h * 0.5)) * alphaMult;
-        // else ctx.globalAlpha = (1 - Math.min(1, r / h)) * alphaMult;
-        ctx.globalAlpha = alphaMult * Math.max(0,r / h);
-        ctx.strokeStyle = shared.difficultyImageColors[mapDifficulty];//`hsl(0, 100%, 50%)`;//`hsl(${window.frames / 1000}, 100%, 50%)`;
-        ctx.lineWidth = 5;
-        ctx.beginPath();
-        ctx.roundRect(canvas.w/2 - w/2 + r/2, 15 + hOffset - h/2 + r/2, w - r, h - r, (h-r)/2);
-        ctx.stroke();
-        ctx.closePath();
+    const colInt = parseInt(col.slice(1), 16);
+
+    const r = (colInt >> 16) & 255;
+    const g = (colInt >> 8) & 255;
+    const b = colInt & 255;
+
+    ctx.translate(canvas.w/2, 15 + h/2 - hOffset);
+    ctx.scale(w/h, 1);
+
+    const grd = ctx.createRadialGradient(0, 0, 0, 0, 0, h/2);
+
+    grd.addColorStop(0, `rgba(${r},${g},${b},0.5)`);
+    grd.addColorStop(1, `rgba(${r},${g},${b},0)`);
+
+    ctx.fillStyle = grd;
+
+    ctx.beginPath();
+    ctx.arc(0, 0, h/2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.closePath();
+    ctx.scale(h/w, 1);
+    ctx.translate(-canvas.w/2, -(15 + h/2 - hOffset));
+
+    if(cpTimer > 0) {
+        if(cpTimer < 3) ctx.fillStyle = shared.blendColor('#ffff00','#ffffff',smootherStep(1 - cpTimer/3));
+        else ctx.fillStyle = '#ffff00';
+    } else ctx.fillStyle = 'white';
+    ctx.fillText(txt, canvas.w/2, 15);
+
+    if(lastMapPath !== shared.mapPath){
+        lastMapPath = shared.mapPath;
+        checkpoints.length = 0;
+        for(let i = 0; i < shared.obstacles.length; i++){
+            if(shared.obstacles[i].checkpointOffsetX === undefined) continue;
+            checkpoints.push(shared.obstacles[i]);
+        }
     }
-    ctx.globalAlpha = 1;
+
+    for(let i = 0; i < checkpoints.length; i++){
+        if(checkpoints[i].checkpointCollected === true){
+            checkpoints.splice(i,1);
+            cpDisplay = t;
+            cpTimer = 30;
+            break;
+        }
+    }
 }
 
 const toRenderTime = (t) => {
@@ -81,44 +107,6 @@ const toRenderTime = (t) => {
     return displayTime;
 }
 
-// repeats every 10
-const hues = [
-    180,// cyan
-    0,// red
-    60,// yellow
-    120,// green
-    240,// blue
-    30, // orange
-    300, // purple
-    210, // light-dark blue
-    90, // greenish-yellow
-    ~~(Math.random() * 360)
-]
-
-// repeats every 100
-const saturations = [
-    100,
-    60,
-    20,
-    80,
-    40,
-    30,
-    70,
-    0,
-    50,
-    90
-];
-
-// repeats every 1000
-const lightnesses = [
-    50,
-    10,
-    100,
-    20,
-    40,
-    70,
-    20,
-    60,
-    30,
-    90,
-];
+function smootherStep(t){
+    return t * t * t * (t * (t * 6. - 15.) + 10.);
+}

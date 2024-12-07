@@ -673,6 +673,7 @@ let renderTimerFn;
 shared.toggleTimer = async () => {
     if(shared.renderTimer === true) {shared.renderTimer = false;return;}
     if(renderTimerFn === undefined) {renderTimerFn = (await import('./extras/timer.js')).default; shared.renderTimer = true;}
+    else shared.renderTimer = true;
 }
 
 shared.unTaintCanvas = () => {
