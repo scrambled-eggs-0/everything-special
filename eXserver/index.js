@@ -58,7 +58,8 @@ global.app = uWS.App().ws('/*', {
             accountData: undefined,
             enterMapTime: -1,
             mapRequestFor: undefined,
-            ip: undefined
+            ip: undefined,
+            inCustomMap: false
         }
 
         if(global.bannedIps[ws.me.ip] !== undefined){
@@ -348,21 +349,23 @@ app.get("/maps/:filename", (res, req) => {
     }
 
     if(mapName === 'winroom' && ws.mapName !== ''){
-        const len = ws.me.mapName.length + ws.me.player.name.length + 8;
-        const padding = (4 - (len % 4)) % 4;
-        const buf = new Uint8Array(len + padding);
-        const u32 = new Uint32Array(buf.buffer);
         const timeToBeat = Date.now() - ws.me.enterMapTime;
-        buf[0] = 18;// 18 - win message
-        buf[1] = ws.me.mapName.length;
-        buf[2] = padding;
-        u32[1] = timeToBeat;
-        global.encoder.encodeInto(ws.me.mapName, buf.subarray(8 | 0));
-        global.encoder.encodeInto(ws.me.player.name, buf.subarray((ws.me.mapName.length+8) | 0));
-        global.broadcastEveryone(buf);
+        if(ws.me.inCustomMap === false){
+            const len = ws.me.mapName.length + ws.me.player.name.length + 8;
+            const padding = (4 - (len % 4)) % 4;
+            const buf = new Uint8Array(len + padding);
+            const u32 = new Uint32Array(buf.buffer);
+            buf[0] = 18;// 18 - win message
+            buf[1] = ws.me.mapName.length;
+            buf[2] = padding;
+            u32[1] = timeToBeat;
+            global.encoder.encodeInto(ws.me.mapName, buf.subarray(8 | 0));
+            global.encoder.encodeInto(ws.me.player.name, buf.subarray((ws.me.mapName.length+8) | 0));
+            global.broadcastEveryone(buf);
 
-        //Win msg discord:
-        sendWebhookWinMessage(ws.me.mapName, ws.me.player.name, timeToBeat)
+            //Win msg discord:
+            sendWebhookWinMessage(ws.me.mapName, ws.me.player.name, timeToBeat);
+        }
 
         db.beatMap(ws.me.player.name, ws.accountData, ws.me.mapName, timeToBeat);
         
@@ -830,7 +833,8 @@ function changeMap(me, newMapName, res, customData=null){
 
         // 5. break here for custom maps b/c
         // they do small writes for gridFS .5
-        if(customData !== null) return;
+        me.inCustomMap = customData !== null;
+        if(me.inCustomMap === true) return;
 
         res.end(fs.readFileSync(`eXserver/maps/${newMapName}.js`));
     });
