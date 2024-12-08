@@ -99,6 +99,10 @@ export default /*const toolbox =*/ {
         },
         {
           'kind': 'block',
+          'type': 'map_dimensions'
+        },
+        {
+          'kind': 'block',
           'type': 'set_music',
           'inputs': {
             'URL': {

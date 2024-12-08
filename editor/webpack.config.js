@@ -24,7 +24,7 @@ const config = {
       {
         test: /\.(png|svg|jpg|jpeg|gif|webp)$/i,
         type: 'asset/resource'
-      }
+      },
     ],
   },
   plugins: [

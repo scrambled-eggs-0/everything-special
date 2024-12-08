@@ -50,12 +50,12 @@ function initWS() {
 
 if(shared.isEditor === false) initWS();
 
-shared.changeMap = function changeMap(url=`/maps/hub`, method='GET', headers=new Headers()){
+shared.changeMap = function changeMap(url=`/maps/hub`, method='GET', headers=new Headers(), onRejected=(url)=>{console.error(`failed to load map url ${url}`);}){
     lateSyncMap = false; shared.mapEntryTime = window.frames;
     headers.append('id', shared.authId);
     fetch(location.origin + url, {method, headers}).then(async (d) => {
         const levelData = await d.text();
-        if(levelData === 'n') {console.error(`failed to load map url ${url}`); return;}
+        if(levelData === 'n') {onRejected(url); return;}
         const [players, selfId] = JSON.parse(d.headers.get("X-Init-Data"));
 
         const prevScript = document.getElementById('gameScript');

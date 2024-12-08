@@ -29,9 +29,16 @@ import db from './db.js';
 
 const PORT = 3000;
 
+// discord webhook
 import sendWebhookWinMessage from './webhook.js';
 
 import banIp from './ipBan.js';
+
+// compiling uploaded map code
+import validateCode from '../server/validation/validateCode.js';
+
+// parsing uploaded files
+import multipart from "parse-multipart";
 
 const clients = global.clients = {};
 const randomBuf = new Uint32Array(2);
@@ -53,8 +60,6 @@ global.app = uWS.App().ws('/*', {
             mapRequestFor: undefined,
             ip: undefined
         }
-
-        console.log(ws.context);
 
         if(global.bannedIps[ws.me.ip] !== undefined){
             ws.close();
@@ -113,7 +118,22 @@ app.get("/favicon.ico", (res, req) => {
 });
 
 app.get("/:filename", (res, req) => {
-    const path = 'z_dev' + req.getUrl();
+    let path = 'z_dev' + req.getUrl();
+    
+    // Check if the file exists
+    if (fs.existsSync(path)) {
+        // Read and serve the file
+        const file = fs.readFileSync(path);
+        res.end(file);
+    } else {
+        // File not found
+        res.writeStatus('404 Not Found');
+        res.end();
+    }
+});
+
+app.get("/eXeditor/:filename", (res, req) => {
+    let path = 'eXeditor/dist/' + req.getParameter(0);
     
     // Check if the file exists
     if (fs.existsSync(path)) {
@@ -194,15 +214,15 @@ app.get("/gfx/decorations/:filename", (res, req) => {
 });
 
 app.get("/editor", (res, req) => {
-    res.end(fs.readFileSync("editor/dist/index.html"));
+    res.end(fs.readFileSync("eXeditor/dist/index.html"));
 });
 
-// app.get("/bundle.js", (res, req) => {
-//     res.cork(() => {
-//         res.writeHeader("Content-Type", "text/javascript");
-//         res.end(fs.readFileSync("editor/dist/bundle.js"));
-//     });
-// });
+app.get("/eXeditor/bundle.js", (res, req) => {
+    res.cork(() => {
+        res.writeHeader("Content-Type", "text/javascript");
+        res.end(fs.readFileSync("eXeditor/dist/bundle.js"));
+    });
+});
 
 app.get('/create', (res, req) => {
     res.end(fs.readFileSync('eXaccount/index.html'));
@@ -367,12 +387,64 @@ app.get("/maps/:filename", (res, req) => {
     changeMap(ws.me, mapName, res);
 });
 
-app.get("/tutorial", (res, req) => {
+app.get("/customPlanet", async (res, req) => {
     let aborted = false;
     res.onAborted(() => {
         aborted = true;
+    })
+    const authId = req.getHeader("id");
+    const mapName = req.getHeader("mapname");
+
+    const ws = clients[authId];
+
+    // first metadata
+    // TODO: send the difficulty and mapName to everyone for leaderboard
+    const metadata = await db.getMetadataByName(mapName);
+
+    if(aborted === true) return;
+    if(metadata === null || ws === undefined || ws.accountData === undefined){
+        res.cork(() => {res.end('n');});
+        return;
+    }
+
+    ws.me.enterMapTime = Date.now();
+
+    if(global.maps[mapName] !== undefined){
+        const otherClient = global.maps[mapName].getRandomClient();
+        if(otherClient !== undefined){
+            const buf = new Uint8Array(1);
+            buf[0] = 20; // request map
+            send(otherClient, buf);
+            otherClient.mapRequestFor = authId;
+            setTimeout(() => {
+                if(otherClient.mapRequestFor === authId) otherClient.mapRequestFor = undefined;
+            }, 2000)
+        }
+    }
+
+    changeMap(ws.me, mapName, res, metadata);
+
+    // write map data to ws. This is usually done by changeMap
+    // but we override it and do it here instead.
+    const stream = db.getCustomMapStream(mapName, metadata);
+    stream.on("data", (chunk) => {
+        if (aborted === true) return;
+        res.cork(() => {
+            res.write(chunk);
+        });
     });
 
+    stream.on("end", () => {
+        if (aborted === true) return;
+        res.cork(() => {res.end();});
+    });
+
+    stream.on("error", (error) => {
+        console.error('Error fetching planet from GridFS: ', error);
+    });
+})
+
+app.get("/tutorial", (res, req) => {
     const authId = req.getHeader("id");
 
     const ws = clients[authId];
@@ -448,6 +520,96 @@ app.post("/join",async (res, req) => {
 
     // send default map
     changeMap(ws.me, global.defaultMapName, res);
+});
+
+app.post("/upload", (res, req) => {
+    res.onAborted(() => {rejected = true;});
+
+    console.log("post recieved!");
+
+    const username = req.getHeader("u");
+    const password = req.getHeader("p");
+
+    const mapName = req.getHeader("mapname");
+
+    if(typeof mapName !== 'string' || mapName.length === 0){
+        res.end('n');
+        return;
+    }
+
+    const difficulty = parseFloat(req.getHeader("difficulty"));
+    
+    if(Number.isFinite(difficulty) === false || difficulty < 0 || difficulty >= 9){
+        res.cork(() => {res.end('n')});
+        return;
+    }
+
+    let rejected = false;
+
+    // see if login works
+    const loginPromise = new Promise((resolve) => {
+        (async () => {
+            let userData = await db.getAccountRequirePassword(username, password);
+            if (userData === null) {
+                if(rejected !== true) res.cork(() => {res.end('n')});
+                rejected = true;
+                return;
+            }
+            resolve();
+        })();
+    });
+    
+    // see if the map is taken
+    const mapNameUniquePromise = new Promise((resolve) => {
+        (async () => {
+            let preexistingData = await db.getMetadataByName(mapName);
+            if (preexistingData !== null) {
+                if(rejected !== true) res.cork(() => {res.end('taken')});
+                rejected = true;
+                return;
+            }
+            resolve();
+        })();
+    });
+
+    // handle data streaming
+    let buffer = Buffer.alloc(0);
+    const streamingPromise = new Promise((resolve) => {
+        res.onData((ab, isLast) => {
+            if(rejected === true) return;
+            const chunk = Buffer.from(ab);
+            buffer = Buffer.concat([buffer, chunk]);
+    
+            if (isLast === true) resolve();
+        });
+    })
+
+    const boundary = req.getHeader("content-type").split("boundary=")[1];
+    Promise.all([loginPromise, mapNameUniquePromise, streamingPromise]).then(() => {
+        if(rejected === true) return;
+
+        // Extract the file content using parse-multipart
+        const parts = multipart.Parse(buffer, boundary);
+
+        // Assume the first part is the file
+        const fileContent = parts[0].data;
+
+        // verification
+        const compiled = validateCode(fileContent.toString());
+
+        if (compiled === false) {
+            res.cork(() => {res.end('n')});
+            return;
+        }
+
+        db.uploadPlanet(
+            compiled,
+            fileContent,
+            username,
+            {mapName, difficulty}
+        );
+        res.cork(() => {res.end()});
+    })
 });
 
 // const decoder = new TextDecoder();
@@ -650,7 +812,7 @@ global.broadcastEveryone = (msg) => {
     app.publish('global', msg, true, false);
 }
 
-function changeMap(me, newMapName, res){
+function changeMap(me, newMapName, res, customData=null){
     // 1. remove from old map .1
     if(me.mapName !== '') removeFromMap(me);
 
@@ -659,12 +821,17 @@ function changeMap(me, newMapName, res){
 
     // 3. add to new map (winroom) .3
     me.mapName = newMapName;
-    addToMap(me, newMapName);
+    addToMap(me, newMapName, customData);
 
     // 4. send as response (new system) .4
     res.cork(() => {
         res.writeHeader("Content-Type", "text/javascript");
         res.writeHeader("X-Init-Data", JSON.stringify(global.maps[newMapName].getInitDataForPlayer(me.player)));
+
+        // 5. break here for custom maps b/c
+        // they do small writes for gridFS .5
+        if(customData !== null) return;
+
         res.end(fs.readFileSync(`eXserver/maps/${newMapName}.js`));
     });
 }

@@ -176,6 +176,8 @@ shared.resetGame = () => {
     if(shared.addSideMenuEvtListeners !== undefined) shared.addSideMenuEvtListeners(nextFileName);
     shared.spawnPosition.x = 100;
     shared.spawnPosition.y = 100;
+    shared.mapDimensions.x = 2000;
+    shared.mapDimensions.y = 2000;
     shared.camera.numControlledBy = 0;
     const player = shared.players[shared.selfId];
     if(player !== undefined){

@@ -1,6 +1,5 @@
-import shared from '../shared/shared.js';
 const starImg = new Image();
-starImg.src = shared.jewelBoxUrl;
+starImg.src = 'https://upload.wikimedia.org/wikipedia/commons/c/c3/A_Snapshot_of_the_Jewel_Box_cluster_with_the_ESO_VLT.jpg';
 
 import Arrow from './gfx/arrow.png';
 const arrowImg = new Image();

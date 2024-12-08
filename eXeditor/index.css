@@ -513,7 +513,7 @@ input:checked + .slider:before {
 
 .property-button-input {
     /*padding: 5px;*/
-    width: 250px;
+    width: calc(100% - 10px);
     height: 27.5px;
     color: white;
     font-size: 0.85rem;

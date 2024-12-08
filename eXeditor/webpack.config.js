@@ -9,6 +9,7 @@ const config = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
+    publicPath: '/eXeditor/',
   },
   // Enable webpack-dev-server to get hot refresh of the app.
   devServer: {
@@ -40,6 +41,8 @@ const config = {
 module.exports = (env, argv) => {
   if (argv.mode === 'development') {
     if (module.hot) module.hot.accept();
+
+    delete config.output.publicPath;
 
     // Set the output path to the `build` directory
     // so we don't clobber production builds.

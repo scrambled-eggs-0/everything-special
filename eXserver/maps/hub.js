@@ -620,9 +620,6 @@ C(3,[1],[20],{type:[3,[1],[20]],x:5600,y:550,w:50,h:50,size:30,text:"warning",an
 C(3,[1],[20],{type:[3,[1],[20]],x:5600,y:650,w:50,h:50,size:30,text:"extremely",angle:10,story:false,fontSize:60,hex:"#FFFFFF",pivotX:5600,pivotY:650,rotateSpeed:0,initialRotation:0.17453292519943295,})
 C(3,[1],[20],{type:[3,[1],[20]],x:5600,y:700,w:50,h:50,size:30,text:"dangerous",angle:10,story:false,fontSize:60,hex:"#FFFFFF",pivotX:5600,pivotY:700,rotateSpeed:0,initialRotation:0.17453292519943295,})
 
-C(3,[1],[20],{type:[3,[1],[20]],x:5650,y:2750,w:50,h:50,size:30,text:"Po🔗",angle:0,story:false,fontSize:60,hex:"#FFFFFF",pivotX:5600,pivotY:700,rotateSpeed:0,initialRotation:0,})
-
-
 C(3,[1],[20],{type:[3,[1],[20]],x:5600,y:750,w:50,h:50,size:30,text:"area",angle:10,story:false,fontSize:60,hex:"#FFFFFF",pivotX:5600,pivotY:750,rotateSpeed:0,initialRotation:0.17453292519943295,})
 C(3,[1],[20],{type:[3,[1],[20]],x:5630,y:5300,w:50,h:50,size:30,text:"friendly",angle:15,story:false,fontSize:60,hex:"#FFFFFF",pivotX:5630,pivotY:5300,rotateSpeed:0,initialRotation:0.2617993877991494,})
 C(3,[1],[20],{type:[3,[1],[20]],x:5610,y:5350,w:50,h:50,size:30,text:"planets",angle:15,story:false,fontSize:60,hex:"#FFFFFF",pivotX:5610,pivotY:5350,rotateSpeed:0,initialRotation:0.2617993877991494,})
@@ -635,7 +632,6 @@ C(3,[1],[20],{type:[3,[1],[20]],x:5310,y:4410,w:50,h:50,size:30,text:"stuff",ang
 C(3,[],[20],{type:[3,[],[20]],x:9000,y:9850,w:50,h:50,size:30,text:"(Also how did you get here wtf???)",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
 C(3,[],[20],{type:[3,[],[20]],x:9600,y:200,w:50,h:50,size:30,text:"hi",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
 C(3,[],[20],{type:[3,[],[20]],x:350,y:1150,w:50,h:50,size:30,text:"best of luck to you",angle:0,story:false,fontSize:60,hex:"#FFFFFF",})
-
 
 C(1,[],[22],{type:[1,[],[22]],x:6000,y:5200,w:200,h:200,name:"Planet of Peaceful Beginnings",acronym:"PoPB",difficulty:"Peaceful",difficultyNumber:"0.3",musicPath:null,renderType:"portal",inView:true,mapName:"popb",})
 C(1,[],[22],{type:[1,[],[22]],x:6100,y:6000,w:200,h:200,name:"Planet of Simple Challenges",acronym:"PoSC",difficulty:"Peaceful",difficultyNumber:"0.7",musicPath:null,renderType:"portal",inView:true,mapName:"posc",})
@@ -872,7 +868,8 @@ C(1,[],[22],{type:[1,[],[22]],x:7900,y:4900,w:200,h:200,name:"Planet of Wacky Cr
         }})
     }
 
-    //discord
+    //discord - temp removed, haha put this back if you redesign the hub
+    let redir = false;
     {
         let image = new Image();
         image.src = "https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png";
@@ -880,17 +877,95 @@ C(1,[],[22],{type:[1,[],[22]],x:7900,y:4900,w:200,h:200,name:"Planet of Wacky Cr
         image.onload = () => {
             imageCanBeUsed = true;
         }
-        C(1,[],[3],{type:[1,[],[3]],x:5500,y:2800,w:300,h:300,canJump:true,inView:false,cr:(o)=>{
+        C(1,[],[3],{type:[1,[],[3]],x:5500,y:3100,w:100,h:100,canJump:true,inView:false,cr:(o)=>{
             ctx.globalAlpha = 0.2;
             ctx.fillStyle = "black";
             ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y);
             ctx.globalAlpha = 1;
             if (imageCanBeUsed){
-                ctx.drawImage(image, o.pos.x, o.pos.y + 35, o.dimensions.x, o.dimensions.y - 70)
+                ctx.drawImage(image, o.pos.x, o.pos.y + 35/3, o.dimensions.x, o.dimensions.y - 70/3);
             }
         },ef:(o)=>{
+            if(redir === true) return;
+            redir = true;
             window.location.replace("https://discord.gg/p6eWkFJjcU")
         }})
+    }
+
+    // editor
+    {
+        C(1,[],[3],{type:[1,[],[3]],x:5800,y:3100,w:100,h:100,canJump:true,inView:false,cr:(o)=>{
+            ctx.globalAlpha = 0.2;
+            ctx.fillStyle = "black";
+            ctx.fillRect(o.pos.x, o.pos.y, o.dimensions.x, o.dimensions.y);
+            ctx.globalAlpha = 1;
+            ctx.font = '72px Inter';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.globalAlpha = 0.8;
+            ctx.fillText('🛠️',o.topLeft.x + o.dimensions.x/2, o.topLeft.y + o.dimensions.y/2);
+            ctx.globalAlpha = 1;
+        },ef:(o)=>{
+            if(redir === true) return;
+            redir = true;
+            window.location.replace(location.origin + '/editor');
+        }})
+    }
+
+    // normal filling in the gap
+    C(1,[],[0],{x:5500,y:2800,w:100,h:300});
+    C(1,[],[0],{x:5500,y:2800,w:300,h:100});
+
+    // po🗺️
+    {
+        C(1,[],[22],{h:200,w:200,y:2900,x:5600,mapName:'pom',sf:(o) => {
+                o.difficulty += 1 / 60;
+                while(o.difficulty >= 9) o.difficulty -= 9;
+            },
+            cr:(o)=>{
+                let t = (o.difficulty % 1);
+
+                ctx.beginPath();
+                ctx.fillStyle = shared.blendColor(difficultyImageColors[Math.floor(o.difficulty)],difficultyImageColors[Math.ceil(o.difficulty)%9],t);
+                o.renderShape(o);
+                ctx.fill();
+                ctx.closePath();
+
+                let topX = o.topLeft.x;
+                let topY = o.topLeft.y;
+
+                if(o.dimensions.x > o.dimensions.y){
+                    ctx.translate(o.dimensions.x - o.dimensions.y + topX, topY);
+                } else {
+                    ctx.translate(topX, o.dimensions.y - o.dimensions.x + topY);
+                }
+
+                ctx.lineCap = 'round';
+                ctx.globalAlpha = t;
+                difficultyImageMap[Math.ceil(o.difficulty)%9](Math.min(o.dimensions.x, o.dimensions.y));
+
+                ctx.globalAlpha = 1 - t;
+                difficultyImageMap[Math.floor(o.difficulty)](Math.min(o.dimensions.x, o.dimensions.y));
+                ctx.lineCap = 'square';
+                ctx.globalAlpha = 1;
+
+                if(o.dimensions.x > o.dimensions.y){
+                    ctx.translate(-(o.dimensions.x - o.dimensions.y + topX), -topY);
+                } else {
+                    ctx.translate(-topX, -(o.dimensions.y - o.dimensions.x + topY));
+                }
+
+                ctx.font = `${o.dimensions.x / 3.5}px Inter`;
+                ctx.fillStyle = 'white';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(
+                    'Po🗺️',
+                    topX + o.dimensions.x / 2,
+                    topY - o.dimensions.y / 4
+                );
+            }
+        });
     }
 
     // art canvas
@@ -1675,4 +1750,7 @@ C(1,[],[22],{type:[1,[],[22]],x:7900,y:4900,w:200,h:200,name:"Planet of Wacky Cr
             o.innerSize = 0;
         },cr:()=>{}})
     }
+
+    C(3,[1],[20],{type:[3,[1],[20]],x:5550,y:3065,w:50,h:50,text:"Po🔗",angle:0,story:false,fontSize:40,hex:"#FFFFFF",pivotX:5600,pivotY:700,rotateSpeed:0,initialRotation:0,})
+    C(3,[1],[20],{type:[3,[1],[20]],x:5850+10,y:3065,w:50,h:50,text:"Po🔨",angle:0,story:false,fontSize:40,hex:"#FFFFFF",pivotX:5600,pivotY:700,rotateSpeed:0,initialRotation:0,})
 });

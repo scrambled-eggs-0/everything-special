@@ -75,7 +75,6 @@ if(mapsBeatenStr !== null){
     }
 }
 
-shared.jewelBoxUrl = 'https://upload.wikimedia.org/wikipedia/commons/c/c3/A_Snapshot_of_the_Jewel_Box_cluster_with_the_ESO_VLT.jpg';
 shared.decorationImgs = {};
 if(typeof Image !== 'undefined'){
 	shared.arrowImg = new Image();
@@ -91,7 +90,7 @@ if(typeof Image !== 'undefined'){
 	} else {
 		// client
 		shared.arrowImg.src = './gfx/arrow.png';
-		shared.starImg.src = shared.jewelBoxUrl;
+		shared.starImg.src = 'https://upload.wikimedia.org/wikipedia/commons/c/c3/A_Snapshot_of_the_Jewel_Box_cluster_with_the_ESO_VLT.jpg';
 	}
 } else {
 	// server

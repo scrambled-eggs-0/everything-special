@@ -1241,6 +1241,7 @@ const initEffectMap = [
     (o, params) => {
         o.mapName = params.mapName;
         o.difficulty = shared.mapDifficulties[params.mapName] ?? 0;
+        o.toCustomPlanet = params.toCustomPlanet;
     },
     /*tornado*/
     (o, params) => {
@@ -1586,7 +1587,12 @@ const effectMap = [
         if(shared.won === true) return;
         shared.won = true;
         if(shared.isExClient === true){
-            shared.changeMap('/maps/' + o.mapName);
+            if(o.toCustomPlanet === true && o.changeMapBroken === undefined){
+                const headers = new Headers();
+                headers.append('mapname', o.mapName);
+                shared.changeMap('/customPlanet', 'GET', headers, ()=>{shared.won = false;o.changeMapBroken=true;});
+            }
+            else shared.changeMap('/maps/' + o.mapName);
         } else {
             // TODO: send user to the specified omni
         }
@@ -2019,7 +2025,7 @@ shared.effectDefaultMap = [
     // invisible
     {},
     // changeMap
-    {mapName: 'hub'},
+    {mapName: 'hub', toCustomPlanet: true},
     // tornado
     {tornadoStrength: 1},
     // changeVignette
@@ -2663,6 +2669,44 @@ const renderEffectMap = [
         // ctx.cleanUpFunction = () => {
         //     ctx.shadowBlur = 0;
         // }
+
+        if(o.toCustomPlanet === true){
+            ctx.fillStyle = '#646464';
+            ctx.fillRect(o.topLeft.x, o.topLeft.y, o.dimensions.x, o.dimensions.y);
+
+            ctx.font = `1000 ${Math.min(o.dimensions.x, o.dimensions.y)/2}px Inter`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = '#464646';
+            ctx.translate(o.topLeft.x + o.dimensions.x/2, o.topLeft.y + o.dimensions.y/2);
+
+            if(o.randomSineOffset === undefined) o.randomSineOffset = Math.random() * Math.PI * 2;
+            const r = Math.sin(window.frames / 36 + o.randomSineOffset) * 0.32;
+            ctx.rotate(r);
+            ctx.fillText('?', 0, 0);
+            ctx.rotate(-r);
+            ctx.translate(-(o.topLeft.x + o.dimensions.x/2), -(o.topLeft.y + o.dimensions.y/2));
+
+            ctx.fillStyle = 'white';
+            ctx.font = `${o.dimensions.x / 3.5}px Inter`;
+
+            // same fillText
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            ctx.globalAlpha = Math.min(1,((shared.players[shared.selfId].pos.y + canvas.h/2) - (o.topLeft.y)) / (o.dimensions.y));
+
+            ctx.globalAlpha *= 0.8;
+            ctx.fillText(
+                o.mapName,
+                o.topLeft.x + o.dimensions.x / 2,
+                o.topLeft.y - o.dimensions.y / 4
+            );
+            ctx.globalAlpha = 1;
+
+            ctx.toFill = false;
+            return;
+        }
 
         let t = (1+Math.sin(window.frames/36))/2 * (o.difficulty % 1);
 

@@ -432,6 +432,12 @@ forBlock['bg_color'] = function (block, generator) {
   return `shared.colors.background=${bg}; shared.colors.tile=${tile};\n`;
 };
 
+forBlock['map_dimensions'] = function (block, generator) {
+  const dx = generator.valueToCode(block, 'DIMENSIONS_X', Order.NONE);
+  const dy = generator.valueToCode(block, 'DIMENSIONS_Y', Order.NONE);
+  return `shared.mapDimensions.x=${dx}; shared.mapDimensions.y=${dy};\n`;
+};
+
 // forBlock['bg_image'] = function (block, generator) {
 //   const url = generator.valueToCode(block, 'URL', Order.NONE) || "'https://memes.co.in/memes/update/uploads/2021/12/InShot_20211209_222013681.jpg'";
 //   const setBgImg = generator.provideFunction_(

@@ -6,6 +6,7 @@ const { javascriptGenerator } = require('blockly/javascript');
 
 import './SAT.js';
 import '../../client/components.js';
+import shared from '../../shared/shared.js';
 import textData from "../../shared/textData.js";
 const { JSBlockData, JSBlockNames } = textData;
 import '../../shared/fixPolygon.js';
@@ -17,10 +18,9 @@ for(let i = 0; i < JSBlockNames.length; i++){
 for(let key in global.shared){
     global[key] = global.shared[key];
 }
-global.isServer = true;
-global.shared.isServer = true;
-global.shared.onWorkspaceLoadFunctions=[];
-global.shared.workspaceLoaded = false;
+global.isServer = shared.isServer = true;
+shared.onWorkspaceLoadFunctions=[];
+shared.workspaceLoaded = false;
 
 import blocks from './text.js';
 import forBlock from '../../shared/forBlock.js';
@@ -47,5 +47,5 @@ export default function validate(wsData) {
     
     // console.log(code.replaceAll('var ', 'let '));
     // return false;
-    return code;
+    return `window.loadMap((shared) => {\nshared.resetGame();\n${code}\n})`;
 }

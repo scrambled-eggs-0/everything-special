@@ -2,6 +2,7 @@ import shared from '../shared/shared.js';
 import utils from "../client/utils.js";
 import * as Blockly from 'blockly';
 import {javascriptGenerator} from 'blockly/javascript';
+import {save} from './serialization';
 const { stringHTMLSafe } = utils;
 let open = false; let allowGeneration = false;
 const toggle = document.querySelector('.toggle-gui');
@@ -23,12 +24,44 @@ toggle.onclick = (e) => {
     return e.preventDefault();
 }
 
+function dropdown(options=[1,2,3], onChange=()=>{}){
+    return {
+        specialType: 'dropdown',
+        options, onChange,
+        selectedIndex: 0
+    }
+}
+
+function button(name, onClick=()=>{}){
+    return {
+        specialType: 'button',
+        name, onClick
+    }
+}
+
 const settings = {
     snap: 50,
     snapEnabled: true,
+    difficulty: dropdown(['Peaceful', 'Moderate','Difficult','Hardcore','Exhausting','Relentless','Agonizing','Terrorizing','Cataclysmic']),
+    subDifficulty: 0.5,
+    mapName: 'Planet of Creative Name',
+    uploadBtn: button("Upload! 🔥", uploadCode),
 }
 
-function changeSettings(key, val){
+const nameToDifficulty = {Peaceful: 0, Moderate: 1, Difficult: 2, Hardcore: 3, Exhausting: 4, Relentless: 5, Agonizing: 6, Terrorizing: 7, Cataclysmic: 8};
+
+let difficulty = 0.5; let mapName = 'Planet of Creative Name';
+function changeSettings(key, val, input){
+    if(key === 'difficulty'){
+        difficulty = (difficulty % 1) + nameToDifficulty[val];
+        console.log(difficulty);
+        return;
+    } else if(key === 'subDifficulty'){
+        if(Number.isFinite(val) === false || val < 0) input.value = 0;
+        else if(val >= 1) val = input.value = 0.9999;
+        difficulty = Math.floor(difficulty) + val;
+        return;
+    } else if(key === 'mapName') mapName = val;
     shared[key] = val;
 }
 
@@ -204,6 +237,11 @@ function createProperty(o, key, changeFn){
         propName.classList.add('property-name');
         propName.innerText = formatName(key);
         prop.appendChild(propName);
+    } else if(value?.specialType === 'dropdown'){
+        const propName = document.createElement('span');
+        propName.classList.add('property-name');
+        propName.innerText = formatName(key);
+        prop.appendChild(propName);
     }
 
     const input = document.createElement('input');
@@ -212,7 +250,7 @@ function createProperty(o, key, changeFn){
 
     input.oninput = ((e) => {
         const targetValue = type === 'number' ? parseFloat(e.target.value) : e.target.value;
-        changeFn(key, targetValue);
+        changeFn(key, targetValue, input);
         
         return e.preventDefault();
     })
@@ -224,7 +262,7 @@ function createProperty(o, key, changeFn){
         prop.appendChild(input);
     }
 
-    if(type === 'object') prop.style.height = 'auto';
+    if(type === 'object' && value?.specialType !== 'dropdown') prop.style.height = 'auto';
 
     return prop;
 }
@@ -256,14 +294,19 @@ const typeToFolderModifier = {
             input.checked = !input.checked;
             if(input.checked == true) span.classList.add('inputChecked'); 
             else span.classList.remove('inputChecked');
-            set(key, input.checked);
+            set(key, input.checked, input);
         }
 
         prop.appendChild(label);
     },
     // always an array because params are not objects.
     object: (key, obj, input, prop, o, set) => {
-        prop.appendChild(createFolder(obj, (k,v)=>{obj[k]=v;set(key,obj)}, formatName(key)));
+        if(obj.specialType !== undefined){
+            typeToFolderModifier[obj.specialType](key, obj, input, prop, o, set);
+            return;
+        }
+
+        prop.appendChild(createFolder(obj, (k,v)=>{obj[k]=v;set(key,obj,input)}, formatName(key)));
     },
     color: (key, value, input, prop) => {
         input.classList.add('property-color-input');
@@ -288,7 +331,39 @@ const typeToFolderModifier = {
 
         prop.appendChild(label);
     },
-    // old codebase also has "options" type
+    button: (key, obj, input, prop) => {
+        // class to add a property to an object
+        input.classList.add('property-button-input');
+        input.type = 'button';
+        input.value = obj.name;
+
+        input.onclick = obj.onClick;
+
+        prop.appendChild(input);
+    },
+    dropdown: (key, value, input, prop, o, set) => {
+        const select = document.createElement('select');
+        select.classList.add('property-option-input');
+        
+        value.options.forEach((data) => {
+            const option = document.createElement('option');
+            option.value = data;
+            option.classList.add('select-items');
+            option.innerText = data;
+            select.appendChild(option);
+        });
+
+        if(value.selectedOption === undefined) value.selectedOption = value.options[0];
+        else select.value = value.selectedOption;
+        // processChange(key, value);
+
+        select.onchange = (e) => {
+            value.selectedIndex = select.selectedIndex;
+            set(key, value.options[value.selectedIndex], input);
+        }
+        
+        prop.appendChild(select);
+    }
 }
 
 function isHex(s){
@@ -310,3 +385,58 @@ function formatName(s){
 }
 
 createFolder(settings, changeSettings, "Settings");
+
+let username = localStorage.getItem('username');
+let password = localStorage.getItem('password');
+
+// Upload code!
+const uploadUrl = `${location.origin}/upload`;
+let exclams = '';
+function uploadCode() {
+  // direct user to login page if we don't have a saved username
+  if(username === null){
+    exclams += '!';
+    alert(`Stop pressing me >:( ${exclams} I am an angry troll that doesnt let people without an account pass, so GO AWAY! Stop! Head on down to the land of evadesX.io/create or /login to get an account, and then maybe i'll let you upload your little level, ha!`, true, 22);
+    return;
+  }
+
+  save(shared.ws);
+  const blob = new Blob([localStorage.getItem("ws")], { type: 'application/javascript' });
+
+  const formData = new FormData();
+  formData.append('file', blob, 'upload.js');
+
+  const headers = new Headers();
+  headers.append('u', username);
+  headers.append('p', password);
+
+  if(difficulty === 9) difficulty = 8.9999;
+  headers.append('difficulty', difficulty);
+  headers.append('mapname', mapName);
+
+  fetch(uploadUrl, {
+    method: 'POST',
+    body: formData,
+    headers: headers
+  }).then(async (d) => {
+      const txt = await d.text();
+      if(txt === 'taken'){
+        const txt = prompt(`Upload failed because your planet name (${mapName}) is taken! Type a new map name here and click ok to retry, or hit cancel and change the name in game menu.`);
+        console.log(txt);
+        if(txt === null) return;
+        mapName = txt;
+        uploadCode();
+        return;
+      }
+      if(txt === 'n'){
+        alert('Upload failed! If you think this might be a bug, please dm a developer on discord!', true, 22);
+        return;
+      }
+      alert(`Congrats! ${mapName} was uploaded to the servers!`, true, 22*3);
+      
+      if(!location.origin.startsWith('http://localhost')) {ws.clear(); localStorage.removeItem('ws'); load(shared.ws); }
+    })
+    .catch(error => {
+      console.error('Error uploading file:', error);
+    });
+}

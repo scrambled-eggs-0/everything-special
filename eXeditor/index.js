@@ -46,7 +46,7 @@ import toolbox from '../shared/toolbox.js';
 const ws = shared.ws = Blockly.inject(blocklyDiv, {toolbox, zoom, theme});
 
 window.getCode = () => {
-  return `window.editorRunCode((shared) => {\n${javascriptGenerator.workspaceToCode(ws)}\n})`;
+  return `window.editorRunCode((shared) => {\nshared.resetGame();\n${javascriptGenerator.workspaceToCode(ws)}\n})`;
 }
 
 window.editorRunCode = (I) => {
@@ -197,60 +197,3 @@ clearBtn.onclick = () => {
   load(shared.ws);
   shared.runCode();
 }
-
-// // TODO: Upload code. Also, if the user doesn't have an account,
-// // "Looks like you don't have an account. You can still use the editor, but won't be able to upload levels. Head on over to evadesX.io/create or /login to get an account".
-// let hashedPassword = localStorage.getItem('hashedPassword');
-// const uploadUrl = `${location.origin}/upload`;
-// shared.uploadCode = () => {
-//   // direct user to login page if we don't have a saved username
-//   if(username === null){
-//     const childsharedOrigin = `${location.origin}/account`;
-
-//     const loginshared = document.createElement('iframe');
-//     loginshared.src = childsharedOrigin;
-//     loginshared.classList.add('loginshared');
-//     const handleMessage = function(event) {
-//       if (event.origin === location.origin) {
-//         loginshared.remove();
-//         shared.removeEventListener('message', handleMessage);
-//         username = localStorage.getItem('username');
-//         hashedPassword = localStorage.getItem('hashedPassword');
-//         shared.uploadCode();
-//       }
-//     }
-//     shared.addEventListener('message', handleMessage);
-
-//     document.body.appendChild(loginshared);
-
-//     return;
-//   }
-
-//   save(ws);
-//   const blob = new Blob([localStorage.getItem("ws")], { type: 'application/javascript' });
-
-//   const formData = new FormData();
-//   formData.append('file', blob, 'upload.js');
-
-//   const headers = new Headers();
-//   headers.append('u', username);
-//   headers.append('hp', hashedPassword);
-
-//   fetch(uploadUrl, {
-//       method: 'POST',
-//       body: formData,
-//       headers: headers
-//   }).then(async (d) => {
-//         const failed = (await d.text()) === 'n';
-//         if(failed === true){
-//           alert('Upload failed! If you think this might be a bug, please contact a developer!');
-//           return;
-//         }
-//         alert('Congrats! Your code was uploaded to the servers!');
-        
-//         if(!location.origin.startsWith('http://localhost')) {ws.clear(); localStorage.removeItem('ws');}
-//     })
-//     .catch(error => {
-//         console.error('Error uploading file:', error);
-//     });
-// }

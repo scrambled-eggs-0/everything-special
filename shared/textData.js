@@ -471,6 +471,7 @@ export default {
     'collide_obstacles',
     'create_list',
     'bg_color',
+    'map_dimensions'
   ],
   JSBlockData: [
     // create_obstacle
@@ -1343,6 +1344,64 @@ export default {
                 </shadow>
               </value>
             </shadow>`));
+        },
+      }
+    },
+
+    // map_dimensions
+    function(Blockly) {
+      return {
+        init: function() {
+          this.setColour('121');
+
+          this.setNextStatement(true, null);
+          this.setPreviousStatement(true, null);
+
+          this.appendValueInput("DIMENSIONS_X")
+            .appendField("Set arena width to:")
+            .setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(5000)));
+            // .setCheck("Colour").setShadowDom(Blockly.utils.xml.textToDom(
+            //   `<shadow type="colour_rgb">
+            //   <value name="RED">
+            //     <shadow type="math_number">
+            //       <field name="NUM">19</field>
+            //     </shadow>
+            //   </value>
+            //   <value name="GREEN">
+            //     <shadow type="math_number">
+            //       <field name="NUM">6</field>
+            //     </shadow>
+            //   </value>
+            //   <value name="BLUE">
+            //     <shadow type="math_number">
+            //       <field name="NUM">60</field>
+            //     </shadow>
+            //   </value>
+            // </shadow>`));
+
+          this.appendValueInput("DIMENSIONS_Y")
+            .appendField("Set arena height to:")
+            .setShadowDom(Blockly.utils.xml.textToDom(shared.generateShadowBlock(5000)));
+            // .setShadowDom(shared.generateShadowBlock(5000));
+            // .setCheck("Colour")
+            // .setShadowDom(Blockly.utils.xml.textToDom(
+            //   `<shadow type="colour_rgb">
+            //   <value name="RED">
+            //     <shadow type="math_number">
+            //       <field name="NUM">11</field>
+            //     </shadow>
+            //   </value>
+            //   <value name="GREEN">
+            //     <shadow type="math_number">
+            //       <field name="NUM">4</field>
+            //     </shadow>
+            //   </value>
+            //   <value name="BLUE">
+            //     <shadow type="math_number">
+            //       <field name="NUM">34</field>
+            //     </shadow>
+            //   </value>
+            // </shadow>`));
         },
       }
     },

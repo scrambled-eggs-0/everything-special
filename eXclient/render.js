@@ -461,7 +461,7 @@ shared.render = (os=shared.obstacles, cols=shared.colors, players=shared.players
     // }
 
     if(shared.disconnected === true){
-        let txt = 'Disconected From Server.'.split('');
+        let txt = 'Disconnected From Server.'.split('');
         for(let i = 0; i < txt.length; i++) {if(Math.random() < 0.03) txt[i] = '#';}
         txt = txt.join('');
         ctx.font = '81px Inter';

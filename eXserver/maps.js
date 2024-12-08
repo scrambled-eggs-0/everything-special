@@ -44,10 +44,21 @@ function mapExists(name){
     return validPaths[`./maps/${name}.js`] !== undefined;
 }
 
+function createCustomMap(name){
+    // already assume it exists
+    // because we have metadata.
+    global.leaderboard[name] = {};
+    return new Map(name);    
+}
+
 const buf2 = new Uint8Array(2);
 buf2[0] = 3;
-function addToMap(me, mapName){
-    if(global.maps[mapName] === undefined) global.maps[mapName] = createMap(mapName);
+function addToMap(me, mapName, metadata=null){
+    // custom creation vs normal creation
+    if(metadata !== null){
+        if(global.maps[mapName] === undefined) global.maps[mapName] = createCustomMap(mapName);
+    }
+    else if(global.maps[mapName] === undefined) global.maps[mapName] = createMap(mapName);
 
     // add player up here for id
     global.maps[mapName].addPlayer(me.player);
