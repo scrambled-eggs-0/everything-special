@@ -132,7 +132,7 @@ function handleKey(e){
         if (e.repeat) return e.preventDefault();
 
         if(e.type === 'keydown'){
-            if(e.code === 'KeyO' && shared.isProd === false && shared.players[shared.selfId].dev === true){
+            if(e.code === 'KeyO' && shared.isProd === false && shared.players[shared.selfId].dev === true && shared.isEditor === false){
                 shared.players[shared.selfId].god = !shared.players[shared.selfId].god;
                 const buf = new Uint8Array(2);
                 buf[0] = 8;

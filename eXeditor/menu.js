@@ -401,7 +401,7 @@ uploadBtn.onclick = () => {
 }
 
 shared.inClearCheckMode = false;
-let lastOpen, lastPlayMode, lastSimulateMode, exclams='!';
+let lastOpen, lastPlayMode, lastSimulateMode, lastGod, exclams='!';
 function enterClearCheck() {
     if(shared.inClearCheckMode === true) return;
     if(mapName === 'Planet of Creative Name') {
@@ -438,6 +438,8 @@ function enterClearCheck() {
     lastSimulateMode = shared.simulateMode;
     if(lastSimulateMode === false) shared.toggleSimulateMode();
     shared.inClearCheckMode = true;
+    lastGod = shared.players[shared.selfId].god;
+    shared.players[shared.selfId].god = false;
 
     shared.selectedObstacles.length = 0;
     shared.regenerateMenu();
@@ -450,6 +452,7 @@ function exitClearCheck() {
     if(lastOpen === true) toggle.onclick({preventDefault:()=>{}});
     if(lastPlayMode === false) shared.togglePlayMode();
     if(lastSimulateMode === false) shared.toggleSimulateMode();
+    if(lastGod === true) shared.players[shared.selfId].god = true;
 }
 shared.exitClearCheck = exitClearCheck;
 

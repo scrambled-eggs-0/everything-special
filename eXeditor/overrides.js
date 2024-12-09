@@ -78,6 +78,8 @@ window.onkeydown = window.onkeyup = (e) => {
         shared.deleteSelectedObs();
     } else if(e.code === 'Digit0' && e.ctrlKey === true){// TODO && testing === false
         shared.respawnPlayer();
+    } else if(e.code === 'KeyO' && shared.inClearCheckMode === false){
+        shared.players[shared.selfId].god = !shared.players[shared.selfId].god;
     } // scrapped because blockly has all the undo stuff we really need
     /* else if(e.code === 'KeyZ' && e.ctrlKey === true){
         let val = 'alsoUndoNext';
