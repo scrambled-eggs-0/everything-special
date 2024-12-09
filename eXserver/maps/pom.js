@@ -28,10 +28,15 @@ window.loadMap((shared)=>{
         o.hex = shared.blendColor("#FFFF00","#FFFFFF",(Math.sin(window.frames / 32) + 1)/2)
     }});
 
-    const featuredEdges = new Array(4).fill('Planet of Creative Name');
+    const featuredEdges = [
+        'Planet of Creative Name',
+        'Planet of WIP Escape Room',
+        'Comet of Portal Avoidance',
+        'Planet of ______'
+    ]
 
     // Should be harder than all of the featuredEdges
-    const featuredMiddle = 'Planet of Creative Name';
+    const featuredMiddle = 'Failed to load, try typing something else :(';
 
     // w,h = 200
     const topX = 1200;
