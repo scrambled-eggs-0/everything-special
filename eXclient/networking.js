@@ -493,6 +493,11 @@ const messageMap = [
         const mapName = decodeText(data, 8).replaceAll('\x00', '');
         customMapDifficulties[mapName] = difficulty;
     },
+    // 24 - no players for sync
+    (data) => {
+        shared.accum = 0;
+        shared.offtabSync = false;
+    }
 ]
 
 function createPlayerFromData(data){
