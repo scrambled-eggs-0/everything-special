@@ -1076,7 +1076,7 @@ C(1,[0],[1],{type:[1,[0],[1]],x:700,y:15900,w:100,h:200,points:[[350,7950],[550,
 C(1,[],[0],{type:[1,[],[0]],x:700,y:16100,w:300,h:900,canJump:true,inView:false,})
 C(1,[],[0],{type:[1,[],[0]],x:1.224646799147353e-14,y:13900,w:700,h:3100,canJump:true,inView:false,})
 C(1,[],[7],{type:[1,[],[7]],x:750,y:13950,w:100,h:100,id:2,active:true,inView:false,color:"#d6d612",coinAmount:1,})
-C(1,[],[8],{type:[1,[],[8]],x:1000,y:16100,w:200,h:100,id:2,active:true,inView:false,coinDoorColor:"#d6d612",coindoorCoinAmount:1,})
+C(1,[],[8],{type:[1,[],[8]],x:1000,y:16100,w:200,h:100,id:2,active:true,inView:false,coinDoorColor:"#d6d612",coindoorCoinAmount:2,})
 C(1,[],[17],{type:[1,[],[17]],x:1700,y:13000,w:100,h:200,time:0,maxTime:1.5,cdmult:3,trapType:"death",inView:false,timeTrapToShowTenth:true,timeTrapToKill:true,timeTrapRecoverySpeed:3,timeTrapMaxTime:90,})
 C(1,[],[0],{type:[1,[],[0]],x:1000,y:16400,w:500,h:600,canJump:true,inView:false,})
 C(1,[],[0],{type:[1,[],[0]],x:1700,y:16300,w:200,h:375,canJump:true,inView:false,})
