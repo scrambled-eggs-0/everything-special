@@ -778,7 +778,14 @@ const messageMap = [
     },
     // 16 - sync request because offtab
     (data, me) => {
-        if(me.mapName === '' || global.maps[me.mapName].clients.length <= 1) return;
+        if(me.mapName === '') return;
+
+        if(global.maps[me.mapName].clients.length <= 1){
+            const buf = new Uint8Array(1);
+            buf[0] = 24;
+            send(me, buf);
+            return;
+        }
 
         const map = global.maps[me.mapName];
         let otherClient = map.getRandomClient();

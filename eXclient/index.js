@@ -49,11 +49,15 @@ function run(){
 
     // Get the map from another player
     if(shared.accum > 2000) {
-        shared.accum = -Infinity;
-        shared.offtabSync = true; 
-        const buf = new Uint8Array(1);
-        buf[0] = 16;
-        shared.send(buf);
+        if(shared.players.length <= 1){
+            shared.accum = 0;
+        } else {
+            shared.accum = -Infinity;
+            shared.offtabSync = true; 
+            const buf = new Uint8Array(1);
+            buf[0] = 16;
+            shared.send(buf);
+        }
     }
 
     while(shared.accum >= 0){
