@@ -433,6 +433,20 @@ export default {
       "previousStatement": null,
       "nextStatement" : null,
     },
+    {
+      "type": "set_revives",
+      "message0": "Enable revives? %1",
+      "args0": [
+        {
+          "type": "field_checkbox",
+          "name": "REVIVES_ENABLED",
+          "checked": true
+        }
+      ],
+      "colour": '121',
+      "previousStatement": null,
+      "nextStatement" : null,
+    },
     // {
     //   "type": "this_touching",
     //   "message0": "touching %1",

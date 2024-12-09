@@ -7,6 +7,7 @@ import shared from '../shared/shared.js';
 import * as Blockly from 'blockly';
 import '../shared/fixPolygon.js';
 import {javascriptGenerator} from 'blockly/javascript';
+javascriptGenerator.addReservedWords('C');
 import {save, load} from './serialization';
 
 const blocklyDiv = document.getElementById('blocklyDiv');
@@ -46,7 +47,7 @@ import toolbox from '../shared/toolbox.js';
 const ws = shared.ws = Blockly.inject(blocklyDiv, {toolbox, zoom, theme});
 
 window.getCode = () => {
-  return `window.editorRunCode((shared) => {\nshared.resetGame();\n${javascriptGenerator.workspaceToCode(ws)}\n})`;
+  return `window.editorRunCode((shared) => {\nconst C=shared.C;\nshared.resetGame();\n${javascriptGenerator.workspaceToCode(ws)}\n})`;
 }
 
 window.editorRunCode = (I) => {
@@ -159,13 +160,15 @@ shared.startGame();
 // importing and exporting
 const importBtn = document.getElementById('import-button');
 importBtn.onclick = () => {
+  if(shared.inClearCheckMode === true) return;
   navigator.clipboard.readText().then((txt) => {
     const lastWS = localStorage.getItem('ws') ?? '';
-    console.log(lastWS);
     try {
+      shared.workspaceLoaded = false;
       localStorage.setItem('ws', txt);
       load(shared.ws);
     } catch (err) {
+      shared.workspaceLoaded = true;
       console.error(err);
       alert('Map Import Failed! ' + err, true, 22);
       localStorage.setItem('ws', lastWS);
@@ -184,14 +187,17 @@ exportBtn.onclick = () => {
 // undo, redo, and clear
 const undoBtn = document.getElementById('undo-button');
 undoBtn.onclick = () => {
+  if(shared.inClearCheckMode === true) return;
   shared.ws.undo(false);
 }
 const redoBtn = document.getElementById('redo-button');
 redoBtn.onclick = () => {
+  if(shared.inClearCheckMode === true) return;
   shared.ws.undo(true);
 }
 const clearBtn = document.getElementById('clear-button');
 clearBtn.onclick = () => {
+  if(shared.inClearCheckMode === true) return;
   if(confirm('Are you sure you want to clear the map?') !== true) return;
   localStorage.removeItem('ws');
   load(shared.ws);

@@ -39,7 +39,7 @@ shared.startGame = () => {
 // gameloop
 let lastTime=0, now=0;
 window.frames = 0; shared.accum = 0;
-shared.FRAME_TIME = 1000 / 60;
+shared.FRAME_TIME = 1000 / 60; shared.offtabSync = false;
 function run(){
     requestAnimationFrame(run);
 
@@ -47,8 +47,14 @@ function run(){
     shared.accum += now - lastTime;
     lastTime = now;
 
-    // TODO: Get the map from another player
-    if(shared.accum > 2000) shared.accum = 0;
+    // Get the map from another player
+    if(shared.accum > 2000) {
+        shared.accum = -Infinity;
+        shared.offtabSync = true; 
+        const buf = new Uint8Array(1);
+        buf[0] = 16;
+        shared.send(buf);
+    }
 
     while(shared.accum >= 0){
         shared.accum -= shared.FRAME_TIME;

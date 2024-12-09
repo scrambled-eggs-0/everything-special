@@ -673,6 +673,8 @@ shared.toggleTimer = async () => {
     else shared.renderTimer = true;
 }
 
+import './extras/timer.js';
+
 shared.unTaintCanvas = () => {
     const transform = ctx.getTransform();
 

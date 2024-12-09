@@ -200,6 +200,7 @@ const extraObsMap = [
     }
 ];
 function changeState(){
+    if(shared.inClearCheckMode === true) return;
     lastSelected = undefined;
     obs.length = 0;
     state++;
@@ -433,6 +434,7 @@ function previewWithPos(){
     shared.C(...type, {...structuredClone(params)});
 }
 
+let offset = 0;
 function createWithPos(){
     if(startX === endX && startY === endY && type[0] !== 2){
         shared.stopEditorCreateDrag();
@@ -441,6 +443,9 @@ function createWithPos(){
     Blockly.Events.disable();
     generatePosParams[type[0]](params, startX, startY, endX, endY);
     const [block, extraState] = shared.createBlock(type, true);
+
+    console.log(block);
+    block.moveBy((offset++)*7, (offset++)*7);
 
     // set shape params we got from 
     for(let key in extraState.shapeParamToId){
@@ -591,7 +596,7 @@ shared.createBlock = (type, toFocus=false) => {
     
     shared.workspaceLoaded = true;
     // block.moveBy(x, y);
-    if(toFocus === true) ws.centerOnBlock(block.id);
+    if(toFocus === true) {ws.centerOnBlock(block.id);}
     for(let i = 0; i < shared.onWorkspaceLoadFunctions.length; i++){
         shared.onWorkspaceLoadFunctions[i]();
     }

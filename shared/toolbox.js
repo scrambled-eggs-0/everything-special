@@ -99,6 +99,10 @@ export default /*const toolbox =*/ {
         },
         {
           'kind': 'block',
+          'type': 'set_revives'
+        },
+        {
+          'kind': 'block',
           'type': 'map_dimensions'
         },
         {

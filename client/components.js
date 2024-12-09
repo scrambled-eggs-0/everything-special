@@ -1349,11 +1349,15 @@ const effectMap = [
     /*winpad*/
     (p, res, o) => {
         if(environment === 'editor' || shared.standalone === true){
-            // respawn
-            shared.respawnPlayer();
-            if(shared.inClearCheckMode === true){
-                shared.exitClearCheckMode();
-                uploadCode();
+            if(shared.isExClient === true){
+                shared.uploadCode();
+            } else {
+                // respawn
+                shared.respawnPlayer();
+                if(shared.inClearCheckMode === true){
+                    shared.exitClearCheckMode();
+                    uploadCode();
+                }
             }
         } else if(shared.won !== true){
             shared.won = true;
@@ -2025,7 +2029,7 @@ shared.effectDefaultMap = [
     // invisible
     {},
     // changeMap
-    {mapName: 'hub', toCustomPlanet: true},
+    {mapName: 'hub', toCustomPlanet: false},
     // tornado
     {tornadoStrength: 1},
     // changeVignette
@@ -2672,39 +2676,38 @@ const renderEffectMap = [
 
         if(o.toCustomPlanet === true){
             ctx.fillStyle = '#646464';
-            ctx.fillRect(o.topLeft.x, o.topLeft.y, o.dimensions.x, o.dimensions.y);
 
-            ctx.font = `1000 ${Math.min(o.dimensions.x, o.dimensions.y)/2}px Inter`;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillStyle = '#464646';
-            ctx.translate(o.topLeft.x + o.dimensions.x/2, o.topLeft.y + o.dimensions.y/2);
+            ctx.cleanUpFunction = () => {
+                ctx.font = `1000 ${Math.min(o.dimensions.x, o.dimensions.y)/2}px Inter`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = '#464646';
+                ctx.translate(o.topLeft.x + o.dimensions.x/2, o.topLeft.y + o.dimensions.y/2);
 
-            if(o.randomSineOffset === undefined) o.randomSineOffset = Math.random() * Math.PI * 2;
-            const r = Math.sin(window.frames / 36 + o.randomSineOffset) * 0.32;
-            ctx.rotate(r);
-            ctx.fillText('?', 0, 0);
-            ctx.rotate(-r);
-            ctx.translate(-(o.topLeft.x + o.dimensions.x/2), -(o.topLeft.y + o.dimensions.y/2));
+                if(o.randomSineOffset === undefined) o.randomSineOffset = Math.random() * Math.PI * 2;
+                const r = Math.sin(window.frames / 36 + o.randomSineOffset) * 0.32;
+                ctx.rotate(r);
+                ctx.fillText('?', 0, 0);
+                ctx.rotate(-r);
+                ctx.translate(-(o.topLeft.x + o.dimensions.x/2), -(o.topLeft.y + o.dimensions.y/2));
 
-            ctx.fillStyle = 'white';
-            ctx.font = `${o.dimensions.x / 3.5}px Inter`;
+                ctx.fillStyle = 'white';
+                ctx.font = `${o.dimensions.x / 3.5}px Inter`;
 
-            // same fillText
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
+                // same fillText
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
 
-            ctx.globalAlpha = Math.min(1,((shared.players[shared.selfId].pos.y + canvas.h/2) - (o.topLeft.y)) / (o.dimensions.y));
+                ctx.globalAlpha = Math.min(1,((shared.players[shared.selfId].pos.y + canvas.h/2) - (o.topLeft.y)) / (o.dimensions.y));
 
-            ctx.globalAlpha *= 0.8;
-            ctx.fillText(
-                o.mapName,
-                o.topLeft.x + o.dimensions.x / 2,
-                o.topLeft.y - o.dimensions.y / 4
-            );
-            ctx.globalAlpha = 1;
-
-            ctx.toFill = false;
+                ctx.globalAlpha *= 0.8;
+                ctx.fillText(
+                    o.mapName,
+                    o.topLeft.x + o.dimensions.x / 2,
+                    o.topLeft.y - o.dimensions.y / 4
+                );
+                ctx.globalAlpha = 1;
+            }
             return;
         }
 

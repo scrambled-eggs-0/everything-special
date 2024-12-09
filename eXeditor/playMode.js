@@ -8,6 +8,7 @@ let lastCameraX, lastCameraY, lastCameraScale;
 
 // const playButtonText = document.getElementById("play-button-text");
 shared.togglePlayMode = () => {
+    if(shared.inClearCheckMode === true) return;
     shared.playMode = !shared.playMode;
 
     const p = shared.players[shared.selfId];
@@ -38,6 +39,7 @@ const lastCreate = shared.C;
 
 // const simulateButtonText = document.getElementById("simulate-button-text");
 shared.toggleSimulateMode = () => {
+    if(shared.inClearCheckMode === true) return;
     shared.simulateMode = !shared.simulateMode;
 
     if(shared.simulateMode === false){

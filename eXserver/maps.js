@@ -16,6 +16,7 @@ global.tutorialMapName = 'potb';
 shared.isServer = true;
 
 global.leaderboard = {/*mapName: {id: playerName, ...}*/};
+global.customMapDifficulties = {};// for leaderboard
 global.maps = {};
 
 const validPaths = {};
@@ -44,11 +45,21 @@ function mapExists(name){
     return validPaths[`./maps/${name}.js`] !== undefined;
 }
 
-function createCustomMap(name){
+function createCustomMap(name, metadata){
     // already assume it exists
     // because we have metadata.
     global.leaderboard[name] = {};
-    return new Map(name);    
+    global.customMapDifficulties[name] = metadata.difficulty;
+
+    // send difficulty
+    const buf = new Uint8Array(8 + Math.ceil(name.length/4)*4);
+    buf[0] = 23;
+    const f32 = new Float32Array(buf.buffer);
+    f32[1] = metadata.difficulty;
+    global.encoder.encodeInto(name, buf.subarray(8 | 0));
+    global.broadcastEveryone(buf);
+
+    return new Map(name);
 }
 
 const buf2 = new Uint8Array(2);
@@ -56,7 +67,7 @@ buf2[0] = 3;
 function addToMap(me, mapName, metadata=null){
     // custom creation vs normal creation
     if(metadata !== null){
-        if(global.maps[mapName] === undefined) global.maps[mapName] = createCustomMap(mapName);
+        if(global.maps[mapName] === undefined) {global.maps[mapName] = createCustomMap(mapName, metadata);}
     }
     else if(global.maps[mapName] === undefined) global.maps[mapName] = createMap(mapName);
 
@@ -80,7 +91,7 @@ function removeFromMap(me, isConnected=true){
     global.maps[me.mapName].removePlayer(me.player);
     global.maps[me.mapName].removeClient(me, isConnected);
 
-    if(global.maps[me.mapName].players.length === 0) {delete global.maps[me.mapName]; delete global.leaderboard[me.mapName]}
+    if(global.maps[me.mapName].players.length === 0) {delete global.maps[me.mapName]; delete global.leaderboard[me.mapName]; delete global.customMapDifficulties[me.mapName];}
     else {
         // send to all other clients removePlayer
         u8[0] = 6;// message type 6 - remove player

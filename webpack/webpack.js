@@ -59,7 +59,11 @@ if(global.env === 'dev'){
 const compiler = webpack(webpackSettings);
 
 if(global.env === 'build') {
-    console.log('Built Successfully.');
+    compiler.run((err, stats) => {
+        if (err != null) console.log('webpack error! ', err);
+        else if(stats.hasErrors() === true) console.log('fatal webpack error!!', stats.toJson().errors)
+        else console.log('Built Successfully.');
+    });
 } else {
     // watch for changes and compile if there are any
     compiler.watch(

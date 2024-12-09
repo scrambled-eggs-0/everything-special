@@ -776,8 +776,27 @@ const messageMap = [
         u16[1] = me.player.id;
         global.maps[me.mapName].broadcast(data);
     },
-    // 16 - unused
-    () => {},
+    // 16 - sync request because offtab
+    (data, me) => {
+        if(me.mapName === '' || global.maps[me.mapName].clients.length <= 1) return;
+
+        const map = global.maps[me.mapName];
+        let otherClient = map.getRandomClient();
+        if(otherClient === me){
+            if(map.clients[0] === me) otherClient = map.clients[1];
+            else otherClient = map.clients[0];
+        }
+
+        const authId = me.ws.id;
+
+        const buf = new Uint8Array(1);
+        buf[0] = 20; // request map
+        send(otherClient, buf);
+        otherClient.mapRequestFor = authId;
+        setTimeout(() => {
+            if(otherClient.mapRequestFor === authId) otherClient.mapRequestFor = undefined;
+        }, 2000)
+    },
     // 17 - unused
     () => {},
     // 18 - unused

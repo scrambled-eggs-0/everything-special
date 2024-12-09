@@ -18,6 +18,8 @@ let draggingMaxY = false;
 
 let rotateAngle, startRotateAngle, rotating=false;
 
+let unSnappedX, unSnappedY;
+
 // transformBoundX = transformBoundY = 100;
 // transformBoundW = transformBoundH = 500;
 
@@ -31,6 +33,7 @@ for(let i = 0; i < stateDivs.length; i++){
     const btn = stateDivs[i].children[0];
     const text = stateDivs[i].children[1];
     btn.onclick = () => {
+        if(shared.inClearCheckMode === true) return;
         highlightedText.classList.remove('red');
         text.classList.add('red');
         highlightedText = stateDivs[i].children[1];
@@ -53,13 +56,13 @@ function renderSelection(){
     }
     shared.translateWorldToScreen();
 
-    if(startX !== undefined){
+    if(unSnappedX !== undefined){
         shared.translateScreenToWorld();
         ctx.fillStyle = 'black';
         ctx.strokeStyle = 'black';
         ctx.lineWidth = 6;
         ctx.beginPath();
-        ctx.rect(startX, startY, endX - startX, endY - startY);
+        ctx.rect(unSnappedX, unSnappedY, endX - unSnappedX, endY - unSnappedY);
         ctx.globalAlpha = 0.3;
         ctx.fill();
         ctx.globalAlpha = 1;
@@ -107,7 +110,8 @@ function restartSimulation(){
 let singleFlag = false;// TODO: pausing simulation!!
 shared.editorMouseDownFns.push((e) => {
     // creating obs
-    [startX, startY] = getWorldPos(e);
+    [unSnappedX, unSnappedY] = getWorldPos(e);
+    [startX, startY] = shared.snapPt([unSnappedX, unSnappedY]);
 
     if(state !== 'select'){
         // scale - check if we're close to the rect selection rect and if so determine which bounds we're dragging
@@ -178,7 +182,7 @@ shared.editorMouseDownFns.push((e) => {
     }
     
     // immediate selection - if we're intersecting with an obs right now then select it and only it.
-    shared.C(0,[],[0],{x:startX, y:startY, r:25});
+    shared.C(0,[],[0],{x:unSnappedX, y:unSnappedY, r:25});
     const selection = shared.obstacles.pop();
     const res = new SAT.Response(); let collided = false;
     // looping in render order - we want to select the topmost obs
@@ -197,10 +201,10 @@ shared.editorMouseDownFns.push((e) => {
             }
             
             // if we're not included start a single drag.
-            if(shared.selectedObstacles.includes(shared.obstacles[i]) === false){
+            if(shared.selectedObstacles.length === 1 || shared.selectedObstacles.includes(shared.obstacles[i]) === false){
                 // set this obstacle to be the only one
                 shared.selectedObstacles = [shared.obstacles[i]];
-                startX = startY = undefined;
+                startX = startY = unSnappedX = unSnappedY = undefined;
                 singleFlag = true;
                 selectCorrespondingBlock(shared.selectedObstacles[0]);
 
@@ -211,7 +215,7 @@ shared.editorMouseDownFns.push((e) => {
                     tMinY = o.topLeft.y;
                     tMaxX = o.topLeft.x + o.dimensions.x;
                     tMaxY = o.topLeft.y + o.dimensions.y;
-                    startX = startY = undefined;
+                    startX = startY = unSnappedX = unSnappedY = undefined;
                     rotating = false;
                 }
             }
@@ -272,10 +276,10 @@ shared.editorMouseUpFns.push((e) => {
     }
     shared.selectedObstacles.length = 0;
     shared.unInitMenu();
-    if(startX === undefined) return;
+    if(unSnappedX === undefined) return;
     [endX, endY] = getWorldPos(e);
 
-    const params = {x: Math.min(startX, endX), y: Math.min(startY, endY), w: Math.abs(startX - endX), h: Math.abs(startY - endY)};
+    const params = {x: Math.min(unSnappedX, endX), y: Math.min(startY, endY), w: Math.abs(unSnappedX - endX), h: Math.abs(startY - endY)};
     if(params.w !== 0 && params.h !== 0){
         shared.C(1,[],[0],params);
         const selection = shared.obstacles.pop();
@@ -295,7 +299,7 @@ shared.editorMouseUpFns.push((e) => {
             selectCorrespondingBlock(shared.selectedObstacles[shared.selectedObstacles.length-1]);
         }
     }
-    startX = startY = endX = endY = undefined;
+    unSnappedX = unSnappedY = startX = startY = endX = endY = undefined;
     shared.regenerateMenu();
     if(state !== 'select') updateTransformBounds();
 })
@@ -362,7 +366,15 @@ function selectCorrespondingBlock(o) {
     if(block !== null && block !== undefined){
         shared.ws.centerOnBlock(block.id);
         block.select();
+        bringBlockToFront(block);
     }
+}
+
+function bringBlockToFront(block) {
+    const svgRoot = block.getSvgRoot();
+    if (svgRoot === null || svgRoot === undefined) return;
+    const workspaceSvg = shared.ws.getCanvas();
+    workspaceSvg.appendChild(svgRoot);
 }
 
 shared.deleteSelectedObs = () => {

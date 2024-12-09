@@ -8,6 +8,7 @@ let open = false; let allowGeneration = false;
 const toggle = document.querySelector('.toggle-gui');
 const gui = document.querySelector('.data-gui');
 toggle.onclick = (e) => {
+    if(shared.inClearCheckMode === true) return;
     open = !open;
     if(open === true){
         toggle.innerText = 'Close Menu';
@@ -45,7 +46,7 @@ const settings = {
     difficulty: dropdown(['Peaceful', 'Moderate','Difficult','Hardcore','Exhausting','Relentless','Agonizing','Terrorizing','Cataclysmic']),
     subDifficulty: 0.5,
     mapName: 'Planet of Creative Name',
-    uploadBtn: button("Upload! 🔥", uploadCode),
+    uploadBtn: button("Upload! 🔥", enterClearCheck),
 }
 
 const nameToDifficulty = {Peaceful: 0, Moderate: 1, Difficult: 2, Hardcore: 3, Exhausting: 4, Relentless: 5, Agonizing: 6, Terrorizing: 7, Cataclysmic: 8};
@@ -389,54 +390,112 @@ createFolder(settings, changeSettings, "Settings");
 let username = localStorage.getItem('username');
 let password = localStorage.getItem('password');
 
+const uploadBtn = document.getElementById('upload-button');
+
+uploadBtn.onclick = () => {
+    if(shared.inClearCheckMode === true){
+        exitClearCheck();
+    } else {
+        enterClearCheck();
+    }
+}
+
+shared.inClearCheckMode = false;
+let lastOpen, lastPlayMode, lastSimulateMode, exclams='!';
+function enterClearCheck() {
+    if(shared.inClearCheckMode === true) return;
+    if(mapName === 'Planet of Creative Name') {
+        alert('Upload failed because default map name was used! Go to Open Menu > Settings > map name and replace "Planet of Creative Name" with, well, a creative name!', true, 18);
+        return;
+    }
+    let foundWinpad = false;
+    for(let i = 0; i < shared.obstacles.length; i++){
+        if(shared.obstacles[i].isWinpad === true){
+            foundWinpad = true; break;
+        }
+    }
+    if(foundWinpad === false){
+        alert(`Could not upload level because there is no winpad! Add one and try again!`, true, 6);
+        return;
+    }
+    // direct user to login page if we don't have a saved username
+    if(username === null || password === null){
+        exclams += '!';
+        alert(`Stop pressing me >:( ${exclams} I am an angry troll that doesnt let people without an account pass, so GO AWAY! Stop! Head on down to the land of evadesX.io/create or /login to get an account, and then maybe i'll let you upload your little level, ha!`, true, 22);
+        return;
+    }
+
+    alert('To prove your level is possible, you must clear it before uploading. Good Luck!');
+    shared.setDividerPercent(1);
+    shared.resetGame();
+    shared.respawnPlayer();
+    shared.runCode();
+    shared.cancelCreate();
+    lastOpen = open;
+    if(open === true) toggle.onclick({preventDefault:()=>{}});
+    lastPlayMode = shared.playMode;
+    if(shared.playMode === false) shared.togglePlayMode();
+    lastSimulateMode = shared.simulateMode;
+    if(lastSimulateMode === false) shared.toggleSimulateMode();
+    shared.inClearCheckMode = true;
+
+    shared.selectedObstacles.length = 0;
+    shared.regenerateMenu();
+}
+
+function exitClearCheck() {
+    if(shared.inClearCheckMode === false) return;
+    shared.inClearCheckMode = false;
+    shared.resetDividerPercent();
+    if(lastOpen === true) toggle.onclick({preventDefault:()=>{}});
+    if(lastPlayMode === false) shared.togglePlayMode();
+    if(lastSimulateMode === false) shared.toggleSimulateMode();
+}
+shared.exitClearCheck = exitClearCheck;
+
 // Upload code!
 const uploadUrl = `${location.origin}/upload`;
-let exclams = '';
+shared.uploadCode = uploadCode;
 function uploadCode() {
-  // direct user to login page if we don't have a saved username
-  if(username === null){
-    exclams += '!';
-    alert(`Stop pressing me >:( ${exclams} I am an angry troll that doesnt let people without an account pass, so GO AWAY! Stop! Head on down to the land of evadesX.io/create or /login to get an account, and then maybe i'll let you upload your little level, ha!`, true, 22);
-    return;
-  }
+    exitClearCheck();
+    if(username === null) return;
 
-  save(shared.ws);
-  const blob = new Blob([localStorage.getItem("ws")], { type: 'application/javascript' });
+    save(shared.ws);
+    const blob = new Blob([localStorage.getItem("ws")], { type: 'application/javascript' });
 
-  const formData = new FormData();
-  formData.append('file', blob, 'upload.js');
+    const formData = new FormData();
+    formData.append('file', blob, 'upload.js');
 
-  const headers = new Headers();
-  headers.append('u', username);
-  headers.append('p', password);
+    const headers = new Headers();
+    headers.append('u', username);
+    headers.append('p', password);
 
-  if(difficulty === 9) difficulty = 8.9999;
-  headers.append('difficulty', difficulty);
-  headers.append('mapname', mapName);
+    if(difficulty === 9) difficulty = 8.9999;
+    headers.append('difficulty', difficulty);
+    headers.append('mapname', mapName);
 
-  fetch(uploadUrl, {
+    fetch(uploadUrl, {
     method: 'POST',
     body: formData,
     headers: headers
-  }).then(async (d) => {
-      const txt = await d.text();
-      if(txt === 'taken'){
-        const txt = prompt(`Upload failed because your planet name (${mapName}) is taken! Type a new map name here and click ok to retry, or hit cancel and change the name in game menu.`);
-        console.log(txt);
-        if(txt === null) return;
-        mapName = txt;
-        uploadCode();
-        return;
-      }
-      if(txt === 'n'){
-        alert('Upload failed! If you think this might be a bug, please dm a developer on discord!', true, 22);
-        return;
-      }
-      alert(`Congrats! ${mapName} was uploaded to the servers!`, true, 22*3);
-      
-      if(!location.origin.startsWith('http://localhost')) {ws.clear(); localStorage.removeItem('ws'); load(shared.ws); }
+    }).then(async (d) => {
+        const txt = await d.text();
+        if(txt === 'taken'){
+            const txt = prompt(`Upload failed because your planet name (${mapName}) is taken! Type a new map name here and click ok to retry, or hit cancel and change the name in game menu (cancelling will force you to redo the clear check).`);
+            if(txt === null) return;
+            mapName = txt;
+            uploadCode();
+            return;
+        }
+        if(txt === 'n'){
+            alert('Upload failed! If you think this might be a bug, please dm a developer on discord!', true, 22);
+            return;
+        }
+        alert(`Congrats! ${mapName} was uploaded to the servers!`, true, 22*3);
+        
+        if(!location.origin.startsWith('http://localhost')) {ws.clear(); localStorage.removeItem('ws'); load(shared.ws); }
     })
     .catch(error => {
-      console.error('Error uploading file:', error);
+        console.error('Error uploading file:', error);
     });
 }

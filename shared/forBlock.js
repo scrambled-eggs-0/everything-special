@@ -132,7 +132,7 @@ forBlock['create_obstacle'] = function(block, generator) {
 
   // console.log({shape, simulates, effects, params});
   
-  return `shared.C(${shape},${simulates},${effects},${params});\n`
+  return `C(${shape},${simulates},${effects},${params});\n`
    + (shared.environment === 'editor' ? `shared.CB2O("${block.id}");\n` : '');
   // console.log(shapeParams);
 
@@ -408,6 +408,28 @@ forBlock['player_spawn'] = function (block, generator) {
   }
   return str + '\n';
 };
+
+forBlock['set_revives'] = function (block, generator) {
+  const state = block.getFieldValue('REVIVES_ENABLED', Order.NONE) === "TRUE";
+  if(state === false){
+    return "shared.customToRevive = false;";
+  } else {
+    return `shared.customToRevive = true;\nC(0,[],[3],{x:-1E9,y:0,r:1,sf:(o,p)=>{
+      if(p.dead === true && shared.customToRevive !== false){
+        for(let i = 0; i < shared.players.length; i++){
+          const p2 = shared.players[i];
+          if(p2 === undefined) continue;
+          if(p2.dead === false && (p2.pos.x-p.pos.x) ** 2 + (p2.pos.y-p.pos.y) ** 2 < (p2.sat.r + p.sat.r) ** 2){
+            p.dead = false;
+            p.renderRadius = 0;
+          }
+        }
+      }
+    }});\n`;
+  }
+};
+
+
 
 // forBlock['this_touching'] = function (block, generator) {
 //   const objectId = block.getFieldValue('SPRITE_ID', Order.NONE);

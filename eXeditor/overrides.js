@@ -32,6 +32,7 @@ shared.render = (...params) => {
 }
 
 canvas.onmousedown = (e) => {
+    if(shared.inClearCheckMode === true) return;
     shared.breakFns = false;
     for(let i = 0; i < shared.editorMouseDownFns.length; i++){
         shared.editorMouseDownFns[i](e);
@@ -39,6 +40,7 @@ canvas.onmousedown = (e) => {
     }
 }
 canvas.onmousemove = (e) => {
+    if(shared.inClearCheckMode === true) return;
     shared.breakFns = false;
     for(let i = 0; i < shared.editorMouseMoveFns.length; i++){
         shared.editorMouseMoveFns[i](e);
@@ -47,6 +49,7 @@ canvas.onmousemove = (e) => {
     lastMouseMoveEvent = e;
 }
 canvas.onmouseup = (e) => {
+    if(shared.inClearCheckMode === true) return;
     shared.breakFns = false;
     for(let i = 0; i < shared.editorMouseUpFns.length; i++){
         shared.editorMouseUpFns[i](e);
@@ -67,7 +70,10 @@ window.onkeydown = window.onkeyup = (e) => {
     if(e.code === 'KeyZ'){
         shared.stopEditorCreateDrag();
     } else if(e.code === 'Escape'){
-        shared.cancelCreate();
+        if(shared.inClearCheckMode === true){
+            shared.exitClearCheck();
+        }
+        else shared.cancelCreate();
     } else if(e.code === 'Delete'){
         shared.deleteSelectedObs();
     } else if(e.code === 'Digit0' && e.ctrlKey === true){// TODO && testing === false

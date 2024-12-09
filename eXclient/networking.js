@@ -101,7 +101,7 @@ window.loadMap = (I) => {
     } else lateSyncMap = true;
 }
 
-
+const customMapDifficulties = {};
 function addToLeaderboard(playerName, mapName){
     let mapDiv = document.getElementById(`leaderboard-map-${mapName}`);
     if(mapDiv === null){
@@ -110,7 +110,7 @@ function addToLeaderboard(playerName, mapName){
         mapDiv.classList.add("lb-group");
         mapDiv.id = `leaderboard-map-${mapName}`;
 
-        const difficulty = shared.mapDifficulties[mapName] ?? 0;
+        const difficulty = shared.mapDifficulties[mapName] ?? customMapDifficulties[mapName] ?? 0;
         const displayMapName = stringHTMLSafe(shared.mapLeaderboardNames[mapName] ?? mapName);
 
         const mapNameDiv = document.createElement('span');
@@ -460,16 +460,23 @@ const messageMap = [
                 }
             }
         }
+
+        const offtab = shared.offtabSync;
         
-        if(lateSyncMap === true){
+        if(lateSyncMap === true || shared.offtabSync === true){
             syncMapFn();
             syncMapFn = undefined;
+            shared.offtabSync = false;
             lateSyncMap = false;
         }
 
-        const ticksToSimulate = (window.frames - shared.mapEntryTime) / 2;
-        if(ticksToSimulate > 2000) return;
-        shared.accum += shared.FRAME_TIME * ticksToSimulate;
+        if(offtab === true) {
+            shared.accum = 0;
+        } else {
+            const ticksToSimulate = (window.frames - shared.mapEntryTime) / 2;
+            if(ticksToSimulate > 2000) return;
+            shared.accum += shared.FRAME_TIME * ticksToSimulate;
+        }
     },
     // 22 - change radius
     (data) => {
@@ -478,7 +485,14 @@ const messageMap = [
         if(id === shared.selfId) return;
         const f32 = new Float32Array(data.buffer);
         shared.players[id].sat.r = f32[1];
-    }
+    },
+    // 23 - set custom map difficulty
+    (data) => {
+        const f32 = new Float32Array(data.buffer);
+        const difficulty = f32[1];
+        const mapName = decodeText(data, 8).replaceAll('\x00', '');
+        customMapDifficulties[mapName] = difficulty;
+    },
 ]
 
 function createPlayerFromData(data){

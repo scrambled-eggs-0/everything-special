@@ -29,6 +29,7 @@ Blockly.common.defineBlocks(libraryBlocks);
 Blockly.common.defineBlocks(blocks);
 forBlock['modify_existing'](javascriptGenerator, Blockly);
 javascriptGenerator.addReservedWords('code');
+javascriptGenerator.addReservedWords('C');
 javascriptGenerator.INFINITE_LOOP_TRAP = 'if(--shared.loopTrap == 0){try{eval("break;")}catch(e){eval("return;")}}\n';
 Object.assign(javascriptGenerator.forBlock, forBlock);
 
@@ -47,5 +48,5 @@ export default function validate(wsData) {
     
     // console.log(code.replaceAll('var ', 'let '));
     // return false;
-    return `window.loadMap((shared) => {\nshared.resetGame();\n${code}\n})`;
+    return `window.loadMap((shared) => {\nconst C=shared.C;\nshared.resetGame();\n${code}\n})`;
 }
