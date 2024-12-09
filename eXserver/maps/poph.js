@@ -294,7 +294,7 @@ let areas = [
 	}],
 	[{ //1.2
 		type: "normal",
-		count: 18,
+		count: 16,
 		radius: 24,
 		speed: 2
 	}, {
@@ -315,7 +315,7 @@ let areas = [
 	}],
 	[{ //1.3
 		type: "normal",
-		count: 12,
+		count: 11,
 		radius: 30,
 		speed: 6
 	}, {
@@ -331,7 +331,7 @@ let areas = [
 	}],
 	[{ //1.4
 		type: "normal",
-		count: 60,
+		count: 50,
 		radius: 18,
 		speed: 2
 	}, {
@@ -368,7 +368,7 @@ let areas = [
 	}],
 	[{ //2.2
 		type: "dasher",
-		count: 22,
+		count: 19,
 		radius: 18,
 		speed: 9
 	}, {
@@ -441,7 +441,7 @@ let areas = [
 	}],
 	[{ //3.1
 		type: "normal",
-		count: 90,
+		count: 75,
 		radius: 12,
 		speed: 6
 	}, {
@@ -468,12 +468,12 @@ let areas = [
 	}],
 	[{ //3.3
 		type: "normal",
-		count: 18,
+		count: 16,
 		radius: 18,
 		speed: 12
 	}, {
 		type: "homing",
-		count: 15,
+		count: 13,
 		radius: 15,
 		speed: 6
 	}, {
@@ -484,12 +484,12 @@ let areas = [
 	}],
 	[{ //3.4
 		type: "normal",
-		count: 14,
+		count: 13,
 		radius: 18,
 		speed: 13
 	}, {
 		type: "normal",
-		count: 14,
+		count: 13,
 		radius: 12,
 		speed: 13
 	}, {
@@ -534,7 +534,7 @@ let areas = [
 		speed: 18
 	}, {
 		type: "stop",
-		count: 12,
+		count: 10,
 		radius: 30,
 		speed: 7
 	}, {
@@ -545,7 +545,7 @@ let areas = [
 	}],
 	[{ //4.4
 		type: "blackhole",
-		count: 25,
+		count: 22,
 		radius: 9,
 		speed: 10
 	}, {
@@ -592,7 +592,7 @@ let areas = [
 		speed: 7
 	}, {
 		type: "blackhole",
-		count: 7,
+		count: 2,
 		radius: 9,
 		speed: 7
 	}, {
@@ -613,7 +613,7 @@ let areas = [
 	}],
 	[{ //5.3
 		type: "killmoving",
-		count: 70,
+		count: 65,
 		radius: 18,
 		speed: 12
 	}, {
@@ -624,7 +624,7 @@ let areas = [
 	}],
 	[{ //5.4
 		type: "killmoving",
-		count: 4,
+		count: 3,
 		radius: 24,
 		speed: 7
 	}, {
@@ -663,12 +663,12 @@ let areas = [
 		speed: 7
 	}, {
 		type: "dasher",
-		count: 5,
+		count: 3,
 		radius: 15,
 		speed: 7
 	}, {
 		type: "homing",
-		count: 6,
+		count: 3,
 		radius: 21,
 		speed: 7
 	}, {
@@ -693,7 +693,7 @@ let areas = [
 		speed: 8
 	}, {
 		type: "outofbounds",
-		count: 15,
+		count: 11,
 		radius: 18,
 		speed: 9
 	}, {
@@ -1066,7 +1066,7 @@ let areas = [
 		type: "warp",
 		count: 12,
 		radius: 30,
-		speed: 8
+		speed: 6
 	}, {
 		type: "wall",
 		count: 8,
@@ -1202,12 +1202,12 @@ let areas = [
 		}
 	}, {
 		type: "normal",
-		count: 40,
+		count: 30,
 		radius: 12,
 		speed: 3
 	}, {
 		type: "normal",
-		count: 40,
+		count: 30,
 		radius: 18,
 		speed: 2
 	}, {
@@ -1370,12 +1370,12 @@ let areas = [
 		}
 	}, {
 		type: "dasher",
-		count: 40,
+		count: 35,
 		radius: 12,
 		speed: 3
 	}, {
 		type: "normal",
-		count: 10,
+		count: 8,
 		radius: 18,
 		speed: 6
 	}, {
@@ -1419,12 +1419,12 @@ let areas = [
 	}, {
 		type: "normal",
 		count: 10,
-		radius: 18,
+		radius: 6,
 		speed: 6
 	}, {
 		type: "homing",
-		count: 15,
-		radius: 6,
+		count: 8,
+		radius: 18,
 		speed: 2
 	},{
 		type: "wall",
@@ -1570,12 +1570,12 @@ let areas = [
 			type: "snake",
 			count: 8,
 			radius: 18,
-			speed: 3.2
+			speed: 2.4
 		}, {
 			type: "oscillating",
 			count: 9,
 			radius: 18,
-			speed: 2.4
+			speed: 1.6
 		}, {
 			type: "slower",
 			count: 18,
@@ -1615,7 +1615,7 @@ let areas = [
 	[
 		{
 			type: "normal",
-			count: 120,
+			count: 110,
 			radius: 12,
 			speed: 2.8 * 2
 		}
@@ -3034,6 +3034,10 @@ for (let i = 0; i < areas.length; i++) {
 								if (players[ii] == undefined) {
 									continue;
 								}
+								if (!(players[ii].pos.x % 15000 > 1000 && players[ii].pos.x % 15000 < 9000)){
+									//Not in active zone!
+									continue;
+								}
 								if (players[ii].dead == true){
 									//Dead!
 									continue;
@@ -3108,6 +3112,10 @@ for (let i = 0; i < areas.length; i++) {
 						sf: (e) => {
 							for (let ii of Object.keys(players)) {
 								if (players[ii] == undefined) {
+									continue;
+								}
+								if (!(players[ii].pos.x % 15000 > 1000 && players[ii].pos.x % 15000 < 9000)){
+									//Not in active zone!
 									continue;
 								}
 								if (players[ii].dead == true){

@@ -10920,8 +10920,8 @@ C(1,[],[17],{x:14100,y:6100,w:1200,h:800,timeTrapToShowTenth:false,timeTrapToKil
             ctx.globalAlpha = 1;
         }
     });C(1,[],[1],{type:[1,[],[1]],x:14200,y:6200,w:1000,h:700,canCollide:false,inView:false,boundPlayer:false,})
-C(1,[1],[1],{type:[1,[1],[1]],x:14200,y:7400,w:1500,h:200,angle:9520.616666664913,rotateSpeed:0.017744107744107743,pivotX:14950,pivotY:7500,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:378.3186487605389,unSim:4.433333333333343,inView:false,initialRotation:166.1661076535502,boundPlayer:true,})
-C(1,[1],[1],{type:[1,[1],[1]],x:14200,y:7400,w:1500,h:200,angle:9610.61666666487,rotateSpeed:0.017744107744107743,pivotX:14950,pivotY:7500,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:378.3186487605389,unSim:4.433333333333343,inView:false,initialRotation:167.73690398034435,boundPlayer:true,})
+C(1,[1],[1],{type:[1,[1],[1]],x:14200,y:7400,w:1500,h:200,angle:9520.616666664913,rotateSpeed:0.017744107744107743,pivotX:14950,pivotY:7500,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:378.3186487605389,unSim:4.433333333333343,inView:false,initialRotation:166.1661076535502,boundPlayer:false,})
+C(1,[1],[1],{type:[1,[1],[1]],x:14200,y:7400,w:1500,h:200,angle:9610.61666666487,rotateSpeed:0.017744107744107743,pivotX:14950,pivotY:7500,distToPivot:0,canCollide:true,renderType:"rotating",cullingRadius:378.3186487605389,unSim:4.433333333333343,inView:false,initialRotation:167.73690398034435,boundPlayer:false,})
 C(1,[],[1],{type:[1,[],[1]],x:14250,y:11050,w:150,h:350,canCollide:true,inView:false,boundPlayer:true,})
 C(1,[],[1],{type:[1,[],[1]],x:15000,y:11050,w:150,h:350,canCollide:true,inView:false,boundPlayer:true,})
 C(1,[],[8],{type:[1,[],[8]],x:14900,y:11600,w:200,h:200,coins:1,currentCoins:1,inView:false,coinDoorColor:"#d5d612",coindoorCoinAmount:1,})

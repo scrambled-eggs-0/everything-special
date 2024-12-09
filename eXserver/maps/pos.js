@@ -2082,7 +2082,7 @@ C(1,[],[1],{type:[1,[],[1]],x:6850,y:17900,w:150,h:100,canCollide:true,inView:fa
 C(1,[],[1],{type:[1,[],[1]],x:6900,y:17600,w:200,h:200,canCollide:true,inView:false,boundPlayer:true,})
 C(1,[],[1],{type:[1,[],[1]],x:6750,y:17410,w:50,h:150,canCollide:true,inView:false,boundPlayer:true,})
 C(1,[],[1],{type:[1,[],[1]],x:6600,y:17650,w:50,h:150,canCollide:true,inView:false,boundPlayer:true,})
-C(1,[],[13],{type:[1,[],[13]],x:6300,y:17450,w:300,h:300,force:2000,dir:{"x":0,"y":-2000},direction:"up",inView:false,conveyorAngle:270,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorForce:1.4165666266506605,})
+C(1,[],[13],{type:[1,[],[13]],x:6350,y:17450,w:300,h:300,force:2000,dir:{"x":0,"y":-2000},direction:"up",inView:false,conveyorAngle:270,conveyorFriction:0.8,conveyorAngleRotateSpeed:0,conveyorForce:1.4165666266506605,})
 C(1,[],[1],{type:[1,[],[1]],x:6000,y:18250,w:100,h:50,canCollide:true,inView:false,boundPlayer:true,})
 C(1,[],[1],{type:[1,[],[1]],x:5750,y:18400,w:150,h:50,canCollide:true,inView:false,boundPlayer:true,})
 C(1,[],[1],{type:[1,[],[1]],x:6000,y:18550,w:100,h:50,canCollide:true,inView:false,boundPlayer:true,})
