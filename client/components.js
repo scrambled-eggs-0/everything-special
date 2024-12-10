@@ -1350,7 +1350,12 @@ const effectMap = [
     (p, res, o) => {
         if(environment === 'editor' || shared.standalone === true){
             if(shared.isExClient === true){
-                shared.uploadCode();
+                if(shared.inClearCheckMode === true){
+                    shared.inClearCheckMode = false;
+                    shared.uploadCode();
+                } else {
+                    shared.respawnPlayer();
+                }
             } else {
                 // respawn
                 shared.respawnPlayer();
