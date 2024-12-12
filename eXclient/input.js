@@ -75,7 +75,7 @@ function handleKey(e){
                 shared.changeMap('/maps/hub');
             }
             else if(msg === '/help'){
-                shared.addChatMessage(`: Evades X is a futuristic dodging game where anything is possible!<br><br>Commands:<br>/reset - teleports you to the hub world<br>...and that's it lol, more commands coming soon`, 'system');
+                shared.addChatMessage(`: <b>Evades X is a futuristic dodging game where anything is possible!</b><br><br><b>Global keybinds:</b><br>WASD/Arrow Keys - Move<br>r - Respawn<br>z - Toggle chat and leaderboard<br>t - Toggle timer<br><br><b>Commands:</b><br>/reset - teleports you to the hub world<br>...and that's it lol, more commands coming soon`, 'system');
             }
             else if(shared.isProd === false && msg.slice(0,6) === '/tpmap'){
                 shared.changeMap(`/maps/` + msg.slice(7).toLowerCase());
