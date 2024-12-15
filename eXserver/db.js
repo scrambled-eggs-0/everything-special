@@ -13,6 +13,7 @@ let connected = false;
 let bucket;
 let userCollection;
 let metadataCollection;
+let fileCollection;
 
 async function run() {
     try {
@@ -21,6 +22,7 @@ async function run() {
         db = client.db("Cluster0");
         userCollection = db.collection("User");
         metadataCollection = db.collection("Metadata");
+        fileCollection = db.collection("fs.files");
         bucket = new GridFSBucket(db);
 
         connected = true;
@@ -160,6 +162,29 @@ async function uploadPlanet(
     rawUploadStream.on("error", (error) => {
         console.error("Error uploading ws raw file to GridFS:", error);
     });
+}
+
+async function deletePlanet(mapName){
+    await until(() => {return connected;});
+
+    const metadata = await metadataCollection.findOne({ mapName });
+    if(metadata === null){
+        console.error('file deletion failed!', {mapName});
+        return;
+    }
+
+    const filename = metadata.mapId + '.js';
+
+    const file = await fileCollection.findOne({ filename });
+
+    bucket.delete(file._id);
+    
+    const username = metadata.creator;
+    userCollection.updateOne({ username }, { $unset: { uploadedLevelIds: metadata.mapId } });
+
+    metadataCollection.deleteOne({ mapName });
+
+    console.log('Successfully deleted', { mapName });
 }
 
 async function getMetadataByName(mapName) {
