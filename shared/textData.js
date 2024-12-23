@@ -414,14 +414,14 @@ export default {
           "name": "SPAWN_X",
           "value": 800,
           "min": 0,
-          "max": 900,
+          // "max": 900,
         },
         {
           "type": "field_number",
           "name": "SPAWN_Y",
           "value": 100,
           "min": 0,
-          "max": 1600,
+          // "max": 1600,
         },
         {
           "type": "field_checkbox",

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkOmniblockly=self.webpackChunkOmniblockly||[]).push([[258],{332:(e,c,s)=>{s.r(c),s.d(c,{default:()=>a});const t=s.p+"bd0fd7f3240c978e0c7d.png",o=new Image;o.src="https://upload.wikimedia.org/wikipedia/commons/c/c3/A_Snapshot_of_the_Jewel_Box_cluster_with_the_ESO_VLT.jpg";const n=new Image;n.src=t;const a={arrowImg:n,starImg:o}}}]);

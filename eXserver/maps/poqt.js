@@ -17165,13 +17165,13 @@ C(3,[],[20],{type:[3,[],[20]],x:208900,y:1000,w:50,h:50,size:30,text:"Maybe ill 
         if(z10active === true) return;
         z10active = true;
 
-        if(shared.skullImg === undefined){
-            shared.skullImg = new Image();
-            shared.skullImg.src = 'https://svgsilh.com/svg/1294357.svg';
-            shared.skullImg.onload = () => {
-                shared.skullImgLoaded = true;
-            }
-        }
+        // if(shared.skullImg === undefined){
+        //     shared.skullImg = new Image();
+        //     shared.skullImg.src = 'https://svgsilh.com/svg/1294357.svg';
+        //     shared.skullImg.onload = () => {
+        //         shared.skullImgLoaded = true;
+        //     }
+        // }
 
         shared.players[shared.selfId].cr = (player) => {
             const lastR = player.sat.r;
@@ -17183,7 +17183,7 @@ C(3,[],[20],{type:[3,[],[20]],x:208900,y:1000,w:50,h:50,size:30,text:"Maybe ill 
             ctx.lineWidth = 8;
             ctx.stroke();
             ctx.clip();
-            if(shared.skullImgLoaded === true)ctx.drawImage(shared.skullImg, player.pos.x - player.sat.r, player.pos.y - player.sat.r, player.sat.r * 2, player.sat.r * 2);
+            // if(shared.skullImgLoaded === true)ctx.drawImage(shared.skullImg, player.pos.x - player.sat.r, player.pos.y - player.sat.r, player.sat.r * 2, player.sat.r * 2);
             ctx.closePath();
             ctx.restore();
             player.sat.r = lastR;
@@ -18292,6 +18292,47 @@ C(3,[],[20],{type:[3,[],[20]],x:208900,y:1000,w:50,h:50,size:30,text:"Maybe ill 
         }
 }
 
+        
+    // z8 inv
+    {
+        const maxInv = 30;// half a second
+        let inv = maxInv;
+        shared.C(0,[],[3],{x:-1E9,y:0,r:100,sf:(o,p)=>{
+            if(p.pos.x < 44200 || p.pos.x > 45600 || p.pos.y > 19400 || p.pos.y < 12600){
+                inv = maxInv;
+                o.pos.x = -1E9;
+                return;
+            }
+
+            if(p.pos.x > 44750 && p.pos.y > 18800 && p.pos.x < 45050 && p.pos.y < 19100){
+                inv = maxInv;
+            }
+
+            if(inv <= 0){
+                o.pos.x = -1E9;
+                return;
+            }
+
+            if(p.dead === true && p.onSafe === false){
+                inv--;
+                p.onSafe = true;
+            }
+
+            o.sat.r = p.sat.r + inv; 
+            o.pos.x = p.pos.x;
+            o.pos.y = p.pos.y;
+        },cr:(o)=>{
+            ctx.beginPath();
+            ctx.fillStyle = 'rgba(140,140,140,.25)';
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 4;
+            ctx.arc(o.pos.x, o.pos.y, o.sat.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();
+        }})
+    } 
+
     shared.C(0,[],[11],{x:-1E9,y:0,r:100,sf:(o,p)=>{
         if(inv14 <= 0){
             o.pos.x = -1E9;
@@ -18377,10 +18418,11 @@ shared.C(0,[],[11],{x:-1E9,y:0,r:100,sf:(o,p)=>{
 // tetris iframe!
 
 {
+    let timer_ = 75;
     let lastW = canvas.w;
     let lastH = canvas.h;
     canvas.w = 1600;
-    canvas.h = 900
+    canvas.h = 900;
     let lastTransform;
     let started = false;
     let won = false;
@@ -18394,9 +18436,10 @@ shared.C(0,[],[11],{x:-1E9,y:0,r:100,sf:(o,p)=>{
     C(1,[],[3],{x:29650,y:16850,w:100,h:100,ef:(p)=>{
         if(started === false) {
             interval1 = window.setInterval(() => {
-                timer -= (performance.now() - lastTime) / 1000;
+                const dt = (performance.now() - lastTime);
+                if(dt < 300) timer_ -= dt / 1000;
                 lastTime = performance.now();
-                if (timer < 0) {
+                if (timer_ < 0) {
                     won = true;
                 }
             }, 1000 / 60)
@@ -18830,8 +18873,6 @@ shared.C(0,[],[11],{x:-1E9,y:0,r:100,sf:(o,p)=>{
 
     let linesCleared = 0;
 
-    let timer = 75;
-
     let activeblock = null;
 
     let nextblock = generateBlock(canvas.w / 2 - tileImg.width / 2, 0, 500, 1000);
@@ -18872,10 +18913,10 @@ shared.C(0,[],[11],{x:-1E9,y:0,r:100,sf:(o,p)=>{
         ctx.textBaseline = 'bottom';
         ctx.fillText('Score: ' + score, canvas.w / 2 - tileImg.width / 2 - 10, 50);
 
-        let timerText = ctx.measureText(Math.round(timer * 10) / 10);
-        ctx.fillText('Time Left: ', canvas.w / 2 - tileImg.width / 2 - 10 - timerText.width, 120);
-        ctx.fillStyle = timer < 0 ? 'green' : 'red';
-        ctx.fillText(Math.round(timer * 10) / 10, canvas.w / 2 - tileImg.width / 2 - 10, 120);
+        let timer_Text = ctx.measureText(Math.round(timer_ * 10) / 10);
+        ctx.fillText('Time Left: ', canvas.w / 2 - tileImg.width / 2 - 10 - timer_Text.width, 120);
+        ctx.fillStyle = timer_ < 0 ? 'green' : 'red';
+        ctx.fillText(Math.round(timer_ * 10) / 10, canvas.w / 2 - tileImg.width / 2 - 10, 120);
         ctx.fillStyle = 'white';
 
         ctx.textAlign = 'left';
@@ -18931,7 +18972,7 @@ shared.C(0,[],[11],{x:-1E9,y:0,r:100,sf:(o,p)=>{
             blocks.push(activeblock);
             activeblock = null;
             if (checkGameOver()) {
-                if(timer < 0){
+                if(timer_ < 0){
                     // won
                     win();
                     return;
@@ -18941,7 +18982,7 @@ shared.C(0,[],[11],{x:-1E9,y:0,r:100,sf:(o,p)=>{
                 score = 0;
                 level = 1;
                 linesCleared = 0;
-                timer = 75;
+                timer_ = 75;
                 activeblock = generateBlock(canvas.w / 2 - tileImg.width / 2, 0, 500, 1000);
                 nextblock = generateBlock(canvas.w / 2 - tileImg.width / 2, 0, 500, 1000);
                 clearInterval(speedInterval);

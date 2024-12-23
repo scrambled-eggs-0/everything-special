@@ -135,12 +135,22 @@ shared.editorMouseDownFns.push((e) => {
                         const o = shared.selectedObstacles[i];
                         if(o.pivotX !== undefined){
                             o.alreadyHasRotateType = true;// used upon adding block
+
+                            // unrotate to the starting angle
+                            const lastRotateSpeed = o.rotateSpeed;
+                            o.rotateSpeed = (-o.rotation) % (Math.PI*2);// rotate all the way back to 0
+                            shared.simulateMap[1](o);
+                            o.rotateSpeed = lastRotateSpeed;
+
+                            o.pivotX = middleX;
+                            o.pivotY = middleY;
+
                             continue;
                         }
                         // giving them the *params* of the rotate type. We will officially add the type when we add to the block.
+                        o.rotateSpeed = o.rotation = 0;
                         o.pivotX = middleX;
                         o.pivotY = middleY;
-                        o.rotateSpeed = o.rotation = 0;
                     }
                     startX = startY = undefined;
                     stopSimulation();
@@ -217,6 +227,34 @@ shared.editorMouseDownFns.push((e) => {
                     tMaxY = o.topLeft.y + o.dimensions.y;
                     startX = startY = unSnappedX = unSnappedY = undefined;
                     rotating = false;
+
+                    if(state === 'rotate'){
+                        startRotateAngle = rotateAngle = Math.atan2(startY - middleY, startX - middleX);
+                        rotating = true;
+                        const middleX = o.topLeft.x + o.dimensions.x/2;
+                        const middleY = o.topLeft.y + o.dimensions.y/2;
+                        for(let i = 0; i < shared.selectedObstacles.length; i++){
+                            const o = shared.selectedObstacles[i];
+                            if(o.pivotX !== undefined){
+                                o.alreadyHasRotateType = true;// used upon adding block
+    
+                                // unrotate to the starting angle
+                                const lastRotateSpeed = o.rotateSpeed;
+                                o.rotateSpeed = (-o.rotation) % (Math.PI*2);// rotate all the way back to 0
+                                shared.simulateMap[1](o);
+                                o.rotateSpeed = lastRotateSpeed;
+    
+                                o.pivotX = middleX;
+                                o.pivotY = middleY;
+    
+                                continue;
+                            }
+                            // giving them the *params* of the rotate type. We will officially add the type when we add to the block.
+                            o.rotateSpeed = o.rotation = 0;
+                            o.pivotX = middleX;
+                            o.pivotY = middleY;
+                        }
+                    }
                 }
             }
             startX = startY = undefined;
@@ -243,9 +281,14 @@ shared.editorMouseMoveFns.push((e) => {
 
         // just add pos for now, on update we'll make it official with the blocks.
         for(let i = 0; i < shared.selectedObstacles.length; i++){
-            shared.selectedObstacles[i].pos.x += deltaX;
-            shared.selectedObstacles[i].pos.y += deltaY;
-            shared.selectedObstacles[i].topLeft = shared.generateTopLeftCoordinates(shared.selectedObstacles[i]);
+            const o = shared.selectedObstacles[i];
+            o.pos.x += deltaX;
+            o.pos.y += deltaY;
+            o.topLeft = shared.generateTopLeftCoordinates(o);
+            if(o.pivotX !== undefined){
+                o.pivotX += deltaX;
+                o.pivotY += deltaY;
+            }
         }
         return;
     }
@@ -432,7 +475,7 @@ function setObstaclesMatchingRotate(middleX, middleY, angle){
     for(let i = 0; i < shared.selectedObstacles.length; i++){
         const o = shared.selectedObstacles[i];
 
-        if(o.alreadyHasRotateType === true) continue;
+        // if(o.alreadyHasRotateType === true) continue;
 
         if(o.sat.r !== undefined){
             o.pos.x -= o.pivotX;
@@ -564,6 +607,11 @@ function setBlocksMatchingTransform(){
                 shared.setValueInput(block, 'x', o.pos.x);
                 shared.setValueInput(block, 'y', o.pos.y);
             }
+
+            if(o.pivotX !== undefined){
+                shared.setValueInput(block, 'pivotX', o.pivotX);
+                shared.setValueInput(block, 'pivotY', o.pivotY);
+            }
         }
         transformX = transformY = undefined;
     } else if(state === 'rotate'){
@@ -576,29 +624,34 @@ function setBlocksMatchingTransform(){
             if(block === null || block === undefined) continue;
 
             if(o.alreadyHasRotateType === true){
-                if(o.pivotX !== centerX || o.pivotY !== centerY) {
-                    if(alerted === false) {alert('Shapes were contained within your selection that had a rotate type with a different pivot, and could not be rotated! Just FYI. Also FYI I love you <3', true, 22); alerted = true;}
-                    continue;
-                }
-                delete o.alreadyHasRotateType;
+                // we already have a rotate, just change the position and stuff
+                shared.setValueInput(block, 'pivotX', centerX);
+                shared.setValueInput(block, 'pivotY', centerY);
+                shared.setValueInput(block, 'initialRotation', rotateAngle - startRotateAngle);
+                
+                // if(o.pivotX !== centerX || o.pivotY !== centerY) {
+                //     if(alerted === false) {alert('Shapes were contained within your selection that had a rotate type with a different pivot, and could not be rotated! Just FYI. Also FYI I love you <3', true, 22); alerted = true;}
+                //     continue;
+                // }
+                // delete o.alreadyHasRotateType;
 
-                const inputName = block.simulateParamToId.initialRotation;
-                if(inputName === undefined) continue;
+                // const inputName = block.simulateParamToId.initialRotation;
+                // if(inputName === undefined) continue;
 
-                const input = block.getInput(inputName)?.connection?.targetConnection?.sourceBlock_;
-                if(input === null || input === undefined || input.isShadow() === false) continue;
+                // const input = block.getInput(inputName)?.connection?.targetConnection?.sourceBlock_;
+                // if(input === null || input === undefined || input.isShadow() === false) continue;
 
-                javascriptGenerator.init(shared.ws);
-                let generated = javascriptGenerator.blockToCode(input, true);
-                if(Array.isArray(generated) === true) generated = generated[0];
+                // javascriptGenerator.init(shared.ws);
+                // let generated = javascriptGenerator.blockToCode(input, true);
+                // if(Array.isArray(generated) === true) generated = generated[0];
 
-                eval(`window.temp = ${generated};`);
+                // eval(`window.temp = ${generated};`);
 
-                if(Number.isFinite(window.temp) === false) continue;
+                // if(Number.isFinite(window.temp) === false) continue;
 
-                shared.setValueInput(block, 'initialRotation', window.temp + rotateAngle - startRotateAngle);
+                // shared.setValueInput(block, 'initialRotation', window.temp + rotateAngle - startRotateAngle);
 
-                delete window.temp;
+                // delete window.temp;
 
                 continue;
             }

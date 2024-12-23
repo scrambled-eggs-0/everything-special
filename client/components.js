@@ -819,7 +819,7 @@ const initSimulateMap = [
     }
 ]
 
-const simulateMap = [
+const simulateMap = shared.simulateMap = [
     /*pathMove*/
     (o) => {
         o.pos.x += o.xv;
