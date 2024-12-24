@@ -4168,6 +4168,7 @@ shared.C(1, [], [3,11], {
 		giveInv = true;
 		if (audioLoaded){
 			audio.play();
+			shared.spawnPosition.x = 525600;
 			e.pos.x = 1000;
 			e.pos.y = 6500;
 		}
